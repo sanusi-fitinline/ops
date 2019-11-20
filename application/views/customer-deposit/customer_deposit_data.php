@@ -43,11 +43,12 @@
             		<thead style="font-size: 14px;">
 	                	<tr>
 	                    	<th style="vertical-align: middle; text-align: center; width: 90px;">STATUS</th>
-							<th style="vertical-align: middle; text-align: center; width: 110px;">DATE</th>
+							<th style="vertical-align: middle; text-align: center; width: 60px;">DATE</th>
 							<th style="vertical-align: middle; text-align: center; width: 50px;">ORDER ID</th>
-							<th style="vertical-align: middle; text-align: center;width: 150px;">CUSTOMER</th>
-	                    	<th style="vertical-align: middle; text-align: center; width: 100px;">DEPOSIT</th>
-							<th style="vertical-align: middle; text-align: center; width: 110px;">PAY DATE</th>
+							<th style="vertical-align: middle; text-align: center;width: 130px;">CUSTOMER</th>
+	                    	<th style="vertical-align: middle; text-align: center; width: 80px;">DEPOSIT</th>
+							<th style="vertical-align: middle; text-align: center; width: 130px;">NOTES</th>
+							<th style="vertical-align: middle; text-align: center; width: 60px;">PAY DATE</th>
 							<th style="vertical-align: middle; text-align: center; width: 50px;">ACTION</th>
 	                  	</tr>
 	                </thead>
@@ -60,11 +61,12 @@
             		<thead style="font-size: 14px;">
 	                	<tr>
 	                    	<th style="vertical-align: middle; text-align: center; width: 90px;">STATUS</th>
-							<th style="vertical-align: middle; text-align: center; width: 110px;">DATE</th>
+							<th style="vertical-align: middle; text-align: center; width: 60px;">DATE</th>
 							<th style="vertical-align: middle; text-align: center; width: 50px;">ORDER ID</th>
-							<th style="vertical-align: middle; text-align: center;width: 150px;">CUSTOMER</th>
-	                    	<th style="vertical-align: middle; text-align: center; width: 100px;">DEPOSIT</th>
-							<th style="vertical-align: middle; text-align: center; width: 110px;">PAY DATE</th>
+							<th style="vertical-align: middle; text-align: center;width: 130px;">CUSTOMER</th>
+	                    	<th style="vertical-align: middle; text-align: center; width: 80px;">DEPOSIT</th>
+							<th style="vertical-align: middle; text-align: center; width: 130px;">NOTES</th>
+							<th style="vertical-align: middle; text-align: center; width: 60px;">PAY DATE</th>
 							<th style="vertical-align: middle; text-align: center; width: 50px;">ACTION</th>
 	                  	</tr>
 	                </thead>

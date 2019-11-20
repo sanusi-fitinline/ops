@@ -20,8 +20,8 @@
             		<thead style="font-size: 14px">
 	                	<tr>
 							<th style="vertical-align: middle; text-align: center; width: 100px;">STATUS</th>
-	                    	<th style="vertical-align: middle; text-align: center;width: 150px;">VENDOR</th>
 							<th style="vertical-align: middle; text-align: center;width: 100px;">ORDER ID</th>
+	                    	<th style="vertical-align: middle; text-align: center;width: 150px;">VENDOR</th>
 	                    	<th style="vertical-align: middle; text-align: center; width: 200px;">ORDER DATE</th>
 							<th style="vertical-align: middle; text-align: center; width: 150px;">TOTAL</th>
 							<th style="vertical-align: middle; text-align: center;  width: 200px;">PAYMENT DATE</th>

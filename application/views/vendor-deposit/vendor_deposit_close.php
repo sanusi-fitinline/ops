@@ -95,6 +95,10 @@
 					</div>
 					<form action="<?php echo site_url('vendor_deposit/close_deposit/'.$row->VENDD_ID)?>" method="POST" enctype="multipart/form-data">
 						<div class="form-group">
+						    <label>Notes</label>
+							<textarea class="form-control" cols="100%" rows="5" name="VENDD_NOTES"><?php echo $row->VENDD_NOTES ?></textarea>
+						</div>
+						<div class="form-group">
 							<label>Close Date</label>
 							<div class="input-group">
 								<div class="input-group-prepend">
@@ -105,7 +109,11 @@
 						    </div>
 						</div>
 						<div align="center">
-							<button class="btn btn-sm btn-primary" type="submit" name="UPDATE"><i class="fa fa-save"></i> UPDATE</button>
+							<?php if((!$this->access_m->isEdit('Vendor Deposit', 1)->row()) && ($this->session->GRP_SESSION !=3)) : ?>
+				        		<button class="btn btn-sm btn-secondary" type="submit" name="UPDATE" disabled><i class="fa fa-save"></i> UPDATE</button>
+					        <?php else: ?>
+					        	<button class="btn btn-sm btn-primary" type="submit" name="UPDATE"><i class="fa fa-save"></i> UPDATE</button>
+					        <?php endif ?>
 						</div>
 					</form>
 				</div>

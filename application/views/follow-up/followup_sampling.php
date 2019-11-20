@@ -120,12 +120,12 @@
 				          		<table class="table table-bordered" id="tableFollowUp" width="100%" cellspacing="0">
 				            		<thead style="font-size: 14px;">
 					                	<tr>
-					                    	<th style="vertical-align: middle; text-align: center;">DATE</th>
-											<th style="vertical-align: middle; text-align: center;">CUSTOMER NAME</th>
-											<th style="vertical-align: middle; text-align: center;">ACTIVITY</th>
-											<th style="vertical-align: middle; text-align: center;">STATUS</th>
-											<th style="vertical-align: middle; text-align: center;">REASON</th>
-											<th style="vertical-align: middle; text-align: center;">ACTION</th>
+					                    	<th style="vertical-align: middle; text-align: center; width: 50px;">DATE</th>
+											<th style="vertical-align: middle; text-align: center;width: 100px;">CUSTOMER NAME</th>
+											<th style="vertical-align: middle; text-align: center;width: 70px;">ACTIVITY</th>
+											<th style="vertical-align: middle; text-align: center;width: 70px;">STATUS</th>
+											<th style="vertical-align: middle; text-align: center;width: 130px;">REASON</th>
+											<th style="vertical-align: middle; text-align: center;width: 50px;">ACTION</th>
 					                  	</tr>
 					                </thead>
 					                <tbody style="font-size: 14px;">

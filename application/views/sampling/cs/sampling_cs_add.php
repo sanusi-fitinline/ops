@@ -103,6 +103,9 @@
 											<img width="70px" src="<?php echo base_url('assets/images/loading.gif') ?>">
 										</div>
 										<div id="tarf" class="form-group"></div>
+										<div id="deposit" class="form-group"></div>
+										<div id="total" class="form-group"></div>
+										<input id="SAMPLING_DEPOSIT" class="form-control" type="hidden" name="LSAM_DEPOSIT" value="">
 									</div>
 									<div class="col-md-3">
 										<div class="form-group">

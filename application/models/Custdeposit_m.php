@@ -15,10 +15,18 @@ class Custdeposit_m extends CI_Model {
 
     private function _get_datatables_query($CUSTD_DATE = null, $ORDER_ID = null, $CUST_NAME = null)
     {
-        
+        $this->load->model('access_m');
+        $modul = "Customer Deposit";
+        $view = 1;
+        $viewall =  $this->access_m->isViewAll($modul, $view)->row();
         $this->db->select('tb_customer_deposit.*, tb_customer.CUST_NAME');
         $this->db->from($this->table);
         $this->db->join('tb_customer', 'tb_customer.CUST_ID=tb_customer_deposit.CUST_ID', 'left');
+        if ($this->session->GRP_SESSION !=3) {
+            if (!($viewall)) { // filter sesuai hak akses
+                $this->db->where('tb_customer_deposit.USER_ID', $this->session->USER_SESSION);
+            }
+        }
 
         if($CUSTD_DATE != null){
 			$this->db->like('tb_customer_deposit.CUSTD_DATE', date('Y-m-d', strtotime($CUSTD_DATE)));
@@ -131,6 +139,9 @@ class Custdeposit_m extends CI_Model {
         $params['CUSTD_DEPOSIT_STATUS'] = 1;
         $params['CUSTD_ORDER_ID']       = 0;
         $params['CUSTD_PAY_DATE']       = $DATE.' '.$TIME;
+        if(!empty($this->input->post('CUSTD_NOTES', TRUE))) {
+            $params['CUSTD_NOTES']          = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$this->input->post('CUSTD_NOTES', TRUE));
+        }
         $this->db->where('CUSTD_ID', $CUSTD_ID);
         $this->db->update('tb_customer_deposit', $this->db->escape_str($params));
     }

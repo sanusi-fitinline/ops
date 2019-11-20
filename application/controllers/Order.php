@@ -22,6 +22,7 @@ class Order extends CI_Controller {
 		$this->load->model('courier_m');
 		$this->load->model('coutariff_m');
 		$this->load->model('custdeposit_m');
+		$this->load->model('clog_m');
 		check_not_login();
 		$this->load->library('Pdf');
 		$this->load->library('rajaongkir');
@@ -131,15 +132,16 @@ class Order extends CI_Controller {
 				          	<span class='input-group-text'>$product->CURR_NAME</span>
 				        </div>
 						<input class='form-control' type='text' value='$PRO_PRICE' readonly>
-						<input class='form-control' type='hidden' id='HARGA' name='PRICE' value='$product->PRO_PRICE'>
-						<input class='form-control' type='hidden' id='HARGA_VENDOR' name='PRICE_VENDOR' value='$product->PRO_PRICE_VENDOR'>
+						<input class='form-control' type='hidden' id='HARGA' name='ORDD_PRICE' value='$product->PRO_PRICE'>
+						<input class='form-control' type='hidden' id='HARGA_VENDOR' name='ORDD_PRICE_VENDOR' value='$product->PRO_PRICE_VENDOR'>
 						<input class='form-control' type='hidden' name='UMEA_ID' value='$product->PRO_UNIT'>
+						<input class='form-control' type='hidden' name='QTY' value='1'>
 				    </div>
 				</div>
 				<div class='form-group'>
 					<label>Weight</label>
 					<div class='input-group'>
-						<input class='form-control' type='text' id='PRO_WEIGHT' name='PRO_WEIGHT' value='$product->PRO_WEIGHT' readonly>
+						<input class='form-control' type='text' id='PRO_WEIGHT' value='$product->PRO_WEIGHT' readonly>
 						<div class='input-group-prepend'>
 				          	<span class='input-group-text'>Kg</i></span>
 				        </div>
@@ -163,15 +165,18 @@ class Order extends CI_Controller {
 				          	<span class='input-group-text'>$product->CURR_NAME</span>
 				        </div>
 						<input class='form-control' type='text' value='$GROSIR_PRICE' readonly>
-						<input class='form-control' type='hidden' id='HARGA' name='PRICE' value='$GROSIR'>
-						<input class='form-control' type='hidden' id='HARGA_VENDOR' name='PRICE_VENDOR' value='$GROSIR_VENDOR'>
-						<input class='form-control' type='hidden' name='UMEA_ID' value='$product->PRO_TOTAL_UNIT'>
+						<input class='form-control' type='hidden' id='HARGA' value='$GROSIR'>
+						<input class='form-control' type='hidden' id='HARGA_VENDOR' value='$GROSIR_VENDOR'>
+						<input class='form-control' type='hidden' name='UMEA_ID' value='$product->PRO_VOL_UNIT'>
+						<input class='form-control' type='hidden' name='ORDD_PRICE' value='$PRO_VOL_PRICE'>
+						<input class='form-control' type='hidden' name='ORDD_PRICE_VENDOR' value='$PRO_VOL_PRICE_VENDOR'>
+						<input class='form-control' type='hidden' name='QTY' value='$product->PRO_TOTAL_COUNT'>
 				    </div>
 				</div>
 				<div class='form-group'>
 					<label>Weight</label>
 					<div class='input-group'>
-						<input class='form-control' type='text' id='PRO_WEIGHT' name='PRO_WEIGHT' value='$product->PRO_TOTAL_WEIGHT' readonly>
+						<input class='form-control' type='text' id='PRO_WEIGHT' value='$product->PRO_TOTAL_WEIGHT' readonly>
 						<div class='input-group-prepend'>
 				          	<span class='input-group-text'>Kg</i></span>
 				        </div>
@@ -205,10 +210,11 @@ class Order extends CI_Controller {
 		}
 	}
 
-	public function add() {
-		$data['customer'] = $this->customer_m->get()->result();
-		$data['channel'] = $this->channel_m->getCha()->result();
-		$data['bank'] 		= $this->bank_m->getBank()->result();
+	public function add($CUST_ID = null) {
+		$data['customer'] 	= $this->customer_m->get()->result();
+		$data['channel']  	= $this->channel_m->getCha()->result();
+		$data['bank'] 	  	= $this->bank_m->getBank()->result();
+		$data['flwp_date'] 	= $this->clog_m->get_followup_date($CUST_ID)->row();
 		$this->template->load('template', 'order/order_form_add', $data);
 	}
 
@@ -251,7 +257,6 @@ class Order extends CI_Controller {
 				$data['courier'] 		= $this->courier_m->getCourier()->result();
 				$data['detail'] 		= $this->orderdetail_m->get($ORDER_ID)->result();
 				$data['get_by_vendor'] 	= $this->ordervendor_m->get_by_vendor($ORDER_ID)->result();
-				// $data['deposit'] 		= $this->custdeposit_m->getDeposit($ORDER_ID)->row();
 				$this->template->load('template', 'order/order_detail', $data);
 			} else {
 				echo "<script>alert('Data tidak ditemukan.')</script>";
@@ -285,7 +290,7 @@ class Order extends CI_Controller {
 					for ($j=0; $j < count($detailCost['rajaongkir']['results'][$i]['costs']); $j++) {
 						$service = $detailCost['rajaongkir']['results'][$i]['costs'][$j]['service'];
 						$tarif = $detailCost['rajaongkir']['results'][$i]['costs'][$j]['cost'][0]['value'];
-						$etd = $detailCost['rajaongkir']['results'][$i]['costs'][$j]['cost'][0]['etd'];
+						$etd = $detailCost['rajaongkir']['results'][$i]['costs'][$j]['cost'][0]['etd']." Hari";
 						$lists .= "<option value='$tarif,$service,$etd'>$service</option>";
 					}
 				}
@@ -329,6 +334,23 @@ class Order extends CI_Controller {
 		$update['update'] = $this->order_m->update_payment($ORDER_ID);
 		if($update) {
 			echo "<script>alert('Data berhasil diubah.')</script>";
+			if (($this->input->post('ORDER_PAYMENT_DATE') != null)) {
+				require_once(APPPATH.'third_party/pusher/vendor/autoload.php');
+				$options = array(
+					'cluster' => 'ap1',
+					'useTLS' => true
+				);
+				$pusher = new Pusher\Pusher(
+					'3de920bf0bfb448a7809',
+					'0799716e5d66b96f5b61',
+					'845132',
+					$options
+				);
+
+				$data['message'] = "\nNew Order from Customer!";
+				$data['url'] 	 = site_url('order_support/detail/'.$ORDER_ID);
+				$pusher->trigger('channel-pm', 'event-pm', $data);
+			}
 			echo "<script>window.location='".site_url('order/detail/'.$ORDER_ID)."'</script>";
 		} else {
 			echo "<script>alert('Data gagal diubah.')</script>";
@@ -379,16 +401,16 @@ class Order extends CI_Controller {
 		$order_vendor 			= $this->ordervendor_m->get_by_vendor($ORDER_ID, $VEND_ID)->row();
 		$ORDER_TOTAL 	 		= $order->ORDER_TOTAL;
 		$GRAND_TOTAL 	 		= $order->ORDER_GRAND_TOTAL;
-		$ORDD_PRICE 	 		= $detail->ORDD_PRICE;
-		$ORDD_PRICE_VENDOR 	 	= $detail->ORDD_PRICE_VENDOR;
+		$DETAIL_PRICE 	 		= $detail->ORDD_PRICE * $detail->ORDD_QUANTITY;
+		$DETAIL_PRICE_VENDOR 	= $detail->ORDD_PRICE_VENDOR * $detail->ORDD_QUANTITY;
 		$SHIPCOST 				= $order_vendor->ORDV_SHIPCOST;
 		$ORDV_TOTAL 	 		= $order_vendor->ORDV_TOTAL;
 		$ORDV_TOTAL_VENDOR 		= $order_vendor->ORDV_TOTAL_VENDOR;
 		// update data baru
-		$NEW_ORDV_TOTAL 		= $ORDV_TOTAL - $ORDD_PRICE - $SHIPCOST;
-		$NEW_ORDV_TOTAL_VENDOR 	= $ORDV_TOTAL_VENDOR - $ORDD_PRICE_VENDOR - $SHIPCOST;
+		$NEW_ORDV_TOTAL 		= $ORDV_TOTAL - $DETAIL_PRICE - $SHIPCOST;
+		$NEW_ORDV_TOTAL_VENDOR 	= $ORDV_TOTAL_VENDOR - $DETAIL_PRICE_VENDOR - $SHIPCOST;
 		if($order->ORDER_GRAND_TOTAL != null && $order->ORDER_GRAND_TOTAL != 0){
-			$NEW_GRAND_TOTAL 		= $GRAND_TOTAL - $ORDD_PRICE - $SHIPCOST;
+			$NEW_GRAND_TOTAL 		= $GRAND_TOTAL - $DETAIL_PRICE - $SHIPCOST;
 		} else {
 			$NEW_GRAND_TOTAL 		= 0;
 		}
@@ -399,8 +421,8 @@ class Order extends CI_Controller {
 	}
 
 	public function cancel_order($ORDER_ID) {
-		$this->order_m->cancel($ORDER_ID);
-		if($this->db->affected_rows() > 0) {
+		$delete['delete'] = $this->order_m->cancel($ORDER_ID);
+		if($delete) {
 			echo "<script>window.location='".site_url('order')."'</script>";
 		}
 	}

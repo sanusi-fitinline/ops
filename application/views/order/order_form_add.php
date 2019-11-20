@@ -14,21 +14,24 @@
     <div class="card mb-3">
     	<div class="card-header">
         	<i class="fas fa-table"></i>
-        	Add Data Order <a href="<?php echo site_url('order/new_customer') ?>" class="btn btn-success btn-sm"><i class="fa fa-user-plus"></i> New Customer</a>
+        	Add Data Order <a href="<?php echo site_url('order/new_customer') ?>" class="btn btn-sm btn-success"><i class="fa fa-user-plus"></i> New Customer</a>
         </div>
       	<div class="card-body">
       		<div class="row">
-				<div class="col-md-12 offset-md-1">
+				<div class="col-md-12">
 					<h3>Select Customer</h3>
+				</div>
+				<div class="col-md-12 offset-md-3">					
 					<form action="<?php echo site_url('order/addProcess')?>" method="POST" enctype="multipart/form-data">
 						<div class="row">
 							<div class="col-md-3">
 								<div class="form-group">
 								    <label>Customer</label>
-								    <select class="form-control selectpicker" name="CUST_ID" id="CUST_ID" title="-- Select One --" data-live-search="true" required>
+								    <select class="form-control selectpicker" name="CUST_ID" id="CUST_SELECT" title="-- Select One --" data-live-search="true" required>
 							    		<option value="" disabled>-- Select One --</option>
 								    	<?php foreach($customer as $cust): ?>
-									    	<option value="<?php echo $cust->CUST_ID?>">
+									    	<option value="<?php echo $cust->CUST_ID?>"
+									    		<?php if($cust->CUST_ID == $this->uri->segment(3)) {echo "selected";} ?>>
 									    		<?php echo stripslashes($cust->CUST_NAME) ?>
 									    	</option>
 									    <?php endforeach ?>
@@ -46,7 +49,11 @@
 										<div class="input-group-prepend">
 								          	<span class="input-group-text"><i class="fa fa-calendar"></i></span>
 								        </div>
-										<input class="form-control datepicker" type="text" name="ORDER_DATE" value="<?php echo date('d-m-Y') ?>" autocomplete="off" required>
+								        <?php if($this->uri->segment(3) != null): ?>
+											<input class="form-control datepicker" type="text" name="URI_ORDER_DATE" value="<?php echo date('d-m-Y H:i:s', strtotime($flwp_date->FLWP_DATE)) ?>" autocomplete="off" readonly>
+										<?php else: ?>
+											<input class="form-control datepicker" type="text" name="ORDER_DATE" value="<?php echo date('d-m-Y') ?>" autocomplete="off" required>
+										<?php endif ?>
 								    </div>
 								</div>
 								<div class="form-group">
@@ -63,28 +70,6 @@
 								<div class="form-group">
 									<label>Note</label>
 									<textarea class="form-control" cols="100%" rows="5" name="ORDER_NOTES"></textarea>
-								</div>
-							</div>
-							<div class="col-md-3">
-								<div class="form-group">
-									<label>Bank</label>
-									<select class="form-control selectpicker" name="BANK_ID" id="INPUT_BANK" title="-- Select One --">
-										<option value="" disabled>-- Select One --</option>
-										<?php foreach($bank as $row): ?>
-								    		<option value="<?php echo $row->BANK_ID?>">
-									    		<?php echo $row->BANK_NAME ?>
-									    	</option>
-									    <?php endforeach ?>
-								    </select>
-								</div>
-								<div class="form-group">
-									<label>Payment Date</label>
-									<div class="input-group">
-										<div class="input-group-prepend">
-								          	<span class="input-group-text"><i class="fa fa-calendar"></i></span>
-								        </div>
-										<input class="form-control datepicker" type="text" name="ORDER_PAYMENT_DATE" id="INPUT_PAYMENT" autocomplete="off">
-								    </div>
 								</div>
 								<br>
 								<div align="center">

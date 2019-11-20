@@ -72,12 +72,17 @@ class Followup extends CI_Controller {
 		$data = array();
 		$no = $_POST['start'];
 		foreach ($list as $field) {
+			if($field->FLWC_ID != null && $field->FLWC_ID != 0) {
+				$REASON = "<div align='center'>$field->FLWC_NAME</div>";
+			} else {
+				$REASON = "<div align='center'>-</div>";
+			}
 			$row   = array();
-			$row[] = "<div align='center'>".date('d-m-Y', strtotime($field->FLWP_DATE))."</div>";
+			$row[] = "<div align='center'>".date('d-m-Y / H:i:s', strtotime($field->FLWP_DATE))."</div>";
 			$row[] = stripslashes($field->CUST_NAME);
 			$row[] = "<div align='center'>$field->CACT_NAME</div>";
 			$row[] = "<div align='center'>$field->FLWS_NAME</div>";
-			$row[] = "<div align='center'>$field->FLWC_NAME</div>";
+			$row[] = $REASON;
 			if((!$this->access_m->isDelete('Follow Up', 1)->row()) && ($this->session->GRP_SESSION !=3)){
 				if ($SEGMENT == "sampling_followup"){
 					$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="'.$url.'followup/sampling_followup_edit/'.$field->FLWP_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a></div>';
@@ -230,14 +235,14 @@ class Followup extends CI_Controller {
 	}
 
 	public function assign_edit($CLOG_ID) {
-		$query 				= $this->followup_m->get_assign($CLOG_ID);
-		$data['customer'] 	= $this->customer_m->get()->result();
-		$data['channel']	= $this->channel_m->getCha()->result();
-		$data['bank'] 		= $this->bank_m->getBank()->result();
-		$data['clog'] 		= $this->clog_m->get($query->row()->CLOG_ID)->row();
-		$data['activity'] 	= $this->cactivity_m->get()->result();
-		$data['user'] 		= $this->user_m->getCs(null, 1)->result();
-		$data['followup_status'] 		= $this->followup_m->get_followup_status()->result();
+		$query 					 = $this->followup_m->get_assign($CLOG_ID);
+		$data['customer'] 		 = $this->customer_m->get()->result();
+		$data['channel']		 = $this->channel_m->getCha()->result();
+		$data['bank'] 			 = $this->bank_m->getBank()->result();
+		$data['clog'] 			 = $this->clog_m->get($query->row()->CLOG_ID)->row();
+		$data['activity'] 		 = $this->cactivity_m->get()->result();
+		$data['user'] 			 = $this->user_m->getCs(null, 1)->result();
+		$data['followup_status'] = $this->followup_m->get_followup_status()->result();
 		if ($query->num_rows() > 0) {
 			$data['row'] =	$query->row();
 			$this->template->load('template', 'follow-up/edit_assign', $data);
@@ -281,11 +286,11 @@ class Followup extends CI_Controller {
 	}
 
 	public function sampling_followup_edit($FLWP_ID) {
-		$query 				= $this->followup_m->get($FLWP_ID);
-		$data['clog'] 		= $this->clog_m->get($query->row()->CLOG_ID)->row();
-		$data['followup'] 	= $this->followup_m->get()->result();
-		$data['flws'] 		= $this->followup_m->get_followup_status()->result();
-		$data['followup_closed'] 		= $this->followup_m->get_followup_closed()->result();
+		$query 					 = $this->followup_m->get($FLWP_ID);
+		$data['clog'] 			 = $this->clog_m->get($query->row()->CLOG_ID)->row();
+		$data['followup'] 		 = $this->followup_m->get()->result();
+		$data['flws'] 			 = $this->followup_m->get_followup_status()->result();
+		$data['followup_closed'] = $this->followup_m->get_followup_closed()->result();
 		if ($query->num_rows() > 0) {
 			$data['row'] =	$query->row();
 			$this->template->load('template', 'follow-up/followup_sampling_edit', $data);
@@ -302,11 +307,12 @@ class Followup extends CI_Controller {
 			echo "<script>alert('Anda tidak punya akses ke $modl.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
 		} else {
-			$query 				= $this->ckstock_m->get_by_log($CLOG_ID);
-			$data['clog'] 		= $this->clog_m->get($query->row()->CLOG_ID)->row();
-			$data['followup'] 	= $this->followup_m->get()->result();
-			$data['flws'] 		= $this->followup_m->get_followup_status()->result();
-			$data['followup_closed'] 		= $this->followup_m->get_followup_closed()->result();
+			$query 					 = $this->ckstock_m->get_by_log($CLOG_ID);
+			$data['clog'] 			 = $this->clog_m->get($query->row()->CLOG_ID)->row();
+			$data['followup'] 		 = $this->followup_m->get()->result();
+			$data['flws'] 		     = $this->followup_m->get_followup_status()->result();
+			$data['followup_closed'] = $this->followup_m->get_followup_closed()->result();
+			$data['product'] 		 = $this->ckstock_m->get_product($CLOG_ID)->result();
 			if ($query->num_rows() > 0) {
 				$data['row'] =	$query->row();
 				$this->template->load('template', 'follow-up/followup_ckstock', $data);
@@ -319,11 +325,12 @@ class Followup extends CI_Controller {
 	}
 
 	public function check_stock_followup_edit($FLWP_ID) {
-		$query 				= $this->followup_m->get($FLWP_ID);
-		$data['clog'] 		= $this->clog_m->get($query->row()->CLOG_ID)->row();
-		$data['followup'] 	= $this->followup_m->get()->result();
-		$data['flws'] 		= $this->followup_m->get_followup_status()->result();
-		$data['followup_closed'] 		= $this->followup_m->get_followup_closed()->result();
+		$query 					 = $this->followup_m->get($FLWP_ID);
+		$data['clog'] 			 = $this->clog_m->get($query->row()->CLOG_ID)->row();
+		$data['followup'] 		 = $this->followup_m->get()->result();
+		$data['flws'] 			 = $this->followup_m->get_followup_status()->result();
+		$data['followup_closed'] = $this->followup_m->get_followup_closed()->result();
+		$data['product'] 		 = $this->ckstock_m->get_product($query->row()->CLOG_ID)->result();
 		if ($query->num_rows() > 0) {
 			$data['row'] =	$query->row();
 			$this->template->load('template', 'follow-up/followup_ckstock_edit', $data);
@@ -340,11 +347,11 @@ class Followup extends CI_Controller {
 			echo "<script>alert('Anda tidak punya akses ke $modl.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
 		} else {
-			$query 				= $this->followup_m->get_assign($CLOG_ID);
-			$data['clog'] 		= $this->clog_m->get($query->row()->CLOG_ID)->row();
-			$data['followup'] 	= $this->followup_m->get()->result();
-			$data['flws'] 		= $this->followup_m->get_followup_status()->result();
-			$data['followup_closed'] 		= $this->followup_m->get_followup_closed()->result();
+			$query 					 = $this->followup_m->get_assign($CLOG_ID);
+			$data['clog'] 			 = $this->clog_m->get($query->row()->CLOG_ID)->row();
+			$data['followup'] 		 = $this->followup_m->get()->result();
+			$data['flws'] 			 = $this->followup_m->get_followup_status()->result();
+			$data['followup_closed'] = $this->followup_m->get_followup_closed()->result();
 			if ($query->num_rows() > 0) {
 				$data['row'] =	$query->row();
 				$this->template->load('template', 'follow-up/followup_assign', $data);
@@ -363,12 +370,11 @@ class Followup extends CI_Controller {
 			echo "<script>alert('Anda tidak punya akses ke $modl.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
 		} else {
-			$data['customer'] 	= $this->customer_m->get()->result();
-			// $data['new_cust'] 	= $this->customer_m->get($this->db->insert_id())->row();
-			$data['channel'] 	= $this->channel_m->getCha()->result();
-			$data['activity'] 	= $this->cactivity_m->get()->result();
-			$data['user'] 		= $this->user_m->getCs(null, 1)->result();
-			$data['followup_status'] 		= $this->followup_m->get_followup_status()->result();
+			$data['customer'] 		 = $this->customer_m->get()->result();
+			$data['channel'] 		 = $this->channel_m->getCha()->result();
+			$data['activity'] 		 = $this->cactivity_m->get()->result();
+			$data['user'] 			 = $this->user_m->getCs(null, 1)->result();
+			$data['followup_status'] = $this->followup_m->get_followup_status()->result();
 			$this->template->load('template', 'follow-up/add_assign', $data);
 		}
 	}
@@ -394,7 +400,6 @@ class Followup extends CI_Controller {
 	public function newcust_process(){
 		$data['row'] =	$this->customer_m->insert();
 		if ($data) {
-			// $data['new_cust']      = $this->db->insert_id();
 			echo "<script>alert('Data berhasil ditambah.')</script>";
 			echo "<script>window.location='".site_url('followup/add_assign')."'</script>";
 		} else{

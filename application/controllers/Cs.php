@@ -21,6 +21,7 @@ class Cs extends CI_Controller {
 		$this->load->model('channel_m');
 		$this->load->model('clog_m');
 		$this->load->model('followup_m');
+		$this->load->model('custdeposit_m');
 		check_not_login();
 		$this->load->library('form_validation');
 		$this->load->library('rajaongkir');
@@ -108,11 +109,17 @@ class Cs extends CI_Controller {
 				$RCPNO = $field->LSAM_RCPNO;
 			} else {$RCPNO = "<div align='center'>-</div>";}
 
+			if ($field->LSAM_NOTES != null || $field->LSAM_NOTES !="") {
+				$NOTES = $field->LSAM_NOTES;
+			} else {
+				$NOTES = "<div align='center'>-</div>";
+			}
+
 			$row   = array();
 			$row[] = "<div align='center'>$STATUS</div>";
 			$row[] = date('d-m-Y / H:i:s', strtotime($field->LSAM_DATE));
 			$row[] = stripslashes($field->CUST_NAME);
-			$row[] = $field->LSAM_NOTES;
+			$row[] = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$NOTES);
 			$row[] = "<div align='center'>".$field->COURIER_NAME." ".$field->LSAM_SERVICE_TYPE."</div>";
 			$row[] = "<div align='center'>$DELDATE</div>";
 			$row[] = $RCPNO;
@@ -151,89 +158,6 @@ class Cs extends CI_Controller {
 		echo json_encode($output);
 	}
 
-	public function add($CUST_ID = null) {
-		$data['customer'] = $this->customer_m->get()->result();
-		$data['channel'] = $this->channel_m->getCha()->result();
-		$data['bank'] 		= $this->bank_m->getBank()->result();
-		$data['courier'] = $this->courier_m->getCourier()->result();
-		if($CUST_ID != null) {
-			$data['row'] = $this->customer_m->get($CUST_ID)->row();
-			$this->template->load('template', 'sampling/cs/sampling_cs_add_by_status', $data);
-		} else {
-			$this->template->load('template', 'sampling/cs/sampling_cs_add', $data);
-		}
-	}
-
-	public function addProcess() {
-		$data['row'] =	$this->sampling_m->insert();
-		if ($data) {
-			echo "<script>alert('Data berhasil ditambah.')</script>";
-			if (($this->input->post('LSAM_PAYDATE') != null)) {
-				require_once(APPPATH.'third_party/pusher/vendor/autoload.php');
-				$options = array(
-					'cluster' => 'ap1',
-					'useTLS' => true
-				);
-				$pusher = new Pusher\Pusher(
-					'3de920bf0bfb448a7809',
-					'0799716e5d66b96f5b61',
-					'845132',
-					$options
-				);
-
-				$data['message'] = "New Product Sampling Request!";
-				$data['url'] = site_url('pm/sampling');
-				$pusher->trigger('my-notif', 'my-event', $data);
-			}
-			echo "<script>window.location='".site_url('cs/sampling')."'</script>";
-		} else{
-			echo "<script>alert('Data gagal ditambah.')</script>";
-			echo "<script>window.location='".site_url('cs/sampling')."'</script>";
-		}
-		
-	}
-
-	public function edit_sampling($LSAM_ID) {
-		$query 				= $this->sampling_m->get($LSAM_ID);
-		$data['customer'] 	= $this->customer_m->get()->result();
-		$data['channel']	= $this->channel_m->getCha()->result();
-		$data['bank'] 		= $this->bank_m->getBank()->result();
-		$data['courier'] 	= $this->courier_m->getCourier()->result();
-		$data['clog'] 		= $this->clog_m->get($query->row()->CLOG_ID)->row();
-		if ($query->num_rows() > 0) {
-			$data['row'] =	$query->row();
-			$this->template->load('template', 'sampling/cs/sampling_cs_edit', $data);
-		} else {
-			echo "<script>alert('Data tidak ditemukan.')</script>";
-			echo "<script>window.location='".site_url('cs/sampling')."'</script>";
-		}
-	}
-
-	public function edit_sampling_process($CLOG_ID) {
-		$this->sampling_m->update($CLOG_ID);
-		if($this->db->affected_rows() > 0) {
-			echo "<script>alert('Data berhasil diubah.')</script>";
-			echo "<script>window.location='".site_url('cs/sampling')."'</script>";
-		} else {
-			echo "<script>alert('Data gagal diubah.')</script>";
-			echo "<script>window.location='".site_url('cs/sampling')."'</script>";
-		}
-	}
-
-	public function del_sampling() {
-		$LSAM_ID = $this->input->post('LSAM_ID');
-		$CLOG_ID = $this->input->post('CLOG_ID');
-		$this->sampling_m->delete($CLOG_ID);
-
-		if($this->db->affected_rows() > 0) {
-			echo "<script>alert('Data berhasil dihapus.')</script>";
-			echo "<script>window.location='".site_url('cs/sampling')."'</script>";
-		} else {
-			echo "<script>alert('Data berhasil dihapus.')</script>";
-			echo "<script>window.location='".site_url('cs/sampling')."'</script>";
-		}
-	}
-
 	public function newcust() {
 		$data['bank'] 		= $this->bank_m->getBank()->result();
 		$data['channel'] 	= $this->channel_m->getCha()->result();
@@ -254,8 +178,12 @@ class Cs extends CI_Controller {
 
 	public function custdata(){
 		$CUST_ID = $this->input->post('CUST_ID');
-		$cust = $this->customer_m->get($CUST_ID)->row();
-		$channel	= $this->channel_m->getCha()->result();
+		$CHA_PREORDER = $this->input->post('CHANNEL');
+		if($CHA_PREORDER != null) {
+			$channel_preorder = $this->clog_m->get_by_channel($CHA_PREORDER)->row();
+		}
+		$cust 	 = $this->customer_m->get($CUST_ID)->row();
+		$channel = $this->channel_m->getCha()->result();
 		if($cust->CUST_ADDRESS !=null){
 			$ADDRESS = $cust->CUST_ADDRESS.', ';
 		} else {$ADDRESS = '';}
@@ -277,20 +205,39 @@ class Cs extends CI_Controller {
 			<div class='form-group'><label>Phone</label><input class='form-control' type='text' name='CUST_PHONE' value='$cust->CUST_PHONE' readonly></div>
 			<div class='form-group'><label>Email</label><input class='form-control' type='email' name='CUST_EMAIL' value='$cust->CUST_EMAIL' readonly></div>
 			<div class='form-group'><label>Address</label><textarea class='form-control' cols='100%' rows='5' name='CUST_ADDRESS' readonly>".$ADDRESS.$SUBDNAME.$CITYNAME.$STATENAME.$CNTRNAME."</textarea></div>";
-			
-			$chalists = "<option value='$cust->CHA_ID' selected>$cust->CHA_NAME</option>";
+			if($CHA_PREORDER != null) {
+				$chalists = "<option value='$channel_preorder->CHA_ID' selected>$channel_preorder->CHA_NAME</option>";
+			} else {
+				$chalists = "<option value='$cust->CHA_ID' selected>$cust->CHA_NAME</option>";
+			}
 			$chalists .= "<option value='' disabled>-----</option>";
 			foreach($channel as $cha) {
 				$chalists .= "<option value='$cha->CHA_ID'>$cha->CHA_NAME</option>";
 		    }
 		} else {
 			$lists = "";
-			$chalists = "";
+			$chalists = "<option value='' selected disabled>--Select One--</option>";
 		}
 		$callback = array('list_customer'=>$lists,
 		'list_channel'=>$chalists,); 
 	    echo json_encode($callback);
 		
+	}
+
+	public function list_umea(){
+		$PRO_ID = $this->input->post('PRO_ID');
+		$umea = $this->product_m->get_umea($PRO_ID)->row();
+		$lists = "<option value='' selected disabled>-- Select One --</option>";
+		if($umea->UNIT_ID != null || $umea->UNIT_ID != 0) {
+    		$lists .= "<option value='".$umea->UNIT_ID."'>".$umea->UNIT_NAME."</option>";
+		}
+		if($umea->TOTAL_ID != null || $umea->TOTAL_ID != 0) {
+			if ($umea->TOTAL_ID != $umea->UNIT_ID) {
+    			$lists .= "<option value='".$umea->TOTAL_ID."'>".$umea->TOTAL_NAME."</option>";
+			}
+		}
+	    $callback = array('list_umea'=>$lists);
+	    echo json_encode($callback);
 	}
 
 	public function datacal(){
@@ -322,9 +269,12 @@ class Cs extends CI_Controller {
 					}
 				}
 			}
+			$callback = array('list_courier'=>$lists);
 		}
 		else{
 			$lists = "";
+			$deposit = "";
+			$total = "";
 			if(!$apinol){
 					$lists .= "<p style='font-size:14px;color:red;'><small>* </small>Tarif tidak ditemukan, ganti kurir lain.</p>";
 			} else{
@@ -350,24 +300,59 @@ class Cs extends CI_Controller {
 						<div class='input-group-prepend'>
 				          	<span class='input-group-text'>Rp.</span>
 				        </div>
-						<input class='form-control' type='text' name='' value='".number_format($tarif,0,',','.')."' readonly>
+						<input class='form-control' type='text' name='' id='COST_VALUE' value='".number_format($tarif,0,',','.')."' readonly>
 				    </div>
 					<input class='form-control' type='hidden' name='COURIER' value='$COURIER_NAME'>
 					<input class='form-control' type='hidden' name='LSAM_COST' value='$tarif'>
 					<input class='form-control' type='hidden' name='LSAM_SERVICE_TYPE' value=''>";
-					
+
+					$check   = $this->custdeposit_m->check_deposit($CUST_ID);
+					if($check->num_rows() > 0) {
+						$field = $this->custdeposit_m->get_deposit($CUST_ID)->row();
+						$deposit .= "
+							<div class='custom-control custom-checkbox'>
+						     	<input type='checkbox' class='custom-control-input' id='pilih-deposit' name='pilih-deposit'>
+						     	<label class='custom-control-label' for='pilih-deposit'>Deposit</label>
+						    </div>
+							<div class='input-group'>
+								<div class='input-group-prepend'>
+						          	<span class='input-group-text'>Rp.</span>
+						        </div>
+								<input class='form-control' type='text' id='DEPOSIT_VALUE' value='".number_format($field->CUSTD_DEPOSIT,0,',','.')."' readonly>
+						    </div>";
+					} else {
+						$deposit .= "
+							<div class='custom-control custom-checkbox'>
+						     	<input type='checkbox' class='custom-control-input' id='pilih-deposit' name='pilih-deposit' disabled>
+						     	<label class='custom-control-label' for='pilih-deposit'>Deposit</label>
+						    </div>
+							<div class='input-group'>
+								<div class='input-group-prepend'>
+						          	<span class='input-group-text'>Rp.</span>
+						        </div>
+								<input class='form-control' type='text' name='' value='0' readonly>
+						    </div>";
+					}
+					$total .= "
+						<label>Total</label>
+						<div class='input-group'>
+							<div class='input-group-prepend'>
+					          	<span class='input-group-text'>Rp.</span>
+					        </div>
+							<input class='form-control' type='text' name='' id='CETAK_TOTAL' value='".number_format($tarif,0,',','.')."' readonly>";
 				}
 			}
-
+			$callback = array('list_courier'=>$lists, 'list_deposit'=>$deposit, 'list_total'=>$total);
 		}
-		$callback = array('list_courier'=>$lists); 
 	    echo json_encode($callback);
 	}
 
 	public function datatarif(){
+		$CUST_ID = $this->input->post('cust_id');
 		$courier = $this->input->post('courier');
 		$service = $this->input->post('service');
 		$tarif 	 = $this->input->post('tarif');
+		$check   = $this->custdeposit_m->check_deposit($CUST_ID);
 		$lists = "";
 		$lists .= "
 			<label>Cost</label>
@@ -375,13 +360,147 @@ class Cs extends CI_Controller {
 				<div class='input-group-prepend'>
 		          	<span class='input-group-text'>Rp.</span>
 		        </div>
-				<input class='form-control' type='text' name='' value='".number_format($tarif,0,',','.')."' readonly>
+				<input class='form-control' type='text' name='' id='COST_VALUE' value='".number_format($tarif,0,',','.')."' readonly>
 		    </div>
 			<input class='form-control' type='hidden' name='COURIER' value='$courier'>
 			<input class='form-control' type='hidden' name='SERVICE' value='$service'>
 			<input class='form-control' type='hidden' name='LSAM_COST' value='$tarif'>";
-		$callback = array('list_tarif'=>$lists); 
+		if($check->num_rows() > 0) {
+			$field = $this->custdeposit_m->get_deposit($CUST_ID)->row();
+			$deposit = "
+				<div class='custom-control custom-checkbox'>
+			     	<input type='checkbox' class='custom-control-input' id='pilih-deposit' name='pilih-deposit'>
+			     	<label class='custom-control-label' for='pilih-deposit'>Deposit</label>
+			    </div>
+				<div class='input-group'>
+					<div class='input-group-prepend'>
+			          	<span class='input-group-text'>Rp.</span>
+			        </div>
+					<input class='form-control' type='text' id='DEPOSIT_VALUE' value='".number_format($field->CUSTD_DEPOSIT,0,',','.')."' readonly>
+			    </div>";
+		} else {
+			$deposit = "
+				<div class='custom-control custom-checkbox'>
+			     	<input type='checkbox' class='custom-control-input' id='pilih-deposit' name='pilih-deposit' disabled>
+			     	<label class='custom-control-label' for='pilih-deposit'>Deposit</label>
+			    </div>
+				<div class='input-group'>
+					<div class='input-group-prepend'>
+			          	<span class='input-group-text'>Rp.</span>
+			        </div>
+					<input class='form-control' type='text' name='' value='0' readonly>
+			    </div>";
+		}
+		$total = "
+			<label>Total</label>
+			<div class='input-group'>
+				<div class='input-group-prepend'>
+		          	<span class='input-group-text'>Rp.</span>
+		        </div>
+				<input class='form-control' type='text' name='' id='CETAK_TOTAL' value='".number_format($tarif,0,',','.')."' readonly>";
+
+		$callback = array('list_tarif'=>$lists, 'list_deposit'=>$deposit, 'list_total'=>$total); 
 	    echo json_encode($callback);
+	}
+
+	public function add($CUST_ID = null) {
+		$data['customer'] = $this->customer_m->get()->result();
+		$data['channel'] = $this->channel_m->getCha()->result();
+		$data['bank'] 		= $this->bank_m->getBank()->result();
+		$data['courier'] = $this->courier_m->getCourier()->result();
+		if($CUST_ID != null) {
+			$data['row'] = $this->customer_m->get($CUST_ID)->row();
+			$this->template->load('template', 'sampling/cs/sampling_cs_add_by_status', $data);
+		} else {
+			$this->template->load('template', 'sampling/cs/sampling_cs_add', $data);
+		}
+	}
+
+	public function addProcess() {
+		$data['row'] =	$this->sampling_m->insert();
+		if ($data) {
+			echo "<script>alert('Data berhasil ditambah.')</script>";
+			if (($this->input->post('LSAM_PAYDATE') != null)) {
+				require_once(APPPATH.'third_party/pusher/vendor/autoload.php');
+				$options = array(
+					'cluster' => 'ap1',
+					'useTLS' => true
+				);
+				$pusher = new Pusher\Pusher(
+					'3de920bf0bfb448a7809',
+					'0799716e5d66b96f5b61',
+					'845132',
+					$options
+				);
+				$LSAM_ID = $this->db->insert_id();
+				$data['message'] = "\nNew Product Sampling Request!";
+				$data['url'] = site_url('pm/edit_sampling/'.$LSAM_ID);
+				$pusher->trigger('channel-pm', 'event-pm', $data);
+			}
+			echo "<script>window.location='".site_url('cs/sampling')."'</script>";
+		} else{
+			echo "<script>alert('Data gagal ditambah.')</script>";
+			echo "<script>window.location='".site_url('cs/sampling')."'</script>";
+		}
+		
+	}
+
+	public function edit_sampling($LSAM_ID) {
+		$query 				= $this->sampling_m->get($LSAM_ID);
+		$data['customer'] 	= $this->customer_m->get()->result();
+		$data['channel']	= $this->channel_m->getCha()->result();
+		$data['bank'] 		= $this->bank_m->getBank()->result();
+		$data['courier'] 	= $this->courier_m->getCourier()->result();
+		$data['clog'] 		= $this->clog_m->get($query->row()->CLOG_ID)->row();
+		if ($query->num_rows() > 0) {
+			$data['row'] =	$query->row();
+			$this->template->load('template', 'sampling/cs/sampling_cs_edit', $data);
+		} else {
+			echo "<script>alert('Data tidak ditemukan.')</script>";
+			echo "<script>window.location='".site_url('cs/sampling')."'</script>";
+		}
+	}
+
+	public function edit_sampling_process($CLOG_ID) {
+		$this->sampling_m->update($CLOG_ID);
+		if($this->db->affected_rows() > 0) {
+			echo "<script>alert('Data berhasil diubah.')</script>";
+			if (($this->input->post('LSAM_PAYDATE') != null)) {
+				require_once(APPPATH.'third_party/pusher/vendor/autoload.php');
+				$options = array(
+					'cluster' => 'ap1',
+					'useTLS' => true
+				);
+				$pusher = new Pusher\Pusher(
+					'3de920bf0bfb448a7809',
+					'0799716e5d66b96f5b61',
+					'845132',
+					$options
+				);
+				$LSAM_ID = $this->input->post('LSAM_ID');
+				$data['message'] = "\nNew Product Sampling Request!";
+				$data['url'] = site_url('pm/edit_sampling/'.$LSAM_ID);
+				$pusher->trigger('channel-pm', 'event-pm', $data);
+			}
+			echo "<script>window.location='".site_url('cs/sampling')."'</script>";
+		} else {
+			echo "<script>alert('Data gagal diubah.')</script>";
+			echo "<script>window.location='".site_url('cs/sampling')."'</script>";
+		}
+	}
+
+	public function del_sampling() {
+		$LSAM_ID = $this->input->post('LSAM_ID');
+		$CLOG_ID = $this->input->post('CLOG_ID');
+		$this->sampling_m->delete($CLOG_ID);
+
+		if($this->db->affected_rows() > 0) {
+			echo "<script>alert('Data berhasil dihapus.')</script>";
+			echo "<script>window.location='".site_url('cs/sampling')."'</script>";
+		} else {
+			echo "<script>alert('Data berhasil dihapus.')</script>";
+			echo "<script>window.location='".site_url('cs/sampling')."'</script>";
+		}
 	}
 
 	public function check_stock() {
@@ -545,6 +664,21 @@ class Cs extends CI_Controller {
 	public function add_check_process() {
 		if(isset($_POST['new'])) {
 			$data['row'] = $this->ckstock_m->insert_lagi();
+			require_once(APPPATH.'third_party/pusher/vendor/autoload.php');
+			$options = array(
+				'cluster' => 'ap1',
+				'useTLS' => true
+			);
+			$pusher = new Pusher\Pusher(
+				'3de920bf0bfb448a7809',
+				'0799716e5d66b96f5b61',
+				'845132',
+				$options
+			);
+			$LSTOCK_ID = $this->db->insert_id();
+			$data['message'] = "\nNew Check Stock Request!";
+			$data['url'] = site_url('pm/edit_check/'.$LSTOCK_ID);
+			$pusher->trigger('channel-pm', 'event-pm', $data);
 		} else {
 			$data['row'] =	$this->ckstock_m->insert();
 			if ($data) {
@@ -561,11 +695,10 @@ class Cs extends CI_Controller {
 					'845132',
 					$options
 				);
-
-				$data['message'] = "New Check Stock Request!";
-				$data['url'] = site_url('pm/check_stock');
-				$pusher->trigger('my-notif', 'my-event', $data);
-
+				$LSTOCK_ID = $this->db->insert_id();
+				$data['message'] = "\nNew Check Stock Request!";
+				$data['url'] = site_url('pm/edit_check/'.$LSTOCK_ID);
+				$pusher->trigger('channel-pm', 'event-pm', $data);
 				echo "<script>window.location='".site_url('cs/check_stock')."'</script>";
 			} else{
 				echo "<script>alert('Data gagal ditambah.')</script>";
@@ -640,11 +773,11 @@ class Cs extends CI_Controller {
 			echo "<script>alert('Anda tidak punya akses ke $modul.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
 		} else {
-			$query 				= $this->sampling_m->get_by_log($CLOG_ID);
-			$data['clog'] 		= $this->clog_m->get($query->row()->CLOG_ID)->row();
-			$data['followup'] 	= $this->followup_m->get()->result();
-			$data['flws'] 		= $this->followup_m->get_followup_status()->result();
-			$data['followup_closed'] 		= $this->followup_m->get_followup_closed()->result();
+			$query 					 = $this->sampling_m->get_by_log($CLOG_ID);
+			$data['clog'] 			 = $this->clog_m->get($query->row()->CLOG_ID)->row();
+			$data['followup'] 		 = $this->followup_m->get()->result();
+			$data['flws'] 			 = $this->followup_m->get_followup_status()->result();
+			$data['followup_closed'] = $this->followup_m->get_followup_closed()->result();
 			if ($query->num_rows() > 0) {
 				$data['row'] =	$query->row();
 				$this->template->load('template', 'follow-up/followup_sampling', $data);
@@ -663,11 +796,12 @@ class Cs extends CI_Controller {
 			echo "<script>alert('Anda tidak punya akses ke $modul.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
 		} else {
-			$query 				= $this->ckstock_m->get_by_log($CLOG_ID);
-			$data['clog'] 		= $this->clog_m->get($query->row()->CLOG_ID)->row();
-			$data['followup'] 	= $this->followup_m->get()->result();
-			$data['flws'] 		= $this->followup_m->get_followup_status()->result();
-			$data['followup_closed'] 		= $this->followup_m->get_followup_closed()->result();
+			$query 					 = $this->ckstock_m->get_by_log($CLOG_ID);
+			$data['clog'] 			 = $this->clog_m->get($query->row()->CLOG_ID)->row();
+			$data['followup'] 		 = $this->followup_m->get()->result();
+			$data['flws'] 			 = $this->followup_m->get_followup_status()->result();
+			$data['followup_closed'] = $this->followup_m->get_followup_closed()->result();
+			$data['product'] 		 = $this->ckstock_m->get_product($CLOG_ID)->result();
 			if ($query->num_rows() > 0) {
 				$data['row'] =	$query->row();
 				$this->template->load('template', 'follow-up/followup_ckstock', $data);
@@ -683,7 +817,7 @@ class Cs extends CI_Controller {
 		$CUST_ID = $this->input->post('CUST_ID');
 		$CLOG_ID = $this->input->post('CLOG_ID');
 		$FLWS_ID = $this->input->post('FLWS_ID');
-		$check = $this->followup_m->check($CLOG_ID);
+		$check   = $this->followup_m->check($CLOG_ID);
 		if ($check->num_rows() > 0) {
 			echo "<script>alert('Gagal, Data sudah ada.')</script>";
 			echo "<script>window.location='".site_url('cs/sampling_followup/'.$CLOG_ID)."'</script>";
@@ -695,6 +829,8 @@ class Cs extends CI_Controller {
 					echo "<script>window.location='".site_url('cs/add_check/'.$CUST_ID)."'</script>";
 				} else if ($FLWS_ID == 3) {
 					echo "<script>window.location='".site_url('cs/add/'.$CUST_ID)."'</script>";
+				} else if ($FLWS_ID == 4) {
+					echo "<script>window.location='".site_url('order/add/'.$CUST_ID)."'</script>";
 				} else {
 					echo "<script>window.location='".site_url('cs/sampling_followup/'.$CLOG_ID)."'</script>";
 				}
@@ -706,11 +842,17 @@ class Cs extends CI_Controller {
 	}
 
 	public function edit_followup($FLWP_ID) {
+		$CUST_ID = $this->input->post('CUST_ID');
 		$CLOG_ID = $this->input->post('CLOG_ID');
+		$FLWS_ID = $this->input->post('FLWS_ID');
 		$this->followup_m->update($FLWP_ID);
 		if($this->db->affected_rows() > 0) {
 			echo "<script>alert('Data berhasil diubah.')</script>";
-			echo "<script>window.location='".site_url('cs/sampling_followup/'.$CLOG_ID)."'</script>";
+			if ($FLWS_ID == 4) {
+				echo "<script>window.location='".site_url('order/add/'.$CUST_ID)."'</script>";
+			} else {
+				echo "<script>window.location='".site_url('cs/sampling_followup/'.$CLOG_ID)."'</script>";
+			}
 		} else {
 			echo "<script>alert('Data berhasil diubah.')</script>";
 			echo "<script>window.location='".site_url('cs/sampling_followup/'.$CLOG_ID)."'</script>";
@@ -735,18 +877,20 @@ class Cs extends CI_Controller {
 		$CUST_ID = $this->input->post('CUST_ID');
 		$CLOG_ID = $this->input->post('CLOG_ID');
 		$FLWS_ID = $this->input->post('FLWS_ID');
-		$check = $this->followup_m->check($CLOG_ID);
+		$check   = $this->followup_m->check($CLOG_ID);
 		if ($check->num_rows() > 0) {
 			echo "<script>alert('Gagal, Data sudah ada.')</script>";
 			echo "<script>window.location='".site_url('cs/check_stock_followup/'.$CLOG_ID)."'</script>";
 		} else {
-			$data['row'] =	$this->followup_m->insert();
+			$data['row'] =	$this->followup_m->insert_ck();
 			if ($data) {
 				echo "<script>alert('Data berhasil ditambah.')</script>";
 				if($FLWS_ID == 2) {
 					echo "<script>window.location='".site_url('cs/add_check/'.$CUST_ID)."'</script>";
 				} else if ($FLWS_ID == 3) {
 					echo "<script>window.location='".site_url('cs/add/'.$CUST_ID)."'</script>";
+				} else if ($FLWS_ID == 4) {
+					echo "<script>window.location='".site_url('order')."'</script>";
 				} else {
 					echo "<script>window.location='".site_url('cs/check_stock_followup/'.$CLOG_ID)."'</script>";
 				}
@@ -759,10 +903,15 @@ class Cs extends CI_Controller {
 
 	public function edit_followup_ck($FLWP_ID) {
 		$CLOG_ID = $this->input->post('CLOG_ID');
-		$this->followup_m->update($FLWP_ID);
+		$FLWS_ID = $this->input->post('FLWS_ID');
+		$this->followup_m->update_ck($FLWP_ID);
 		if($this->db->affected_rows() > 0) {
 			echo "<script>alert('Data berhasil diubah.')</script>";
-			echo "<script>window.location='".site_url('cs/check_stock_followup/'.$CLOG_ID)."'</script>";
+			if ($FLWS_ID == 4) {
+				echo "<script>window.location='".site_url('order')."'</script>";
+			} else {
+				echo "<script>window.location='".site_url('cs/check_stock_followup/'.$CLOG_ID)."'</script>";
+			}
 		} else {
 			echo "<script>alert('Data berhasil diubah.')</script>";
 			echo "<script>window.location='".site_url('cs/check_stock_followup/'.$CLOG_ID)."'</script>";
@@ -787,7 +936,7 @@ class Cs extends CI_Controller {
 		$CUST_ID = $this->input->post('CUST_ID');
 		$CLOG_ID = $this->input->post('CLOG_ID');
 		$FLWS_ID = $this->input->post('FLWS_ID');
-		$check = $this->followup_m->check($CLOG_ID);
+		$check   = $this->followup_m->check($CLOG_ID);
 		if ($check->num_rows() > 0) {
 			echo "<script>alert('Gagal, Data sudah ada.')</script>";
 			echo "<script>window.location='".site_url('followup/assign_followup/'.$CLOG_ID)."'</script>";

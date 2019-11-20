@@ -39,11 +39,17 @@ class Product extends CI_Controller {
 		$data = array();
 		$no = $_POST['start'];
 		foreach ($list as $field) {
+			if ($field->PRO_DESC!= null || $field->PRO_DESC !="") {
+				$DESCRIPTION = $field->PRO_DESC;
+			} else {
+				$DESCRIPTION = "<div align='center'>-</div>";
+			}
+
 			$no++;
 			$row = array();
 			$row[] = '<div style="vertical-align: middle; text-align: center;">'.$no.'</div>';
 			$row[] = $field->PRO_NAME;
-			$row[] = $field->PRO_DESC;
+			$row[] = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$DESCRIPTION);
 			$row[] = $field->VEND_NAME;
 			if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Product Option')->row()) && ($this->session->GRP_SESSION !=3)) {
 				if((!$this->access_m->isDelete('Product', 1)->row()) && ($this->session->GRP_SESSION !=3)){

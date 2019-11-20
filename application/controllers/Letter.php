@@ -11,8 +11,20 @@ class Letter extends CI_Controller {
 		$this->load->model('orderletter_m');
     }
     
-    public function insert($ORDER_ID) {
-    	$this->orderletter_m->add($ORDER_ID);
+    public function add($ORDER_ID) {
+    	$ORDL_TYPE	= $this->input->post('ORDL_TYPE', TRUE);
+    	$check = $this->orderletter_m->check($ORDER_ID, $ORDL_TYPE);
+    	if ($check->num_rows() > 0) {
+    		if($ORDL_TYPE == 1) {
+				echo "<script>window.location='".site_url('letter/quotation/'.$ORDER_ID)."'</script>";
+			} else if($ORDL_TYPE == 2) {
+				echo "<script>window.location='".site_url('letter/invoice/'.$ORDER_ID)."'</script>";
+			} else {
+				echo "<script>window.location='".site_url('letter/receipt/'.$ORDER_ID)."'</script>";
+			}
+    	} else {
+    		$this->orderletter_m->insert($ORDER_ID);
+    	}
     }
 
     public function quotation($ORDER_ID) {

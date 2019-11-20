@@ -201,7 +201,7 @@
 								<div class="form-group">
 									<label>Total Unit Measure</label>
 								    <select class="form-control selectpicker" name="PRO_TOTAL_UNIT" data-live-search="true">
-										<option value="<?php echo $row->PRO_VOL_UNIT ?>"><?php echo $row->PRO_VOL_UNIT != 0 ? "".$row->UMEA_NAME_C : "-"?></option>
+										<option value="<?php echo $row->PRO_TOTAL_UNIT ?>"><?php echo $row->PRO_TOTAL_UNIT != 0 ? "".$row->UMEA_NAME_C : "-"?></option>
 							    		<option value="" disabled="">----</option>
 							    		<?php foreach($umea as $unit): ?>
 									    	<option value="<?php echo $unit->UMEA_ID ?>">

@@ -16,9 +16,10 @@ class Venddeposit_m extends CI_Model {
     private function _get_datatables_query($VENDD_DATE = null, $ORDER_ID = null, $VEND_NAME = null)
     {
         
-        $this->db->select('tb_vendor_deposit.*, tb_vendor.VEND_NAME');
+        $this->db->select('tb_vendor_deposit.*, tb_vendor.VEND_NAME, tb_bank.BANK_NAME');
         $this->db->from($this->table);
         $this->db->join('tb_vendor', 'tb_vendor.VEND_ID=tb_vendor_deposit.VEND_ID', 'left');
+        $this->db->join('tb_bank', 'tb_bank.BANK_ID=tb_vendor_deposit.BANK_ID', 'left');
 
 		if($VENDD_DATE != null){
 			$this->db->like('tb_vendor_deposit.VENDD_DATE', date('Y-m-d', strtotime($VENDD_DATE)));
@@ -97,6 +98,23 @@ class Venddeposit_m extends CI_Model {
         return $query;
     }
 
+    public function check_deposit_used($VEND_ID, $VENDD_ORDER_ID){
+        $this->db->where('VEND_ID', $VEND_ID);
+        $this->db->where('VENDD_ORDER_ID', $VENDD_ORDER_ID);
+        $this->db->where('VENDD_DEPOSIT_STATUS', 2);
+        return $this->db->get('tb_vendor_deposit');
+    }
+
+    public function get_deposit_used($VEND_ID, $VENDD_ORDER_ID){
+        $this->db->select('SUM(VENDD_DEPOSIT) AS TOTAL_DEPOSIT_USED');
+        $this->db->from('tb_vendor_deposit');
+        $this->db->where('VEND_ID', $VEND_ID);
+        $this->db->where('VENDD_ORDER_ID', $VENDD_ORDER_ID);
+        $this->db->where('VENDD_DEPOSIT_STATUS', 2);
+        $query = $this->db->get();
+        return $query;
+    }
+
     public function get_for_close($VENDD_ID = null) {
         $this->db->select('tb_vendor_deposit.*, tb_vendor.VEND_NAME, tb_vendor.VEND_CPERSON, tb_vendor.VEND_ADDRESS, tb_vendor.VEND_PHONE, tb_vendor.CNTR_ID, tb_vendor.STATE_ID, tb_vendor.CITY_ID, tb_vendor.SUBD_ID, tb_vendor_bank.BANK_ID, tb_vendor_bank.VBA_ACCNAME, tb_vendor_bank.VBA_ACCNO, tb_country.CNTR_NAME, tb_state.STATE_NAME, tb_city.CITY_NAME, tb_subdistrict.SUBD_NAME, tb_bank.BANK_NAME');
         $this->db->from('tb_vendor_deposit');
@@ -122,6 +140,9 @@ class Venddeposit_m extends CI_Model {
         $params['VENDD_ORDER_ID']       = 0;
         $params['VENDD_CLOSE_DATE']     = $DATE.' '.$TIME;
         $params['BANK_ID']              = $this->input->post('BANK_ID', TRUE);
+        if(!empty($this->input->post('VENDD_NOTES', TRUE))) {
+            $params['VENDD_NOTES']          = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$this->input->post('VENDD_NOTES', TRUE));
+        }
         $this->db->where('VENDD_ID', $VENDD_ID);
         $this->db->update('tb_vendor_deposit', $this->db->escape_str($params));
     }

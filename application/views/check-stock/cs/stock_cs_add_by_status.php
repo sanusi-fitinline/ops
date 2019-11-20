@@ -84,7 +84,7 @@
 										</div>
 										<div class="form-group">
 											<label>Product</label>
-										    <select class="form-control selectpicker" name="PRO_ID" data-live-search="true" required>
+										    <select class="form-control selectpicker" name="PRO_ID" id="CHECK_PRODUCT" data-live-search="true" required>
 									    		<option value="" selected disabled>-- Select One --</option>
 										    	<?php foreach($product as $pro): ?>
 											    	<option value="<?php echo $pro->PRO_ID?>">
@@ -101,11 +101,11 @@
 									<div class="col-md-3">
 										<div class="form-group">
 											<label>Amount</label>
-											<input class="form-control" type="number" name="LSTOCK_AMOUNT" required>
+											<input class="form-control" step="0.1" min="1" type="number" name="LSTOCK_AMOUNT" required>
 										</div>
 										<div class="form-group">
 											<label>Unit Measure</label>
-										    <select class="form-control selectpicker" name="UMEA_ID" data-live-search="true" required>
+										    <select class="form-control selectpicker" name="UMEA_ID" id="CHECK_UMEA" data-live-search="true" required>
 									    		<option value="" selected disabled>-- Select One --</option>
 										    	<?php foreach($umea as $um): ?>
 											    	<option value="<?php echo $um->UMEA_ID?>">

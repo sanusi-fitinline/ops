@@ -133,11 +133,12 @@
 							<div class="col-md-12">
 								<form action="<?php echo site_url('order/edit_detail/'.$row->ORDER_ID)?>" method="POST" enctype="multipart/form-data">
 									<div>
+										<a href="<?php echo site_url('order/add_detail/'.$row->ORDER_ID) ?>" class="btn btn-success btn-sm" <?php if($row->ORDER_STATUS != null || $row->ORDER_STATUS != 0){echo "hidden";} ?>><i class="fa fa-user-plus"></i> ADD PRODUCT</a>
 										<a href="<?php echo base_url('order/quotation/'.$row->ORDER_ID)?>" target="_blank" class="btn btn-sm btn-primary" id="QUOTATION"><i class="fa fa-print"></i> QUOTATION</a>
 										<a href="<?php echo base_url('order/invoice/'.$row->ORDER_ID)?>" target="_blank" class="btn btn-sm btn-primary" id="INVOICE"><i class="fa fa-print"></i> INVOICE</a>
 										<a href="<?php echo base_url('order/receipt/'.$row->ORDER_ID)?>" target="_blank" class="btn btn-sm btn-primary" id="RECEIPT"><i class="fa fa-print"></i> RECEIPT</a>
 										<input type="hidden" name="ORDER_STATUS_ID" value="<?php echo $row->ORDER_STATUS ?>">
-										<input type="submit" name="CANCEL" class="btn btn-sm btn-warning" <?php if($row->ORDER_STATUS == 3 || $row->ORDER_STATUS == 4) {echo "hidden";} ?> onclick="return confirm('Cancel order?')" value="CANCEL ORDER">
+										<input type="submit" name="CANCEL" <?php if((!$this->access_m->isEdit('Order', 1)->row()) && ($this->session->GRP_SESSION !=3)) {echo "class='btn btn-sm btn-secondary' disabled";} else {echo "class='btn btn-sm btn-warning'";} if($row->ORDER_STATUS == 3 || $row->ORDER_STATUS == 4) {echo "hidden";} ?> onclick="return confirm('Cancel order?')" value="CANCEL ORDER">
 										<br>
 										<hr>
 										<div class="table-responsive">
@@ -161,13 +162,13 @@
 								                			<td align="center" style="vertical-align: middle; width: 10px;"><?php echo $no++ ?></td>
 								                			<td style="vertical-align: middle;"><?php echo $value->PRO_NAME ?></td>
 								                			<td style="vertical-align: middle;"><?php echo $value->ORDD_OPTION ?></td>
-								                			<td align="right" style="vertical-align: middle;"><?php echo number_format($value->PRICE,0,',','.') ?></td>
-								                			<td align="center" style="vertical-align: middle;"><input style="text-align: center; font-size: 14px;" class="form-control ORDD_QUANTITY" type="number" name="" id="ORDD_QUANTITY<?php  echo $value->ORDD_ID?>" value="<?php echo $value->ORDD_QUANTITY ?>" min="1"></td>
+								                			<td align="right" style="vertical-align: middle;"><?php echo number_format($value->ORDD_PRICE,0,',','.') ?></td>
+								                			<td align="center" style="vertical-align: middle;"><input style="text-align: center; font-size: 14px;" class="form-control ORDD_QUANTITY" step="0.1" type="number" name="" id="ORDD_QUANTITY<?php  echo $value->ORDD_ID?>" value="<?php echo $value->ORDD_QUANTITY ?>" min="1"></td>
 								                			<td align="center" style="vertical-align: middle;"><?php echo $value->UMEA_NAME ?></td>
-								                			<td class="CETAK_ORDD_PRICE<?php echo $value->ORDD_ID ?>" style="padding-right: 25px; vertical-align: middle;" align="right"><?php echo number_format($value->ORDD_PRICE,0,',','.') ?></td>
+								                			<td class="CETAK_TOTAL_ORDD_PRICE<?php echo $value->ORDD_ID ?>" style="padding-right: 25px; vertical-align: middle;" align="right"></td>
 								                			<input type="hidden" name="" id="PRO_WEIGHT<?php echo $value->ORDD_ID ?>" value="<?php echo $value->PRO_WEIGHT ?>">
-								                			<input type="hidden" name="" id="PRICE<?php echo $value->ORDD_ID ?>" value="<?php echo $value->PRICE ?>">
-								                			<input type="hidden" name="" id="PRICE_VENDOR<?php echo $value->ORDD_ID ?>" value="<?php echo $value->PRICE_VENDOR ?>">
+								                			<input type="hidden" name="" id="PRICE<?php echo $value->ORDD_ID ?>" value="<?php echo $value->ORDD_PRICE ?>">
+								                			<input type="hidden" name="" id="PRICE_VENDOR<?php echo $value->ORDD_ID ?>" value="<?php echo $value->ORDD_PRICE_VENDOR ?>">
 								                		</tr>
 								                	<?php endforeach ?>
 								                </tbody>
@@ -179,38 +180,50 @@
 														<input type="hidden" name="CUSTOMER" autocomplete="off" value="<?php echo $row->CUST_ID ?>">
 													</tr>
 													<tr>
-														<td style="vertical-align: middle; font-weight: bold" colspan="7" align="right">DISCOUNT</td>
+														<td style="vertical-align: middle; font-weight: bold" colspan="7" align="right">DISCOUNT (-)</td>
 														<td>
 															<input style="text-align: right; font-size: 14px;" class="form-control uang" type="text" name="ORDER_DISCOUNT" id="ORDER_DISCOUNT" autocomplete="off" value="<?php echo $row->ORDER_DISCOUNT !=null ? $row->ORDER_DISCOUNT : "0" ?>">
 														</td>
 													</tr>
 													<tr>
-														<td style="font-weight: bold;" colspan="7" align="right">
-															<div class="custom-control custom-checkbox">
-														     	<input type="checkbox" class="custom-control-input" id="check-deposit" name="check-deposit" checked>
-														     	<label class="custom-control-label" for="check-deposit">DEPOSIT</label>
-														    </div>
-														</td>
 														<?php 
 															$this->load->model('custdeposit_m');
 															$check = $this->custdeposit_m->check_deposit($row->CUST_ID);
 															$deposit = $this->custdeposit_m->get_all_deposit($row->CUST_ID)->row();
-															if($check->num_rows() > 0) {
-																$DEPOSIT = number_format($deposit->TOTAL_DEPOSIT,0,',','.');
+															if($row->ORDER_PAYMENT_DATE != 0000-00-00) {
+																if ($row->ORDER_DEPOSIT != null) {
+																	$DEPOSIT = number_format($row->ORDER_DEPOSIT,0,',','.');
+																} else {
+																	$DEPOSIT = 0;
+																}
 															} else {
-																$DEPOSIT = 0;
+																if($check->num_rows() > 0) {
+																	$DEPOSIT = number_format($deposit->TOTAL_DEPOSIT,0,',','.');
+																} else {
+																	$DEPOSIT = 0;
+																}
 															}
 														?>
+														<td style="font-weight: bold;" colspan="7" align="right">
+															<?php if($row->ORDER_PAYMENT_DATE != 0000-00-00): ?>
+														    	<label>DEPOSIT (-)</label>
+														    <?php else: ?>
+																<div class="custom-control custom-checkbox">
+															     	<input type="checkbox" class="custom-control-input" id="check-deposit" name="check-deposit" checked <?php if($DEPOSIT < 0 || $row->ORDER_DEPOSIT < 0){echo "disabled";} ?>>
+															     	<label class="custom-control-label" for="check-deposit">DEPOSIT (-)</label>
+															    </div>
+														    <?php endif ?>
+														</td>
 														<td style="padding-right: 25px;" align="right" id="DEPOSIT"><?php echo $row->ORDER_DEPOSIT != null ? number_format($row->ORDER_DEPOSIT,0,',','.') : $DEPOSIT ?></td>
 														<input type="hidden" id="ORDER_DEPOSIT" name="ORDER_DEPOSIT" value="">
 													</tr>
 													<tr>
-														<td style="font-weight: bold;" colspan="7" align="right">SHIPMENT COST</td>
+														<td style="font-weight: bold;" colspan="7" align="right">SHIPMENT COST (+)</td>
 														<td style="padding-right: 25px;" align="right" id="CETAK_ORDER_SHIPCOST"><?php echo number_format($row->ORDER_SHIPCOST,0,',','.') ?></td>
 														<input type="hidden" id="ORDER_SHIPCOST" name="ORDER_SHIPCOST" value="<?php echo $row->ORDER_SHIPCOST ?>">
 													</tr>
 													<tr>
-														<td style="vertical-align: middle; font-weight: bold;" colspan="7" align="right">TAX</td>
+														<td style="vertical-align: middle; font-weight: bold;" colspan="7" align="right">TAX (+)</td>
 														<td>
 															<input style="text-align: right; font-size: 14px;" class="form-control uang" type="text" name="ORDER_TAX" id="ORDER_TAX" autocomplete="off" value="<?php echo $row->ORDER_TAX!=null ? $row->ORDER_TAX : "0"  ?>">
 														</td>
@@ -254,23 +267,24 @@
 												                			<td align="center" style="padding-top: 20px"><?php echo $i++ ?></td>
 												                			<td style="padding-top: 20px"><?php echo $field->PRO_NAME ?></td>
 												                			<td style="padding-top: 20px"><?php echo $field->ORDD_OPTION ?></td>
-												                			<td align="right" style="padding-top: 20px"><?php echo number_format($field->PRICE,0,',','.') ?></td>
+												                			<td align="right" style="padding-top: 20px"><?php echo number_format($field->ORDD_PRICE,0,',','.') ?></td>
 												                			<td class="CETAK_QTY_DETAIL<?php echo $field->ORDD_ID ?>" align="center" style="padding-top: 20px">
 												                				<?php echo $field->ORDD_QUANTITY ?></td>
 												                			<td align="center" style="padding-top: 20px"><?php echo $field->UMEA_NAME ?></td>
-												                			<td class="CETAK_ORDD_PRICE<?php echo $field->ORDD_ID ?>" style="padding-top: 20px; padding-right: 25px;" align="right"><?php echo number_format($field->ORDD_PRICE,0,',','.') ?></td>
+												                			<td class="CETAK_TOTAL_ORDD_PRICE<?php echo $field->ORDD_ID ?>" style="padding-top: 20px; padding-right: 25px;" align="right"></td>
 												                			
 												                			<!-- inputan update data -->
 												                			<input type="hidden" class="form-control" name="ORDD_ID[]" value="<?php echo $field->ORDD_ID ?>">
 												                			<input type="hidden" class="form-control" name="ORDD_QUANTITY[]" id="QTY_DETAIL<?php echo $field->ORDD_ID ?>" value="<?php echo $field->ORDD_QUANTITY ?>">
-												                			<input type="hidden" class="form-control TOTAL_ORDV_WEIGHT<?php echo $field->VEND_ID ?>" name="ORDV_WEIGHT[]" id="ORDV_WEIGHT<?php echo $field->ORDD_ID ?>" value="<?php echo $field->ORDV_WEIGHT ?>">
-												                			<input type="hidden" class="form-control uang DETAIL-PRICE ORDD_PRICE<?php echo $data->VEND_ID ?>" name="ORDD_PRICE[]" id="ORDD_PRICE<?php echo $field->ORDD_ID ?>" value="<?php echo $field->ORDD_PRICE ?>">
-												                			<input type="hidden" class="form-control uang ORDD_PRICE_VENDOR<?php echo $data->VEND_ID ?>" name="ORDD_PRICE_VENDOR[]" id="ORDD_PRICE_VENDOR<?php echo $field->ORDD_ID ?>" value="<?php echo $field->ORDD_PRICE_VENDOR ?>">
+												                			<input type="hidden" class="form-control TOTAL_ORDD_WEIGHT<?php echo $field->VEND_ID ?>" name="ORDD_WEIGHT[]" id="ORDD_WEIGHT<?php echo $field->ORDD_ID ?>" value="<?php echo $field->ORDD_WEIGHT ?>">
+												                			<input type="hidden" class="form-control uang DETAIL-PRICE TOTAL_ORDD_PRICE<?php echo $data->VEND_ID ?>" name="" id="TOTAL_ORDD_PRICE<?php echo $field->ORDD_ID ?>" value="">
+												                			<input type="hidden" class="form-control uang TOTAL_ORDD_PRICE_VENDOR<?php echo $data->VEND_ID ?>" name="" id="TOTAL_ORDD_PRICE_VENDOR<?php echo $field->ORDD_ID ?>" value="">
 												                		</tr>
 												                	<?php endif ?>
 											                	<?php endforeach ?>
 											                </tbody>
 															<tfoot style="font-size: 14px;">
+											                	<input type="hidden" name="PAYTOV_ID[]" value="<?php echo $data->PAYTOV_ID ?>">
 											                	<input type="hidden" name="VENDOR[]" value="<?php echo $data->VEND_ID ?>">
 											                	<input type="hidden" id="TOTAL_ORDV<?php echo $data->VEND_ID ?>" name="TOTAL_ORDV[]" value="<?php echo $data->ORDV_TOTAL ?>">
 											                	<input type="hidden" name="ORDV_ADDCOST_VENDOR[]" value="<?php echo $data->ORDV_ADDCOST_VENDOR ?>">
@@ -294,7 +308,7 @@
 													<input type="hidden" id="VEND_ID<?php echo $data->VEND_ID ?>" name="VEND_ID" value="<?php echo $data->VEND_ID ?>">
 													<div class="form-group">
 														<div class="input-group">
-															<input type="" class="form-control" id="VENDOR_WEIGHT<?php echo $data->VEND_ID ?>" name="VENDOR_WEIGHT[]" value="<?php echo $data->ORDV_WEIGHT ?>" readonly>
+															<input type="text" class="form-control" id="VENDOR_WEIGHT<?php echo $data->VEND_ID ?>" name="VENDOR_WEIGHT[]" value="<?php echo $data->ORDV_WEIGHT ?>" readonly>
 															<div class="input-group-prepend">
 													          	<span class="input-group-text">Kg</span>
 													        </div>
@@ -347,7 +361,11 @@
 							        	<?php endforeach ?>
 									</div>
 							        <div align="center">
-							        	<button type="submit" name="UPDATE_DATA" <?php if(($row->ORDER_STATUS != null) || ($row->ORDER_STATUS != 0)) {echo 'class="btn btn-secondary" disabled';} else{ echo 'class="btn btn-primary"';} ?>><i class="fa fa-save"></i> UPDATE</button>
+							        	<?php if((!$this->access_m->isEdit('Order', 1)->row()) && ($this->session->GRP_SESSION !=3)) : ?>
+							        		<a href="<?php echo site_url('order') ?>" class="btn btn-warning" name="batal"><i class="fa fa-arrow-left"></i> Back</a>
+								        <?php else: ?>
+								        	<button type="submit" name="UPDATE_DATA" <?php if(($row->ORDER_STATUS != null) || ($row->ORDER_STATUS != 0)) {echo 'class="btn btn-secondary" disabled';} else{ echo 'class="btn btn-primary"';} ?>><i class="fa fa-save"></i> UPDATE</button>
+								        <?php endif ?>
 							        </div>
 								</form>
 					       	</div>
@@ -419,7 +437,7 @@
 									tarif	= tarif.join('').split('').reverse().join('');
 				        		// ORDV_TOTAL
 							    var total_ordv = 0;
-							    $(".ORDD_PRICE"+vendor).each(function(){
+							    $(".TOTAL_ORDD_PRICE"+vendor).each(function(){
 							    	if($(this).val() != "") {
 							    		var price_ordv = $(this).val();
 							    	} else {
@@ -441,7 +459,7 @@
 
 							    // ORDV_TOTAL_VENDOR
 							    var total_ordv_vendor = 0;
-							    $(".ORDD_PRICE_VENDOR"+vendor).each(function(){
+							    $(".TOTAL_ORDD_PRICE_VENDOR"+vendor).each(function(){
 							    	if($(this).val() != "") {
 							    		var price_ordv_vendor = $(this).val();
 							    	} else {
@@ -553,7 +571,7 @@
 
 					// ORDV_TOTAL
 				    var total_ordv = 0;
-				    $(".ORDD_PRICE"+vendor).each(function(){
+				    $(".TOTAL_ORDD_PRICE"+vendor).each(function(){
 				    	if($(this).val() != "") {
 				    		var price_ordv = $(this).val();
 				    	} else {
@@ -575,7 +593,7 @@
 
 				    // ORDV_TOTAL_VENDOR
 				    var total_ordv_vendor = 0;
-				    $(".ORDD_PRICE_VENDOR"+vendor).each(function(){
+				    $(".TOTAL_ORDD_PRICE_VENDOR"+vendor).each(function(){
 				    	if($(this).val() != "") {
 				    		var price_ordv_vendor = $(this).val();
 				    	} else {
@@ -663,19 +681,50 @@
 
 	    // menghitung total berat dan total harga order detail setelah quantity diubah
 	    <?php foreach ($_detail as $value): ?>
+	    	// total detail harga setelah halaman diload
+	    	var detail_id = "<?php echo $value->ORDD_ID ?>";
+	    	var vend_id = "<?php echo $value->VEND_ID ?>";
+	    	var jml = $("#ORDD_QUANTITY"+detail_id).val();
+			if ($("#PRICE"+detail_id).val() != null) {
+				var harga_satuan = $("#PRICE"+detail_id).val();
+			} else {
+				var harga_satuan = 0;
+			}
+			var total_harga = jml * harga_satuan;
+			var	reverse = total_harga.toString().split('').reverse().join(''),
+				ribuan 	= reverse.match(/\d{1,3}/g);
+				ribuan	= ribuan.join('.').split('').reverse().join('');
+			$("#TOTAL_ORDD_PRICE"+detail_id).val(ribuan);
+			$(".CETAK_TOTAL_ORDD_PRICE"+detail_id).text(ribuan);
+			$("#QTY_DETAIL"+detail_id).val(jml);
+			$(".CETAK_QTY_DETAIL"+detail_id).text(jml);
+
+			// total harga vendor setelah halaman diload
+			if ($("#PRICE_VENDOR"+detail_id).val() != null) {
+				var harga_satuan_vendor = $("#PRICE_VENDOR"+detail_id).val();
+			} else {
+				var harga_satuan_vendor = 0;
+			}
+			var total_harga_vendor  = jml * harga_satuan_vendor;
+			var	reverse_vendor 		= total_harga_vendor.toString().split('').reverse().join(''),
+				ribuan_vendor 		= reverse_vendor.match(/\d{1,3}/g);
+				ribuan_vendor		= ribuan_vendor.join('.').split('').reverse().join('');
+			$("#TOTAL_ORDD_PRICE_VENDOR"+detail_id).val(ribuan_vendor);
+			//
+
 	    	$(".ORDD_QUANTITY").each(function(){
 	    		var ordd_id = "<?php echo $value->ORDD_ID ?>";
 	    		var vendor_id = "<?php echo $value->VEND_ID ?>";
 	    		// total berat berdasarkan vendor
 				var total_vendor_weight = 0;
-				$(".TOTAL_ORDV_WEIGHT"+vendor_id).each(function(){
+				$(".TOTAL_ORDD_WEIGHT"+vendor_id).each(function(){
 					if($(this).val() != "") {
 			    		var vendor_weight = $(this).val();
 			    	} else {
 			    		var vendor_weight = 0;
 			    	}
 			    	total_vendor_weight += Number(vendor_weight);
-			    	$("#VENDOR_WEIGHT"+vendor_id).val(total_vendor_weight);
+			    	$("#VENDOR_WEIGHT"+vendor_id).val(total_vendor_weight.toFixed(2));
 				});
 				$("#ORDD_QUANTITY"+ordd_id).on('keyup mouseup',function(){
 					var jumlah = $("#ORDD_QUANTITY"+ordd_id).val();
@@ -686,18 +735,18 @@
 						var berat_satuan = 0;
 					}
 					total_berat = jumlah * berat_satuan;
-					$("#ORDV_WEIGHT"+ordd_id).val(total_berat);
+					$("#ORDD_WEIGHT"+ordd_id).val(total_berat);
 					
 					// total berat berdasarkan vendor
 					var total_vendor_weight = 0;
-					$(".TOTAL_ORDV_WEIGHT"+vendor_id).each(function(){
+					$(".TOTAL_ORDD_WEIGHT"+vendor_id).each(function(){
 						if($(this).val() != "") {
 				    		var vendor_weight = $(this).val();
 				    	} else {
 				    		var vendor_weight = 0;
 				    	}
 				    	total_vendor_weight += Number(vendor_weight);
-				    	$("#VENDOR_WEIGHT"+vendor_id).val(total_vendor_weight);
+				    	$("#VENDOR_WEIGHT"+vendor_id).val(total_vendor_weight.toFixed(2));
 					});
 
 					// total detail harga setelah quantity diubah
@@ -710,13 +759,10 @@
 					var	reverse = total_harga.toString().split('').reverse().join(''),
 						ribuan 	= reverse.match(/\d{1,3}/g);
 						ribuan	= ribuan.join('.').split('').reverse().join('');
-					$("#ORDD_PRICE"+ordd_id).val(ribuan);
-					$(".CETAK_ORDD_PRICE"+ordd_id).text(ribuan);
+					$("#TOTAL_ORDD_PRICE"+ordd_id).val(ribuan);
+					$(".CETAK_TOTAL_ORDD_PRICE"+ordd_id).text(ribuan);
 					$("#QTY_DETAIL"+ordd_id).val(jumlah);
 					$(".CETAK_QTY_DETAIL"+ordd_id).text(jumlah);
-					
-					$(".CETAK_QTY_DETAIL"+ordd_id).text(jumlah);
-					//
 
 					// total harga vendor setelah quantity diubah
 					if ($("#PRICE_VENDOR"+ordd_id).val() != null) {
@@ -728,7 +774,7 @@
 					var	reverse_vendor 		= total_harga_vendor.toString().split('').reverse().join(''),
 						ribuan_vendor 		= reverse_vendor.match(/\d{1,3}/g);
 						ribuan_vendor		= ribuan_vendor.join('.').split('').reverse().join('');
-					$("#ORDD_PRICE_VENDOR"+ordd_id).val(ribuan_vendor);
+					$("#TOTAL_ORDD_PRICE_VENDOR"+ordd_id).val(ribuan_vendor);
 					//
 
 					// menghitung order total setelah quantity diubah
@@ -753,7 +799,7 @@
 
 					// menghitung ORDV_TOTAL setelah quantity diubah
 				    var total_ordv = 0;
-				    $(".ORDD_PRICE"+vendor_id).each(function(){
+				    $(".TOTAL_ORDD_PRICE"+vendor_id).each(function(){
 				    	if($(this).val() != "") {
 				    		var price_ordv = $(this).val();
 				    	} else {
@@ -780,7 +826,7 @@
 
 				    // menghitung ORDV_TOTAL_VENDOR setelah quantity diubah
 				    var total_ordv_vendor = 0;
-				    $(".ORDD_PRICE_VENDOR"+vendor_id).each(function(){
+				    $(".TOTAL_ORDD_PRICE_VENDOR"+vendor_id).each(function(){
 				    	if($(this).val() != "") {
 				    		var price_ordv_vendor = $(this).val();
 				    	} else {
@@ -1043,7 +1089,7 @@
 	    	var grand = parseInt(curr_order_total) - parseInt(curr_diskon) + parseInt(shipment) + parseInt(curr_tax);
 
 	    	if ($("#check-deposit").is(":checked")){
-				var	deposit = $("#DEPOSIT").text()
+				var	deposit = $("#DEPOSIT").text();
 		    	var	reverse_deposit  = deposit.toString().split('').reverse().join(''),
 						deposit_curr = reverse_deposit.match(/\d{1,3}/g);
 						deposit_curr = deposit_curr.join('').split('').reverse().join('');
@@ -1052,8 +1098,10 @@
 		    	} else {
 		    		var after_deposit = parseInt(grand) + parseInt(deposit_curr);
 		    	}
+		    	$("#DEPOSIT").css({'text-decoration' : 'none'});
 		    	$("#ORDER_DEPOSIT").val(deposit);
 			} else {
+				$("#DEPOSIT").css({'text-decoration' : 'line-through'});
 				$("#ORDER_DEPOSIT").val('');
 				var after_deposit = parseInt(grand);
 			}
@@ -1083,7 +1131,7 @@
 				$("#TAMPIL-TARIF"+vendor_id).on('keyup',function(){
 					// ORDV_TOTAL
 					var total_ordv = 0;
-				    $(".ORDD_PRICE"+vendor_id).each(function(){
+				    $(".TOTAL_ORDD_PRICE"+vendor_id).each(function(){
 				    	if($(this).val() != "") {
 				    		var price_ordv = $(this).val();
 				    	} else {
@@ -1114,7 +1162,7 @@
 
 				    // ORDV_TOTAL_VENDOR
 				    var total_ordv_vendor = 0;
-				    $(".ORDD_PRICE_VENDOR"+vendor_id).each(function(){
+				    $(".TOTAL_ORDD_PRICE_VENDOR"+vendor_id).each(function(){
 				    	if($(this).val() != "") {
 				    		var price_ordv_vendor = $(this).val();
 				    	} else {

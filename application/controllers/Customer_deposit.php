@@ -34,7 +34,7 @@ class Customer_deposit extends CI_Controller {
 			if($field->CUSTD_PAY_DATE != null){
 				$PAYMENT_DATE = date('d-m-Y / H:i:s', strtotime($field->CUSTD_PAY_DATE));
 			} else {
-				$PAYMENT_DATE = "";
+				$PAYMENT_DATE = "<div align='center'>-</div>";
 			}
 
 			if($field->CUSTD_DEPOSIT_STATUS == 0) {
@@ -45,13 +45,20 @@ class Customer_deposit extends CI_Controller {
 				$STATUS = "<div class='btn btn-default btn-sm' style='font-size: 12px; color: #fff; background-color:#17a2b8; border-color:#17a2b8; border-radius: 6px; padding: 2px 5px 5px 3px; width:80px;'><i class='fa fa-check-circle'></i><span><b> Used</b></span></div>";
 			}
 
+			if ($field->CUSTD_NOTES != null) {
+				$NOTES = $field->CUSTD_NOTES;
+			} else {
+				$NOTES = "<div align='center'>-</div>";
+			}
+
 			$row   = array();
 			$row[] = "<div align='center'>$STATUS</div>";
-			$row[] = "<div align='center'>".date('d-m-Y / H:i:s', strtotime($field->CUSTD_DATE))."</div>";
+			$row[] = date('d-m-Y / H:i:s', strtotime($field->CUSTD_DATE));
 			$row[] = "<div align='center'>$field->ORDER_ID</div>";
 			$row[] = $field->CUST_NAME;
 			$row[] = "<div align='right'>".number_format($field->CUSTD_DEPOSIT,0,',','.')."</div>";
-			$row[] = "<div align='center'>$PAYMENT_DATE</div>";
+			$row[] = $NOTES;
+			$row[] = $PAYMENT_DATE;
 			if($field->CUSTD_DEPOSIT_STATUS != 0) {
 				$row[] = "";
 			} else {

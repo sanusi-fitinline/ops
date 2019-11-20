@@ -167,7 +167,7 @@
 											<div class="form-group">
 											    <label>Payment Status</label>
 											    <?php 
-													if($data->ORDV_PAYTOV_DATE !='0000-00-00'){
+													if($data->PAYTOV_DATE != null){
 														echo "<input style='color: green;' class='form-control' type='text' name='PAYTOV_STATUS' value='Sudah Dibayar' readonly>";
 													} else {
 														echo "<input style='color: red;' class='form-control' type='text' name='PAYTOV_STATUS' value='Belum Dibayar' readonly>";
@@ -202,8 +202,7 @@
 													
 													$ALAMAT = $CUST_ADDRESS.$SUBD_NAME.$CITY_NAME.$STATE_NAME;
 												?>
-												<p id="order<?php echo $data->VEND_ID ?>">ORDER : <?php echo$row->ORDER_ID."\n" ?></p>
-												<p>
+												<p id="order<?php echo $data->VEND_ID ?>">ORDER : <?php echo$row->ORDER_ID ?></p>
 												<?php foreach ($detail as $key):?>
 													<?php if($data->VEND_ID == $key->VEND_ID): ?>
 														<?php 
@@ -211,10 +210,9 @@
 																$PRODUCT = $key->PRO_NAME."/".$key->ORDD_OPTION;
 															} else { $PRODUCT = $key->PRO_NAME;}
 														?>
-														<p class="produk produk<?php echo $data->VEND_ID ?>"><?php echo $PRODUCT."/".$key->ORDD_QUANTITY." ".$key->UMEA_NAME."\n"; ?></p>
+														<p class="produk produk<?php echo $data->VEND_ID ?>"><?php echo $PRODUCT."/".$key->ORDD_QUANTITY." ".$key->UMEA_NAME; ?></p>
 													<?php endif ?>
 												<?php endforeach ?>
-												</p>
 												<p id="kurir<?php echo $data->VEND_ID ?>" style="text-transform: uppercase;">KURIR : <?php echo $data->COURIER_NAME." ".$data->ORDV_SERVICE_TYPE; ?></p>
 												<p id="penerima-asli<?php echo $data->VEND_ID ?>" style="text-transform: uppercase;">PENERIMA : <?php echo stripslashes($row->CUST_NAME).", ".$ALAMAT.", ".$row->CUST_PHONE; ?></p>
 												<p id="penerima<?php echo $data->VEND_ID ?>" style="text-transform: uppercase;">PENERIMA : <?php echo stripslashes($row->CUST_NAME).", ".$ALAMAT.", 0812-2569-6886"; ?></p>
@@ -260,9 +258,12 @@
 											<form action="<?php echo site_url('order_support/edit_delivery_support/'.$row->ORDER_ID)?>" method="POST" enctype="multipart/form-data">
 												<div class="row">
 													<div class="col-md-6">
+														<input type="hidden" name="USER_ID" value="<?php echo $row->USER_ID ?>" readonly>
 														<input type="hidden" name="VEND_ID" value="<?php echo $data->VEND_ID ?>">
 														<input type="hidden" name="CUST_ID" value="<?php echo $data->CUST_ID ?>">
+														<input type="hidden" name="ORDV_ID" value="<?php echo $data->ORDV_ID ?>">
 														<input type="hidden" name="ORDV_SHIPCOST" value="<?php echo $data->ORDV_SHIPCOST ?>">
+														<input type="hidden" name="PAYTOV_ID" value="<?php echo $data->PAYTOV_ID ?>">
 														<div class="form-group">
 															<label>Delivery Date</label>
 															<div class="input-group">
@@ -289,7 +290,11 @@
 													</div>
 												</div>													
 												<div align="right">
-										        	<button class="btn btn-sm btn-primary" type="submit" name="UPDATE_SHIPMENT"><i class="fa fa-shipping-fast"></i> UPDATE SHIPMENT</button>
+													<?php if((!$this->access_m->isEdit('Order SS', 1)->row()) && ($this->session->GRP_SESSION !=3)) : ?>
+										        		<button class="btn btn-sm btn-secondary" type="submit" name="UPDATE_SHIPMENT" disabled><i class="fa fa-shipping-fast"></i> UPDATE SHIPMENT</button>
+											        <?php else: ?>
+											        	<button class="btn btn-sm btn-primary" type="submit" name="UPDATE_SHIPMENT"><i class="fa fa-shipping-fast"></i> UPDATE SHIPMENT</button>
+											        <?php endif ?>
 										        </div>
 											</form>
 										</div>

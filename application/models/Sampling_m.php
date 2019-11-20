@@ -204,6 +204,24 @@ class Sampling_m extends CI_Model {
 		return $query;
 	}
 
+	public function check_data($CUST_ID, $LSAM_ID) {
+		$this->db->select('CUSTD_ID');
+		$this->db->from('tb_customer_deposit');
+		$this->db->where('CUSTD_DEPOSIT_STATUS', 0);
+		$this->db->where('CUST_ID', $CUST_ID);
+		$this->db->where('CUSTD_NOTES', "Sampling ID $LSAM_ID");
+		$query = $this->db->get();
+		return $query;
+	}
+
+	public function check_shipcost($LSAM_ID) {
+		$this->db->select('LSAM_COST, CUST_ID');
+		$this->db->from('tb_log_sample');
+		$this->db->where('LSAM_ID', $LSAM_ID);
+		$query = $this->db->get();
+		return $query;
+	}
+
 	public function insert() {
 		date_default_timezone_set('Asia/Jakarta');
 		$date 		= date('Y-m-d', strtotime($this->input->post('LSAM_DATE', TRUE)));
@@ -222,18 +240,47 @@ class Sampling_m extends CI_Model {
 			$params['LSAM_DATE']		= $date.' '.$time;
 			$params['LSAM_NOTES']		= str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$this->input->post('LSAM_NOTES', TRUE));
 			$params['LSAM_COST']		= $this->input->post('LSAM_COST', TRUE);
+			if (!empty($this->input->post('LSAM_DEPOSIT', TRUE))) {
+				$params['LSAM_DEPOSIT'] = $this->input->post('LSAM_DEPOSIT', TRUE);
+			}
 			if (!empty($this->input->post('LSAM_PAYDATE', TRUE))) {
 				$params['LSAM_PAYDATE'] = date('Y-m-d', strtotime($this->input->post('LSAM_PAYDATE', TRUE)));
 			}
-			$params['COURIER_ID']			= $this->input->post('COURIER_ID', TRUE);
-			$params['LSAM_SERVICE_TYPE']	= $this->input->post('SERVICE', TRUE);
-			$params['CITY_ID']				= $this->input->post('CITY_ID', TRUE);
-			$params['CUST_ID']				= $this->input->post('CUST_ID', TRUE);
-			$params['BANK_ID']				= $this->input->post('BANK_ID', TRUE);
-			$params['USER_ID']				= $this->session->USER_SESSION;
-			$params['CLOG_ID']				= $id_log;
-
+			$params['COURIER_ID']		 = $this->input->post('COURIER_ID', TRUE);
+			$params['LSAM_SERVICE_TYPE'] = $this->input->post('SERVICE', TRUE);
+			$params['CITY_ID']			 = $this->input->post('CITY_ID', TRUE);
+			$params['CUST_ID']			 = $this->input->post('CUST_ID', TRUE);
+			$params['BANK_ID']			 = $this->input->post('BANK_ID', TRUE);
+			$params['USER_ID']			 = $this->session->USER_SESSION;
+			$params['CLOG_ID']			 = $id_log;
 			$this->db->insert('tb_log_sample', $this->db->escape_str($params));
+
+			if (!empty($this->input->post('LSAM_DEPOSIT', TRUE))) {
+				$CUSTOMER = $this->input->post('CUST_ID', TRUE);
+				$COST     = $this->input->post('LSAM_COST', TRUE);
+				$DEPOSIT  = $this->input->post('LSAM_DEPOSIT', TRUE);
+				// check customer deposit yang masih open
+				$this->load->model('custdeposit_m');
+				$check = $this->custdeposit_m->check_deposit($CUSTOMER);
+				if($check->num_rows() > 0) {
+					// update deposit status pada tb_customer_deposit
+					$update_status['CUSTD_DEPOSIT_STATUS'] = 2;
+					$this->db->where('CUST_ID', $CUSTOMER);
+					$this->db->where('CUSTD_DEPOSIT_STATUS', 0);
+					$this->db->update('tb_customer_deposit', $this->db->escape_str($update_status));
+				}
+
+				// insert tb_customer_deposit jika deposit > cost
+				if($DEPOSIT > $COST) {
+					$SISA_DEPOSIT = $DEPOSIT - $COST;
+					$deposit_baru['CUSTD_DATE'] 		  = date('Y-m-d H:i:s');
+					$deposit_baru['CUSTD_DEPOSIT'] 		  = $SISA_DEPOSIT;
+					$deposit_baru['CUSTD_DEPOSIT_STATUS'] = 0;
+					$deposit_baru['CUST_ID'] 			  = $CUSTOMER;
+					$deposit_baru['USER_ID'] 			  = $this->session->USER_SESSION;
+					$this->db->insert('tb_customer_deposit', $this->db->escape_str($deposit_baru));
+				}
+			}
 		}
 	}
 
@@ -243,19 +290,48 @@ class Sampling_m extends CI_Model {
 			'CUST_ID'		=> $this->input->post('CUST_ID', TRUE),
 			'CHA_ID'		=> $this->input->post('CHA_ID', TRUE),
 		);
-		$this->db->where('CLOG_ID', $CLOG_ID)->update('tb_customer_log', $this->db->escape_str($dataLog));
+		$this->db->where('CLOG_ID', $CLOG_ID)->update('tb_customer_log', $this->db->escape_str($dataLog));	
 
-		$dataUpdate = array(
-			'LSAM_NOTES'	=> str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$this->input->post('LSAM_NOTES', TRUE)),
-			'LSAM_COST'			=> $this->input->post('LSAM_COST', TRUE),
-			'LSAM_PAYDATE'		=> date('Y-m-d', strtotime($this->input->post('LSAM_PAYDATE', TRUE))),
-			'COURIER_ID'		=> $this->input->post('COURIER_ID', TRUE),
-			'LSAM_SERVICE_TYPE'	=> $this->input->post('LSAM_SERVICE_TYPE', TRUE),
-			'CITY_ID'			=> $this->input->post('CITY_ID', TRUE),
-			'CUST_ID'			=> $this->input->post('CUST_ID', TRUE),
-			'BANK_ID'			=> $this->input->post('BANK_ID', TRUE),
-		);
-		$this->db->where('CLOG_ID', $CLOG_ID)->update('tb_log_sample', $this->db->escape_str($dataUpdate));
+		$NOTES = $this->input->post('LSAM_NOTES', TRUE);
+		$params['LSAM_NOTES']   = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$NOTES);
+		$params['LSAM_COST']		= $this->input->post('LSAM_COST', TRUE);
+		if (!empty($this->input->post('LSAM_DEPOSIT', TRUE))) {
+			$params['LSAM_DEPOSIT'] = $this->input->post('LSAM_DEPOSIT', TRUE);
+		}
+		$params['LSAM_PAYDATE'] = date('Y-m-d', strtotime($this->input->post('LSAM_PAYDATE', TRUE)));
+		$params['COURIER_ID']		 = $this->input->post('COURIER_ID', TRUE);
+		$params['LSAM_SERVICE_TYPE'] = $this->input->post('SERVICE', TRUE);
+		$params['CITY_ID']			 = $this->input->post('CITY_ID', TRUE);
+		$params['CUST_ID']			 = $this->input->post('CUST_ID', TRUE);
+		$params['BANK_ID']			 = $this->input->post('BANK_ID', TRUE);
+		$this->db->where('CLOG_ID', $CLOG_ID)->update('tb_log_sample', $this->db->escape_str($params));
+
+		if (!empty($this->input->post('LSAM_DEPOSIT', TRUE))) {
+			$CUSTOMER = $this->input->post('CUST_ID', TRUE);
+			$COST     = $this->input->post('LSAM_COST', TRUE);
+			$DEPOSIT  = $this->input->post('LSAM_DEPOSIT', TRUE);
+			// check customer deposit yang masih open
+			$this->load->model('custdeposit_m');
+			$check = $this->custdeposit_m->check_deposit($CUSTOMER);
+			if($check->num_rows() > 0) {
+				// update deposit status pada tb_customer_deposit
+				$update_status['CUSTD_DEPOSIT_STATUS'] = 2;
+				$this->db->where('CUST_ID', $CUSTOMER);
+				$this->db->where('CUSTD_DEPOSIT_STATUS', 0);
+				$this->db->update('tb_customer_deposit', $this->db->escape_str($update_status));
+			}
+
+			// insert tb_customer_deposit jika deposit > cost
+			if($DEPOSIT > $COST) {
+				$SISA_DEPOSIT = $DEPOSIT - $COST;
+				$deposit_baru['CUSTD_DATE'] 		  = date('Y-m-d H:i:s');
+				$deposit_baru['CUSTD_DEPOSIT'] 		  = $SISA_DEPOSIT;
+				$deposit_baru['CUSTD_DEPOSIT_STATUS'] = 0;
+				$deposit_baru['CUST_ID'] 			  = $CUSTOMER;
+				$deposit_baru['USER_ID'] 			  = $this->session->USER_SESSION;
+				$this->db->insert('tb_customer_deposit', $this->db->escape_str($deposit_baru));
+			}
+		}
 	}
 
 	public function pm_update($LSAM_ID) {
@@ -266,6 +342,31 @@ class Sampling_m extends CI_Model {
 			'LSAM_RCPNO'		=> $this->input->post('LSAM_RCPNO', TRUE),
 		);
 		$this->db->where('LSAM_ID', $LSAM_ID)->update('tb_log_sample', $this->db->escape_str($dataUpdate));
+
+		$check = $this->check_shipcost($LSAM_ID)->row();
+		$actual_cost = str_replace(".", "", $this->input->post('LSAM_COST_ACTUAL', TRUE));
+		if($check->LSAM_COST != $actual_cost) {
+			$CUST_ID = $check->CUST_ID;
+			$DEPOSIT = $check->LSAM_COST - $actual_cost;
+			$check_deposit = $this->check_data($CUST_ID, $LSAM_ID);
+			if ($check_deposit->num_rows() > 0) {
+				$update_customer_deposit = array(
+	                'CUSTD_DEPOSIT'         => $DEPOSIT,
+	            );
+	            $this->db->where('CUST_ID', $CUST_ID);
+	            $this->db->where('CUSTD_NOTES', "Sampling ID $LSAM_ID");
+	            $this->db->update('tb_customer_deposit', $this->db->escape_str($update_customer_deposit));
+			} else {
+				$insert_customer_deposit = array(
+	                'CUSTD_DATE'            => date('Y-m-d H:i:s'),
+	                'CUSTD_DEPOSIT'         => $DEPOSIT,
+	                'CUSTD_DEPOSIT_STATUS'  => 0,
+	                'CUST_ID'               => $CUST_ID,
+	                'CUSTD_NOTES'           => "Sampling ID ".$LSAM_ID,
+	            );
+	            $this->db->insert('tb_customer_deposit', $this->db->escape_str($insert_customer_deposit));
+			}
+		}
 	}
 
 	public function delete($CLOG_ID) {

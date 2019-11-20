@@ -125,11 +125,37 @@
 										    </div>
 											<input class="form-control" type="hidden" name="LSAM_COST" value="<?php echo $row->LSAM_COST ?>">
 										</div>
+										<div id="deposit" class="form-group">
+									     	<label>Deposit</label>
+											<div class="input-group">
+												<div class="input-group-prepend">
+										          	<span class="input-group-text">Rp.</span>
+										        </div>
+												<input class="form-control" type="text" name="" value="<?php echo number_format($row->LSAM_DEPOSIT,0,',','.') ?>" readonly>
+										    </div>
+										</div>
+										<input id="SAMPLING_DEPOSIT" class="form-control" type="hidden" name="LSAM_DEPOSIT" value="">
+										<div id="total" class="form-group">
+									     	<label>Total</label>
+											<div class="input-group">
+												<div class="input-group-prepend">
+										          	<span class="input-group-text">Rp.</span>
+										        </div>
+										        <?php 
+										        	if($row->LSAM_DEPOSIT >= $row->LSAM_COST) {
+										        		$total = 0;
+										        	} else {
+										        		$total = $row->LSAM_COST - $row->LSAM_DEPOSIT;
+										        	}
+										        ?>
+												<input class="form-control" type="text" name="" value="<?php echo number_format($total,0,',','.') ?>" readonly>
+										    </div>
+										</div>
 									</div>
 									<div class="col-md-3">
 										<div class="form-group">
 											<label>Bank</label>
-											<select class="form-control selectpicker" name="BANK_ID"title="-- Select One --" required>
+											<select class="form-control selectpicker" name="BANK_ID" id="INPUT_BANK" title="-- Select One --" required>
 												<?php foreach($bank as $b): ?>
 										    		<option value="<?php echo $b->BANK_ID?>" <?php if($row->BANK_ID == $b->BANK_ID) {echo "selected";} ?>>
 											    		<?php echo $b->BANK_NAME ?>

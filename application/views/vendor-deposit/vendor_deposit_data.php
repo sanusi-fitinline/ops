@@ -43,11 +43,13 @@
             		<thead style="font-size: 14px;">
 	                	<tr>
 	                    	<th style="vertical-align: middle; text-align: center; width: 90px;">STATUS</th>
-							<th style="vertical-align: middle; text-align: center; width: 100px;">DATE</th>
+							<th style="vertical-align: middle; text-align: center; width: 70px;">DATE</th>
 							<th style="vertical-align: middle; text-align: center; width: 50px;">ORDER ID</th>
-							<th style="vertical-align: middle; text-align: center; width: 150px;">VENDOR</th>
-							<th style="vertical-align: middle; text-align: center;width: 100px;">DEPOSIT</th>
-							<th style="vertical-align: middle; text-align: center; width: 100px;">CLOSE DATE</th>
+							<th style="vertical-align: middle; text-align: center; width: 100px;">VENDOR</th>
+							<th style="vertical-align: middle; text-align: center;width: 80px;">DEPOSIT</th>
+							<th style="vertical-align: middle; text-align: center;width: 130px;">NOTES</th>
+							<th style="vertical-align: middle; text-align: center;width: 70px;">BANK</th>
+							<th style="vertical-align: middle; text-align: center; width: 70px;">CLOSE DATE</th>
 							<th style="vertical-align: middle; text-align: center; width: 50px;">ACTION</th>
 	                  	</tr>
 	                </thead>
@@ -60,11 +62,13 @@
             		<thead style="font-size: 14px;">
 	                	<tr>
 	                    	<th style="vertical-align: middle; text-align: center; width: 90px;">STATUS</th>
-							<th style="vertical-align: middle; text-align: center; width: 100px;">DATE</th>
+							<th style="vertical-align: middle; text-align: center; width: 70px;">DATE</th>
 							<th style="vertical-align: middle; text-align: center; width: 50px;">ORDER ID</th>
-							<th style="vertical-align: middle; text-align: center; width: 150px;">VENDOR</th>
-							<th style="vertical-align: middle; text-align: center;width: 100px;">DEPOSIT</th>
-							<th style="vertical-align: middle; text-align: center; width: 100px;">CLOSE DATE</th>
+							<th style="vertical-align: middle; text-align: center; width: 100px;">VENDOR</th>
+							<th style="vertical-align: middle; text-align: center;width: 80px;">DEPOSIT</th>
+							<th style="vertical-align: middle; text-align: center;width: 130px;">NOTES</th>
+							<th style="vertical-align: middle; text-align: center;width: 70px;">BANK</th>
+							<th style="vertical-align: middle; text-align: center; width: 70px;">CLOSE DATE</th>
 							<th style="vertical-align: middle; text-align: center; width: 50px;">ACTION</th>
 	                  	</tr>
 	                </thead>

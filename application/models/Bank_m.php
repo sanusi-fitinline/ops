@@ -124,9 +124,13 @@ class Bank_m extends CI_Model {
         }
         else
         {
-        	$bank = $this->db->get_where('tb_bank',['BANK_ID' => $BANK_ID])->row();
-	        unlink("assets/images/bank/".$bank->BANK_LOGO);
-	        $gambar	= $this->upload->data('file_name', TRUE);
+            $bank = $this->db->get_where('tb_bank',['BANK_ID' => $BANK_ID])->row();
+            if($bank->BANK_LOGO != null || $bank->BANK_LOGO != ''){
+                if(file_exists("./assets/images/bank/".$bank->BANK_LOGO)) {
+        	        unlink("./assets/images/bank/".$bank->BANK_LOGO);
+                }
+            }
+            $gambar	= $this->upload->data('file_name', TRUE);
         }
         $dataUpdate = array(
 			'BANK_NAME'			=> $this->input->post('BANK_NAME', TRUE),
@@ -139,8 +143,10 @@ class Bank_m extends CI_Model {
 		$bank = $this->db->get_where('tb_bank',['BANK_ID' => $BANK_ID])->row();
         $query = $this->db->delete('tb_bank',['BANK_ID'=>$BANK_ID]);
         if($query){
-            if ($bank->BANK_LOGO != null) {
-                unlink("assets/images/bank/".$bank->BANK_LOGO);
+            if($bank->BANK_LOGO != null || $bank->BANK_LOGO != ''){
+                if(file_exists("./assets/images/bank/".$bank->BANK_LOGO)) {
+                   unlink("./assets/images/bank/".$bank->BANK_LOGO);
+                }
             }
         }
 	}

@@ -140,7 +140,11 @@ class Poption_m extends CI_Model {
 	    	$gambar = $this->input->post('OLD_PICTURE', TRUE);
         } else {
     		$query = $this->db->get_where('tb_poption',['POPT_ID' => $POPT_ID])->row();
-	        unlink("assets/images/product/option/".$query->POPT_PICTURE);
+            if($query->POPT_PICTURE != null || $query->POPT_PICTURE != ''){
+                if(file_exists("./assets/images/product/option/".$query->POPT_PICTURE)) {
+                   unlink("./assets/images/product/option/".$query->POPT_PICTURE);
+                }
+            }
 	        $gambar = $this->upload->data('file_name', TRUE);
 		}
 		$dataUpdate = array(
@@ -155,8 +159,10 @@ class Poption_m extends CI_Model {
 		$opt = $this->db->get_where('tb_poption',['POPT_ID' => $POPT_ID])->row();
         $query = $this->db->delete('tb_poption',['POPT_ID'=>$POPT_ID]);
         if($query){
-            if($opt->POPT_PICTURE !=null) {
-                unlink("assets/images/product/option/".$opt->POPT_PICTURE);
+            if($opt->POPT_PICTURE != null || $opt->POPT_PICTURE != ''){
+                if(file_exists("./assets/images/product/option/".$opt->POPT_PICTURE)) {
+                   unlink("./assets/images/product/option/".$opt->POPT_PICTURE);
+                }
             }
         }
 	}

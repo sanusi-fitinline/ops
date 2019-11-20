@@ -25,6 +25,7 @@
 								<div class="row">
 									<div class="col-md-3">
 										<div class="form-group">
+											<input class="form-control" type="hidden" name="USER_ID" value="<?php echo $row->USER_ID ?>" readonly>
 										    <label>Customer</label>
 										    <input class="form-control" type="text" name="" value="<?php echo $row->CUST_NAME ?>" readonly>
 										</div>

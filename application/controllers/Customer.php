@@ -50,12 +50,19 @@ class Customer extends CI_Controller {
 			if($field->CNTR_ID !=0){
 				$CNTR = $field->CNTR_NAME.'.';
 			} else {$CNTR = '';}
+
+			if($field->CUST_EMAIL != null || $field->CUST_EMAIL !="") {
+				$EMAIL = $field->CUST_EMAIL;
+			} else {
+				$EMAIL = "<div align='center'>-</div>";
+			}
+
 			$row = array();
 			$row[] = '<div style="vertical-align: middle; text-align: center;">'.$field->CUST_ID.'</div>';
 			$row[] = stripslashes($field->CUST_NAME);
 			$row[] = $field->CUST_PHONE;
-			$row[] = $field->CUST_EMAIL;
-			$row[] = [$ADDRESS.$SUBD.$CITY.$STATE.$CNTR];
+			$row[] = $EMAIL;
+			$row[] = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$ADDRESS).$SUBD.$CITY.$STATE.$CNTR;
 			if((!$this->access_m->isDelete('Customer', 1)->row()) && ($this->session->GRP_SESSION !=3)){
 				$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="'.$url.'customer/edit/'.$field->CUST_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a></div>';
 			} else {

@@ -95,7 +95,7 @@
 									<div class="col-md-3">
 										<div class="form-group">
 											<label>Amount</label>
-											<input class="form-control" type="number" name="LSTOCK_AMOUNT" value="<?php echo $row->LSTOCK_AMOUNT?>" required>
+											<input class="form-control" step="0.1" min="1" type="number" name="LSTOCK_AMOUNT" value="<?php echo $row->LSTOCK_AMOUNT?>" required>
 										</div>
 										<div class="form-group">
 											<label>Unit Measure</label>
@@ -117,7 +117,7 @@
 									<div class="col-md-3">
 										<div class="form-group">
 											<label>Stock Status</label>
-											<input class="form-control" type="text" name="LSTOCK_STATUS" value="<?php echo $row->LSTOCK_STATUS==null ? "Unchecked" :($row->LSTOCK_STATUS==0 ? "Kosong" : "Ada") ?>" readonly>
+											<input class="form-control" type="text" name="LSTOCK_STATUS" value="<?php echo $row->LSTOCK_STATUS==null ? "Unchecked" :($row->LSTOCK_STATUS==0 ? "Not Available" : "Available") ?>" readonly>
 										</div>
 										<div class="form-group">
 											<label>Vendor Note</label>

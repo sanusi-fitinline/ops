@@ -35,7 +35,7 @@ class Vendor_deposit extends CI_Controller {
 			if($field->VENDD_CLOSE_DATE != null){
 				$CLOSE_DATE = date('d-m-Y / H:i:s', strtotime($field->VENDD_CLOSE_DATE));
 			} else {
-				$CLOSE_DATE = "";
+				$CLOSE_DATE = "<div align='center'>-</div>";
 			}
 
 			if($field->VENDD_DEPOSIT_STATUS == 0) {
@@ -46,13 +46,27 @@ class Vendor_deposit extends CI_Controller {
 				$STATUS = "<div class='btn btn-default btn-sm' style='font-size: 12px; color: #fff; background-color:#17a2b8; border-color:#17a2b8; border-radius: 6px; padding: 2px 5px 5px 3px; width:80px;'><i class='fa fa-check-circle'></i><span><b> Used</b></span></div>";
 			}
 
+			if ($field->VENDD_NOTES != null) {
+				$NOTES = $field->VENDD_NOTES;
+			} else {
+				$NOTES = "<div align='center'>-</div>";
+			}
+
+			if ($field->BANK_ID != null) {
+				$BANK = "<div align='center'>$field->BANK_NAME</div>";
+			} else {
+				$BANK = "<div align='center'>-</div>";
+			}
+
 			$row   = array();
 			$row[] = "<div align='center'>$STATUS</div>";
-			$row[] = "<div align='center'>".date('d-m-Y / H:i:s', strtotime($field->VENDD_DATE))."</div>";
+			$row[] = date('d-m-Y / H:i:s', strtotime($field->VENDD_DATE));
 			$row[] = "<div align='center'>$field->ORDER_ID</div>";
 			$row[] = $field->VEND_NAME;
 			$row[] = "<div align='right'>".number_format($field->VENDD_DEPOSIT,0,',','.')."</div>";
-			$row[] = "<div align='center'>$CLOSE_DATE</div>";
+			$row[] = $NOTES;
+			$row[] = $BANK;
+			$row[] = $CLOSE_DATE;
 			if($field->VENDD_DEPOSIT_STATUS != 0) {
 				$row[] = "";
 			} else {

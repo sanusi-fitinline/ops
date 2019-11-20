@@ -64,7 +64,7 @@ class Vendor extends CI_Controller {
 			$row = array();
 			$row[] = stripslashes($field->VEND_NAME);
 			$row[] = stripslashes($field->VEND_CPERSON);
-			$row[] = [$ADDRESS.$SUBD.$CITY.$STATE.$CNTR];
+			$row[] = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$ADDRESS).$SUBD.$CITY.$STATE.$CNTR;
 			$row[] = $field->VEND_PHONE;
 			$row[] = $field->VEND_EMAIL;
 			$row[] = "<div align='center'>$STATUS</div>";

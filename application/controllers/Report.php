@@ -8,6 +8,16 @@ class Report extends CI_Controller {
 		$this->load->model('access_m');
 		$this->load->model('user_m');
 		$this->load->model('followup_m');
+		$this->load->model('product_m');
+		$this->load->model('vendor_m');
+		$this->load->model('order_m');
+		$this->load->model('orderdetail_m');
+		$this->load->model('ordervendor_m');
+		$this->load->model('ordervendor_m');
+		$this->load->model('incomebycs_m');
+		$this->load->model('incomebyproduct_m');
+		$this->load->model('incomebyvendor_m');
+		$this->load->model('profitloss_m');
 		check_not_login();
 		$this->load->library('form_validation');
 	}
@@ -225,6 +235,337 @@ class Report extends CI_Controller {
   			'list_jumlah_closed5'		=>$jumlah_closed5,
   			'list_jumlah_closed6'		=>$jumlah_closed6,
   		); 
+	    echo json_encode($callback);
+	}
+
+	function penyebut($nilai) {
+		$nilai = abs($nilai);
+		$huruf = array("", "Satu", "Dua", "Tiga", "Empat", "Lima", "Enam", "Tujuh", "Delapan", "Sembilan", "Sepuluh", "Sebelas");
+		$temp = "";
+		if ($nilai < 12) {
+			$temp = " ". $huruf[$nilai];
+		} else if ($nilai <20) {
+			$temp = $this->penyebut($nilai - 10). " Belas";
+		} else if ($nilai < 100) {
+			$temp = $this->penyebut($nilai/10)." Puluh". $this->penyebut($nilai % 10);
+		} else if ($nilai < 200) {
+			$temp = " Seratus" . $this->penyebut($nilai - 100);
+		} else if ($nilai < 1000) {
+			$temp = $this->penyebut($nilai/100) . " Ratus" . $this->penyebut($nilai % 100);
+		} else if ($nilai < 2000) {
+			$temp = " Seribu" . penyebut($nilai - 1000);
+		} else if ($nilai < 1000000) {
+			$temp = $this->penyebut($nilai/1000) . " Ribu" . $this->penyebut($nilai % 1000);
+		} else if ($nilai < 1000000000) {
+			$temp = $this->penyebut($nilai/1000000) . " Juta" . $this->penyebut($nilai % 1000000);
+		} else if ($nilai < 1000000000000) {
+			$temp = $this->penyebut($nilai/1000000000) . " Milyar" . $this->penyebut(fmod($nilai,1000000000));
+		} else if ($nilai < 1000000000000000) {
+			$temp = $this->penyebut($nilai/1000000000000) . " Trilyun" . $this->penyebut(fmod($nilai,1000000000000));
+		}     
+		return $temp;
+	}
+ 
+	function terbilang($nilai) {
+		if($nilai<0) {
+			$hasil = "minus ". trim($this->penyebut($nilai));
+		} else {
+			$hasil = trim($this->penyebut($nilai));
+		}     		
+		return $hasil;
+	}
+
+	public function income_by_cs(){
+	    $modul = "Report";
+		$access =  $this->access_m->isAccess($this->session->GRP_SESSION, $modul)->row();
+		if ((!$access) && ($this->session->GRP_SESSION !=3)) {
+			echo "<script>alert('Anda tidak punya akses ke $modul.')</script>";
+			echo "<script>window.location='".site_url('dashboard')."'</script>";
+		} else {
+			$data['get_cs'] = $this->user_m->get_only_cs()->result();
+			$this->template->load('template', 'income/income_by_cs', $data);
+		}
+	}
+
+	public function income_by_csjson() {
+		$FROM     = $this->input->post('FROM', TRUE);
+		$TO 	  = $this->input->post('TO', TRUE);
+		$USER_ID  = $this->input->post('USER_ID', TRUE);
+		$income   = $this->incomebycs_m->get($FROM, $TO, $USER_ID)->result_array();
+		$by_cs    = $this->incomebycs_m->get_by_cs($FROM, $TO, $USER_ID)->result();
+		$no = 1;
+		$body = "";
+		if(!$income && !$by_cs){
+			$body .= "<tr>
+					<td align='center' colspan='5'>No data available in table</td>
+				</tr>";
+			foreach($by_cs as $row){
+				$body .= $user_name[] = "";
+				$body .= $grand_total[] = "";
+			}
+			$footer = "";
+			$callback = array(
+				'list_body'=>$body,
+				'list_footer'=>$footer,
+				'list_user_name'=>$user_name,
+				'list_grand_total'=>$grand_total,
+			);
+		} else {
+			$SUBTOTAL= 0;
+			foreach($income as $key => $field){
+				$SUBTOTAL 	  += $field['ORDER_GRAND_TOTAL'];
+				$GRANDTOTAL[]  = $field['ORDER_GRAND_TOTAL'];
+				$body .= "<tr>
+						<td align='center'>".$no++."</td>
+						<td>".date('d-m-Y / H:i:s', strtotime($field['ORDER_DATE']))."</td>
+						<td>".$field['USER_NAME']."</td>
+						<td align='center'>".$field['ORDER_ID']."</td>
+						<td align='right'>".number_format($field['ORDER_GRAND_TOTAL'],0,',','.')."</td>
+					</tr>";		
+				if(@$income[$key+1]['USER_ID'] != $field['USER_ID']) {
+					$body .= "<tr>
+						<td align='right' colspan='4' style='font-weight: bold;'>SUBTOTAL</td>
+						<td align='right' style='color: green; font-weight:bold;'>".number_format($SUBTOTAL,0,',','.')."</td>
+					</tr>";
+					$SUBTOTAL=0;
+				}
+			}
+			$TOTAL = array_sum($GRANDTOTAL);
+			$footer = "
+				<tr>
+					<td colspan='4' align='right' style='font-weight: bold;'>TOTAL</td>
+					<td align='right' style='color: blue; font-weight:bold;'>".number_format($TOTAL,0,',','.')."</td>
+				</tr>
+				<tr>
+					<td colspan='5' align='right'><em>".$this->terbilang($TOTAL)."</em></td>
+				</tr>";
+			foreach($by_cs as $row){
+				$body .= $user_name[] = $row->USER_NAME;
+				$body .= $grand_total[] = $row->GRAND_TOTAL;
+			}
+			$callback = array(
+				'list_body'=>$body,
+				'list_footer'=>$footer,
+				'list_user_name'=>$user_name,
+				'list_grand_total'=>$grand_total,
+			);
+		}
+	    echo json_encode($callback);
+	}
+
+	public function income_by_product(){
+	    $modul = "Report";
+		$access =  $this->access_m->isAccess($this->session->GRP_SESSION, $modul)->row();
+		if ((!$access) && ($this->session->GRP_SESSION !=3)) {
+			echo "<script>alert('Anda tidak punya akses ke $modul.')</script>";
+			echo "<script>window.location='".site_url('dashboard')."'</script>";
+		} else {
+			$data['product'] = $this->product_m->get()->result();
+			$this->template->load('template', 'income/income_by_product', $data);
+		}
+	}
+
+	public function income_by_productjson() {
+		$FROM    = $this->input->post('FROM', TRUE);
+		$TO 	 = $this->input->post('TO', TRUE);
+		$PRO_ID  = $this->input->post('PRO_ID', TRUE);
+		$income  = $this->incomebyproduct_m->get($FROM, $TO, $PRO_ID)->result_array();
+		$by_product  = $this->incomebyproduct_m->get_by_product($FROM, $TO, $PRO_ID)->result();
+		$no = 1;
+		$body = "";
+		if(!$income && !$by_product){
+			$body .= "<tr>
+					<td align='center' colspan='7'>No data available in table</td>
+				</tr>";
+			foreach($by_product as $row){
+				$body .= $pro_name[] = "";
+				$body .= $grand_total[] = "";
+			}
+			$footer = "";
+			$callback = array(
+				'list_body'=>$body,
+				'list_footer'=>$footer,
+				'list_pro_name'=>$pro_name,
+				'list_grand_total'=>$grand_total,
+			);
+		} else {
+			$SUBTOTAL= 0;
+			foreach($income as $key => $field){
+				$SUBTOTAL 	  += $field['ORDD_PRICE'] * $field['ORDD_QUANTITY'];
+				$GRANDTOTAL[]  = $field['ORDD_PRICE'] * $field['ORDD_QUANTITY'];
+				$body .= "<tr>
+						<td align='center'>".$no++."</td>
+						<td>".date('d-m-Y / H:i:s', strtotime($field['ORDER_DATE']))."</td>
+						<td>".$field['PRO_NAME']."</td>
+						<td>".$field['ORDD_OPTION']."</td>
+						<td align='center'>".$field['ORDD_QUANTITY']."</td>
+						<td align='right'>".number_format($field['ORDD_PRICE'],0,',','.')."</td>
+						<td align='right'>".number_format($field['ORDD_PRICE'] * $field['ORDD_QUANTITY'],0,',','.')."</td>
+					</tr>";
+
+				if(@$income[$key+1]['PRO_ID'] != $field['PRO_ID']) {
+					$body .= "<tr>
+						<td align='right' colspan='6' style='font-weight: bold;'>SUBTOTAL</td>
+						<td align='right' style='color: green; font-weight:bold;'>".number_format($SUBTOTAL,0,',','.')."</td>
+					</tr>";
+					$SUBTOTAL = 0;
+				}
+			}
+			$TOTAL = array_sum($GRANDTOTAL);
+			$footer = "
+				<tr>
+					<td colspan='6' align='right' style='font-weight: bold;'>TOTAL</td>
+					<td align='right' style='color: blue; font-weight:bold;'>".number_format($TOTAL,0,',','.')."</td>
+				</tr>
+				<tr>
+					<td colspan='7' align='right'><em>".$this->terbilang($TOTAL)."</em></td>
+				</tr>";
+			foreach($by_product as $row){
+				$body .= $pro_name[] = $row->PRO_NAME;
+				$body .= $grand_total[] = $row->GRAND_TOTAL;
+			}
+			$callback = array(
+				'list_body'=>$body,
+				'list_footer'=>$footer,
+				'list_pro_name'=>$pro_name,
+				'list_grand_total'=>$grand_total,
+			);
+		}
+	    echo json_encode($callback);
+	}
+
+	public function income_by_vendor(){
+	    $modul = "Report";
+		$access =  $this->access_m->isAccess($this->session->GRP_SESSION, $modul)->row();
+		if ((!$access) && ($this->session->GRP_SESSION !=3)) {
+			echo "<script>alert('Anda tidak punya akses ke $modul.')</script>";
+			echo "<script>window.location='".site_url('dashboard')."'</script>";
+		} else {
+			$data['get_vendor'] = $this->vendor_m->get()->result();
+			$this->template->load('template', 'income/income_by_vendor', $data);
+		}
+	}
+
+	public function income_by_vendorjson() {
+		$FROM    	= $this->input->post('FROM', TRUE);
+		$TO 	 	= $this->input->post('TO', TRUE);
+		$VEND_ID 	= $this->input->post('VEND_ID', TRUE);
+		$income  	= $this->incomebyvendor_m->get($FROM, $TO, $VEND_ID)->result_array();
+		$by_vendor  = $this->incomebyvendor_m->get_by_vendor($FROM, $TO, $VEND_ID)->result();
+		$no = 1;
+		$body = "";
+		if(!$income && !$by_vendor){
+			$body .= "<tr>
+					<td align='center' colspan='5'>No data available in table</td>
+				</tr>";
+			foreach($by_vendor as $row){
+				$body .= $vend_name[] = "";
+				$body .= $grand_total[] = "";
+			}
+			$footer = "";
+			$callback = array(
+				'list_body'=>$body,
+				'list_footer'=>$footer,
+				'list_vend_name'=>$vend_name,
+				'list_grand_total'=>$grand_total,
+			);
+		} else {
+			$SUBTOTAL = 0;
+			foreach($income as $key => $field){
+				$SUBTOTAL 	  +=$field['ORDV_TOTAL'];
+				$GRANDTOTAL[]  =$field['ORDV_TOTAL'];
+				$body .= "<tr>
+						<td align='center'>".$no++."</td>
+						<td>".date('d-m-Y / H:i:s', strtotime($field['ORDER_DATE']))."</td>
+						<td>".$field['VEND_NAME']."</td>
+						<td align='center'>".$field['ORDER_ID']."</td>
+						<td align='right'>".number_format($field['ORDV_TOTAL'],0,',','.')."</td>
+					</tr>";
+
+				if(@$income[$key+1]['VEND_ID'] != $field['VEND_ID']) {
+					$body .= "<tr>
+						<td align='right' colspan='4' style='font-weight: bold;'>SUBTOTAL</td>
+						<td align='right' style='color: green; font-weight:bold;'>".number_format($SUBTOTAL,0,',','.')."</td>
+					</tr>";
+					$SUBTOTAL = 0;
+				}
+			}
+			$TOTAL = array_sum($GRANDTOTAL);
+			$footer = "
+				<tr>
+					<td colspan='4' align='right' style='font-weight: bold;'>TOTAL</td>
+					<td align='right' style='color: blue; font-weight:bold;'>".number_format($TOTAL,0,',','.')."</td>
+				</tr>
+				<tr>
+					<td colspan='5' align='right'><em>".$this->terbilang($TOTAL)."</em></td>
+				</tr>";
+			foreach($by_vendor as $row){
+				$body .= $vend_name[] = $row->VEND_NAME;
+				$body .= $grand_total[] = $row->GRAND_TOTAL;
+			}
+			$callback = array(
+				'list_body'=>$body,
+				'list_footer'=>$footer,
+				'list_vend_name'=>$vend_name,
+				'list_grand_total'=>$grand_total,
+			);
+		}
+	    echo json_encode($callback);
+	}
+
+	public function profit_loss(){
+	    $modul = "Report";
+		$access =  $this->access_m->isAccess($this->session->GRP_SESSION, $modul)->row();
+		if ((!$access) && ($this->session->GRP_SESSION !=3)) {
+			echo "<script>alert('Anda tidak punya akses ke $modul.')</script>";
+			echo "<script>window.location='".site_url('dashboard')."'</script>";
+		} else {
+			$data['get_vendor'] = $this->vendor_m->get()->result();
+			$this->template->load('template', 'income/profit_loss', $data);
+		}
+	}
+
+	public function profit_loss_json() {
+		$FROM    = $this->input->post('FROM', TRUE);
+		$TO 	 = $this->input->post('TO', TRUE);
+		$income  = $this->profitloss_m->get($FROM, $TO)->result();
+		$no = 1;
+		$body = "";
+		if(!$income){
+			$body .= "<tr>
+					<td align='center' colspan='6'>No data available in table</td>
+				</tr>";
+			$footer = "";
+			$callback = array('list_body'=>$body,'list_footer'=>$footer);
+		} else {
+			foreach($income as $field){
+				$GRAND_TOTAL[] 		  = $field->GRAND_TOTAL;
+				$GRAND_TOTAL_VENDOR[] = $field->GRAND_TOTAL_VENDOR;
+				$PROFIT_LOSS[] 		  = $field->PROFIT_LOSS;
+				$body .= "<tr>
+						<td align='center'>".$no++."</td>
+						<td>".date('d-m-Y / H:i:s', strtotime($field->ORDER_DATE))."</td>
+						<td align='center'>".$field->ORDER_ID."</td>
+						<td align='right'>".number_format($field->GRAND_TOTAL,0,',','.')."</td>
+						<td align='right'>".number_format($field->GRAND_TOTAL_VENDOR,0,',','.')."</td>
+						<td align='right'>".number_format($field->PROFIT_LOSS,0,',','.')."</td>
+					</tr>";
+			}
+			$TOTAL_GRAND_TOTAL 		  = array_sum($GRAND_TOTAL);
+			$TOTAL_GRAND_TOTAL_VENDOR = array_sum($GRAND_TOTAL_VENDOR);
+			$TOTAL_PROFIT_LOSS 		  = array_sum($PROFIT_LOSS);
+			$footer = "
+				<tr>
+					<td colspan='3' align='right' style='font-weight: bold;'>TOTAL</td>
+					<td align='right' style='color: green; font-weight:bold;'>".number_format($TOTAL_GRAND_TOTAL,0,',','.')."</td>
+					<td align='right' style='color: green; font-weight:bold;'>".number_format($TOTAL_GRAND_TOTAL_VENDOR,0,',','.')."</td>
+					<td align='right' style='color: blue; font-weight:bold;'>".number_format($TOTAL_PROFIT_LOSS,0,',','.')."</td>
+				</tr>
+				<tr>
+					<td colspan='6' align='right'><em>".$this->terbilang($TOTAL_PROFIT_LOSS)."</em></td>
+				</tr>";
+			$callback = array('list_body'=>$body,'list_footer'=>$footer);
+		}
 	    echo json_encode($callback);
 	}
 }

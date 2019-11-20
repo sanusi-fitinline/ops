@@ -75,7 +75,7 @@
 		      	<div class="card-body">
 		      		<div class="row">
 						<div class="col-md-12">
-							<form action="<?php echo site_url('letter/insert/'.$this->uri->segment(3))?>" method="POST" enctype="multipart/form-data">
+							<form action="<?php echo site_url('letter/add/'.$this->uri->segment(3))?>" method="POST" enctype="multipart/form-data">
 								<div class="row">
 									<div class="col-md-3">
 										<div class="form-group">
@@ -95,7 +95,7 @@
 										<div class="form-group">
 											<label>Note</label>
 											<textarea class="form-control" cols="100%" rows="7" name="ORDL_NOTES">1. Proses order max 2 hari setelah pembayaran dilakukan.&#13;&#10;2. Info Pengiriman :&#13;&#10;<?php foreach ($courier_data as $key) {
-												echo $kurir ="-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Pengiriman dari ".$key->CITY_NAME.", menggunakan ".$key->COURIER_NAME." ".$key->ORDV_SERVICE_TYPE." estimasi ".$key->ORDV_ETD." hari.&#13;&#10;";
+												echo $kurir ="-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Pengiriman dari ".$key->CITY_NAME.", menggunakan ".$key->COURIER_NAME." ".$key->ORDV_SERVICE_TYPE." estimasi ".$key->ORDV_ETD.".&#13;&#10;";
 											} ?>3. Transaksi tanpa Pajak. Pembayaran dalam dapat ditransfer melalui Bank BCA: 8020169363 atau Bank Mandiri: 1240004177276 atas nama Istofani Api Diany.</textarea>
 										</div>
 										<div align="center">

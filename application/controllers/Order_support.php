@@ -68,7 +68,7 @@ class Order_support extends CI_Controller {
 			$row[] = "<div align='center'>".date('d-m-Y / H:i:s', strtotime($field->ORDER_DATE))."</div>";
 			$row[] = stripslashes($field->CUST_NAME);
 			$row[] = $ORDER_NOTES;
-			if((!$this->access_m->isDelete('Order', 1)->row()) && ($this->session->GRP_SESSION !=3))
+			if((!$this->access_m->isDelete('Order SS', 1)->row()) && ($this->session->GRP_SESSION !=3))
 			{
 				$row[] = '<div style="vertical-align: middle; text-align: center;">
 					<a href="'.$url.'order_support/detail/'.$field->ORDER_ID.'" class="btn btn-sm btn-primary" title="Detail"><i class="fa fa-search-plus"></i></a></div>';
@@ -111,6 +111,24 @@ class Order_support extends CI_Controller {
 		$query['update'] = $this->ordervendor_m->update_delivery_support($ORDER_ID);
 		if($query) {
 			echo "<script>alert('Data berhasil diubah.')</script>";
+			if (($this->input->post('ORDV_DELIVERY_DATE') != null)) {
+				require_once(APPPATH.'third_party/pusher/vendor/autoload.php');
+				$options = array(
+					'cluster' => 'ap1',
+					'useTLS' => true
+				);
+				$pusher = new Pusher\Pusher(
+					'3de920bf0bfb448a7809',
+					'0799716e5d66b96f5b61',
+					'845132',
+					$options
+				);
+
+				$data['message'] = "\nNew Shipment for Customer Order!";
+				$data['url'] 	 = site_url('order/detail/'.$ORDER_ID);
+				$data['user'] 	 = $this->input->post('USER_ID');
+				$pusher->trigger('channel-cs', 'event-cs', $data);
+			}
 			echo "<script>window.location='".site_url('order_support/detail/'.$ORDER_ID)."'</script>";
 		} else {
 			echo "<script>alert('Data gagal diubah.')</script>";

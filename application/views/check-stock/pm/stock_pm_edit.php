@@ -7,7 +7,7 @@
 	    	<a href="<?php echo site_url('dashboard') ?>">Dashboard</a>
 	  	</li>
 	  	<li class="breadcrumb-item">
-	    	<a href="<?php echo site_url('cs/check_stock') ?>">Check Stock</a>
+	    	<a href="<?php echo site_url('pm/check_stock') ?>">Check Stock</a>
 	  	</li>
 	  	<li class="breadcrumb-item active">Add</li>
 	</ol>
@@ -25,6 +25,7 @@
 								<div class="row">
 									<div class="col-md-3">
 										<div class="form-group">
+											<input class="form-control" type="hidden" name="USER_ID" value="<?php echo $row->USER_ID ?>" readonly>
 											<input class="form-control" type="text" name="CACT_ID" value="2" hidden>
 											<label>Activity</label>
 											<input class="form-control" type="text" name="CACT_NAME" value="Check Stock" readonly>
@@ -35,8 +36,21 @@
 											<input class="form-control" type="text" name="PRO_ID" value="<?php echo $row->PRO_NAME ?>" readonly>
 										</div>
 										<div class="form-group">
+											<label>Price</label>
+											<div class="input-group">
+												<div class="input-group-prepend">
+										          	<span class="input-group-text">Rp.</span>
+										        </div>
+												<input class="form-control" type="text" name="PRO_PRICE" value="<?php echo number_format($row->PRO_PRICE_VENDOR,0,',','.') ?>" autocomplete="off" required readonly>
+										    </div>											
+										</div>
+										<div class="form-group">
 											<label>Color</label>
 											<input class="form-control" type="text" name="LSTOCK_COLOR" value="<?php echo $row->LSTOCK_COLOR ?>" autocomplete="off" required readonly>
+										</div>
+										<div class="form-group">
+											<label>Picture</label><br>
+											<img class="form-control box-content" style="width: 219px;height: 297px;border: 3px dotted #ced4da; padding: 5px; margin-bottom: 10px" src="<?php echo base_url('/assets/images/product/'.$row->PRO_PICTURE) ?>">
 										</div>
 									</div>
 									<div class="col-md-3">

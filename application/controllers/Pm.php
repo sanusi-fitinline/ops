@@ -69,11 +69,17 @@ class Pm extends CI_Controller {
 				$RCPNO = $field->LSAM_RCPNO;
 			} else {$RCPNO = "<div align='center'>-</div>";}
 
+			if($field->LSAM_NOTES !=null || $field->LSAM_NOTES !="") {
+				$NOTES = $field->LSAM_NOTES;
+			} else {
+				$NOTES = "<div align='center'>-</div>";
+			}
+
 			$row   = array();
 			$row[] = "<div align='center'>$STATUS</div>";
 			$row[] = date('d-m-Y / H:i:s', strtotime($field->LSAM_DATE));
 			$row[] = stripslashes($field->CUST_NAME);
-			$row[] = $field->LSAM_NOTES;
+			$row[] = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$NOTES);
 			$row[] = "<div align='center'>".$field->COURIER_NAME." ".$field->LSAM_SERVICE_TYPE."</div>";
 			$row[] = "<div align='center'>$DELDATE</div>";
 			$row[] = $RCPNO;
@@ -118,6 +124,24 @@ class Pm extends CI_Controller {
 		$this->sampling_m->pm_update($LSAM_ID);
 		if($this->db->affected_rows() > 0) {
 			echo "<script>alert('Data berhasil diubah.')</script>";
+			if (($this->input->post('LSAM_DELDATE') != null)) {
+				require_once(APPPATH.'third_party/pusher/vendor/autoload.php');
+				$options = array(
+					'cluster' => 'ap1',
+					'useTLS' => true
+				);
+				$pusher = new Pusher\Pusher(
+					'3de920bf0bfb448a7809',
+					'0799716e5d66b96f5b61',
+					'845132',
+					$options
+				);
+
+				$data['message'] = "\nYour Product Sampling Request has been delivered!";
+				$data['url'] 	 = site_url('cs/edit_sampling/'.$LSAM_ID);
+				$data['user'] 	 = $this->input->post('USER_ID');
+				$pusher->trigger('channel-cs', 'event-cs', $data);
+			}
 			echo "<script>window.location='".site_url('pm/sampling')."'</script>";
 		} else {
 			echo "<script>alert('Data gagal diubah.')</script>";
@@ -214,6 +238,24 @@ class Pm extends CI_Controller {
 		$this->ckstock_m->pm_update($LSTOCK_ID);
 		if($this->db->affected_rows() > 0) {
 			echo "<script>alert('Data berhasil diubah.')</script>";
+			if (($this->input->post('LSTOCK_STATUS') != null)) {
+				require_once(APPPATH.'third_party/pusher/vendor/autoload.php');
+				$options = array(
+					'cluster' => 'ap1',
+					'useTLS' => true
+				);
+				$pusher = new Pusher\Pusher(
+					'3de920bf0bfb448a7809',
+					'0799716e5d66b96f5b61',
+					'845132',
+					$options
+				);
+
+				$data['message'] = "\nThere is Update on Your Check Stock Request!";
+				$data['url'] 	 = site_url('cs/edit_check/'.$LSTOCK_ID);
+				$data['user'] 	 = $this->input->post('USER_ID');
+				$pusher->trigger('channel-cs', 'event-cs', $data);
+			}
 			echo "<script>window.location='".site_url('pm/check_stock')."'</script>";
 		} else {
 			echo "<script>alert('Data gagal diubah.')</script>";

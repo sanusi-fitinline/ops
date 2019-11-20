@@ -91,7 +91,7 @@ class Followup_m extends CI_Model {
         $modul = "Follow Up";
         $view = 1;  
         $viewall =  $this->access_m->isViewAll($modul, $view)->row();
-		$this->db->select('tb_followup.*, tb_customer.CUST_NAME, tb_customer_activity.CACT_NAME, tb_followup_status.FLWS_NAME, tb_followup_closed.FLWC_NAME');
+		$this->db->select('tb_followup.*, tb_customer.CUST_ID, tb_customer.CUST_NAME, tb_customer_activity.CACT_NAME, tb_followup_status.FLWS_NAME, tb_followup_closed.FLWC_NAME');
 		$this->db->from('tb_followup');
 		$this->db->join('tb_customer_log', 'tb_customer_log.CLOG_ID=tb_followup.CLOG_ID', 'left');
 		$this->db->join('tb_customer', 'tb_customer.CUST_ID=tb_customer_log.CUST_ID', 'left');
@@ -378,9 +378,12 @@ class Followup_m extends CI_Model {
     }
 
 	public function insert() {
-        $params['FLWP_DATE']    = date('Y-m-d', strtotime($this->input->post('FLWP_DATE', TRUE)));
+        $date                   = date('Y-m-d', strtotime($this->input->post('FLWP_DATE', TRUE)));
+        $time                   = date('H:i:s');
+        $flwp_status            = $this->input->post('FLWS_ID', TRUE);
+        $params['FLWP_DATE']    = $date." ".$time;
         $params['FLWP_NOTES']   = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$this->input->post('FLWP_NOTES', TRUE));
-        $params['FLWS_ID']      = $this->input->post('FLWS_ID', TRUE);
+        $params['FLWS_ID']      = $flwp_status;
         if (!empty($this->input->post('FLWC_ID', TRUE))) {
             $params['FLWC_ID']  = $this->input->post('FLWC_ID', TRUE); 
         }
@@ -395,23 +398,232 @@ class Followup_m extends CI_Model {
 	}
 
     public function update($FLWP_ID) {
-		$params['FLWP_DATE']    = date('Y-m-d', strtotime($this->input->post('FLWP_DATE', TRUE)));
+        $date                   = date('Y-m-d', strtotime($this->input->post('FLWP_DATE', TRUE)));
+        $time                   = date('H:i:s');
+        $flwp_status            = $this->input->post('FLWS_ID', TRUE);
+        $params['FLWP_DATE']    = $date." ".$time;
         $params['FLWP_NOTES']   = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$this->input->post('FLWP_NOTES', TRUE));
-        $params['FLWS_ID']      = $this->input->post('FLWS_ID', TRUE);
+        $params['FLWS_ID']      = $flwp_status;
         if (!empty($this->input->post('FLWC_ID', TRUE))) {
             $params['FLWC_ID']  = $this->input->post('FLWC_ID', TRUE); 
         }
         if ($this->input->post('FLWS_ID', TRUE) != 5) {
             $params['FLWC_ID']  = 0;
         }
-		$this->db->where('FLWP_ID', $FLWP_ID)->update('tb_followup', $this->db->escape_str($params));
+        $this->db->where('FLWP_ID', $FLWP_ID)->update('tb_followup', $this->db->escape_str($params));
+        
         if($params) {
             $updateLog = array(
                'FLWS_ID' => $this->input->post('FLWS_ID', TRUE), 
             );
             $this->db->where('CLOG_ID', $this->input->post('CLOG_ID', TRUE))->update('tb_customer_log', $this->db->escape_str($updateLog));
         }
-	}
+    }
+
+    public function insert_ck() {
+        $date                   = date('Y-m-d', strtotime($this->input->post('FLWP_DATE', TRUE)));
+        $time                   = date('H:i:s');
+        $flwp_status            = $this->input->post('FLWS_ID', TRUE);
+        $params['FLWP_DATE']    = $date." ".$time;
+        $params['FLWP_NOTES']   = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$this->input->post('FLWP_NOTES', TRUE));
+        $params['FLWS_ID']      = $flwp_status;
+        if (!empty($this->input->post('FLWC_ID', TRUE))) {
+            $params['FLWC_ID']  = $this->input->post('FLWC_ID', TRUE); 
+        }
+        $params['CLOG_ID']      = $this->input->post('CLOG_ID', TRUE);
+        $this->db->insert('tb_followup', $this->db->escape_str($params));
+        if($params) {
+            $updateLog = array(
+               'FLWS_ID' => $this->input->post('FLWS_ID', TRUE), 
+            );
+            $this->db->where('CLOG_ID', $this->input->post('CLOG_ID', TRUE))->update('tb_customer_log', $this->db->escape_str($updateLog));
+        }
+        if($flwp_status == 4) {
+            $order['CUST_ID']    = $this->input->post('CUST_ID');
+            $order['ORDER_DATE'] = $date." ".$time;
+            $order['USER_ID']    = $this->session->USER_SESSION;
+            $order['CHA_ID']     = $this->input->post('CHA_ID', TRUE);
+            $insert_order        = $this->db->insert('tb_order', $this->db->escape_str($order));
+
+            if($insert_order) {
+                $ORDER_ID           = $this->db->insert_id();
+                $CUST_ID            = $this->input->post('CUST_ID', TRUE);
+                $CHA_ID             = $this->input->post('CHA_ID', TRUE);
+                $USER_ID            = $this->input->post('USER_ID', TRUE);
+                $PRO_ID             = $this->input->post('PRO_ID', TRUE);
+                $VEND_ID            = $this->input->post('VEND_ID', TRUE);
+                $ORDD_QUANTITY      = $this->input->post('ORDD_QUANTITY', TRUE);
+                $ORDD_OPTION        = $this->input->post('ORDD_OPTION', TRUE);
+                $UMEA_ID            = $this->input->post('UMEA_ID', TRUE);
+                $PRICE              = str_replace(".", "", $this->input->post('PRICE', TRUE));
+                $PRICE_VENDOR       = str_replace(".", "", $this->input->post('PRICE_VENDOR', TRUE));
+                $ORDD_WEIGHT        = $this->input->post('ORDD_WEIGHT', TRUE);
+
+                // insert tb_order_detail
+                $this->load->model('product_m');
+                $insert_detail_order = array();
+                foreach($PRO_ID as $i => $val){
+                    $product[$i]   = $this->product_m->get($PRO_ID[$i])->row();
+                    if($product[$i]->PRO_TOTAL_UNIT == $UMEA_ID[$i]) {
+                        $UNIT[$i]          = $product[$i]->PRO_VOL_UNIT;
+                        $QTY[$i]           = $product[$i]->PRO_TOTAL_COUNT * $ORDD_QUANTITY[$i];
+                        $WEIGHT[$i]        = $product[$i]->PRO_TOTAL_WEIGHT;
+                        $HARGA[$i]         = $product[$i]->PRO_VOL_PRICE;
+                        $HARGA_VENDOR[$i]  = $product[$i]->PRO_VOL_PRICE_VENDOR;
+                    } else {
+                        $UNIT[$i]          = $UMEA_ID[$i];
+                        $QTY[$i]           = $ORDD_QUANTITY[$i];
+                        $WEIGHT[$i]        = $ORDD_WEIGHT[$i];
+                        $HARGA[$i]         = $PRICE[$i];
+                        $HARGA_VENDOR[$i]  = $PRICE_VENDOR[$i];
+                    }
+                    $insert_detail_order = array(
+                        'ORDER_ID'          => $ORDER_ID,
+                        'PRO_ID'            => $PRO_ID[$i],
+                        'VEND_ID'           => $VEND_ID[$i],
+                        'UMEA_ID'           => $UNIT[$i],
+                        'ORDD_QUANTITY'     => $QTY[$i],
+                        'ORDD_WEIGHT'       => $WEIGHT[$i],
+                        'ORDD_OPTION'       => $ORDD_OPTION[$i],
+                        'ORDD_PRICE'        => $HARGA[$i],
+                        'ORDD_PRICE_VENDOR' => $HARGA_VENDOR[$i],
+                    );
+                    $insert_detail = $this->db->insert('tb_order_detail', $insert_detail_order);
+                }
+
+                if($insert_detail) {
+                    $this->load->model('ordervendor_m');
+                    $insert_detail_vendor = array();
+                    foreach($VEND_ID as $x => $val){
+                        $check[$x] = $this->ordervendor_m->check_order_vendor($ORDER_ID, $VEND_ID[$x]);
+                        $check_num[$x] = $check[$x]->num_rows() > 0;
+                        if(!$check_num[$x]) {
+                            // insert pada tb_payment_to_vendor
+                            $insert_payment_vendor  = array(
+                                'PAYTOV_DEPOSIT'    => 0
+                            );
+                            $this->db->insert('tb_payment_to_vendor', $this->db->escape_str($insert_payment_vendor));
+                            $PAYTOV_ID[$x] = $this->db->insert_id();
+                            //
+                            // insert tb_order_vendor
+                            $insert_detail_vendor = array(
+                                'ORDER_ID'          => $ORDER_ID,
+                                'VEND_ID'           => $VEND_ID[$x],
+                                'PAYTOV_ID'         => $PAYTOV_ID[$x],
+                            );
+                            $this->db->insert('tb_order_vendor', $insert_detail_vendor);
+                        }
+                    }
+                    $query = $this->db->query("UPDATE tb_order SET tb_order.ORDER_TOTAL = (SELECT SUM(tb_order_detail.ORDD_PRICE * tb_order_detail.ORDD_QUANTITY) AS total FROM tb_order_detail WHERE tb_order.ORDER_ID = tb_order_detail.ORDER_ID GROUP BY tb_order_detail.ORDER_ID) WHERE tb_order.ORDER_ID = '$ORDER_ID'");
+                }
+            }
+        }
+    }
+
+    public function update_ck($FLWP_ID) {
+        $date                   = date('Y-m-d', strtotime($this->input->post('FLWP_DATE', TRUE)));
+        $time                   = date('H:i:s');
+        $flwp_status            = $this->input->post('FLWS_ID', TRUE);
+        $params['FLWP_DATE']    = $date." ".$time;
+        $params['FLWP_NOTES']   = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$this->input->post('FLWP_NOTES', TRUE));
+        $params['FLWS_ID']      = $flwp_status;
+        if (!empty($this->input->post('FLWC_ID', TRUE))) {
+            $params['FLWC_ID']  = $this->input->post('FLWC_ID', TRUE); 
+        }
+        if ($this->input->post('FLWS_ID', TRUE) != 5) {
+            $params['FLWC_ID']  = 0;
+        }
+        $this->db->where('FLWP_ID', $FLWP_ID)->update('tb_followup', $this->db->escape_str($params));
+        
+        if($params) {
+            $updateLog = array(
+               'FLWS_ID' => $this->input->post('FLWS_ID', TRUE), 
+            );
+            $this->db->where('CLOG_ID', $this->input->post('CLOG_ID', TRUE))->update('tb_customer_log', $this->db->escape_str($updateLog));
+        }
+
+        if($flwp_status == 4) {
+            $order['CUST_ID']    = $this->input->post('CUST_ID');
+            $order['ORDER_DATE'] = $date." ".$time;
+            $order['USER_ID']    = $this->session->USER_SESSION;
+            $order['CHA_ID']     = $this->input->post('CHA_ID', TRUE);
+            $insert_order        = $this->db->insert('tb_order', $this->db->escape_str($order));
+
+            if($insert_order) {
+                $ORDER_ID           = $this->db->insert_id();
+                $CUST_ID            = $this->input->post('CUST_ID', TRUE);
+                $CHA_ID             = $this->input->post('CHA_ID', TRUE);
+                $USER_ID            = $this->input->post('USER_ID', TRUE);
+                $PRO_ID             = $this->input->post('PRO_ID', TRUE);
+                $VEND_ID            = $this->input->post('VEND_ID', TRUE);
+                $ORDD_QUANTITY      = $this->input->post('ORDD_QUANTITY', TRUE);
+                $ORDD_OPTION        = $this->input->post('ORDD_OPTION', TRUE);
+                $UMEA_ID            = $this->input->post('UMEA_ID', TRUE);
+                $PRICE              = str_replace(".", "", $this->input->post('PRICE', TRUE));
+                $PRICE_VENDOR       = str_replace(".", "", $this->input->post('PRICE_VENDOR', TRUE));
+                $ORDD_WEIGHT        = $this->input->post('ORDD_WEIGHT', TRUE);
+
+
+                // insert tb_order_detail
+                $this->load->model('product_m');
+                $insert_detail_order = array();
+                foreach($PRO_ID as $i => $val){
+                    $product[$i]   = $this->product_m->get($PRO_ID[$i])->row();
+                    if($product[$i]->PRO_TOTAL_UNIT == $UMEA_ID[$i]) {
+                        $UNIT[$i]          = $product[$i]->PRO_VOL_UNIT;
+                        $QTY[$i]           = $product[$i]->PRO_TOTAL_COUNT * $ORDD_QUANTITY[$i];
+                        $WEIGHT[$i]        = $product[$i]->PRO_TOTAL_WEIGHT;
+                        $HARGA[$i]         = $product[$i]->PRO_VOL_PRICE;
+                        $HARGA_VENDOR[$i]  = $product[$i]->PRO_VOL_PRICE_VENDOR;
+                    } else {
+                        $UNIT[$i]          = $UMEA_ID[$i];
+                        $QTY[$i]           = $ORDD_QUANTITY[$i];
+                        $WEIGHT[$i]        = $ORDD_WEIGHT[$i];
+                        $HARGA[$i]         = $PRICE[$i];
+                        $HARGA_VENDOR[$i]  = $PRICE_VENDOR[$i];
+                    }
+                    $insert_detail_order = array(
+                        'ORDER_ID'          => $ORDER_ID,
+                        'PRO_ID'            => $PRO_ID[$i],
+                        'VEND_ID'           => $VEND_ID[$i],
+                        'UMEA_ID'           => $UNIT[$i],
+                        'ORDD_QUANTITY'     => $QTY[$i],
+                        'ORDD_WEIGHT'       => $WEIGHT[$i],
+                        'ORDD_OPTION'       => $ORDD_OPTION[$i],
+                        'ORDD_PRICE'        => $HARGA[$i],
+                        'ORDD_PRICE_VENDOR' => $HARGA_VENDOR[$i],
+                    );
+                    $insert_detail = $this->db->insert('tb_order_detail', $insert_detail_order);
+                }
+
+                if($insert_detail) {
+                    $this->load->model('ordervendor_m');
+                    $insert_detail_vendor = array();
+                    foreach($VEND_ID as $x => $val){
+                        $check[$x] = $this->ordervendor_m->check_order_vendor($ORDER_ID, $VEND_ID[$x]);
+                        $check_num[$x] = $check[$x]->num_rows() > 0;
+                        if(!$check_num[$x]) {
+                            // insert pada tb_payment_to_vendor
+                            $insert_payment_vendor  = array(
+                                'PAYTOV_DEPOSIT'    => 0
+                            );
+                            $this->db->insert('tb_payment_to_vendor', $this->db->escape_str($insert_payment_vendor));
+                            $PAYTOV_ID[$x] = $this->db->insert_id();
+                            
+                            // insert tb_order_vendor
+                            $insert_detail_vendor = array(
+                                'ORDER_ID'          => $ORDER_ID,
+                                'VEND_ID'           => $VEND_ID[$x],
+                                'PAYTOV_ID'         => $PAYTOV_ID[$x],
+                            );
+                            $this->db->insert('tb_order_vendor', $insert_detail_vendor);
+                        }
+                    }
+                    $query = $this->db->query("UPDATE tb_order SET tb_order.ORDER_TOTAL = (SELECT SUM(tb_order_detail.ORDD_PRICE * tb_order_detail.ORDD_QUANTITY) AS total FROM tb_order_detail WHERE tb_order.ORDER_ID = tb_order_detail.ORDER_ID GROUP BY tb_order_detail.ORDER_ID) WHERE tb_order.ORDER_ID = '$ORDER_ID'");
+                }
+            }
+        }
+    }
 
 	public function delete($FLWP_ID) {
 		$this->db->where('FLWP_ID', $FLWP_ID);

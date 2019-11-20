@@ -22,7 +22,6 @@
 		<!-- Custom styles for this template-->
 		<link href="<?php echo base_url() ?>assets/css/sb-admin.css" rel="stylesheet">
 		<link href="<?php echo base_url() ?>assets/css/style.css" rel="stylesheet">
-
 	</head>
 
 	<body id="page-top">
@@ -36,7 +35,7 @@
 		    <ul class="navbar-nav ml-auto mr-0 mr-md-3 my-2 my-md-0">
 		      	<li class="nav-item dropdown no-arrow">
 		        	<a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-			         	<i class="fas fa-user-circle fa-fw"></i>
+			         	<i class="fas fa-fw fa-user-circle"></i>
 			        </a>
 			        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
 			        	<?php $user = $this->access_m->getUser()->row() ?>
@@ -76,11 +75,11 @@
 		          		<span>Pre-Order</span>
 		        	</a>
 			        <div class="dropdown-menu" aria-labelledby="pagesDropdown">
-			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Product Sampling CS')->row()) && ($this->session->GRP_SESSION !=3) ){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('cs/sampling') ?>">Sampling (CS)</a>
-			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Check Stock CS')->row()) && ($this->session->GRP_SESSION !=3) ){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('cs/check_stock') ?>">Check Stock (CS)</a>
-			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Product Sampling PM')->row()) && ($this->session->GRP_SESSION !=3) ){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('pm/sampling') ?>">Sampling (PM)</a>
-			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Check Stock PM')->row()) && ($this->session->GRP_SESSION !=3) ){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('pm/check_stock') ?>">Check Stock (PM)</a>
-			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Follow Up')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('followup') ?>">Follow Up</a>
+			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Product Sampling CS')->row()) && ($this->session->GRP_SESSION !=3) ){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('cs/sampling') ?>">Sampling (CS)<hr style="margin: 0;"></a>
+			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Check Stock CS')->row()) && ($this->session->GRP_SESSION !=3) ){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('cs/check_stock') ?>">Check Stock (CS)<hr style="margin: 0;"></a>
+			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Product Sampling PM')->row()) && ($this->session->GRP_SESSION !=3) ){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('pm/sampling') ?>">Sampling (PM)<hr style="margin: 0;"></a>
+			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Check Stock PM')->row()) && ($this->session->GRP_SESSION !=3) ){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('pm/check_stock') ?>">Check Stock (PM)<hr style="margin: 0;"></a>
+			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Follow Up')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('followup') ?>">Follow Up<hr style="margin: 0;"></a>
 			        </div>
 		      	</li>
 		      	<li class="nav-item dropdown <?php if($this->uri->segment(1)=="order" || $this->uri->segment(1)=="order_support"){echo "active";}?>">
@@ -89,19 +88,19 @@
 		          		<span>Order</span>
 		        	</a>
 			        <div class="dropdown-menu" aria-labelledby="pagesDropdown">
-			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Order')->row()) && ($this->session->GRP_SESSION !=3) ){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('order') ?>">Order (CS)</a>
-			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Order SS')->row()) && ($this->session->GRP_SESSION !=3) ){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('order_support') ?>">Order (SS)</a>
+			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Order')->row()) && ($this->session->GRP_SESSION !=3) ){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('order') ?>">Order (CS)<hr style="margin: 0;"></a>
+			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Order SS')->row()) && ($this->session->GRP_SESSION !=3) ){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('order_support') ?>">Order (SS)<hr style="margin: 0;"></a>
 			        </div>
 		      	</li>
 		      	<li class="nav-item dropdown <?php if($this->uri->segment(1)=="payment_vendor" || $this->uri->segment(1)=="customer_deposit" || $this->uri->segment(1)=="vendor_deposit"){echo "active";}?>">
 		        	<a class="nav-link dropdown-toggle" href="#" id="pagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-		          		<i class="fas fa-donate"></i>
+		          		<i class="fas fa-fw fa-donate"></i>
 		          		<span>Finance</span>
 		        	</a>
 			        <div class="dropdown-menu" aria-labelledby="pagesDropdown">
-			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Payment To Vendor')->row()) && ($this->session->GRP_SESSION !=3) ){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('payment_vendor') ?>">Payment To Vendor</a>
-			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Customer Deposit')->row()) && ($this->session->GRP_SESSION !=3) ){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('customer_deposit') ?>">Customer Deposit</a>
-			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Vendor Deposit')->row()) && ($this->session->GRP_SESSION !=3) ){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('vendor_deposit') ?>">Vendor Deposit</a>
+			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Payment To Vendor')->row()) && ($this->session->GRP_SESSION !=3) ){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('payment_vendor') ?>">Payment To Vendor<hr style="margin: 0;"></a>
+			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Customer Deposit')->row()) && ($this->session->GRP_SESSION !=3) ){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('customer_deposit') ?>">Customer Deposit<hr style="margin: 0;"></a>
+			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Vendor Deposit')->row()) && ($this->session->GRP_SESSION !=3) ){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('vendor_deposit') ?>">Vendor Deposit<hr style="margin: 0;"></a>
 			        </div>
 		      	</li>
 			    <li <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Vendor')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="nav-item <?php if($this->uri->segment(1)=="vendor"){echo "active";}?>">
@@ -128,28 +127,32 @@
 		          		<span>Report</span>
 		        	</a>
 			        <div class="dropdown-menu" aria-labelledby="pagesDropdown">
-			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Report')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('report/sample_order') ?>">Sample to Order</a><hr style="margin: 0;">
-			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Report')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('report/check_stock_order') ?>">Check Stock to Order</a><hr style="margin: 0;">
-			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Report')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('report/check_stock_performance') ?>">Check Stock<br>Performance</a><hr style="margin: 0;">
-			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Report')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('report/followup_performance') ?>">Follow Up<br>Performance</a><hr style="margin: 0;">
-			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Report')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('report/failed_followup') ?>">Failed Follow Up</a>
+			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Report')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('report/sample_order') ?>">Sample to Order<hr style="margin: 0;"></a>
+			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Report')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('report/check_stock_order') ?>">Check Stock to Order<hr style="margin: 0;"></a>
+			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Report')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('report/check_stock_performance') ?>">Check Stock<br>Performance<hr style="margin: 0;"></a>
+			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Report')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('report/followup_performance') ?>">Follow Up<br>Performance<hr style="margin: 0;"></a>
+			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Report')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('report/failed_followup') ?>">Failed Follow Up<hr style="margin: 0;"></a>
+			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Report')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('report/income_by_cs') ?>">Income by CS<hr style="margin: 0;"></a>
+			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Report')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('report/income_by_product') ?>">Income by Product<hr style="margin: 0;"></a>
+			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Report')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('report/income_by_vendor') ?>">Income by Vendor<hr style="margin: 0;"></a>
+			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Report')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('report/profit_loss') ?>">Profit and Loss<hr style="margin: 0;"></a>
 			        </div>
 		      	</li>
-		      	<li class="nav-item dropdown <?php if($this->uri->segment(1)=="master"){echo "active";}?>">
+			    <li class="nav-item dropdown <?php if($this->uri->segment(1)=="master"){echo "active";}?>">
 		        	<a class="nav-link dropdown-toggle" href="#" id="pagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 		          		<i class="fas fa-fw fa-folder-open"></i>
 		          		<span>Master</span>
 		        	</a>
 			        <div class="dropdown-menu" aria-labelledby="pagesDropdown">
-			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Bank')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('master/bank') ?>">Bank</a>
-			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Channel')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('master/channel') ?>">Channel</a>
-			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Currency')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('master/currency') ?>">Currency</a>
-			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Country')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('master/country/') ?>">Country</a>
-			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'State')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('master/state/') ?>">State</a>
-			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'City')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('master/city/') ?>">City</a>
-			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Subdistrict')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('master/subdistrict/') ?>">Subdistrict</a>
-			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Product Type')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('master/type') ?>">Product Type</a>
-			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Unit Measure')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('master/umea') ?>">Unit Measure</a>
+			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Bank')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('master/bank') ?>">Bank<hr style="margin: 0;"></a>
+			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Channel')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('master/channel') ?>">Channel<hr style="margin: 0;"></a>
+			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Currency')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('master/currency') ?>">Currency<hr style="margin: 0;"></a>
+			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Country')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('master/country/') ?>">Country<hr style="margin: 0;"></a>
+			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'State')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('master/state/') ?>">State<hr style="margin: 0;"></a>
+			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'City')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('master/city/') ?>">City<hr style="margin: 0;"></a>
+			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Subdistrict')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('master/subdistrict/') ?>">Subdistrict<hr style="margin: 0;"></a>
+			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Product Type')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('master/type') ?>">Product Type<hr style="margin: 0;"></a>
+			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Unit Measure')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('master/umea') ?>">Unit Measure<hr style="margin: 0;"></a>
 			        </div>
 		      	</li>
 		      	<li <?php if($this->session->GRP_SESSION !=3){echo "hidden";}?> class="nav-item dropdown <?php if($this->uri->segment(1)=="management"){echo "active";}?>">
@@ -158,13 +161,12 @@
 		          		<span>User Management</span>
 		        	</a>
 			        <div class="dropdown-menu" aria-labelledby="pagesDropdown">
-			        	<a class="dropdown-item" href="<?php echo site_url('management/user') ?>">User</a>
-			        	<a class="dropdown-item" href="<?php echo site_url('management/group') ?>">Group</a>
+			        	<a class="dropdown-item" href="<?php echo site_url('management/user') ?>">User<hr style="margin: 0;"></a>
+			        	<a class="dropdown-item" href="<?php echo site_url('management/group') ?>">Group<hr style="margin: 0;"></a>
 			        	<a class="dropdown-item" href="<?php echo site_url('management/module') ?>">Module</a>
 			        </div>
-		      	</li>
+		      	</li>		      	
 		    </ul>
-
 		    <div id="content-wrapper">
 		        <?php echo $contents?>
 		      	<!-- /.container-fluid -->
@@ -208,50 +210,29 @@
 	</body>
 </html>
 
+<!-- Pusher core plugin  JavaScript-->
+<!-- <script src="https://js.pusher.com/5.0/pusher.min.js"></script> -->
+<script src="<?php echo base_url()?>assets/vendor/pusher-js-master/dist/web/pusher.min.js"></script>
 
-<script src="https://js.pusher.com/5.0/pusher.min.js"></script>
-<!-- Core plugin JavaScript-->
+<!-- Jquery core plugin JavaScript-->
 <script src="<?php echo base_url()?>assets/vendor/jquery/jquery.min.js"></script>
 <script src="<?php echo base_url()?>assets/vendor/jquery-mask/jquery.mask.min.js"></script>
 <script src="<?php echo base_url()?>assets/vendor/jquery-easing/jquery.easing.min.js"></script>
-
 <script src="<?php echo base_url()?>assets/vendor/jquery-ui-1.12.1/jquery-ui.min.js"></script>
 
-<!-- Push Js-->
-<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/push.js/1.0.12/push.min.js"></script> -->
-<script src="<?php echo base_url()?>assets/vendor/push.js-master/bin/push.min.js"></script>
-<script src="<?php echo base_url()?>assets/vendor/push.js-master/bin/serviceWorker.min.js"></script>
-
-<!-- Bootstrap core JavaScript-->
+<!-- Bootstrap core plugin JavaScript-->
 <script src="<?php echo base_url()?>assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
 <script src="<?php echo base_url()?>assets/vendor/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
 
-
-<!-- Page level plugin JavaScript-->
+<!-- Datatables core plugin JavaScript-->
 <script src="<?php echo base_url()?>assets/vendor/datatables/jquery.dataTables.js"></script>
 <script src="<?php echo base_url()?>assets/vendor/datatables/dataTables.bootstrap4.js"></script>
 
 <!-- Custom scripts for all pages-->
 <script src="<?php echo base_url()?>assets/js/sb-admin.min.js"></script>
-<script>
-	$("#notify").click(function(){
-        Push.Permission.request(function() {
-        	Push.config({serviceWorker: '<?php echo base_url('assets/vendor/push.js-master/bin/serviceWorker.min.js') ?>'});
-            Push.create('  Notification', {
-                body: 'New Product Sampling Request!',
-                icon: '<?php echo base_url('assets/images/notif.png') ?>',
-                requireInteraction: true,
-                // timeout: 0,
-                onClick: function() {
-                	window.location.href = "<?php echo site_url('dashboard') ?>";
-                }
-            });
-        });
-    });
-</script>
 <script type="text/javascript">
 	$session = <?php echo $this->session->GRP_SESSION ?>;
+	$user 	 = <?php echo $this->session->USER_SESSION ?>;
 	if ($session == 2) {
 		// Enable pusher logging - don't include this in production
 	    Pusher.logToConsole = true;
@@ -261,28 +242,106 @@
 	      	forceTLS: true
 	    });
 
-	    var channel = pusher.subscribe('my-notif');
-	    channel.bind('my-event', function(data) {
-			$(document).ready(function() {
-	            if (Notification.permission !== "granted")
-	            Notification.requestPermission();
-	        });
-			
-			if (!Notification) {
-				alert('Browsermu tidak mendukung Web Notification.'); 
-				return;
-			}
-			if (Notification.permission !== "granted")
-				Notification.requestPermission();
-			else {
+	    var channel = pusher.subscribe('channel-pm');
+	    channel.bind('event-pm', function(data) {
+			if (!("Notification" in window)) {
+					console.log("This browser does not support desktop notification");
+				}
+
+			// Let's check whether notification permissions have alredy been granted
+			else if (Notification.permission === "granted") {
+				// If it's okay let's create a notification
 				var notifikasi = new Notification('  Notification', {
 					icon: "<?php echo base_url('assets/images/notif.png') ?>",
 					body: data.message,
+					requireInteraction: true,
 				});
 				notifikasi.onclick = function () {
-					window.location.href = data.url;      
+					window.focus();
+					window.location.href = data.url;
 				};
+				// setTimeout(function() { 
+				// 	notifikasi.close() 
+				// }, 60000);
 			}
+
+			// Otherwise, we need to ask the user for permission
+			else if (Notification.permission !== 'denied' || Notification.permission === "default") {
+				Notification.requestPermission(function (permission) {
+					// If the user accepts, let's create a notification
+				  	if (permission === "granted") {
+				    	var notifikasi = new Notification('  Notification', {
+							icon: "<?php echo base_url('assets/images/notif.png') ?>",
+							body: data.message,
+							requireInteraction: true,
+						});
+						notifikasi.onclick = function () {
+							window.focus();
+							window.location.href = data.url;
+						};
+						// setTimeout(function() { 
+						// 	notifikasi.close() 
+						// }, 60000);
+				  	}
+				});
+			}
+		});
+	}
+
+	if ($session == 1) {
+		// Enable pusher logging - don't include this in production
+	    Pusher.logToConsole = true;
+
+	    var pusher = new Pusher('3de920bf0bfb448a7809', {
+	     	cluster: 'ap1',
+	      	forceTLS: true
+	    });
+
+	    var channel = pusher.subscribe('channel-cs');
+	    channel.bind('event-cs', function(data) {
+		    if($user == data.user){
+				if (!("Notification" in window)) {
+						console.log("This browser does not support desktop notification");
+					}
+
+				// Let's check whether notification permissions have alredy been granted
+				else if (Notification.permission === "granted") {
+					// If it's okay let's create a notification
+					var notifikasi = new Notification('  Notification', {
+						icon: "<?php echo base_url('assets/images/notif.png') ?>",
+						body: data.message,
+						requireInteraction: true,
+					});
+					notifikasi.onclick = function () {
+						window.focus();
+						window.location.href = data.url;
+					};
+					// setTimeout(function() { 
+					// 	notifikasi.close() 
+					// }, 60000);
+				}
+
+				// Otherwise, we need to ask the user for permission
+				else if (Notification.permission !== 'denied' || Notification.permission === "default") {
+					Notification.requestPermission(function (permission) {
+						// If the user accepts, let's create a notification
+					  	if (permission === "granted") {
+					    	var notifikasi = new Notification('  Notification', {
+								icon: "<?php echo base_url('assets/images/notif.png') ?>",
+								body: data.message,
+								requireInteraction: true,
+							});
+							notifikasi.onclick = function () {
+								window.focus();
+								window.location.href = data.url;
+							};
+							// setTimeout(function() { 
+							// 	notifikasi.close() 
+							// }, 60000);
+					  	}
+					});
+				}
+		    }
 		});
 	}
 </script>
@@ -578,7 +637,11 @@
 		    	$("#INPUT_PAYMENT").attr('required','true');
 		    } else {
 		    	$("#INPUT_PAYMENT").removeAttr('required','true');
-		    }	
+		    }
+
+		    // if($("#INPUT_BANK").val() == 34) {
+		    // 	alert('tes');
+		    // }
 	    });
         
         $("#SAVE-SAMPLING").click(function() {
@@ -637,10 +700,99 @@
 	});
 
 	$(document).ready(function(){
-		$("#CUST_ID").change(function(){ 
+		$("#CUST_SELECT").change(function(){ 
 		    $("#result").hide();
 		    $("#serv").hide();
 		    $("#tarf").hide();
+		    $.ajax({
+		        type: "POST", 
+		        url: "<?php echo site_url('cs/custdata'); ?>", 
+		        data: {
+		        	CUST_ID : $("#CUST_SELECT").val(),
+		        	}, 
+		        dataType: "json",
+		        beforeSend: function(e) {
+		        	$(".spinner").css("display","block");
+		        	if(e && e.overrideMimeType) {
+		            	e.overrideMimeType("application/json;charset=UTF-8");
+		          	}
+		        },
+		        success: function(response){ 
+		          	$(".spinner").css("display","none");
+					$("#result").html(response.list_customer).show('slow');
+					$("#cha-result").html(response.list_channel).show('slow');
+					$("#cha-result").selectpicker('refresh');
+					$("#COURIER_SAMPLING").selectpicker('val','refresh');
+		        },
+		        error: function (xhr, ajaxOptions, thrownError) {
+		        	$(".spinner").css("display","none"); 
+		          	alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError); 
+		        }
+		    });
+	    });
+
+	    if($("#CUST_SELECT").val() != null) {
+		    $("#result").hide();
+		    $("#serv").hide();
+		    $("#tarf").hide();
+		    $.ajax({
+		        type: "POST", 
+		        url: "<?php echo site_url('cs/custdata'); ?>", 
+		        data: {
+		        	CUST_ID : $("#CUST_SELECT").val(),
+		        	CHANNEL : "<?php echo $this->uri->segment(3) ?>",
+		        	}, 
+		        dataType: "json",
+		        beforeSend: function(e) {
+		        	$(".spinner").css("display","block");
+		        	if(e && e.overrideMimeType) {
+		            	e.overrideMimeType("application/json;charset=UTF-8");
+		          	}
+		        },
+		        success: function(response){ 
+		          	$(".spinner").css("display","none");
+					$("#result").html(response.list_customer).show('slow');
+					$("#cha-result").html(response.list_channel).show('slow');
+					$("#cha-result").selectpicker('refresh');
+					$("#COURIER_SAMPLING").selectpicker('val','refresh');
+		        },
+		        error: function (xhr, ajaxOptions, thrownError) {
+		        	$(".spinner").css("display","none"); 
+		          	alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError); 
+		        }
+		    });
+	    };
+
+	    $("#CHECK_PRODUCT").change(function(){
+		    $.ajax({
+		        type: "POST", 
+		        url: "<?php echo site_url('cs/list_umea'); ?>",
+		        data: {
+		        	PRO_ID : $("#CHECK_PRODUCT").val(),
+		        	},
+		        dataType: "json",
+		        beforeSend: function(e) {
+		        	if(e && e.overrideMimeType) {
+		            	e.overrideMimeType("application/json;charset=UTF-8");
+		          	}
+		        },
+		        success: function(response){
+					$("#CHECK_UMEA").html(response.list_umea).show();
+					$("#CHECK_UMEA").selectpicker('refresh');
+		        },
+		        error: function (xhr, ajaxOptions, thrownError) { 
+		          	alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+		        }
+		    });
+	    }); 
+
+	    $("#CUST_ID").change(function(){ 
+		    $("#result").hide();
+		    $("#serv").hide();
+		    $("#cetak-service").hide();
+		    $("#tarf").hide();
+		    $("#deposit").hide();
+		    $("#total").hide();
 		    $.ajax({
 		        type: "POST", 
 		        url: "<?php echo site_url('cs/custdata'); ?>", 
@@ -674,6 +826,8 @@
 	    	$("#service").selectpicker('val', 'refresh');
 	    	$("#cetak-service").hide();
 	    	$("#tarf").hide('slow');
+	    	$("#deposit").hide();
+	    	$("#total").hide();
 	    });
 
 		$("#serv").hide();
@@ -682,6 +836,8 @@
 	    	$("#service").hide();
 	    	$("#cetak-service").hide();
 	    	$("#tarf").hide();
+	    	$("#deposit").hide();
+	    	$("#total").hide();
 	    	var COURIER   = $("#COURIER_SAMPLING").val();
 	    	var COURIER_R = COURIER.split(",");
 	    	var COURIER_V = COURIER_R[0];
@@ -721,6 +877,91 @@
 						$(".spinner3").css("display","none");
 		        		$("#serv").hide();
 		        		$("#tarf").html(response.list_courier).show('slow');
+		        		$("#deposit").html(response.list_deposit).show('slow');
+		        		$("#total").html(response.list_total).show('slow');
+
+						if($("#DEPOSIT_VALUE").val() < 0) {
+							$("#pilih-deposit").attr("checked", "checked");
+							$("#pilih-deposit").attr("disabled", "disabled");
+						}
+
+						$("#pilih-deposit").ready(function(){
+						    if ($("#pilih-deposit").is(":checked")){
+						    	var cost = $("#COST_VALUE").val();
+						    	var	reverse_cost  = cost.toString().split('').reverse().join(''),
+										cost_conv = reverse_cost.match(/\d{1,3}/g);
+										cost_conv = cost_conv.join('').split('').reverse().join('');
+
+						    	var deposit = $("#DEPOSIT_VALUE").val();
+						    	var	reverse_deposit  = deposit.toString().split('').reverse().join(''),
+										deposit_conv = reverse_deposit.match(/\d{1,3}/g);
+										deposit_conv = deposit_conv.join('').split('').reverse().join('');
+
+								if (deposit < 0) {
+									var total = parseInt(cost_conv) - parseInt(-deposit_conv);
+								} else {
+									var total = parseInt(cost_conv) - parseInt(deposit_conv);
+								}
+								var	reverse_total  = total.toString().split('').reverse().join(''),
+										total_conv = reverse_total.match(/\d{1,3}/g);
+										total_conv = total_conv.join('.').split('').reverse().join('');
+						    	
+						    	$("#SAMPLING_DEPOSIT").val(deposit_conv);
+						    	
+						    	if(deposit_conv >= cost_conv) {
+						    		$("#CETAK_TOTAL").val('0');
+						    		if($("#INPUT_BANK").val() != 34) {
+							    		$("#INPUT_BANK").selectpicker('val', 'refresh');
+							    		$("#INPUT_BANK").selectpicker('val', '34');
+							    	}
+						    	} else {
+						    		$("#CETAK_TOTAL").val(total_conv);
+						    	}
+							} else {
+								var cost = $("#COST_VALUE").val();
+								$("#SAMPLING_DEPOSIT").val('');
+						    	$("#CETAK_TOTAL").val(cost);
+							}
+						});
+
+						$("#pilih-deposit").click(function(){
+						    if ($("#pilih-deposit").is(":checked")){
+						    	var cost = $("#COST_VALUE").val();
+						    	var	reverse_cost  = cost.toString().split('').reverse().join(''),
+										cost_conv = reverse_cost.match(/\d{1,3}/g);
+										cost_conv = cost_conv.join('').split('').reverse().join('');
+
+						    	var deposit = $("#DEPOSIT_VALUE").val();
+						    	var	reverse_deposit  = deposit.toString().split('').reverse().join(''),
+										deposit_conv = reverse_deposit.match(/\d{1,3}/g);
+										deposit_conv = deposit_conv.join('').split('').reverse().join('');
+
+								if (deposit < 0) {
+									var total = parseInt(cost_conv) - parseInt(-deposit_conv);
+								} else {
+									var total = parseInt(cost_conv) - parseInt(deposit_conv);
+								}
+								var	reverse_total  = total.toString().split('').reverse().join(''),
+										total_conv = reverse_total.match(/\d{1,3}/g);
+										total_conv = total_conv.join('.').split('').reverse().join('');
+						    	
+						    	$("#SAMPLING_DEPOSIT").val(deposit_conv);
+						    	
+						    	if(parseInt(deposit_conv) >= parseInt(cost_conv)) {
+						    		$("#CETAK_TOTAL").val('0');
+						    		if($("#INPUT_BANK").val() != 34) {
+							    		$("#INPUT_BANK").selectpicker('val', 'refresh');
+							    		$("#INPUT_BANK").selectpicker('val', '34');
+							    	}
+						    	} else {
+						    		$("#CETAK_TOTAL").val(total_conv);
+						    	}
+							} else {
+								var cost = $("#COST_VALUE").val();
+								$("#SAMPLING_DEPOSIT").val('');
+						    	$("#CETAK_TOTAL").val(cost);
+							}
+						});
 		        	}
 		        },
 		        error: function (xhr, ajaxOptions, thrownError) {
@@ -748,21 +989,108 @@
 		        	courier 		: COURIER_N,
 		        	service 		: SERVICE_N,
 		        	tarif 			: TARIF_V,
+		        	cust_id 		: $("#CUST_ID").val(),
 		        	}, 
 		        dataType: "json",
 		        beforeSend: function(e) {
 		        	$(".spinner3").css("display","block");
 		        	$("#tarf").hide();
+		        	$("#deposit").hide();
+		        	$("#total").hide();
 		        	if(e && e.overrideMimeType) {
 		            	e.overrideMimeType("application/json;charset=UTF-8");
 		          	}
 		        },
 		        success: function(response){
 		        	$(".spinner3").css("display","none");
-					// $("#serv").show();
 					$("#service-type").val(SERVICE_N);
 					$("#tarf").html(response.list_tarif).show('slow');
 					$("#tarf").selectpicker('refresh');
+					$("#deposit").html(response.list_deposit).show('slow');
+					$("#total").html(response.list_total).show('slow');
+					
+					if($("#DEPOSIT_VALUE").val() < 0) {
+						$("#pilih-deposit").attr("checked", "checked");
+						$("#pilih-deposit").attr("disabled", "disabled");
+					}
+
+					$("#pilih-deposit").ready(function(){
+					    if ($("#pilih-deposit").is(":checked")){
+					    	var cost = $("#COST_VALUE").val();
+					    	var	reverse_cost  = cost.toString().split('').reverse().join(''),
+									cost_conv = reverse_cost.match(/\d{1,3}/g);
+									cost_conv = cost_conv.join('').split('').reverse().join('');
+
+					    	var deposit = $("#DEPOSIT_VALUE").val();
+					    	var	reverse_deposit  = deposit.toString().split('').reverse().join(''),
+									deposit_conv = reverse_deposit.match(/\d{1,3}/g);
+									deposit_conv = deposit_conv.join('').split('').reverse().join('');
+
+							if (deposit < 0) {
+								var total = parseInt(cost_conv) - parseInt(-deposit_conv);
+							} else {
+								var total = parseInt(cost_conv) - parseInt(deposit_conv);
+							}
+							var	reverse_total  = total.toString().split('').reverse().join(''),
+									total_conv = reverse_total.match(/\d{1,3}/g);
+									total_conv = total_conv.join('.').split('').reverse().join('');
+					    	
+					    	$("#SAMPLING_DEPOSIT").val(deposit_conv);
+					    	
+					    	if(deposit_conv >= cost_conv) {
+					    		$("#CETAK_TOTAL").val('0');
+					    		if($("#INPUT_BANK").val() != 34) {
+						    		$("#INPUT_BANK").selectpicker('val', 'refresh');
+						    		$("#INPUT_BANK").selectpicker('val', '34');
+						    	}
+					    	} else {
+					    		$("#CETAK_TOTAL").val(total_conv);
+					    	}
+						} else {
+							var cost = $("#COST_VALUE").val();
+							$("#SAMPLING_DEPOSIT").val('');
+					    	$("#CETAK_TOTAL").val(cost);
+						}
+					});
+					
+					$("#pilih-deposit").click(function(){
+					    if ($("#pilih-deposit").is(":checked")){
+					    	var cost = $("#COST_VALUE").val();
+					    	var	reverse_cost  = cost.toString().split('').reverse().join(''),
+									cost_conv = reverse_cost.match(/\d{1,3}/g);
+									cost_conv = cost_conv.join('').split('').reverse().join('');
+
+					    	var deposit = $("#DEPOSIT_VALUE").val();
+					    	var	reverse_deposit  = deposit.toString().split('').reverse().join(''),
+									deposit_conv = reverse_deposit.match(/\d{1,3}/g);
+									deposit_conv = deposit_conv.join('').split('').reverse().join('');
+
+							if (deposit < 0) {
+								var total = parseInt(cost_conv) - parseInt(-deposit_conv);
+							} else {
+								var total = parseInt(cost_conv) - parseInt(deposit_conv);
+							}
+							var	reverse_total  = total.toString().split('').reverse().join(''),
+									total_conv = reverse_total.match(/\d{1,3}/g);
+									total_conv = total_conv.join('.').split('').reverse().join('');
+					    	
+					    	$("#SAMPLING_DEPOSIT").val(deposit_conv);
+					    	
+					    	if(parseInt(deposit_conv) >= parseInt(cost_conv)) {
+					    		$("#CETAK_TOTAL").val('0');
+					    		if($("#INPUT_BANK").val() != 34) {
+						    		$("#INPUT_BANK").selectpicker('val', 'refresh');
+						    		$("#INPUT_BANK").selectpicker('val', '34');
+						    	}
+					    	} else {
+					    		$("#CETAK_TOTAL").val(total_conv);
+					    	}
+						} else {
+							var cost = $("#COST_VALUE").val();
+							$("#SAMPLING_DEPOSIT").val('');
+					    	$("#CETAK_TOTAL").val(cost);
+						}
+					});
 		        },
 		        error: function (xhr, ajaxOptions, thrownError) {
 		        	$(".spinner2").css("display","none"); 
@@ -770,7 +1098,6 @@
 		          	alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError); 
 		        }
 		    });
-
 	    });
 	});
 
@@ -952,10 +1279,10 @@
 		    $("#PRO_ID").selectpicker('val','refresh');
 		    $("#result").hide();
 		    $("#option").css("display","none");
+		    $("#ORDD_OPTION").val('');
 		    $("#UMEA").val('');
-		    $("#ORDV_WEIGHT").val(0);
-			$("#ORDD_PRICE").val(0);
-			$("#ORDD_PRICE_VENDOR").val(0);
+		    $("#ORDD_WEIGHT").val(0);
+			$("#TOTAL_ORDD_PRICE").val(0);
 	    });
 	});
 	// data product by id
@@ -963,6 +1290,7 @@
 		$("#PRO_ID").change(function(){ 
 		    $("#result").hide();
 		    $("#option").css("display","none");
+		    $("#ORDD_OPTION").val('');
 		    $.ajax({
 		        type: "POST", 
 		        url: "<?php echo site_url('order/productdata'); ?>", 
@@ -985,7 +1313,7 @@
 					}
 					var jumlah = $("#ORDD_QUANTITY").val();
 					total_berat = jumlah * berat_satuan;
-					$("#ORDV_WEIGHT").val(total_berat);
+					$("#ORDD_WEIGHT").val(total_berat.toFixed(2));
 					
 					// total harga
 					if ($("#HARGA").val() != null) {
@@ -998,7 +1326,7 @@
 					var	reverse = total_harga.toString().split('').reverse().join(''),
 						ribuan 	= reverse.match(/\d{1,3}/g);
 						ribuan	= ribuan.join('.').split('').reverse().join('');
-					$("#ORDD_PRICE").val(ribuan);
+					$("#TOTAL_ORDD_PRICE").val(ribuan);
 
 					// total harga vendor
 					if ($("#HARGA_VENDOR").val() != null) {
@@ -1010,7 +1338,6 @@
 					var	reverse_vendor 		= total_harga_vendor.toString().split('').reverse().join(''),
 						ribuan_vendor 		= reverse_vendor.match(/\d{1,3}/g);
 						ribuan_vendor		= ribuan_vendor.join('.').split('').reverse().join('');
-					$("#ORDD_PRICE_VENDOR").val(ribuan_vendor);
 				}
 		    });
 	    });
@@ -1027,7 +1354,7 @@
 			}
 			var jumlah = $("#ORDD_QUANTITY").val();
 			total_berat = jumlah * berat_satuan;
-			$("#ORDV_WEIGHT").val(total_berat);
+			$("#ORDD_WEIGHT").val(total_berat.toFixed(2));
 
 			// total harga
 			if ($("#HARGA").val() != null) {
@@ -1040,7 +1367,7 @@
 			var	reverse = total_harga.toString().split('').reverse().join(''),
 				ribuan 	= reverse.match(/\d{1,3}/g);
 				ribuan	= ribuan.join('.').split('').reverse().join('');
-			$("#ORDD_PRICE").val(ribuan);
+			$("#TOTAL_ORDD_PRICE").val(ribuan);
 
 			// total harga vendor
 			if ($("#HARGA_VENDOR").val() != null) {
@@ -1052,7 +1379,6 @@
 			var	reverse_vendor 		= total_harga_vendor.toString().split('').reverse().join(''),
 				ribuan_vendor 		= reverse_vendor.match(/\d{1,3}/g);
 				ribuan_vendor		= ribuan_vendor.join('.').split('').reverse().join('');
-			$("#ORDD_PRICE_VENDOR").val(ribuan_vendor);
 			
 		});
 	});

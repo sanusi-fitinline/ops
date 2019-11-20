@@ -96,6 +96,20 @@ class Product_m extends CI_Model {
 		return $query;
 	}
 
+	public function get_umea($PRO_ID) {
+        $this->db->select('tb_product.PRO_ID, a.UMEA_ID AS UNIT_ID, a.UMEA_NAME AS UNIT_NAME, b.UMEA_ID AS VOL_ID,  b.UMEA_NAME AS VOL_NAME, c.UMEA_ID AS TOTAL_ID, c.UMEA_NAME AS TOTAL_NAME');
+        $this->db->from('tb_product');
+        $this->db->join('tb_unit_measure AS a', 'a.UMEA_ID=tb_product.PRO_UNIT', 'left');
+        $this->db->join('tb_unit_measure AS b', 'b.UMEA_ID=tb_product.PRO_VOL_UNIT', 'left');
+        $this->db->join('tb_unit_measure AS c', 'c.UMEA_ID=tb_product.PRO_TOTAL_UNIT', 'left');
+        $this->db->where('tb_product.PRO_ID', $PRO_ID);
+        $this->db->order_by('a.UMEA_NAME', 'ASC');
+        $this->db->order_by('b.UMEA_NAME', 'ASC');
+        $this->db->order_by('c.UMEA_NAME', 'ASC');
+        $query = $this->db->get();
+        return $query;
+    }
+
 	public function insert(){
 		date_default_timezone_set('Asia/Jakarta');
 		$config['upload_path']          = './assets/images/product/';
@@ -163,9 +177,13 @@ class Product_m extends CI_Model {
         {
         	$gambar = $this->input->post('OLD_PICTURE', TRUE);
         } else {
-        	$query = $this->db->get_where('tb_product',['PRO_ID' => $PRO_ID])->row();
-	        unlink("assets/images/product/".$query->PRO_PICTURE);
-	        $gambar = $this->upload->data('file_name', TRUE);
+	        $query = $this->db->get_where('tb_product',['PRO_ID' => $PRO_ID])->row();
+	        if($query->PRO_PICTURE != null || $query->PRO_PICTURE != ''){
+	        	if(file_exists("./assets/images/product/".$query->PRO_PICTURE)) {
+			        unlink("./assets/images/product/".$query->PRO_PICTURE);
+	        	}
+        	}
+		    $gambar = $this->upload->data('file_name', TRUE);
 		}
 		$dataUpdate = array(
 			'PRO_NAME'				=> $this->input->post('PRO_NAME', TRUE),
@@ -180,6 +198,9 @@ class Product_m extends CI_Model {
 			'PRO_VOL_UNIT'			=> $this->input->post('PRO_VOL_UNIT', TRUE),
 			'PRO_PRICE_VENDOR'		=> str_replace(".", "", $this->input->post('PRO_PRICE_VENDOR', TRUE)),
 			'PRO_VOL_PRICE_VENDOR'	=> str_replace(".", "", $this->input->post('PRO_VOLPRICE_VENDOR', TRUE)),
+			'PRO_TOTAL_COUNT'		=> $this->input->post('PRO_TOTAL_COUNT', TRUE),
+			'PRO_TOTAL_UNIT'		=> $this->input->post('PRO_TOTAL_UNIT', TRUE),
+			'PRO_TOTAL_WEIGHT'		=> $this->input->post('PRO_TOTAL_WEIGHT', TRUE),
 			'VEND_ID'				=> $this->input->post('VEND_ID', TRUE),
 			'CURR_ID'				=> $this->input->post('CURR_ID', TRUE),
 			'CITY_ID'				=> $this->input->post('CITY_ID', TRUE),
@@ -195,8 +216,10 @@ class Product_m extends CI_Model {
         $query1 = $this->db->delete('tb_poption',['PRO_ID'=>$PRO_ID]);
         foreach($opt as $row) {
 	        if($query1){
-	        	if($row->POPT_PICTURE !=null) {
-	            	unlink("assets/images/product/option/".$row->POPT_PICTURE);
+	        	if($row->POPT_PICTURE !=null || $row->POPT_PICTURE != '') {
+	        		if(file_exists("./assets/images/product/option/".$row->POPT_PICTURE)) {
+	            		unlink("./assets/images/product/option/".$row->POPT_PICTURE);
+	            	}
 				}
 	        }
         }
@@ -204,8 +227,10 @@ class Product_m extends CI_Model {
 		$pro = $this->db->get_where('tb_product',['PRO_ID' => $PRO_ID])->row();
         $query2 = $this->db->delete('tb_product',['PRO_ID'=>$PRO_ID]);
         if($query2){
-        	if($pro->PRO_PICTURE !=null) {
-            	unlink("assets/images/product/".$pro->PRO_PICTURE);
+        	if($pro->PRO_PICTURE != null || $pro->PRO_PICTURE != ''){
+	        	if(file_exists("./assets/images/product/".$pro->PRO_PICTURE)) {
+			        unlink("./assets/images/product/".$pro->PRO_PICTURE);
+	        	}
         	}
         }
 	}

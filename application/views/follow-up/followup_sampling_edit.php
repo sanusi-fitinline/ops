@@ -33,6 +33,7 @@
 												<div class="input-group-prepend">
 										          	<span class="input-group-text"><i class="fa fa-calendar"></i></span>
 										        </div>
+												<input class="form-control" type="hidden" name="CUST_ID" value="<?php echo $row->CUST_ID?>" autocomplete="off" required>
 												<input class="form-control" type="hidden" name="CLOG_ID" value="<?php echo $row->CLOG_ID?>" autocomplete="off" required>
 												<input class="form-control datepicker" type="text" name="FLWP_DATE" value="<?php echo $row->FLWP_DATE != null ? date('d-m-Y', strtotime($row->FLWP_DATE)) : "" ?>" autocomplete="off" required>
 										    </div>

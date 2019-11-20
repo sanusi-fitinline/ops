@@ -115,10 +115,10 @@
 	            <td align="center">'.$i.'</td>
 	            <td>'.$field->PRO_NAME.'</td>
 	            <td>'.$field->ORDD_OPTION.'</td>
-	            <td align="right">'.number_format($field->PRICE,0,",",".").'</td>
+	            <td align="right">'.number_format($field->ORDD_PRICE,0,",",".").'</td>
 	            <td align="center">'.$field->ORDD_QUANTITY.'</td>
 	            <td align="center">'.$field->UMEA_NAME.'</td>
-	            <td align="right">'.number_format($field->ORDD_PRICE,0,",",".").'</td>
+	            <td align="right">'.number_format($field->ORDD_PRICE * $field->ORDD_QUANTITY,0,",",".").'</td>
 	        </tr>';
 	}
     $html.='<tr bgcolor="#ffffff">
@@ -161,8 +161,10 @@
     } else {
     	$html.='<p></p><p></p>';
     }
+    $a = str_replace('https:', 'http:', base_url('assets/images/ttd.jpg'));
+    $img = str_replace(':4433', ':8080', $a);
 	$html.= '<p style="font-size: 10px">Tertanda,</p>
-		<img src="'.base_url('assets/images/ttd.jpg').'" alt="test alt attribute" width="55" height="55" border="0" />
+		<img src="'.$img.'" alt="test alt attribute" width="55" height="55" border="0" />
 		<p style="font-size: 10px">(Istofani)</p>
 		<p style="font-size: 10px">Fitinline.com</p>';
     $pdf->writeHTML($html, true, false, true, false, '');

@@ -137,10 +137,10 @@
 						                			<td align="center" style="vertical-align: middle; width: 10px;"><?php echo $no++ ?></td>
 						                			<td style="vertical-align: middle;"><?php echo $value->PRO_NAME ?></td>
 						                			<td style="vertical-align: middle;"><?php echo $value->ORDD_OPTION ?></td>
-						                			<td align="right" style="vertical-align: middle;"><?php echo number_format($value->PRICE,0,',','.') ?></td>
+						                			<td align="right" style="vertical-align: middle;"><?php echo number_format($value->ORDD_PRICE,0,',','.') ?></td>
 						                			<td align="center" style="vertical-align: middle;"><?php echo $value->ORDD_QUANTITY ?></td>
 						                			<td align="center" style="vertical-align: middle;"><?php echo $value->UMEA_NAME ?></td>
-						                			<td style="vertical-align: middle;" align="right"><?php echo number_format($value->ORDD_PRICE,0,',','.') ?></td>
+						                			<td style="vertical-align: middle;" align="right"><?php echo number_format($value->ORDD_PRICE * $value->ORDD_QUANTITY,0,',','.') ?></td>
 						                		</tr>
 						                	<?php endforeach ?>
 						                </tbody>
@@ -209,11 +209,11 @@
 										                			<td align="center" style="vertical-align: middle;"><?php echo $i++ ?></td>
 										                			<td style="vertical-align: middle;"><?php echo $field->PRO_NAME ?></td>
 										                			<td style="vertical-align: middle;"><?php echo $field->ORDD_OPTION ?></td>
-										                			<td align="right" style="vertical-align: middle;"><?php echo number_format($field->PRICE,0,',','.') ?></td>
+										                			<td align="right" style="vertical-align: middle;"><?php echo number_format($field->ORDD_PRICE,0,',','.') ?></td>
 										                			<td align="center" style="vertical-align: middle;">
 										                				<?php echo $field->ORDD_QUANTITY ?></td>
 										                			<td align="center" style="vertical-align: middle;"><?php echo $field->UMEA_NAME ?></td>
-										                			<td align="right" style="vertical-align: middle;"><?php echo number_format($field->ORDD_PRICE,0,',','.') ?></td>
+										                			<td align="right" style="vertical-align: middle;"><?php echo number_format($field->ORDD_PRICE * $field->ORDD_QUANTITY,0,',','.') ?></td>
 										                			
 										                		</tr>
 										                	<?php endif ?>
@@ -222,7 +222,7 @@
 													<tfoot style="font-size: 14px;">
 								                		<tr>
 								                			<td colspan="6" align="right" style="font-weight: bold; padding-top: 20px;">SHIPMENT COST</td>
-								                			<td align="right"><?php echo $data->ORDV_SHIPCOST!=null ? $data->ORDV_SHIPCOST : "0"  ?></td>
+								                			<td align="right"><?php echo $data->ORDV_SHIPCOST!=null ? number_format($data->ORDV_SHIPCOST,0,',','.') : "0"  ?></td>
 								                		</tr>
 								                		<tr>
 								                			<td colspan="6" align="right" style="font-weight: bold;">SUBTOTAL</td>

@@ -23,7 +23,7 @@
 								<div class="form-group">
 									<input type="hidden" name="USER_ID" value="<?php echo $row->USER_ID ?>">
 									<label>Username</label>
-									<input class="form-control" type="text" name="USER_NAME" value="<?php echo $this->input->post('USER_NAME') ?? $row->USER_NAME ?>" autocomplete="off" required>
+									<input class="form-control" type="text" name="USER_NAME" value="<?php echo $this->input->post('USER_NAME') ? $this->input->post('USER_NAME') : $row->USER_NAME ?>" autocomplete="off" required>
 								</div>
 								<div class="form-group">
 									<label>Userlogin</label>

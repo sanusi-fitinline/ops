@@ -58,15 +58,14 @@ class Orderletter_m extends CI_Model {
 		return $query;
 	}
 
-	public function add($ORDER_ID) {
+	public function insert($ORDER_ID) {
 		date_default_timezone_set('Asia/Jakarta');
 		$params['ORDL_DATE']	= date('Y-m-d', strtotime($this->input->post('ORDL_DATE', TRUE)));
 		$params['ORDER_ID']		= $ORDER_ID;
 		$params['ORDL_TYPE']	= $this->input->post('ORDL_TYPE', TRUE);
 		$params['ORDL_NO']		= $this->input->post('ORDL_NO', TRUE);
 		$params['ORDL_LNO']		= $this->input->post('ORDL_LNO', TRUE);
-		$params['ORDL_NOTES']	= $this->input->post('ORDL_NOTES', TRUE);
-		
+		$params['ORDL_NOTES']	= $this->input->post('ORDL_NOTES', TRUE);	
 		$insert = $this->db->insert('tb_order_letter', $this->db->escape_str($params));
 		if($insert) {
 			if($this->input->post('ORDL_TYPE') == 1) {

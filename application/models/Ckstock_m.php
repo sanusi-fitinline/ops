@@ -118,7 +118,7 @@ class Ckstock_m extends CI_Model {
 		$view = 1;    
 		$viewall =  $this->access_m->isViewAll($modul, $view)->row();
 		$viewall2 =  $this->access_m->isViewAll($modul2, $view)->row();
-		$this->db->select('tb_log_stock.*, tb_product.PRO_NAME, tb_customer.CUST_ID, tb_customer.CUST_NAME, tb_customer.CUST_PHONE, tb_customer.CUST_EMAIL, tb_customer.CUST_ADDRESS, tb_customer.CNTR_ID, tb_customer.STATE_ID, tb_customer.CITY_ID, tb_customer.SUBD_ID, tb_country.CNTR_NAME, tb_state.STATE_NAME, tb_city.CITY_NAME, tb_subdistrict.SUBD_NAME, tb_unit_measure.UMEA_NAME, tb_vendor.VEND_NAME, tb_vendor.VEND_PHONE');
+		$this->db->select('tb_log_stock.*, tb_product.PRO_NAME, tb_product.PRO_PICTURE, tb_product.PRO_PRICE, tb_product.PRO_PRICE_VENDOR, tb_customer.CUST_ID, tb_customer.CUST_NAME, tb_customer.CUST_PHONE, tb_customer.CUST_EMAIL, tb_customer.CUST_ADDRESS, tb_customer.CNTR_ID, tb_customer.STATE_ID, tb_customer.CITY_ID, tb_customer.SUBD_ID, tb_country.CNTR_NAME, tb_state.STATE_NAME, tb_city.CITY_NAME, tb_subdistrict.SUBD_NAME, tb_unit_measure.UMEA_NAME, tb_vendor.VEND_NAME, tb_vendor.VEND_PHONE');
 		$this->db->from('tb_log_stock');
 		$this->db->join('tb_customer', 'tb_customer.CUST_ID=tb_log_stock.CUST_ID', 'left');
 		$this->db->join('tb_country', 'tb_country.CNTR_ID=tb_customer.CNTR_ID', 'left');
@@ -137,6 +137,31 @@ class Ckstock_m extends CI_Model {
 			$this->db->where('tb_log_stock.LSTOCK_ID', $LSTOCK_ID);
 		}
 		$this->db->order_by('tb_log_stock.LSTOCK_DATE', 'DESC');
+		$query = $this->db->get();
+		return $query;
+	}
+
+	public function get_product($CLOG_ID = null) {
+		$this->load->model('access_m');
+		$modul = "Check Stock CS";
+		$modul2 = "Check Stock PM";
+		$view = 1;    
+		$viewall =  $this->access_m->isViewAll($modul, $view)->row();
+		$viewall2 =  $this->access_m->isViewAll($modul2, $view)->row();
+		$this->db->select('tb_log_stock.*, tb_customer.CUST_NAME, tb_product.PRO_NAME, tb_product.PRO_PRICE, tb_product.PRO_PRICE_VENDOR, tb_product.PRO_WEIGHT, tb_product.PRO_VOL_PRICE, tb_product.PRO_VOL_PRICE_VENDOR, tb_product.VEND_ID, tb_unit_measure.UMEA_NAME, tb_customer_log.CHA_ID');
+		$this->db->from('tb_log_stock');
+		$this->db->join('tb_customer_log', 'tb_customer_log.CLOG_ID=tb_log_stock.CLOG_ID', 'inner');
+		$this->db->join('tb_customer', 'tb_customer.CUST_ID=tb_log_stock.CUST_ID', 'left');
+		$this->db->join('tb_product', 'tb_product.PRO_ID=tb_log_stock.PRO_ID', 'left');
+		$this->db->join('tb_unit_measure', 'tb_unit_measure.UMEA_ID=tb_log_stock.UMEA_ID', 'left');
+		if ($this->session->GRP_SESSION !=3) {
+			if (!($viewall || $viewall2)) { // filter sesuai hak akses
+				$this->db->where('tb_log_stock.USER_ID', $this->session->USER_SESSION);
+			}
+	    }
+		if($CLOG_ID != null){
+			$this->db->where('tb_log_stock.CLOG_ID', $CLOG_ID);
+		}
 		$query = $this->db->get();
 		return $query;
 	}

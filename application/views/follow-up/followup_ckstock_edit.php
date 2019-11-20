@@ -68,6 +68,23 @@
 											    <?php endforeach ?>
 										    </select>
 										</div>
+										<div class="form-group">
+											<?php foreach($product as $field): ?>
+												<?php if($field->LSTOCK_STATUS != 0): ?>
+													<input class="form-control" type="hidden" name="CUST_ID" value="<?php echo $field->CUST_ID ?>">
+													<input class="form-control" type="hidden" name="PRO_ID[]" value="<?php echo $field->PRO_ID ?>">
+													<input class="form-control" type="hidden" name="VEND_ID[]" value="<?php echo $field->VEND_ID ?>">
+													<input class="form-control" type="hidden" name="ORDD_QUANTITY[]" value="<?php echo $field->LSTOCK_AMOUNT ?>">
+													<input class="form-control" type="hidden" name="ORDD_OPTION[]" value="<?php echo $field->LSTOCK_COLOR ?>">
+													<input class="form-control" type="hidden" name="UMEA_ID[]" value="<?php echo $field->UMEA_ID ?>">
+													<input class="form-control" type="hidden" name="PRICE[]" value="<?php echo $field->PRO_PRICE ?>">
+													<input class="form-control" type="hidden" name="PRICE_VENDOR[]" value="<?php echo $field->PRO_PRICE_VENDOR ?>">
+													<input class="form-control" type="hidden" name="ORDD_WEIGHT[]" value="<?php echo ($field->LSTOCK_AMOUNT * $field->PRO_WEIGHT) ?>">
+													<input class="form-control" type="hidden" name="CHA_ID" value="<?php echo $field->CHA_ID ?>">
+													<input class="form-control" type="hidden" name="USER_ID" value="<?php echo $this->session->USER_SESSION ?>">
+												<?php endif ?>
+											<?php endforeach ?>
+										</div>
 										<br>
 										<div align="center">
 								      		<?php if((!$this->access_m->isEdit('Follow Up', 1)->row()) && ($this->session->GRP_SESSION !=3)) : ?>

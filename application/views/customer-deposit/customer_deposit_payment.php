@@ -80,8 +80,6 @@
 						?>
 						<textarea class="form-control" cols="100%" rows="5" readonly><?php echo $BANK.$ACCOUNTNAME.$ACCOUNTNO ?></textarea>
 					</div>
-				</div>
-				<div class="col-md-3">
 					<div class="form-group">
 						<label>Deposit</label>
 						<div class="input-group">
@@ -91,7 +89,13 @@
 							<input class="form-control" type="text" name="" value="<?php echo number_format($row->CUSTD_DEPOSIT,0,',','.') ?>" readonly>
 					    </div>
 					</div>
+				</div>
+				<div class="col-md-3">
 					<form action="<?php echo site_url('customer_deposit/refund/'.$row->CUSTD_ID)?>" method="POST" enctype="multipart/form-data">
+						<div class="form-group">
+							<label>Notes</label>
+							<textarea class="form-control" name="CUSTD_NOTES" cols="100%" rows="5"></textarea>
+						</div>
 						<div class="form-group">
 							<label>Payment Date</label>
 							<div class="input-group">
@@ -102,7 +106,11 @@
 						    </div>
 						</div>
 						<div align="center">
-							<button class="btn btn-sm btn-primary" type="submit" name="UPDATE"><i class="fa fa-save"></i> UPDATE</button>
+							<?php if((!$this->access_m->isEdit('Customer Deposit', 1)->row()) && ($this->session->GRP_SESSION !=3)) : ?>
+				        		<button class="btn btn-sm btn-secondary" type="submit" name="UPDATE" disabled><i class="fa fa-save"></i> UPDATE</button>
+					        <?php else: ?>
+					        	<button class="btn btn-sm btn-primary" type="submit" name="UPDATE"><i class="fa fa-save"></i> UPDATE</button>
+					        <?php endif ?>
 						</div>
 					</form>
 				</div>

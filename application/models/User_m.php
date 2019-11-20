@@ -98,6 +98,15 @@ class User_m extends CI_Model {
         return $query;
     }
 
+    public function get_only_cs() {
+        $this->db->select('*');
+        $this->db->from('tb_user');
+        $this->db->where('GRP_ID', 1);
+        $this->db->order_by('USER_NAME', 'ASC');
+        $query = $this->db->get();
+        return $query;
+    }
+
 	public function insert(){
 		$dataInsert = array(
 			'USER_NAME'			=> $this->input->post('USER_NAME', TRUE),

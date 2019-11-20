@@ -107,8 +107,8 @@ class Clog_m extends CI_Model {
 
 	public function get($CLOG_ID = null){
 		$this->db->select('tb_customer_log.*, tb_customer_activity.CACT_NAME, tb_customer.CUST_NAME, tb_user.USER_NAME, tb_channel.CHA_NAME, tb_followup_status.FLWS_NAME');
-		$this->db->join('tb_customer_activity', 'tb_customer_activity.CACT_ID=tb_customer_log.CACT_ID', 'left');
 		$this->db->from('tb_customer_log');
+		$this->db->join('tb_customer_activity', 'tb_customer_activity.CACT_ID=tb_customer_log.CACT_ID', 'left');
 		$this->db->join('tb_customer', 'tb_customer.CUST_ID=tb_customer_log.CUST_ID', 'left');
 		$this->db->join('tb_user', 'tb_user.USER_ID=tb_customer_log.USER_ID', 'left');
 		$this->db->join('tb_channel', 'tb_channel.CHA_ID=tb_customer_log.CHA_ID', 'left');
@@ -119,6 +119,28 @@ class Clog_m extends CI_Model {
         $query = $this->db->get();
         return $query;
 	}
+
+    public function get_by_channel($CUST_ID) {
+        $this->db->select('tb_customer_log.CHA_ID, tb_channel.CHA_NAME');
+        $this->db->from('tb_customer_log');
+        $this->db->join('tb_channel', 'tb_channel.CHA_ID=tb_customer_log.CHA_ID', 'left');
+        $this->db->where('tb_customer_log.CUST_ID', $CUST_ID);
+        $this->db->order_by('CLOG_ID', 'DESC');
+        $this->db->limit(1);
+        $query = $this->db->get();
+        return $query;
+    }
+
+    public function get_followup_date($CUST_ID) {
+        $this->db->select('tb_customer_log.CLOG_ID,tb_followup.FLWP_DATE');
+        $this->db->from('tb_customer_log');
+        $this->db->join('tb_followup', 'tb_followup.CLOG_ID=tb_customer_log.CLOG_ID', 'left');
+        $this->db->where('tb_customer_log.CUST_ID', $CUST_ID);
+        $this->db->order_by('tb_customer_log.CLOG_ID', 'DESC');
+        $this->db->limit(1);
+        $query = $this->db->get();
+        return $query;
+    }
 
     public function check_open($CLOG_ID) {
         $query = $this->db->query("SELECT tb_customer_log.* FROM tb_customer_log WHERE CLOG_ID = '$CLOG_ID' AND FLWS_ID != '0'");
