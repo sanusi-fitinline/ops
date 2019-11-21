@@ -71,8 +71,9 @@
 											       			<td align="right" style="vertical-align: middle;">
 											       				<input style="text-align: right; font-size: 14px;" class="form-control uang NEW_PRICE_VENDOR" type="text" name="NEW_PRICE_VENDOR[]" id="NEW_PRICE_VENDOR<?php echo $data->ORDD_ID ?>" autocomplete="off" value="<?php echo $data->ORDD_PRICE_VENDOR !=null ? $data->ORDD_PRICE_VENDOR : "0" ?>">
 											       			</td>
-											       			<td style="vertical-align: middle; padding-right: 25px;" align="right" class="TOTAL_ORDD_PRICE_VENDOR<?php echo $data->ORDER_ID ?>" id="TOTAL_ORDD_PRICE_VENDOR<?php echo $data->ORDD_ID ?>">
+											       			<td style="vertical-align: middle; padding-right: 25px;" align="right" id="CETAK_TOTAL_ORDD_PRICE_VENDOR<?php echo $data->ORDD_ID ?>">
 											       			</td>
+											       			<input class="TOTAL_ORDD_PRICE_VENDOR<?php echo $data->ORDER_ID ?>" id="TOTAL_ORDD_PRICE_VENDOR<?php echo $data->ORDD_ID ?>" type="hidden" name="" value="">
 											       			<input type="hidden" name="ORDD_ID[]" value="<?php echo $data->ORDD_ID ?>">
 											       			<input type="hidden" name="PRO_ID[]" value="<?php echo $data->PRO_ID ?>">
 											       			<input type="hidden" name="UMEA_ID[]" value="<?php echo $data->UMEA_ID ?>">
@@ -282,7 +283,8 @@
 			var	reverse_vendor 		= total_harga_vendor.toString().split('').reverse().join(''),
 				ribuan_vendor 		= reverse_vendor.match(/\d{1,3}/g);
 				ribuan_vendor		= ribuan_vendor.join('.').split('').reverse().join('');
-			$("#TOTAL_ORDD_PRICE_VENDOR"+detail_id).text(ribuan_vendor);
+			$("#CETAK_TOTAL_ORDD_PRICE_VENDOR"+detail_id).text(ribuan_vendor);
+			$("#TOTAL_ORDD_PRICE_VENDOR"+detail_id).val(ribuan_vendor);
 			//
 
 			if ($("#radio_advance").is(":checked")){
@@ -297,8 +299,8 @@
 		    		// TOTAL ORDD_PRICE_VENDOR
 					var ordv_total_vendor = 0;						    
 				    $(".TOTAL_ORDD_PRICE_VENDOR"+order_id).each(function(){
-				    	if($(this).text() != "") {
-				    		var total = $(this).text();
+				    	if($(this).val() != "") {
+				    		var total = $(this).val();
 				    	} else {
 				    		var total = 0;
 				    	}
@@ -381,8 +383,8 @@
 			    		// TOTAL ORDD_PRICE_VENDOR
 						var ordv_total_vendor = 0;						    
 					    $(".TOTAL_ORDD_PRICE_VENDOR"+order_id).each(function(){
-					    	if($(this).text() != "") {
-					    		var total = $(this).text();
+					    	if($(this).val() != "") {
+					    		var total = $(this).val();
 					    	} else {
 					    		var total = 0;
 					    	}
@@ -460,8 +462,8 @@
 			    		// TOTAL ORDD_PRICE_VENDOR
 						var ordv_total_vendor = 0;						    
 					    $(".TOTAL_ORDD_PRICE_VENDOR"+order_id).each(function(){
-					    	if($(this).text() != "") {
-					    		var total = $(this).text();
+					    	if($(this).val() != "") {
+					    		var total = $(this).val();
 					    	} else {
 					    		var total = 0;
 					    	}
@@ -539,8 +541,8 @@
 			    		// TOTAL ORDD_PRICE_VENDOR
 						var ordv_total_vendor = 0;						    
 					    $(".TOTAL_ORDD_PRICE_VENDOR"+order_id).each(function(){
-					    	if($(this).text() != "") {
-					    		var total = $(this).text();
+					    	if($(this).val() != "") {
+					    		var total = $(this).val();
 					    	} else {
 					    		var total = 0;
 					    	}
@@ -630,8 +632,8 @@
 			    	// TOTAL ORDD_PRICE_VENDOR
 					var ordv_total_vendor = 0;
 				    $(".TOTAL_ORDD_PRICE_VENDOR"+order).each(function(){
-				    	if($(this).text() != "") {
-				    		var total = $(this).text();
+				    	if($(this).val() != "") {
+				    		var total = $(this).val();
 				    	} else {
 				    		var total = 0;
 				    	}
@@ -706,50 +708,6 @@
 
 		    });
 
-	   //  	$(".ADDCOST").ready(function(){
-	   //  		var order = "<?php echo $value->ORDER_ID ?>";
-		  //   	// ORDV_ADDCOST_VENDOR
-				// if("#ORDV_ADDCOST_VENDOR"+order != "") {
-		  //   		var addcost = $("#ORDV_ADDCOST_VENDOR"+order).val();
-		  //   	} else {
-		  //   		var addcost = 0;
-		  //   	}
-		  //   	var	reverse_addcost = addcost.toString().split('').reverse().join(''),
-				// 	addcost 		= reverse_addcost.match(/\d{1,3}/g);
-				// 	addcost	 	    = addcost.join('').split('').reverse().join('');
-
-		  //   	// TOTAL ORDD_PRICE_VENDOR
-				// var ordv_total_vendor = 0;
-			 //    $(".TOTAL_ORDD_PRICE_VENDOR"+order).each(function(){
-			 //    	if($(this).text() != "") {
-			 //    		var total = $(this).text();
-			 //    	} else {
-			 //    		var total = 0;
-			 //    	}
-				// 	var	reverse = total.toString().split('').reverse().join(''),
-				// 		ordv_total 	= reverse.match(/\d{1,3}/g);
-				// 		ordv_total	= ordv_total.join('').split('').reverse().join('');
-			 //    	ordv_total_vendor += Number(ordv_total);
-
-			 //    });
-
-			 //    // shipcost
-			 //    var	reverse_shipcost = $("#ORDV_SHIPCOST"+order).text().toString().split('').reverse().join(''),
-				// 		shipcost 	= reverse_shipcost.match(/\d{1,3}/g);
-				// 		shipcost	= shipcost.join('').split('').reverse().join('');
-
-				// // discount
-	   //  		var reverse_discount = $("#ORDV_DISCOUNT_VENDOR"+order).val().toString().split('').reverse().join(''),
-				// 	discount 	= reverse_discount.match(/\d{1,3}/g);
-				// 	discount	= discount.join('').split('').reverse().join('');
-
-		  //   	if($("#radio_advance").is(":checked")){
-		  //   		var sub_total = parseInt(shipcost) + parseInt(addcost) + parseInt(ordv_total_vendor) - parseInt(discount);
-		  //   	} else {
-		  //   		var sub_total = parseInt(addcost) + parseInt(ordv_total_vendor) - parseInt(discount);
-		  //   	}
-	   //  	});
-
 	    	$(".DISCOUNT").each(function(){
 	    		var order = "<?php echo $value->ORDER_ID ?>";
 	    		// saat ORDV_DISCOUNT_VENDOR diubah
@@ -767,8 +725,8 @@
 			    	// TOTAL ORDD_PRICE_VENDOR
 					var ordv_total_vendor = 0;
 				    $(".TOTAL_ORDD_PRICE_VENDOR"+order).each(function(){
-				    	if($(this).text() != "") {
-				    		var total = $(this).text();
+				    	if($(this).val() != "") {
+				    		var total = $(this).val();
 				    	} else {
 				    		var total = 0;
 				    	}
@@ -843,50 +801,6 @@
 
 		    });
 
-	   //  	$(".DISCOUNT").ready(function(){
-	   //  		var order = "<?php echo $value->ORDER_ID ?>";
-		  //   	// ORDV_DISCOUNT_VENDOR
-				// if("#ORDV_DISCOUNT_VENDOR"+order != "") {
-		  //   		var discount = $("#ORDV_DISCOUNT_VENDOR"+order).val();
-		  //   	} else {
-		  //   		var discount = 0;
-		  //   	}
-		  //   	var	reverse_discount = discount.toString().split('').reverse().join(''),
-				// 	discount 		 = reverse_discount.match(/\d{1,3}/g);
-				// 	discount	 	 = discount.join('').split('').reverse().join('');
-
-		  //   	// TOTAL ORDD_PRICE_VENDOR
-				// var ordv_total_vendor = 0;
-			 //    $(".TOTAL_ORDD_PRICE_VENDOR"+order).each(function(){
-			 //    	if($(this).text() != "") {
-			 //    		var total = $(this).text();
-			 //    	} else {
-			 //    		var total = 0;
-			 //    	}
-				// 	var	reverse = total.toString().split('').reverse().join(''),
-				// 		ordv_total 	= reverse.match(/\d{1,3}/g);
-				// 		ordv_total	= ordv_total.join('').split('').reverse().join('');
-			 //    	ordv_total_vendor += Number(ordv_total);
-
-			 //    });
-
-			 //    // shipcost
-			 //    var	reverse_shipcost = $("#ORDV_SHIPCOST"+order).text().toString().split('').reverse().join(''),
-				// 		shipcost 	= reverse_shipcost.match(/\d{1,3}/g);
-				// 		shipcost	= shipcost.join('').split('').reverse().join('');
-
-				// // addcost
-	   //  		var reverse_addcost = $("#ORDV_ADDCOST_VENDOR"+order).val().toString().split('').reverse().join(''),
-				// 	addcost 	= reverse_addcost.match(/\d{1,3}/g);
-				// 	addcost	= discount.join('').split('').reverse().join('');
-
-		  //   	if($("#radio_advance").is(":checked")){
-		  //   		var sub_total = parseInt(shipcost) + parseInt(addcost) + parseInt(ordv_total_vendor) - parseInt(discount);
-		  //   	} else {
-		  //   		var sub_total = parseInt(addcost) + parseInt(ordv_total_vendor) - parseInt(discount);
-		  //   	}
-	   //  	});
-	    	
 	    	// NEW_PRICE_VENDOR
 	    	$(".NEW_PRICE_VENDOR").each(function(){
 	    		var order_id = "<?php echo $value->ORDER_ID ?>";
@@ -909,7 +823,8 @@
 					var	reverse_new_ordd_price  = new_ordd_price_vendor.toString().split('').reverse().join(''),
 						new_ordd_price_vendor 	= reverse_new_ordd_price.match(/\d{1,3}/g);
 						new_ordd_price_vendor	= new_ordd_price_vendor.join('.').split('').reverse().join('');
-				    $("#TOTAL_ORDD_PRICE_VENDOR"+ordd_id).text(new_ordd_price_vendor);
+				    $("#CETAK_TOTAL_ORDD_PRICE_VENDOR"+ordd_id).text(new_ordd_price_vendor);
+				    $("#TOTAL_ORDD_PRICE_VENDOR"+ordd_id).val(new_ordd_price_vendor);
 
 				    // shipcost
 				    var	reverse_shipcost = $("#ORDV_SHIPCOST"+order_id).text().toString().split('').reverse().join(''),
@@ -919,8 +834,8 @@
 				    // TOTAL ORDD_PRICE_VENDOR
 					var ordv_total_vendor = 0;
 				    $(".TOTAL_ORDD_PRICE_VENDOR"+order_id).each(function(){
-				    	if($(this).text() != "") {
-				    		var total = $(this).text();
+				    	if($(this).val() != "") {
+				    		var total = $(this).val();
 				    	} else {
 				    		var total = 0;
 				    	}
