@@ -104,16 +104,6 @@
 										       			<td align="center" valign="middle"><?php echo $data->ORDD_QUANTITY ?></td>
 										       			<td style="vertical-align: middle;" align="right"><?php echo number_format($data->ORDD_PRICE_VENDOR,0,',','.') ?></td>
 										       			<td align="right" class="TOTAL_ORDD_PRICE_VENDOR<?php echo $data->ORDER_ID ?>"><?php echo number_format($data->ORDD_PRICE_VENDOR * $data->ORDD_QUANTITY,0,',','.') ?></td>
-										       			<?php 
-															$this->load->model('venddeposit_m');
-															$check_used = $this->venddeposit_m->check_deposit_used($row->VEND_ID, $VENDD_ORDER_ID);
-															$deposit_used = $this->venddeposit_m->get_deposit_used($row->VEND_ID, $VENDD_ORDER_ID)->row();
-															if($check_used->num_rows() > 0) {
-																$DEPOSIT_USED = number_format($deposit_used->TOTAL_DEPOSIT_USED,0,',','.');
-															} else {
-																$DEPOSIT_USED = 0;
-															}
-														?>
 										       		</tr>
 									       		<?php endif ?>
 								       		<?php endforeach ?>
@@ -145,11 +135,11 @@
 				       		<table class="table table-bordered" width="100%" cellspacing="0" style="font-size: 14px;">
 				       			<tr>
 			                		<td colspan="6" align="right" style="font-weight: bold;">DEPOSIT (-)</td>
-					                <td class="" align="right" width="150px" id="DEPOSIT_USED"><?php echo $DEPOSIT_USED?></td>
+					                <td class="" align="right" width="150px"><?php echo number_format($field->PAYTOV_DEPOSIT,0,',','.')?></td>
 			                	</tr>
 				       			<tr>
 				       				<td colspan="6" align="right" style="font-weight: bold;">GRAND TOTAL</td>
-				       				<td align="right" id="GRAND_TOTAL" width="150px" style="font-weight: bold; color: blue"></td>
+				       				<td align="right" width="150px" style="font-weight: bold; color: blue"><?php echo number_format($field->PAYTOV_TOTAL,0,',','.')?></td>
 				       			</tr>
 				       		</table>
 				       	</div>
@@ -206,42 +196,6 @@
 					sub_total	 	  = sub_total.join('.').split('').reverse().join('');
 		    	$("#SUBTOTAL"+order).text(sub_total);
 	    	});
-		<?php endforeach ?>
-		// hitung grand total
-	    var total = 0;
-		$(".SUBTOTAL").ready(function(){
-	    	$(".SUBTOTAL").each(function(){
-		    	if($(this).text() != "") {
-		    		var sub_total = $(this).text();
-		    	} else {
-		    		var sub_total = 0;
-		    	}
-		    	// menghitung total dari subtotal
-				var	reverse  = sub_total.toString().split('').reverse().join(''),
-					subtotal = reverse.match(/\d{1,3}/g);
-					subtotal = subtotal.join('').split('').reverse().join('');
-		    	total += Number(subtotal);
-
-		    	var	cetak_deposit    = $("#DEPOSIT_USED").text()
-		    	var	reverse_cetak    = cetak_deposit.toString().split('').reverse().join(''),
-					deposit_curr 	 = reverse_cetak.match(/\d{1,3}/g);
-					deposit_curr 	 = deposit_curr.join('').split('').reverse().join('');
-				if(cetak_deposit >= 0) {
-		    		after_deposit = parseInt(total) - parseInt(deposit_curr);
-		    	} else {
-		    		after_deposit = parseInt(total) + parseInt(deposit_curr);
-		    	}
-
-		    });
-		    // konversi rupiah dari total
-	    	var	reverse_total = total.toString().split('').reverse().join(''),
-				total_curr    = reverse_total.match(/\d{1,3}/g);
-				total_curr	  = total_curr.join('.').split('').reverse().join('');
-		    // konversi rupiah dari grand total
-	    	var	reverse_grand_total = after_deposit.toString().split('').reverse().join(''),
-				grand_total   		= reverse_grand_total.match(/\d{1,3}/g);
-				grand_total	  		= grand_total.join('.').split('').reverse().join('');
-			$("#GRAND_TOTAL").text(grand_total);
-	    });	    
+		<?php endforeach ?>    
 	});    
 </script>

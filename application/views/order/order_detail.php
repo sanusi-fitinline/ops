@@ -284,7 +284,6 @@
 											                	<?php endforeach ?>
 											                </tbody>
 															<tfoot style="font-size: 14px;">
-											                	<input type="hidden" name="PAYTOV_ID[]" value="<?php echo $data->PAYTOV_ID ?>">
 											                	<input type="hidden" name="VENDOR[]" value="<?php echo $data->VEND_ID ?>">
 											                	<input type="hidden" id="TOTAL_ORDV<?php echo $data->VEND_ID ?>" name="TOTAL_ORDV[]" value="<?php echo $data->ORDV_TOTAL ?>">
 											                	<input type="hidden" name="ORDV_ADDCOST_VENDOR[]" value="<?php echo $data->ORDV_ADDCOST_VENDOR ?>">

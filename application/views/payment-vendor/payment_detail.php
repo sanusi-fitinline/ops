@@ -84,8 +84,6 @@
 									       		<?php endforeach ?>
 							                </tbody>
 							                <tfoot>
-							                	<?php $NO_ORDER = $field->ORDER_ID ?>
-							                	<input type="hidden" name="PAYTOV_ID[]" value="<?php echo $field->PAYTOV_ID ?>">
 							                	<input type="hidden" name="ORDER_ID[]" value="<?php echo $field->ORDER_ID ?>">
 
 							                	<tr>
@@ -121,7 +119,6 @@
 							            </table>
 							        </div>
 					       		<?php endforeach ?>
-					       		<input type="hidden" name="NO_ORDER" value="<?php echo $NO_ORDER ?>">
 					       		<br>
 					       		<table class="table table-bordered" width="100%" cellspacing="0" style="font-size: 14px;">
 					       			<tr>
@@ -142,7 +139,7 @@
 										    </div>
 										</td>
 						                <td class="" align="right" style="padding-right: 25px;" id="DEPOSIT"><?php echo $DEPOSIT  ?></td>
-						                <input type="hidden" id="VENDOR_DEPOSIT" name="VENDOR_DEPOSIT" value="">
+						                <input type="hidden" id="VENDOR_DEPOSIT" name="PAYTOV_DEPOSIT" value="">
 				                	</tr>
 					       			<tr>
 					       				<td colspan="6" align="right" style="font-weight: bold;">GRAND TOTAL</td>

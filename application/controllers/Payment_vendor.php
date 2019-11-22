@@ -45,7 +45,7 @@ class Payment_vendor extends CI_Controller {
 		$data = array();
 		$no = $_POST['start'];
 		foreach ($list as $field) {
-			if ($field->VBA_ID != null || $field->PAYTOV_DATE != null) {
+			if ($field->PAYTOV_ID != null) {
 				if($field->ORDER_STATUS !=5) {
 					$STATUS = "<div class='btn btn-default btn-sm' style='font-size: 12px; color: #fff; background-color:#20c997; border-color:#20c997; border-radius: 6px; padding: 2px 5px 5px 3px; width:80px;'><i class='fa fa-check-circle'></i><span><b> Paid</b></span></div>";
 				} else {
@@ -78,15 +78,13 @@ class Payment_vendor extends CI_Controller {
 			$row[] = "<div align='center'>".date('d-m-Y / H:i:s', strtotime($field->ORDER_DATE))."</div>";
 			$row[] = "<div align='right'>".number_format($TOTAL,0,',','.')."</div>";
 			$row[] = "<div align='center'>$PAYMENT_DATE</div>";
-			if ($field->VBA_ID != null || $field->PAYTOV_DATE != null ) {
+			if ($field->PAYTOV_ID != null) {
 				if($field->ORDER_STATUS !=5) {
-					$row[] = '<form action="'.$url.'payment_vendor/view/'.$field->VEND_ID.'" method="post"><div style="vertical-align: middle; text-align: center;">
-					<input type="hidden" name="PAYTOV_DATE" value="'.$field->PAYTOV_DATE.'">
-					<button class="btn btn-sm btn-primary" style="color: #ffffff;"><i class="fas fa-search-plus"></i></button></div></form>';
+					$row[] = '<div style="vertical-align: middle; text-align: center;">
+						<a href="'.$url.'payment_vendor/view/'.$field->VEND_ID.'/'.$field->PAYTOV_ID.'" class="btn btn-sm btn-primary" style="color: #ffffff;"><i class="fas fa-search-plus"></i></a></div>';
 				} else {
-					$row[] = '<form action="'.$url.'payment_vendor/cancel/'.$field->VEND_ID.'" method="post"><div style="vertical-align: middle; text-align: center;">
-					<input type="hidden" name="PAYTOV_DATE" value="'.$field->PAYTOV_DATE.'">
-					<button class="btn btn-sm btn-primary" style="color: #ffffff;"><i class="fas fa-search-plus"></i></button></div></form>';
+					$row[] = '<div style="vertical-align: middle; text-align: center;">
+						<a href="'.$url.'payment_vendor/cancel/'.$field->VEND_ID.'/'.$field->PAYTOV_ID.'" class="btn btn-sm btn-primary" style="color: #ffffff;"><i class="fas fa-search-plus"></i></a></div>';
 				}
 				
 			} else {
@@ -127,14 +125,13 @@ class Payment_vendor extends CI_Controller {
 		}
 	}
 
-	public function view($VEND_ID) {
+	public function view($VEND_ID, $PAYTOV_ID) {
 		$query = $this->vendor_m->get($VEND_ID);
 		if ($query->num_rows() > 0) {
 			$data['row'] 	 	 = $query->row();
+			$data['order'] 	 	 = $this->order_m->get_for_payment($VEND_ID, $PAYTOV_ID)->result();
+			$data['detail']  	 = $this->orderdetail_m->detail_by_vendor($VEND_ID, $PAYTOV_ID)->result();
 			$data['vendor_bank'] = $this->vendorbank_m->get_by_vendor($VEND_ID)->result();
-			$data['order'] 	 	 = $this->order_m->get_for_payment($VEND_ID)->result();
-			$data['detail']  	 = $this->orderdetail_m->detail_by_vendor($VEND_ID)->result();
-			$data['deposit'] 	 = $this->venddeposit_m->get_deposit($VEND_ID)->row();
 			$this->template->load('template', 'payment-vendor/payment_view', $data);
 		} else {
 			echo "<script>alert('Data tidak ditemukan.')</script>";
@@ -142,13 +139,12 @@ class Payment_vendor extends CI_Controller {
 		}
 	}
 
-	public function cancel($VEND_ID) {
+	public function cancel($VEND_ID, $PAYTOV_ID) {
 		$query = $this->vendor_m->get($VEND_ID);
 		if ($query->num_rows() > 0) {
 			$data['row'] 	 = $query->row();
-			$data['order'] 	 = $this->order_m->get_for_payment($VEND_ID)->result();
+			$data['order'] 	 = $this->order_m->get_for_payment($VEND_ID, $PAYTOV_ID)->result();
 			$data['detail']  = $this->orderdetail_m->detail_by_vendor($VEND_ID)->result();
-			$data['deposit'] = $this->venddeposit_m->get_deposit($VEND_ID)->row();
 			$this->template->load('template', 'payment-vendor/payment_view', $data);
 		} else {
 			echo "<script>alert('Data tidak ditemukan.')</script>";

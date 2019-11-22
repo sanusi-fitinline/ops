@@ -18,7 +18,7 @@ class Ordervendor_m extends CI_Model {
         $modul = "Payment To Vendor";
         $view = 1;
         $viewall =  $this->access_m->isViewAll($modul, $view)->row();
-        $this->db->select('tb_order_vendor.ORDER_ID, tb_order_vendor.VEND_ID, tb_order_vendor.ORDV_SHIPCOST, tb_order_vendor.ORDV_SHIPCOST_VENDOR, tb_order_vendor.ORDV_SHIPCOST_PAY, tb_order_vendor.ORDV_TOTAL_VENDOR, tb_payment_to_vendor.PAYTOV_DATE, tb_payment_to_vendor.VBA_ID, tb_order.ORDER_DATE, tb_order.ORDER_STATUS, tb_order.ORDER_STATUS, tb_vendor.VEND_NAME');
+        $this->db->select('tb_order_vendor.ORDER_ID, tb_order_vendor.VEND_ID, tb_order_vendor.ORDV_SHIPCOST, tb_order_vendor.ORDV_SHIPCOST_VENDOR, tb_order_vendor.ORDV_SHIPCOST_PAY, tb_order_vendor.ORDV_TOTAL_VENDOR, tb_order_vendor.PAYTOV_ID, tb_payment_to_vendor.PAYTOV_DATE, tb_order.ORDER_DATE, tb_order.ORDER_STATUS, tb_vendor.VEND_NAME');
         $this->db->from($this->table);
         $this->db->join('tb_order', 'tb_order.ORDER_ID=tb_order_vendor.ORDER_ID', 'left');
         $this->db->join('tb_vendor', 'tb_vendor.VEND_ID=tb_order_vendor.VEND_ID', 'left');
@@ -32,8 +32,6 @@ class Ordervendor_m extends CI_Model {
         $this->db->where('tb_order.ORDER_STATUS <', 5);
         $this->db->where('tb_payment_to_vendor.PAYTOV_DATE', null);
         $this->db->or_where('tb_payment_to_vendor.PAYTOV_DATE IS NOT NULL', null, false);
-        $this->db->where('tb_payment_to_vendor.VBA_ID', null);
-        $this->db->or_where('tb_payment_to_vendor.VBA_ID IS NOT NULL', null, false);
         $this->db->order_by('tb_order.ORDER_ID', 'DESC');
 
         $i = 0;
@@ -144,25 +142,23 @@ class Ordervendor_m extends CI_Model {
             $ORDD_ID              = $this->input->post('ORDD_ID', TRUE);
             $NEW_PRICE_VENDOR     = str_replace(".", "", $this->input->post('NEW_PRICE_VENDOR', TRUE));
             $ORDER_ID             = $this->input->post('ORDER_ID', TRUE);
-            $NO_ORDER             = $this->input->post('NO_ORDER', TRUE);
             $ORDV_SHIPCOST_PAY    = str_replace(".", "", $this->input->post('ORDV_SHIPCOST_PAY', TRUE));
             $ORDV_ADDCOST_VENDOR  = str_replace(".", "", $this->input->post('ORDV_ADDCOST_VENDOR', TRUE));
             $ORDV_DISCOUNT_VENDOR = str_replace(".", "", $this->input->post('ORDV_DISCOUNT_VENDOR', TRUE));
             $ORDV_TOTAL_VENDOR    = str_replace(".", "", $this->input->post('ORDV_TOTAL_VENDOR', TRUE));
-            $PAYTOV_TOTAL         = str_replace(".", "", $this->input->post('PAYTOV_TOTAL', TRUE));
-            $PAYTOV_ID = $this->input->post('PAYTOV_ID', TRUE);
             
             $PRO_ID    = $this->input->post('PRO_ID', TRUE);
             $UMEA_ID   = $this->input->post('UMEA_ID', TRUE);
             $VENP_QTY  = $this->input->post('VENP_QTY', TRUE);
             $OLD_PRICE = str_replace(".", "", $this->input->post('OLD_PRICE', TRUE));
-            $DEPOSIT   = $this->input->post('DEPOSIT', TRUE);
 
             $date   = date('Y-m-d', strtotime($this->input->post('PAYTOV_DATE', TRUE)));
             $time   = date('H:i:s');
             $VBA_ID = $this->input->post('VBA_ID', TRUE);
             $PAYTOV_DATE = $date.' '.$time;
             $PAYTOV_SHIPCOST_STATUS = $this->input->post('PAYTOV_SHIPCOST_STATUS', TRUE);
+            $PAYTOV_DEPOSIT       = str_replace(".", "", $this->input->post('PAYTOV_DEPOSIT', TRUE));
+            $PAYTOV_TOTAL         = str_replace(".", "", $this->input->post('PAYTOV_TOTAL', TRUE));
 
             // insert vendor_price
             $insert_vendor_price = array();
@@ -193,6 +189,17 @@ class Ordervendor_m extends CI_Model {
                 $this->db->update('tb_order_detail', $update_detail_vendor);
             }
 
+            // insert tb_payment_to_vendor
+            $insert_payment_vendor = array(
+                'PAYTOV_DATE'             => $PAYTOV_DATE,
+                'VBA_ID'                  => $VBA_ID,
+                'PAYTOV_SHIPCOST_STATUS'  => $PAYTOV_SHIPCOST_STATUS,
+                'PAYTOV_DEPOSIT'          => $PAYTOV_DEPOSIT,
+                'PAYTOV_TOTAL'            => $PAYTOV_TOTAL,
+            );
+            $this->db->insert('tb_payment_to_vendor', $insert_payment_vendor);
+            $PAYTOV_ID = $this->db->insert_id();
+
             // update tb_order_vendor
             $update_by_vendor = array();
             foreach($ORDER_ID as $key => $val){
@@ -201,27 +208,15 @@ class Ordervendor_m extends CI_Model {
                     'ORDV_ADDCOST_VENDOR'  => $ORDV_ADDCOST_VENDOR[$key],
                     'ORDV_DISCOUNT_VENDOR' => $ORDV_DISCOUNT_VENDOR[$key],
                     'ORDV_TOTAL_VENDOR'    => $ORDV_TOTAL_VENDOR[$key],
+                    'PAYTOV_ID'            => $PAYTOV_ID,
                 );
                 $this->db->where('VEND_ID', $VEND_ID);
                 $this->db->where('ORDER_ID', $ORDER_ID[$key]);
                 $this->db->update('tb_order_vendor', $update_by_vendor);
             }
 
-            // update tb_payment_to_vendor
-            $update_payment_vendor = array();
-            foreach($PAYTOV_ID as $z => $val){
-                $update_payment_vendor = array(
-                    'PAYTOV_DATE'             => $PAYTOV_DATE,
-                    'VBA_ID'                  => $VBA_ID,
-                    'PAYTOV_SHIPCOST_STATUS'  => $PAYTOV_SHIPCOST_STATUS,
-                    'PAYTOV_TOTAL'            => $PAYTOV_TOTAL,
-                );
-                $this->db->where('PAYTOV_ID', $PAYTOV_ID[$z]);
-                $this->db->update('tb_payment_to_vendor', $update_payment_vendor);
-            }
-
-            if(!empty($this->input->post('VENDOR_DEPOSIT'))) {
-                $VENDOR_DEPOSIT      = str_replace(".", "", $this->input->post('VENDOR_DEPOSIT', TRUE));
+            if(!empty($this->input->post('PAYTOV_DEPOSIT'))) {
+                $VENDOR_DEPOSIT      = str_replace(".", "", $this->input->post('PAYTOV_DEPOSIT', TRUE));
                 $GRAND_TANPA_DEPOSIT = str_replace(".", "", $this->input->post('GRAND_TANPA_DEPOSIT', TRUE));
                 $SISA_DEPOSIT        = $VENDOR_DEPOSIT - $GRAND_TANPA_DEPOSIT;
                 
@@ -230,7 +225,6 @@ class Ordervendor_m extends CI_Model {
                 if($check->num_rows() > 0) {
                     // update deposit status pada tb_vendor_deposit
                     $update_status['VENDD_DEPOSIT_STATUS'] = 2;
-                    $update_status['VENDD_ORDER_ID'] = $NO_ORDER;
                     $this->db->where('VEND_ID', $VEND_ID);
                     $this->db->where('VENDD_DEPOSIT_STATUS', 0);
                     $this->db->update('tb_vendor_deposit', $this->db->escape_str($update_status));
@@ -295,7 +289,7 @@ class Ordervendor_m extends CI_Model {
         $this->db->where('VEND_ID', $VEND_ID);
         $delivery = $this->db->update('tb_order_vendor', $this->db->escape_str($params));
 
-        if ($CHECK_STATUS->PAYTOV_SHIPCOST_STATUS != null) {
+        if (!empty($this->input->post('PAYTOV_ID', TRUE))) {
             // status in advance jika terjadi selisih dengan actual cost maka meng-update customer dan vendor deposit
             if ($CHECK_STATUS->PAYTOV_SHIPCOST_STATUS == 1) { 
                 if($SHIPCOST != $SHIPCOST_VENDOR) {            

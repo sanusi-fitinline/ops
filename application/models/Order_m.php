@@ -3,7 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Order_m extends CI_Model {
 	var $table = 'tb_order'; //nama tabel dari database
-    var $column_search = array('ORDER_ID','ORDER_DATE','CUST_NAME','ORDER_NOTES','ORDER_STATUS'); //field yang diizin untuk pencarian 
+    var $column_search = array('ORDER_ID','CUST_NAME'); //field yang diizin untuk pencarian 
     var $order = array('ORDER_DATE' => 'DESC'); // default order 
 
     public function __construct()
@@ -162,9 +162,8 @@ class Order_m extends CI_Model {
 		return $query;
 	}
 
-	public function get_for_payment($VEND_ID = null) {
-		$PAYTOV_DATE = $this->input->post('PAYTOV_DATE', TRUE);
-		$this->db->select('tb_order.ORDER_ID, tb_order.ORDER_DATE, tb_order_vendor.ORDV_ID, tb_order_vendor.VEND_ID, tb_order_vendor.ORDV_SHIPCOST, tb_order_vendor.ORDV_SHIPCOST_VENDOR, tb_order_vendor.ORDV_SHIPCOST_PAY, tb_order_vendor.ORDV_TOTAL_VENDOR, tb_order_vendor.ORDV_ADDCOST_VENDOR, tb_order_vendor.ORDV_DISCOUNT_VENDOR, tb_order_vendor.PAYTOV_ID, tb_payment_to_vendor.PAYTOV_DATE, tb_payment_to_vendor.PAYTOV_SHIPCOST_STATUS, tb_bank.BANK_NAME');
+	public function get_for_payment($VEND_ID = null, $PAYTOV_ID = null) {
+		$this->db->select('tb_order.ORDER_ID, tb_order.ORDER_DATE, tb_order_vendor.ORDV_ID, tb_order_vendor.VEND_ID, tb_order_vendor.ORDV_SHIPCOST, tb_order_vendor.ORDV_SHIPCOST_VENDOR, tb_order_vendor.ORDV_SHIPCOST_PAY, tb_order_vendor.ORDV_TOTAL_VENDOR, tb_order_vendor.ORDV_ADDCOST_VENDOR, tb_order_vendor.ORDV_DISCOUNT_VENDOR, tb_order_vendor.PAYTOV_ID, tb_payment_to_vendor.PAYTOV_DATE, tb_payment_to_vendor.PAYTOV_SHIPCOST_STATUS, tb_payment_to_vendor.PAYTOV_DEPOSIT, tb_payment_to_vendor.PAYTOV_TOTAL, tb_bank.BANK_NAME');
 		$this->db->from('tb_order');
 		$this->db->join('tb_order_vendor', 'tb_order_vendor.ORDER_ID=tb_order.ORDER_ID', 'inner');
 		$this->db->join('tb_vendor_bank', 'tb_vendor_bank.VEND_ID=tb_order_vendor.VEND_ID', 'left');
@@ -180,12 +179,10 @@ class Order_m extends CI_Model {
 	        $this->db->where('tb_order.ORDER_STATUS <', 5);
 		}
 		if($this->uri->segment(2) == "detail") {
-	        $this->db->where('tb_payment_to_vendor.PAYTOV_DATE', null);
-	        $this->db->where('tb_payment_to_vendor.VBA_ID', null);
+	        $this->db->where('tb_order_vendor.PAYTOV_ID', null);
 		}
 		if($this->uri->segment(2) == "view") {
-	        $this->db->where('tb_payment_to_vendor.PAYTOV_DATE', $PAYTOV_DATE);
-	        $this->db->where('tb_payment_to_vendor.VBA_ID is not Null', null, false);
+	        $this->db->where('tb_order_vendor.PAYTOV_ID', $PAYTOV_ID);
 		}
 		$this->db->order_by('tb_order.ORDER_ID', 'ASC');
 		$this->db->group_by('tb_order.ORDER_ID');
@@ -246,18 +243,10 @@ class Order_m extends CI_Model {
 			$VEND_ID  = $this->input->post('VEND_ID', TRUE);
 			$check = $this->ordervendor_m->check_order_vendor($ORDER_ID, $VEND_ID);
 			if ($check->num_rows() <= 0) {
-				// insert pada tb_payment_to_vendor
-				$insert_payment_vendor  = array(
-					'PAYTOV_DEPOSIT' 	=> 0
-				);
-				$this->db->insert('tb_payment_to_vendor', $this->db->escape_str($insert_payment_vendor));
-				$PAYTOV_ID = $this->db->insert_id();
-				//
 				// insert tb_order_vendor
 				$order_vendor = array(
 					'ORDER_ID'			=> $this->input->post('ORDER_ID', TRUE),
 					'VEND_ID'			=> $this->input->post('VEND_ID', TRUE),
-					'PAYTOV_ID'			=> $PAYTOV_ID,
 				);
 				$this->db->insert('tb_order_vendor', $this->db->escape_str($order_vendor));
 				//
@@ -342,21 +331,6 @@ class Order_m extends CI_Model {
 		$COURIER_ID  		= $this->input->post('COURIER_ID', TRUE);
 		$ORDV_SERVICE_TYPE  = $this->input->post('ORDV_SERVICE_TYPE', TRUE);
 		$ORDV_ETD  			= $this->input->post('ORDV_ETD', TRUE);
-		$PAYTOV_ID  		= $this->input->post('PAYTOV_ID', TRUE);
-
-		// update pada tb_payment_to_vendor
-		$update_payment_vendor = array();
-		foreach($COURIER_ID as $x => $val){
-			$ORDV_TOTAL[$x]			= $TOTAL_ORDV[$x];
-			$ORDV_TOTAL_VENDOR[$x]	= $TOTAL_ORDV_VENDOR[$x];
-			$PAYTOV_DEPOSIT[$x]		= $ORDV_TOTAL[$x] - $ORDV_TOTAL_VENDOR[$x];
-			$update_payment_vendor  = array(
-				'PAYTOV_DEPOSIT' 	=> $PAYTOV_DEPOSIT[$x]
-			);
-			$this->db->where('PAYTOV_ID', $PAYTOV_ID[$x]);
-			$this->db->update('tb_payment_to_vendor', $update_payment_vendor);
-		}
-		//
 
 		// update pada tb_order_vendor
 		$update_by_vendor = array();
@@ -407,22 +381,16 @@ class Order_m extends CI_Model {
 		$this->load->model('ordervendor_m');
 		$check = $this->ordervendor_m->get_by_vendor($ORDER_ID);
 		if($check->num_rows() > 0){
-			// delete tb_payment_to_vendor
-			$order_vendor = $this->ordervendor_m->get_by_vendor($ORDER_ID)->result();
-			foreach($order_vendor as $field){
-				$this->db->where('PAYTOV_ID', $field->PAYTOV_ID);
-				$this->db->delete('tb_payment_to_vendor');
-			}
 			// delete tb_order_vendor
 			$this->db->where('ORDER_ID', $ORDER_ID);
 			$this->db->delete('tb_order_vendor');
 		}
 	}
 
-	public function check_payment_vendor($PAYTOV_ID) {
-        $this->db->where('PAYTOV_ID', $PAYTOV_ID);
-        $this->db->where('PAYTOV_DATE is not Null', null, false);
-        return $this->db->get('tb_payment_to_vendor');
+	public function check_payment_vendor($ORDER_ID) {
+        $this->db->where('ORDER_ID', $ORDER_ID);
+        $this->db->where('PAYTOV_ID IS NOT NULL', null, false);
+        return $this->db->get('tb_order_vendor');
     }
 
 	public function cancel_status($ORDER_ID) {
@@ -441,7 +409,6 @@ class Order_m extends CI_Model {
 			$this->db->insert('tb_customer_deposit', $this->db->escape_str($deposit));
 		}
 
-		$PAYTOV_ID = $this->input->post('PAYTOV_ID', TRUE);
 		$DATE      = date('Y-m-d H:i:s');
 		$VEND_ID   = str_replace(".", "", $this->input->post('VENDOR', TRUE));
 		if(!empty($this->input->post('ORDV_ADDCOST_VENDOR'))) {
@@ -453,9 +420,8 @@ class Order_m extends CI_Model {
 
 		$vend_deposit = array();
 		foreach ($VEND_ID as $i => $value) {
-			$check[$i] 		= $this->check_payment_vendor($PAYTOV_ID[$i]);
-			$check_row[$i]  = $check[$i]->num_rows() > 0;
-			if($check_row[$i]) {
+			$check = $this->check_payment_vendor($ORDER_ID);
+			if($check->num_rows() > 0) {
 				$DEPOSIT[$i] = floatval($ADDCOST[$i]) + floatval($TOTAL_ORDV_VENDOR[$i]);
 				$vend_deposit = array(
 					'VENDD_DATE' 			=> date('Y-m-d H:i:s'),
@@ -513,13 +479,6 @@ class Order_m extends CI_Model {
 	}
 
 	public function delete($ORDER_ID) {
-		// delete tb_payment_to_vendor
-		$this->load->model('ordervendor_m');
-		$order_vendor = $this->ordervendor_m->get_by_vendor($ORDER_ID)->result();
-		foreach($order_vendor as $field){
-			$this->db->where('PAYTOV_ID', $field->PAYTOV_ID);
-			$this->db->delete('tb_payment_to_vendor');
-		}
 		// delete tb_order
 		$this->db->where('ORDER_ID', $ORDER_ID);
 		$this->db->delete('tb_order');

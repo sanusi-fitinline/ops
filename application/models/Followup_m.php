@@ -163,7 +163,6 @@ class Followup_m extends CI_Model {
             tb_user.USER_NAME, DATE_FORMAT(tb_customer_log.CLOG_DATE, "%d/%m/%y") AS the_date'); 
         $this->db->from('tb_customer_log');
         $this->db->join('tb_user', 'tb_user.USER_ID=tb_customer_log.USER_ID', 'inner');
-        // $this->db->where("DATE_FORMAT(tb_customer_log.CLOG_DATE, '%Y-%m') =", date('Y-m'));
         //mendapatkan data hari ini sampai 30 hari ke belakang
         $this->db->where("tb_customer_log.CLOG_DATE BETWEEN DATE_SUB(NOW(), INTERVAL 29 DAY) AND NOW()");
         if ($this->session->GRP_SESSION !=3) {
@@ -498,18 +497,10 @@ class Followup_m extends CI_Model {
                         $check[$x] = $this->ordervendor_m->check_order_vendor($ORDER_ID, $VEND_ID[$x]);
                         $check_num[$x] = $check[$x]->num_rows() > 0;
                         if(!$check_num[$x]) {
-                            // insert pada tb_payment_to_vendor
-                            $insert_payment_vendor  = array(
-                                'PAYTOV_DEPOSIT'    => 0
-                            );
-                            $this->db->insert('tb_payment_to_vendor', $this->db->escape_str($insert_payment_vendor));
-                            $PAYTOV_ID[$x] = $this->db->insert_id();
-                            //
                             // insert tb_order_vendor
                             $insert_detail_vendor = array(
                                 'ORDER_ID'          => $ORDER_ID,
                                 'VEND_ID'           => $VEND_ID[$x],
-                                'PAYTOV_ID'         => $PAYTOV_ID[$x],
                             );
                             $this->db->insert('tb_order_vendor', $insert_detail_vendor);
                         }
@@ -517,6 +508,7 @@ class Followup_m extends CI_Model {
                     $query = $this->db->query("UPDATE tb_order SET tb_order.ORDER_TOTAL = (SELECT SUM(tb_order_detail.ORDD_PRICE * tb_order_detail.ORDD_QUANTITY) AS total FROM tb_order_detail WHERE tb_order.ORDER_ID = tb_order_detail.ORDER_ID GROUP BY tb_order_detail.ORDER_ID) WHERE tb_order.ORDER_ID = '$ORDER_ID'");
                 }
             }
+            echo "<script>window.location='".site_url('order/detail/'.$ORDER_ID)."'</script>";
         }
     }
 
@@ -603,18 +595,10 @@ class Followup_m extends CI_Model {
                         $check[$x] = $this->ordervendor_m->check_order_vendor($ORDER_ID, $VEND_ID[$x]);
                         $check_num[$x] = $check[$x]->num_rows() > 0;
                         if(!$check_num[$x]) {
-                            // insert pada tb_payment_to_vendor
-                            $insert_payment_vendor  = array(
-                                'PAYTOV_DEPOSIT'    => 0
-                            );
-                            $this->db->insert('tb_payment_to_vendor', $this->db->escape_str($insert_payment_vendor));
-                            $PAYTOV_ID[$x] = $this->db->insert_id();
-                            
                             // insert tb_order_vendor
                             $insert_detail_vendor = array(
                                 'ORDER_ID'          => $ORDER_ID,
                                 'VEND_ID'           => $VEND_ID[$x],
-                                'PAYTOV_ID'         => $PAYTOV_ID[$x],
                             );
                             $this->db->insert('tb_order_vendor', $insert_detail_vendor);
                         }
@@ -622,6 +606,7 @@ class Followup_m extends CI_Model {
                     $query = $this->db->query("UPDATE tb_order SET tb_order.ORDER_TOTAL = (SELECT SUM(tb_order_detail.ORDD_PRICE * tb_order_detail.ORDD_QUANTITY) AS total FROM tb_order_detail WHERE tb_order.ORDER_ID = tb_order_detail.ORDER_ID GROUP BY tb_order_detail.ORDER_ID) WHERE tb_order.ORDER_ID = '$ORDER_ID'");
                 }
             }
+            echo "<script>window.location='".site_url('order/detail/'.$ORDER_ID)."'</script>";
         }
     }
 

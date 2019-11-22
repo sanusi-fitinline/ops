@@ -49,7 +49,7 @@
     $bulan 		  = date('n');
     $romawi 	  = getRomawi($bulan);
 	$tahun 		  = date('Y');
-	$format_nomor = $kode."/FIT/INV/".$romawi."/".$tahun;
+	$format_nomor = $kode."/OPS/INV/".$romawi."/".$tahun;
 	//
 ?>
 <!-- Page Content -->

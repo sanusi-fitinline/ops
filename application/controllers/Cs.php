@@ -885,14 +885,14 @@ class Cs extends CI_Controller {
 			$data['row'] =	$this->followup_m->insert_ck();
 			if ($data) {
 				echo "<script>alert('Data berhasil ditambah.')</script>";
-				if($FLWS_ID == 2) {
-					echo "<script>window.location='".site_url('cs/add_check/'.$CUST_ID)."'</script>";
-				} else if ($FLWS_ID == 3) {
-					echo "<script>window.location='".site_url('cs/add/'.$CUST_ID)."'</script>";
-				} else if ($FLWS_ID == 4) {
-					echo "<script>window.location='".site_url('order')."'</script>";
-				} else {
-					echo "<script>window.location='".site_url('cs/check_stock_followup/'.$CLOG_ID)."'</script>";
+				if($FLWS_ID != 4) {
+					if($FLWS_ID == 2) {
+						echo "<script>window.location='".site_url('cs/add_check/'.$CUST_ID)."'</script>";
+					} else if ($FLWS_ID == 3) {
+						echo "<script>window.location='".site_url('cs/add/'.$CUST_ID)."'</script>";
+					} else {
+						echo "<script>window.location='".site_url('cs/check_stock_followup/'.$CLOG_ID)."'</script>";
+					}
 				}
 			} else{
 				echo "<script>alert('Data gagal ditambah.')</script>";
@@ -907,9 +907,7 @@ class Cs extends CI_Controller {
 		$this->followup_m->update_ck($FLWP_ID);
 		if($this->db->affected_rows() > 0) {
 			echo "<script>alert('Data berhasil diubah.')</script>";
-			if ($FLWS_ID == 4) {
-				echo "<script>window.location='".site_url('order')."'</script>";
-			} else {
+			if ($FLWS_ID != 4) {
 				echo "<script>window.location='".site_url('cs/check_stock_followup/'.$CLOG_ID)."'</script>";
 			}
 		} else {
