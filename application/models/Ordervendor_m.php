@@ -268,6 +268,14 @@ class Ordervendor_m extends CI_Model {
         return $query;
     }
 
+    public function get_user_id($CUST_ID) {
+        $this->db->select('USER_ID');
+        $this->db->from('tb_customer');
+        $this->db->where('CUST_ID', $CUST_ID);
+        $query = $this->db->get();
+        return $query;
+    }
+
     public function update_delivery_support($ORDER_ID) {
         $PAYTOV_ID           = $this->input->post('PAYTOV_ID', TRUE);
         $VEND_ID             = $this->input->post('VEND_ID', TRUE);
@@ -279,6 +287,8 @@ class Ordervendor_m extends CI_Model {
         $check_vend_deposit  = $this->check_vendor_deposit($ORDER_ID, $ORDV_ID, $VEND_ID);
         $DEPOSIT             = $SHIPCOST - $SHIPCOST_VENDOR;
         $CHECK_STATUS        = $this->get_shipcost_status($PAYTOV_ID)->row();
+        $get_user            = $this->get_user_id($CUST_ID)->row();
+        $USER_ID             = $get_user->USER_ID;
 
         if (!empty($this->input->post('ORDV_DELIVERY_DATE', TRUE))) {
             $params['ORDV_DELIVERY_DATE'] = date('Y-m-d', strtotime($this->input->post('ORDV_DELIVERY_DATE', TRUE)));
@@ -308,7 +318,7 @@ class Ordervendor_m extends CI_Model {
                             'CUSTD_DEPOSIT'         => $DEPOSIT,
                             'CUSTD_DEPOSIT_STATUS'  => 0,
                             'CUST_ID'               => $CUST_ID,
-                            'USER_ID'               => $this->session->USER_SESSION,
+                            'USER_ID'               => $USER_ID,
                         );
                         $this->db->insert('tb_customer_deposit', $this->db->escape_str($insert_customer_deposit));
                     }
@@ -354,7 +364,7 @@ class Ordervendor_m extends CI_Model {
                             'CUSTD_DEPOSIT'         => $DEPOSIT,
                             'CUSTD_DEPOSIT_STATUS'  => 0,
                             'CUST_ID'               => $CUST_ID,
-                            'USER_ID'               => $this->session->USER_SESSION,
+                            'USER_ID'               => $USER_ID,
                         );
                         $this->db->insert('tb_customer_deposit', $this->db->escape_str($insert_customer_deposit));
                     }
@@ -400,7 +410,7 @@ class Ordervendor_m extends CI_Model {
                             'CUSTD_DEPOSIT'         => $DEPOSIT,
                             'CUSTD_DEPOSIT_STATUS'  => 0,
                             'CUST_ID'               => $CUST_ID,
-                            'USER_ID'               => $this->session->USER_SESSION,
+                            'USER_ID'               => $USER_ID,
                         );
                         $this->db->insert('tb_customer_deposit', $this->db->escape_str($insert_customer_deposit));
                     }
@@ -425,7 +435,7 @@ class Ordervendor_m extends CI_Model {
                         'CUSTD_DEPOSIT'         => $DEPOSIT,
                         'CUSTD_DEPOSIT_STATUS'  => 0,
                         'CUST_ID'               => $CUST_ID,
-                        'USER_ID'               => $this->session->USER_SESSION,
+                        'USER_ID'               => $USER_ID,
                     );
                     $this->db->insert('tb_customer_deposit', $this->db->escape_str($insert_customer_deposit));
                 }

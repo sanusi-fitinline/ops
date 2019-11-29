@@ -393,6 +393,14 @@ class Order_m extends CI_Model {
         return $this->db->get('tb_order_vendor');
     }
 
+    public function get_user_id($CUST_ID) {
+        $this->db->select('USER_ID');
+        $this->db->from('tb_customer');
+        $this->db->where('CUST_ID', $CUST_ID);
+        $query = $this->db->get();
+        return $query;
+    }
+
 	public function cancel_status($ORDER_ID) {
 		$params['ORDER_STATUS'] = 5;
 		$this->db->where('ORDER_ID', $ORDER_ID);
@@ -400,12 +408,15 @@ class Order_m extends CI_Model {
 		
 		$ORDER_STATUS = $this->input->post('ORDER_STATUS_ID', TRUE);
 		if($ORDER_STATUS == 2) {
+			$CUST_ID 	= $this->input->post('CUSTOMER', TRUE)
+			$get_user 	= $this->get_user_id($CUST_ID)->row();
+        	$USER_ID 	= $get_user->USER_ID;
 			$deposit['CUSTD_DATE'] 			 = date('Y-m-d H:i:s');
 			$deposit['ORDER_ID'] 			 = $ORDER_ID;
 			$deposit['CUSTD_DEPOSIT'] 		 = str_replace(".", "", $this->input->post('ORDER_GRAND_TOTAL', TRUE));
 			$deposit['CUSTD_DEPOSIT_STATUS'] = 0;
-			$deposit['CUST_ID'] 			 = $this->input->post('CUSTOMER', TRUE);
-			$deposit['USER_ID'] 			 = $this->session->USER_SESSION;
+			$deposit['CUST_ID'] 			 = $CUST_ID;
+			$deposit['USER_ID'] 			 = $USER_ID;
 			$this->db->insert('tb_customer_deposit', $this->db->escape_str($deposit));
 		}
 
