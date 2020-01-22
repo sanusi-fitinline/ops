@@ -3,12 +3,24 @@
     /*background-color: #fcb549 !important;*/
 }
 
-
-/*}
-
-.sidebar {
+/*.sidebar {
     background-color: #fcb549 !important;
-}
+}*/
 
-border-top: 1px dashed #d29539;
-    border-bottom: 1px dashed #d29539;*/
+/*@media screen and (max-width: 767px) {
+    li.paginate_button.previous {
+        display: inline;
+    }
+ 
+    li.paginate_button.next {
+        display: inline;
+    }
+ 
+    li.paginate_button {
+        display: none;
+    }
+}*/
+
+ul.pagination {
+	flex-wrap: wrap;
+}

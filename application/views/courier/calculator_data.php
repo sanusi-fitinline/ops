@@ -70,7 +70,7 @@
 								<div class="form-group">
 									<label>Weight</label>
 									<div class="input-group">
-										<input class="form-control" type="number" min="1" value="1" placeholder="Weight" name="WEIGHT" id="WEIGHT">
+										<input class="form-control" type="number" min="1" step="0.01" value="1" placeholder="Weight" name="WEIGHT" id="WEIGHT">
 										<div class="input-group-prepend">
 								          	<span class="input-group-text">Kg</i></span>
 								        </div>

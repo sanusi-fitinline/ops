@@ -155,7 +155,7 @@
 								<div class="form-group">
 									<label>Weight</label>
 									<div class="input-group">
-										<input class="form-control" type="text" name="PRO_WEIGHT" onkeypress="return berat(event,false)" value="<?php echo $row->PRO_WEIGHT !=0.00 ? "".$row->PRO_WEIGHT : "-" ?>" autocomplete="off">
+										<input class="form-control" type="number" step="0.01" name="PRO_WEIGHT" value="<?php echo $row->PRO_WEIGHT?>" autocomplete="off">
 										<div class="input-group-prepend">
 								          	<span class="input-group-text">Kg</i></span>
 								        </div>
@@ -213,7 +213,7 @@
 								<div class="form-group">
 									<label>Total Weight</label>
 									<div class="input-group">
-										<input class="form-control" type="text" name="PRO_TOTAL_WEIGHT" onkeypress="return berat(event,false)" value="<?php echo $row->PRO_WEIGHT !=0.00 ? "".$row->PRO_TOTAL_WEIGHT : "-" ?>" autocomplete="off">
+										<input class="form-control" type="number" step="0.01" name="PRO_TOTAL_WEIGHT" value="<?php echo $row->PRO_TOTAL_WEIGHT?>" autocomplete="off">
 										<div class="input-group-prepend">
 								          	<span class="input-group-text">Kg</i></span>
 								        </div>

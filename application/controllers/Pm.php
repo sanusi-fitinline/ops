@@ -23,6 +23,7 @@ class Pm extends CI_Controller {
 		check_not_login();
 		$this->load->library('form_validation');
 		$this->load->library('rajaongkir');
+		$this->load->library('pdf');
 	}
 
 	public function index() {
@@ -56,7 +57,7 @@ class Pm extends CI_Controller {
 			if ($field->LSAM_DELDATE!=null) {
 				$STATUS = "<div class='btn btn-info btn-sm' style='font-size: 12px; border-radius: 6px; padding: 2px 5px 5px 3px; width:80px;'><i class='fa fa-check-circle'></i><span><b> Delivered</b></span></div>";
 			} else {
-				if ($field->LSAM_PAYDATE!=null) {
+				if ($field->LSAM_PAYDATE!=null || ($field->LSAM_COST==0 && $field->LSAM_DEPOSIT == null)) {
 				 	$STATUS = "<div class='btn btn-warning btn-sm' style='font-size: 12px; color: #fff; background-color:#20c997; border-color:#20c997; border-radius: 6px; padding: 2px 5px 5px 3px; width:80px;'><i class='fa fa-minus-circle'></i><span><b> Paid</b></span></div>";
 				} else {
 					$STATUS = "<div class='btn btn-default btn-sm' style='font-size: 12px; color: #fff; background-color:#8e9397; border-color:#8e9397; border-radius: 6px; padding: 2px 5px 5px 3px; width:80px;'><b>Requested</b></div>";
@@ -121,6 +122,10 @@ class Pm extends CI_Controller {
 	}
 
 	public function edit_sampling_process($LSAM_ID) {
+		// $NO_WA   = $this->input->post('NO_WA');
+		// $KURIR 	 = $this->input->post('KURIR');
+		// $NO_RESI = $this->input->post('LSAM_RCPNO');
+		
 		$this->sampling_m->pm_update($LSAM_ID);
 		if($this->db->affected_rows() > 0) {
 			echo "<script>alert('Data berhasil diubah.')</script>";
@@ -142,9 +147,22 @@ class Pm extends CI_Controller {
 				$data['user'] 	 = $this->input->post('USER_ID');
 				$pusher->trigger('channel-cs', 'event-cs', $data);
 			}
+			// $text = rawurlencode("Sample telah diteruskan ke kurir ".$KURIR.".\nNo. Resi : ".$NO_RESI.".\nterima kasih, Fitinline.");
+			// echo "<script>window.open('https://wa.me/".$NO_WA."?text=".$text."', '_blank')</script>";
 			echo "<script>window.location='".site_url('pm/sampling')."'</script>";
 		} else {
 			echo "<script>alert('Data gagal diubah.')</script>";
+			echo "<script>window.location='".site_url('pm/sampling')."'</script>";
+		}
+	}
+
+	public function label_sampling($LSAM_ID) {
+		$query = $this->sampling_m->get($LSAM_ID);
+    	if ($query->num_rows() > 0) {
+			$data['row'] 		= $query->row();
+			$this->load->view('sampling/pm/label_print', $data);
+		} else {
+			echo "<script>alert('Data tidak ditemukan.')</script>";
 			echo "<script>window.location='".site_url('pm/sampling')."'</script>";
 		}
 	}
@@ -195,7 +213,7 @@ class Pm extends CI_Controller {
 			$row[] = date('d-m-Y / H:i:s', strtotime($field->LSTOCK_DATE));
 			$row[] = $field->PRO_NAME;
 			$row[] = "<div align='center'>$field->LSTOCK_COLOR</div>";
-			$row[] = "<div align='center'>$field->LSTOCK_AMOUNT</div>";
+			$row[] = "<div align='center'>".str_replace(".", ",", $field->LSTOCK_AMOUNT)."</div>";
 			$row[] = "<div align='center'>$field->UMEA_NAME</div>";
 			if((!$this->access_m->isDelete('Check Stock PM', 1)->row()) && ($this->session->GRP_SESSION !=3)){
 				$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="'.$url.'pm/edit_check/'.$field->LSTOCK_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a></div>';
@@ -235,6 +253,23 @@ class Pm extends CI_Controller {
 	}
 
 	public function edit_check_process($LSTOCK_ID) {
+		// $NO_WA   	= $this->input->post('NO_WA');
+		// $PRO_NAME   = $this->input->post('PRO_NAME');
+		// $COLOR   	= $this->input->post('LSTOCK_COLOR');
+		// $AMOUNT 	= $this->input->post('LSTOCK_AMOUNT');
+		// $UMEA 		= $this->input->post('UMEA_NAME');
+		// $CUST_NOTES = $this->input->post('LSTOCK_CNOTES');
+		// if($this->input->post('LSTOCK_STATUS') == 0) {
+		// 	$STATUS = "tidak tersedia.";
+		// } else {
+		// 	$STATUS = "tersedia.";
+		// }
+		// if(!empty($this->input->post('LSTOCK_VNOTES'))) {
+		// 	$VEND_NOTES = "\n*catatan: ".$this->input->post('LSTOCK_VNOTES');
+		// } else {
+		// 	$VEND_NOTES = "";
+		// }
+
 		$this->ckstock_m->pm_update($LSTOCK_ID);
 		if($this->db->affected_rows() > 0) {
 			echo "<script>alert('Data berhasil diubah.')</script>";
@@ -256,6 +291,8 @@ class Pm extends CI_Controller {
 				$data['user'] 	 = $this->input->post('USER_ID');
 				$pusher->trigger('channel-cs', 'event-cs', $data);
 			}
+			// $text = rawurlencode("".$PRO_NAME." / ".$COLOR." / ".$AMOUNT." ".$UMEA." ".$STATUS.$VEND_NOTES."");
+			// echo "<script>window.open('https://wa.me/".$NO_WA."?text=".$text."', '_blank')</script>";
 			echo "<script>window.location='".site_url('pm/check_stock')."'</script>";
 		} else {
 			echo "<script>alert('Data gagal diubah.')</script>";

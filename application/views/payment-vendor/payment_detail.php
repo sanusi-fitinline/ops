@@ -10,7 +10,6 @@
 	    	<a href="<?php echo site_url('payment_vendor') ?>">Payment To Vendor</a>
 	  	</li>
 	  	<li class="breadcrumb-item active">Detail</li>
-	  	
 	</ol>
     <div class="row">
 		<div class="col-md-12">
@@ -21,8 +20,8 @@
 		        </div>
 		      	<div class="card-body">
 		      		<div class="row">
-					    <form action="<?php echo site_url('payment_vendor/edit_payment_vendor/'.$row->VEND_ID)?>" method="POST" enctype="multipart/form-data">
-				       		<div class="col-md-12">
+				       	<div class="col-md-12">
+						    <form action="<?php echo site_url('payment_vendor/edit_payment_vendor/'.$row->VEND_ID)?>" method="POST" enctype="multipart/form-data">
 					       		<p><?php echo $row->VEND_NAME ?></p>
 					       		<hr>
 					       		<?php foreach($order as $field): ?>
@@ -44,6 +43,14 @@
 											    </div>
 											</div>
 						       			</div>
+						       			<div class="col-md-3">
+						       				<div class="custom-control custom-checkbox">
+										     	<input type="checkbox" class="custom-control-input" id="CHECK_PAY_NOW<?php echo $field->ORDER_ID ?>" name="" value="" checked>
+										     	<label class="custom-control-label" for="CHECK_PAY_NOW<?php echo $field->ORDER_ID ?>">Pay Now</label>
+										     	<input type="hidden" name="" class="_PAY_NOW" id="PAY_NOW<?php echo $field->ORDER_ID ?>" value="">
+										     	<input type="hidden" name="ORDER_ID[]" id="PAY_ORDER_ID<?php echo $field->ORDER_ID ?>" value="">
+										    </div>
+						       			</div>
 					       			</div>
 					       			<div class="table-responsive">
 						          		<table class="table table-bordered" width="100%" cellspacing="0" style="font-size: 14px;">
@@ -51,25 +58,42 @@
 							                	<tr>
 							                    	<th style="vertical-align: middle; text-align: center; width: 10px;">#</th>
 							                    	<th style="vertical-align: middle; text-align: center;width: 300px;">PRODUCT</th>
-							                    	<th style="vertical-align: middle; text-align: center;width: 300px;">OPTION</th>
+							                    	<th style="vertical-align: middle; text-align: center;width: auto;">OPTION</th>
 													<th style="vertical-align: middle; text-align: center;width: 100px;">AMOUNT</th>
 													<th style="vertical-align: middle; text-align: center; width: 50px;">MEASUREMENT</th>
-													<th style="vertical-align: middle; text-align: center; width: 200px;">PRICE</th>
-													<th style="vertical-align: middle; text-align: center;width: 200px;">TOTAL</th>
+													<th style="vertical-align: middle; text-align: center; width: auto;">PRICE</th>
+													<th style="vertical-align: middle; text-align: center;width:auto;">TOTAL</th>
 							                  	</tr>
 							                </thead>
 							                <tbody>
 							                	<?php $no = 1; ?>
 									       		<?php foreach($detail as $data): ?>
 									       			<?php if($field->ORDER_ID == $data->ORDER_ID): ?>
+									       				<?php 
+									       					if($data->ORDD_OPTION_VENDOR != null) {
+									       						$ORDER_OPTION = $data->ORDD_OPTION_VENDOR;
+									       					} else {
+									       						$ORDER_OPTION = $data->ORDD_OPTION;
+									       					}
+
+									       					if($data->ORDD_QUANTITY_VENDOR != null) {
+									       						$QTY = $data->ORDD_QUANTITY_VENDOR;
+									       					} else {
+									       						$QTY = $data->ORDD_QUANTITY;
+									       					}
+									       				?>
 									       				<tr>
-											       			<td style="vertical-align: middle;;"><?php echo $no++ ?></td>
-											       			<td style="vertical-align: middle;;"><?php echo $data->PRO_NAME ?></td>
-											       			<td style="vertical-align: middle;;"><?php echo $data->ORDD_OPTION ?></td>
-											       			<td align="center" style="vertical-align: middle;;"><?php echo $data->UMEA_NAME ?></td>
-											       			<td align="center" style="vertical-align: middle;" id="QUANTITY<?php echo $data->ORDD_ID ?>"><?php echo $data->ORDD_QUANTITY ?></td>
-											       			<td align="right" style="vertical-align: middle;">
-											       				<input style="text-align: right; font-size: 14px;" class="form-control uang NEW_PRICE_VENDOR" type="text" name="NEW_PRICE_VENDOR[]" id="NEW_PRICE_VENDOR<?php echo $data->ORDD_ID ?>" autocomplete="off" value="<?php echo $data->ORDD_PRICE_VENDOR !=null ? $data->ORDD_PRICE_VENDOR : "0" ?>">
+											       			<td style="vertical-align: middle;"><?php echo $no++ ?></td>
+											       			<td style="vertical-align: middle;"><?php echo $data->PRO_NAME ?></td>
+											       			<td style="vertical-align: middle;" align="center">
+											       				<textarea class="form-control" style="font-size: 14px;width: 150px;" name="ORDD_OPTION_VENDOR[]"><?php echo $ORDER_OPTION ?></textarea>	
+											       			</td>
+											       			<td align="center" style="vertical-align: middle;" align="center">
+											       				<input class="form-control QUANTITY" style="text-align: center; font-size: 14px; width: 85px;" type="number" step="0.01" min="0" name="ORDD_QUANTITY_VENDOR[]" id="QUANTITY<?php echo $data->ORDD_ID ?>" value="<?php echo  $QTY?>">
+											       			</td>
+											       			<td align="center" style="vertical-align: middle;"><?php echo $data->UMEA_NAME ?></td>
+											       			<td align="right" style="vertical-align: middle;" align="center">
+											       				<input style="text-align: right; font-size: 14px; width: 100px;" class="form-control uang NEW_PRICE_VENDOR" type="text" name="NEW_PRICE_VENDOR[]" id="NEW_PRICE_VENDOR<?php echo $data->ORDD_ID ?>" autocomplete="off" value="<?php echo $data->ORDD_PRICE_VENDOR !=null ? $data->ORDD_PRICE_VENDOR : "0" ?>">
 											       			</td>
 											       			<td style="vertical-align: middle; padding-right: 25px;" align="right" id="CETAK_TOTAL_ORDD_PRICE_VENDOR<?php echo $data->ORDD_ID ?>">
 											       			</td>
@@ -79,13 +103,18 @@
 											       			<input type="hidden" name="UMEA_ID[]" value="<?php echo $data->UMEA_ID ?>">
 											       			<input type="hidden" name="VENP_QTY[]" value="<?php echo $data->ORDD_QUANTITY ?>">
 											       			<input type="hidden" name="OLD_PRICE[]" value="<?php echo $data->ORDD_PRICE_VENDOR ?>">
+											       			<input type="hidden" name="CUST_ID[]" value="<?php echo $data->CUST_ID ?>">
+											       			<input type="hidden" name="ORDD_PRICE[]" value="<?php echo $data->ORDD_PRICE ?>">
+											       			<input type="hidden" name="ORDD_QUANTITY[]" value="<?php echo $data->ORDD_QUANTITY ?>">
 											       		</tr>
 										       		<?php endif ?>
 									       		<?php endforeach ?>
 							                </tbody>
 							                <tfoot>
-							                	<input type="hidden" name="ORDER_ID[]" value="<?php echo $field->ORDER_ID ?>">
-
+							                	<tr>
+							                		<td colspan="6" align="right" style="font-weight: bold;">SUBTOTAL</td>
+									                <td class="SUBTOTAL" align="right" style="padding-right: 25px;" id="SUBTOTAL<?php echo $field->ORDER_ID ?>"></td>
+							                	</tr>
 							                	<tr>
 							                		<td colspan="6" align="right" style="font-weight: bold;">SHIPMENT COST (+)</td>
 							                		<?php
@@ -101,18 +130,18 @@
 							                	<tr>
 							                		<td colspan="6" align="right" style="font-weight: bold; padding-top: 20px;">ADDITIONAL COST (+)</td>
 									                <td align="right">
-									                	<input style="text-align: right; font-size: 14px;" class="form-control uang ADDCOST" type="text" name="ORDV_ADDCOST_VENDOR[]" id="ORDV_ADDCOST_VENDOR<?php echo $field->ORDER_ID ?>" autocomplete="off" value="<?php echo $field->ORDV_ADDCOST_VENDOR !=null ? $field->ORDV_ADDCOST_VENDOR : "0" ?>">
+									                	<input style="text-align: right; font-size: 14px; width: 100px;" class="form-control uang ADDCOST" type="text" name="ORDV_ADDCOST_VENDOR[]" id="ORDV_ADDCOST_VENDOR<?php echo $field->ORDER_ID ?>" autocomplete="off" value="<?php echo $field->ORDV_ADDCOST_VENDOR !=null ? $field->ORDV_ADDCOST_VENDOR : "0" ?>">
 									                </td>
 							                	</tr>
 							                	<tr>
 							                		<td colspan="6" align="right" style="font-weight: bold; padding-top: 20px;">DISCOUNT (-)</td>
 									                <td align="right">
-									                	<input style="text-align: right; font-size: 14px;" class="form-control uang DISCOUNT" type="text" name="ORDV_DISCOUNT_VENDOR[]" id="ORDV_DISCOUNT_VENDOR<?php echo $field->ORDER_ID ?>" autocomplete="off" value="<?php echo $field->ORDV_DISCOUNT_VENDOR !=null ? $field->ORDV_DISCOUNT_VENDOR : "0" ?>">
+									                	<input style="text-align: right; font-size: 14px; width: 100px;" class="form-control uang DISCOUNT" type="text" name="ORDV_DISCOUNT_VENDOR[]" id="ORDV_DISCOUNT_VENDOR<?php echo $field->ORDER_ID ?>" autocomplete="off" value="<?php echo $field->ORDV_DISCOUNT_VENDOR !=null ? $field->ORDV_DISCOUNT_VENDOR : "0" ?>">
 									                </td>
 							                	</tr>
 							                	<tr>
-							                		<td colspan="6" align="right" style="font-weight: bold;">SUBTOTAL</td>
-									                <td class="SUBTOTAL" align="right" style="padding-right: 25px;" id="SUBTOTAL<?php echo $field->ORDER_ID ?>"></td>
+							                		<td colspan="6" align="right" style="font-weight: bold;">TOTAL</td>
+									                <td class="TOTAL" align="right" style="padding-right: 25px;" id="TOTAL<?php echo $field->ORDER_ID ?>"></td>
 									                <input type="hidden" name="ORDV_TOTAL_VENDOR[]" id="ORDV_TOTAL_VENDOR<?php echo $field->ORDER_ID ?>" value="">
 							                	</tr>
 							                </tfoot>
@@ -135,10 +164,10 @@
 					       				<td style="font-weight: bold;" colspan="6" align="right">
 											<div class="custom-control custom-checkbox">
 										     	<input type="checkbox" class="custom-control-input" id="check-deposit" name="check-deposit" checked>
-										     	<label class="custom-control-label" for="check-deposit">DEPOSIT (-)</label>
+										     	<label class="custom-control-label" for="check-deposit">DEPOSIT (+)</label>
 										    </div>
 										</td>
-						                <td class="" align="right" style="padding-right: 25px;" id="DEPOSIT"><?php echo $DEPOSIT  ?></td>
+						                <td class="" align="right" style="padding-right: 25px; width: 200px;" id="DEPOSIT"><?php echo $DEPOSIT  ?></td>
 						                <input type="hidden" id="VENDOR_DEPOSIT" name="PAYTOV_DEPOSIT" value="">
 				                	</tr>
 					       			<tr>
@@ -148,8 +177,6 @@
 					       				<input type="hidden" id="INPUT_GRAND_TOTAL" name="PAYTOV_TOTAL" value="">
 					       			</tr>
 					       		</table>
-				       		</div>				       	
-				       		<div class="col-md-12">
 				       			<div class="row">
 					       			<div class="col-md-3">
 					       				<div class="form-group">
@@ -216,8 +243,8 @@
 								        <?php endif ?>
 									</div>
 				       			</div>
-				       		</div>
-						</form>
+							</form>
+				       	</div>
 					</div>
 		      	</div>
 		  	</div>
@@ -270,24 +297,146 @@
 			// total harga vendor setelah halaman diload
 			var detail_id = "<?php echo $value->ORDD_ID ?>";
 	    	var vend_id = "<?php echo $value->VEND_ID ?>";
-	    	var jml = $("#QUANTITY"+detail_id).text();
+	    	var jml = $("#QUANTITY"+detail_id).val();
 			if ($("#NEW_PRICE_VENDOR"+detail_id).val() != null) {
 				var harga_satuan_vendor = $("#NEW_PRICE_VENDOR"+detail_id).val();
 			} else {
 				var harga_satuan_vendor = 0;
 			}
-			var total_harga_vendor  = jml * harga_satuan_vendor;
-			var	reverse_vendor 		= total_harga_vendor.toString().split('').reverse().join(''),
+			var total_harga_vendor  = jml.replace(",",".") * harga_satuan_vendor;
+			var	reverse_vendor 		= total_harga_vendor.toFixed(0).toString().split('').reverse().join(''),
 				ribuan_vendor 		= reverse_vendor.match(/\d{1,3}/g);
 				ribuan_vendor		= ribuan_vendor.join('.').split('').reverse().join('');
 			$("#CETAK_TOTAL_ORDD_PRICE_VENDOR"+detail_id).text(ribuan_vendor);
 			$("#TOTAL_ORDD_PRICE_VENDOR"+detail_id).val(ribuan_vendor);
 			//
 
+			$(".QUANTITY").each(function(){
+				var ordd_id = "<?php echo $value->ORDD_ID ?>";
+				var ordr_id = "<?php echo $value->ORDER_ID ?>";
+				$("#QUANTITY"+ordd_id).on('keyup mouseup',function(){
+					var jumlah = $("#QUANTITY"+ordd_id).val();
+					if($(this).val() != "") {
+			    		var quantity = $(this).val();
+			    	} else {
+			    		var quantity = 0;
+			    	}
+
+			    	var	reverse_new_price = $("#NEW_PRICE_VENDOR"+ordd_id).val().toString().split('').reverse().join(''),
+						new_price 		  = reverse_new_price.match(/\d{1,3}/g);
+						new_price	 	  = new_price.join('').split('').reverse().join('');
+					
+					var new_ordd_price_vendor   = new_price * quantity;
+					var	reverse_new_ordd_price  = new_ordd_price_vendor.toFixed(0).toString().split('').reverse().join(''),
+						new_ordd_price_vendor 	= reverse_new_ordd_price.match(/\d{1,3}/g);
+						new_ordd_price_vendor	= new_ordd_price_vendor.join('.').split('').reverse().join('');
+				    $("#CETAK_TOTAL_ORDD_PRICE_VENDOR"+ordd_id).text(new_ordd_price_vendor);
+				    $("#TOTAL_ORDD_PRICE_VENDOR"+ordd_id).val(new_ordd_price_vendor);
+
+				    // shipcost
+				    var	reverse_shipcost = $("#ORDV_SHIPCOST"+ordr_id).text().toString().split('').reverse().join(''),
+							shipcost 	= reverse_shipcost.match(/\d{1,3}/g);
+							shipcost	= shipcost.join('').split('').reverse().join('');
+
+				    // TOTAL ORDD_PRICE_VENDOR
+					var ordv_total_vendor = 0;
+				    $(".TOTAL_ORDD_PRICE_VENDOR"+ordr_id).each(function(){
+				    	if($(this).val() != "") {
+				    		var total = $(this).val();
+				    	} else {
+				    		var total = 0;
+				    	}
+						var	reverse = total.toString().split('').reverse().join(''),
+							ordv_total 	= reverse.match(/\d{1,3}/g);
+							ordv_total	= ordv_total.join('').split('').reverse().join('');
+				    	ordv_total_vendor += Number(ordv_total);
+
+				    });
+
+				    // subtotal
+			    	var reverse_addcost = ordv_total_vendor.toString().split('').reverse().join(''),
+							subtotal 	= reverse_addcost.match(/\d{1,3}/g);
+							subtotal	= subtotal.join('.').split('').reverse().join('');
+
+				    $("#SUBTOTAL"+ordr_id).text(subtotal);				    
+
+			    	// addcost
+			    	var reverse_addcost = $("#ORDV_ADDCOST_VENDOR"+ordr_id).val().toString().split('').reverse().join(''),
+							addcost 	= reverse_addcost.match(/\d{1,3}/g);
+							addcost		= addcost.join('').split('').reverse().join('');
+
+					// discount
+		    		var reverse_discount = $("#ORDV_DISCOUNT_VENDOR"+ordr_id).val().toString().split('').reverse().join(''),
+						discount 	= reverse_discount.match(/\d{1,3}/g);
+						discount	= discount.join('').split('').reverse().join('');
+
+			    	if($("#radio_advance").is(":checked")){
+			    		var sub_total = parseInt(shipcost) + parseInt(addcost) + parseInt(ordv_total_vendor) - parseInt(discount);
+			    	} else {
+			    		var sub_total = parseInt(addcost) + parseInt(ordv_total_vendor) - parseInt(discount);
+			    	}
+
+			    	var	reverse_sub_total = sub_total.toString().split('').reverse().join(''),
+						sub_total 		  = reverse_sub_total.match(/\d{1,3}/g);
+						sub_total	 	  = sub_total.join('.').split('').reverse().join('');
+			    	
+			    	$("#TOTAL"+ordr_id).text(sub_total);
+			    	$("#ORDV_TOTAL_VENDOR"+ordr_id).val(sub_total);
+
+			    	// hitung grand total
+				    if ($("#CHECK_PAY_NOW"+ordr_id).is(":checked")){
+						var n = $("#TOTAL"+ordr_id).text();
+						$("#PAY_ORDER_ID"+ordr_id).val(ordr_id);
+					} else {
+						var n = 0;
+						$("#PAY_ORDER_ID"+ordr_id).val("");
+					}
+					$("#PAY_NOW"+ordr_id).val(n);
+					var grand = 0;
+					$("._PAY_NOW").each(function(){
+						if($(this).val() != "") {
+							var sub_total = $(this).val();
+				    	} else {
+				    		var sub_total = 0;
+				    	}
+						var	reverse = sub_total.toString().split('').reverse().join(''),
+							total 	= reverse.match(/\d{1,3}/g);
+							total	= total.join('').split('').reverse().join('');
+				    	grand += Number(total);
+				    });
+
+				    if ($("#check-deposit").is(":checked")){
+						var	deposit = $("#DEPOSIT").text()
+				    	var	reverse_deposit  = deposit.toString().split('').reverse().join(''),
+								deposit_curr = reverse_deposit.match(/\d{1,3}/g);
+								deposit_curr = deposit_curr.join('').split('').reverse().join('');
+				    	if(parseInt(deposit) >= 0) {
+				    		var after_deposit = parseInt(grand) + parseInt(deposit_curr);
+				    	} else {
+				    		if(parseInt(deposit_curr) > parseInt(grand)) {
+						    	var after_deposit = 0;
+							} else {
+				    			var after_deposit = parseInt(grand) - parseInt(deposit_curr);
+							}
+				    	}
+				    	$("#VENDOR_DEPOSIT").val(deposit);
+					} else {
+						var after_deposit = parseInt(grand);
+					}
+
+			    	var	reverse_grand = after_deposit.toString().split('').reverse().join(''),
+						grand_total   = reverse_grand.match(/\d{1,3}/g);
+						grand_total	  = grand_total.join('.').split('').reverse().join('');
+					$("#GRAND_TOTAL").text(grand_total);
+					$("#INPUT_GRAND_TOTAL").val(grand_total);
+					$("#GRAND_TANPA_DEPOSIT").val(grand);
+				});
+			});
+
 			if ($("#radio_advance").is(":checked")){
 				$(".SHIPMENT").css({'text-decoration' : 'none'});
 				var order_id = "<?php echo $value->ORDER_ID ?>";
-				$(".SUBTOTAL").each(function(){
+				$(".TOTAL").each(function(){
 		    		// shipcost
 				    var	reverse_shipcost = $("#ORDV_SHIPCOST"+order_id).text().toString().split('').reverse().join(''),
 							shipcost 	= reverse_shipcost.match(/\d{1,3}/g);
@@ -308,6 +457,13 @@
 
 				    });
 
+				    // subtotal
+			    	var reverse_addcost = ordv_total_vendor.toString().split('').reverse().join(''),
+							subtotal 	= reverse_addcost.match(/\d{1,3}/g);
+							subtotal	= subtotal.join('.').split('').reverse().join('');
+
+				    $("#SUBTOTAL"+order_id).text(subtotal);
+
 		    		// addcost
 		    		var reverse_addcost = $("#ORDV_ADDCOST_VENDOR"+order_id).val().toString().split('').reverse().join(''),
 						addcost 	= reverse_addcost.match(/\d{1,3}/g);
@@ -325,15 +481,23 @@
 
 		    		var sub = hasil_curr;
 
-					$("#SUBTOTAL"+order_id).text(sub);
+					$("#TOTAL"+order_id).text(sub);
 					$("#ORDV_TOTAL_VENDOR"+order_id).val(sub);
 			    });
 
 				// hitung grand total
-			    var grand = 0;
-		    	$(".SUBTOTAL").each(function(){
-			    	if($(this).text() != "") {
-			    		var sub_total = $(this).text();
+			    if ($("#CHECK_PAY_NOW"+order_id).is(":checked")){
+					var n = $("#TOTAL"+order_id).text();
+					$("#PAY_ORDER_ID"+order_id).val(order_id);
+				} else {
+					var n = 0;
+					$("#PAY_ORDER_ID"+order_id).val("");
+				}
+				$("#PAY_NOW"+order_id).val(n);
+				var grand = 0;
+				$("._PAY_NOW").each(function(){
+					if($(this).val() != "") {
+						var sub_total = $(this).val();
 			    	} else {
 			    		var sub_total = 0;
 			    	}
@@ -341,7 +505,6 @@
 						total 	= reverse.match(/\d{1,3}/g);
 						total	= total.join('').split('').reverse().join('');
 			    	grand += Number(total);
-
 			    });
 
 			    if ($("#check-deposit").is(":checked")){
@@ -349,10 +512,14 @@
 			    	var	reverse_deposit  = deposit.toString().split('').reverse().join(''),
 							deposit_curr = reverse_deposit.match(/\d{1,3}/g);
 							deposit_curr = deposit_curr.join('').split('').reverse().join('');
-			    	if(deposit >= 0) {
-			    		var after_deposit = parseInt(grand) - parseInt(deposit_curr);
-			    	} else {
+			    	if(parseInt(deposit) >= 0) {
 			    		var after_deposit = parseInt(grand) + parseInt(deposit_curr);
+			    	} else {
+			    		if(parseInt(deposit_curr) > parseInt(grand)) {
+					    	var after_deposit = 0;
+						} else {
+			    			var after_deposit = parseInt(grand) - parseInt(deposit_curr);
+						}
 			    	}
 			    	$("#VENDOR_DEPOSIT").val(deposit);
 				} else {
@@ -371,7 +538,7 @@
 				if ($("#radio_advance").is(":checked")){
 					$(".SHIPMENT").css({'text-decoration' : 'none'});
 					var order_id = "<?php echo $value->ORDER_ID ?>";
-					$(".SUBTOTAL").each(function(){
+					$(".TOTAL").each(function(){
 			    		// shipcost
 					    var	reverse_shipcost = $("#ORDV_SHIPCOST"+order_id).text().toString().split('').reverse().join(''),
 								shipcost 	= reverse_shipcost.match(/\d{1,3}/g);
@@ -409,15 +576,23 @@
 
 			    		var sub = hasil_curr;
 
-						$("#SUBTOTAL"+order_id).text(sub);
+						$("#TOTAL"+order_id).text(sub);
 						$("#ORDV_TOTAL_VENDOR"+order_id).val(sub);
 				    });
 
 					// hitung grand total
-				    var grand = 0;
-			    	$(".SUBTOTAL").each(function(){
-				    	if($(this).text() != "") {
-				    		var sub_total = $(this).text();
+				    if ($("#CHECK_PAY_NOW"+order_id).is(":checked")){
+						var n = $("#TOTAL"+order_id).text();
+						$("#PAY_ORDER_ID"+order_id).val(order_id);
+					} else {
+						var n = 0;
+						$("#PAY_ORDER_ID"+order_id).val("");
+					}
+					$("#PAY_NOW"+order_id).val(n);
+					var grand = 0;
+					$("._PAY_NOW").each(function(){
+						if($(this).val() != "") {
+							var sub_total = $(this).val();
 				    	} else {
 				    		var sub_total = 0;
 				    	}
@@ -425,7 +600,6 @@
 							total 	= reverse.match(/\d{1,3}/g);
 							total	= total.join('').split('').reverse().join('');
 				    	grand += Number(total);
-
 				    });
 
 				    if ($("#check-deposit").is(":checked")){
@@ -433,10 +607,14 @@
 				    	var	reverse_deposit  = deposit.toString().split('').reverse().join(''),
 								deposit_curr = reverse_deposit.match(/\d{1,3}/g);
 								deposit_curr = deposit_curr.join('').split('').reverse().join('');
-				    	if(deposit >= 0) {
-				    		var after_deposit = parseInt(grand) - parseInt(deposit_curr);
-				    	} else {
+				    	if(parseInt(deposit) >= 0) {
 				    		var after_deposit = parseInt(grand) + parseInt(deposit_curr);
+				    	} else {
+				    		if(parseInt(deposit_curr) > parseInt(grand)) {
+						    	var after_deposit = 0;
+							} else {
+				    			var after_deposit = parseInt(grand) - parseInt(deposit_curr);
+							}
 				    	}
 				    	$("#VENDOR_DEPOSIT").val(deposit);
 					} else {
@@ -455,7 +633,7 @@
 				if ($("#radio_pay_later").is(":checked")){
 					$(".SHIPMENT").css({'text-decoration' : 'line-through'});
 					var order_id = "<?php echo $value->ORDER_ID ?>";
-					$(".SUBTOTAL").each(function(){
+					$(".TOTAL").each(function(){
 			    		// TOTAL ORDD_PRICE_VENDOR
 						var ordv_total_vendor = 0;						    
 					    $(".TOTAL_ORDD_PRICE_VENDOR"+order_id).each(function(){
@@ -488,15 +666,25 @@
 
 			    		var sub = hasil_curr;
 			    	
-						$("#SUBTOTAL"+order_id).text(sub);
+						$("#TOTAL"+order_id).text(sub);
 						$("#ORDV_TOTAL_VENDOR"+order_id).val(sub);
+
+						
 				    });
 
 					// hitung grand total
-				    var grand = 0;
-			    	$(".SUBTOTAL").each(function(){
-				    	if($(this).text() != "") {
-				    		var sub_total = $(this).text();
+				    if ($("#CHECK_PAY_NOW"+order_id).is(":checked")){
+						var n = $("#TOTAL"+order_id).text();
+						$("#PAY_ORDER_ID"+order_id).val(order_id);
+					} else {
+						var n = 0;
+						$("#PAY_ORDER_ID"+order_id).val("");
+					}
+					$("#PAY_NOW"+order_id).val(n);
+					var grand = 0;
+					$("._PAY_NOW").each(function(){
+						if($(this).val() != "") {
+							var sub_total = $(this).val();
 				    	} else {
 				    		var sub_total = 0;
 				    	}
@@ -504,7 +692,6 @@
 							total 	= reverse.match(/\d{1,3}/g);
 							total	= total.join('').split('').reverse().join('');
 				    	grand += Number(total);
-
 				    });
 
 				    if ($("#check-deposit").is(":checked")){
@@ -512,10 +699,14 @@
 				    	var	reverse_deposit  = deposit.toString().split('').reverse().join(''),
 								deposit_curr = reverse_deposit.match(/\d{1,3}/g);
 								deposit_curr = deposit_curr.join('').split('').reverse().join('');
-				    	if(deposit >= 0) {
-				    		var after_deposit = parseInt(grand) - parseInt(deposit_curr);
-				    	} else {
+				    	if(parseInt(deposit) >= 0) {
 				    		var after_deposit = parseInt(grand) + parseInt(deposit_curr);
+				    	} else {
+				    		if(parseInt(deposit_curr) > parseInt(grand)) {
+						    	var after_deposit = 0;
+							} else {
+				    			var after_deposit = parseInt(grand) - parseInt(deposit_curr);
+							}
 				    	}
 				    	$("#VENDOR_DEPOSIT").val(deposit);
 					} else {
@@ -534,7 +725,7 @@
 				if ($("#radio_not_included").is(":checked")){
 					$(".SHIPMENT").css({'text-decoration' : 'line-through'});
 					var order_id = "<?php echo $value->ORDER_ID ?>";
-					$(".SUBTOTAL").each(function(){
+					$(".TOTAL").each(function(){
 			    		// TOTAL ORDD_PRICE_VENDOR
 						var ordv_total_vendor = 0;						    
 					    $(".TOTAL_ORDD_PRICE_VENDOR"+order_id).each(function(){
@@ -567,15 +758,23 @@
 
 			    		var sub = hasil_curr;
 			    	
-						$("#SUBTOTAL"+order_id).text(sub);
+						$("#TOTAL"+order_id).text(sub);
 						$("#ORDV_TOTAL_VENDOR"+order_id).val(sub);
 				    });
 					
 					// hitung grand total
-				    var grand = 0;
-			    	$(".SUBTOTAL").each(function(){
-				    	if($(this).text() != "") {
-				    		var sub_total = $(this).text();
+				    if ($("#CHECK_PAY_NOW"+order_id).is(":checked")){
+						var n = $("#TOTAL"+order_id).text();
+						$("#PAY_ORDER_ID"+order_id).val(order_id);
+					} else {
+						var n = 0;
+						$("#PAY_ORDER_ID"+order_id).val("");
+					}
+					$("#PAY_NOW"+order_id).val(n);
+					var grand = 0;
+					$("._PAY_NOW").each(function(){
+						if($(this).val() != "") {
+							var sub_total = $(this).val();
 				    	} else {
 				    		var sub_total = 0;
 				    	}
@@ -583,7 +782,6 @@
 							total 	= reverse.match(/\d{1,3}/g);
 							total	= total.join('').split('').reverse().join('');
 				    	grand += Number(total);
-
 				    });
 
 				    if ($("#check-deposit").is(":checked")){
@@ -591,10 +789,14 @@
 				    	var	reverse_deposit  = deposit.toString().split('').reverse().join(''),
 								deposit_curr = reverse_deposit.match(/\d{1,3}/g);
 								deposit_curr = deposit_curr.join('').split('').reverse().join('');
-				    	if(deposit >= 0) {
-				    		var after_deposit = parseInt(grand) - parseInt(deposit_curr);
-				    	} else {
+				    	if(parseInt(deposit) >= 0) {
 				    		var after_deposit = parseInt(grand) + parseInt(deposit_curr);
+				    	} else {
+				    		if(parseInt(deposit_curr) > parseInt(grand)) {
+						    	var after_deposit = 0;
+							} else {
+				    			var after_deposit = parseInt(grand) - parseInt(deposit_curr);
+							}
 				    	}
 				    	$("#VENDOR_DEPOSIT").val(deposit);
 				    	$("#VENDOR_DEPOSIT_PAYMENT").val(deposit);
@@ -661,15 +863,22 @@
 						sub_total 		  = reverse_sub_total.match(/\d{1,3}/g);
 						sub_total	 	  = sub_total.join('.').split('').reverse().join('');
 			    	
-			    	$("#SUBTOTAL"+order).text(sub_total);
+			    	$("#TOTAL"+order).text(sub_total);
 			    	$("#ORDV_TOTAL_VENDOR"+order).val(sub_total);
 
 			    	// hitung grand total
-				    
-				    var grand = 0;
-			    	$(".SUBTOTAL").each(function(){
-				    	if($(this).text() != "") {
-				    		var sub_total = $(this).text();
+				    if ($("#CHECK_PAY_NOW"+order).is(":checked")){
+						var n = $("#TOTAL"+order).text();
+						$("#PAY_ORDER_ID"+order).val(order);
+					} else {
+						var n = 0;
+						$("#PAY_ORDER_ID"+order).val("");
+					}
+					$("#PAY_NOW"+order).val(n);
+					var grand = 0;
+					$("._PAY_NOW").each(function(){
+						if($(this).val() != "") {
+							var sub_total = $(this).val();
 				    	} else {
 				    		var sub_total = 0;
 				    	}
@@ -677,7 +886,6 @@
 							total 	= reverse.match(/\d{1,3}/g);
 							total	= total.join('').split('').reverse().join('');
 				    	grand += Number(total);
-
 				    });
 
 				    if ($("#check-deposit").is(":checked")){
@@ -685,10 +893,14 @@
 				    	var	reverse_deposit  = deposit.toString().split('').reverse().join(''),
 								deposit_curr = reverse_deposit.match(/\d{1,3}/g);
 								deposit_curr = deposit_curr.join('').split('').reverse().join('');
-				    	if(deposit >= 0) {
-				    		var after_deposit = parseInt(grand) - parseInt(deposit_curr);
-				    	} else {
+				    	if(parseInt(deposit) >= 0) {
 				    		var after_deposit = parseInt(grand) + parseInt(deposit_curr);
+				    	} else {
+				    		if(parseInt(deposit_curr) > parseInt(grand)) {
+						    	var after_deposit = 0;
+							} else {
+				    			var after_deposit = parseInt(grand) - parseInt(deposit_curr);
+							}
 				    	}
 				    	$("#VENDOR_DEPOSIT").val(deposit);
 					} else {
@@ -754,15 +966,22 @@
 						sub_total 		  = reverse_sub_total.match(/\d{1,3}/g);
 						sub_total	 	  = sub_total.join('.').split('').reverse().join('');
 			    	
-			    	$("#SUBTOTAL"+order).text(sub_total);
+			    	$("#TOTAL"+order).text(sub_total);
 			    	$("#ORDV_TOTAL_VENDOR"+order).val(sub_total);
 
-			    	// hitung grand total
-				    
-				    var grand = 0;
-			    	$(".SUBTOTAL").each(function(){
-				    	if($(this).text() != "") {
-				    		var sub_total = $(this).text();
+			    	// hitung grand total				    
+				    if ($("#CHECK_PAY_NOW"+order).is(":checked")){
+						var n = $("#TOTAL"+order).text();
+						$("#PAY_ORDER_ID"+order).val(order);
+					} else {
+						var n = 0;
+						$("#PAY_ORDER_ID"+order).val("");
+					}
+					$("#PAY_NOW"+order).val(n);
+					var grand = 0;
+					$("._PAY_NOW").each(function(){
+						if($(this).val() != "") {
+							var sub_total = $(this).val();
 				    	} else {
 				    		var sub_total = 0;
 				    	}
@@ -770,7 +989,6 @@
 							total 	= reverse.match(/\d{1,3}/g);
 							total	= total.join('').split('').reverse().join('');
 				    	grand += Number(total);
-
 				    });
 
 				    if ($("#check-deposit").is(":checked")){
@@ -778,10 +996,14 @@
 				    	var	reverse_deposit  = deposit.toString().split('').reverse().join(''),
 								deposit_curr = reverse_deposit.match(/\d{1,3}/g);
 								deposit_curr = deposit_curr.join('').split('').reverse().join('');
-				    	if(deposit >= 0) {
-				    		var after_deposit = parseInt(grand) - parseInt(deposit_curr);
-				    	} else {
+				    	if(parseInt(deposit) >= 0) {
 				    		var after_deposit = parseInt(grand) + parseInt(deposit_curr);
+				    	} else {
+				    		if(parseInt(deposit_curr) > parseInt(grand)) {
+						    	var after_deposit = 0;
+							} else {
+				    			var after_deposit = parseInt(grand) - parseInt(deposit_curr);
+							}
 				    	}
 				    	$("#VENDOR_DEPOSIT").val(deposit);
 					} else {
@@ -815,9 +1037,9 @@
 						new_price	 	  = new_price.join('').split('').reverse().join('');
 					
 			    	// NEW ORDD_PRICE_VENDOR
-					var quantity = $("#QUANTITY"+ordd_id).text();
-					var new_ordd_price_vendor   = parseInt(new_price) * parseInt(quantity);
-					var	reverse_new_ordd_price  = new_ordd_price_vendor.toString().split('').reverse().join(''),
+					var quantity = $("#QUANTITY"+ordd_id).val();
+					var new_ordd_price_vendor   = new_price * quantity;
+					var	reverse_new_ordd_price  = new_ordd_price_vendor.toFixed(0).toString().split('').reverse().join(''),
 						new_ordd_price_vendor 	= reverse_new_ordd_price.match(/\d{1,3}/g);
 						new_ordd_price_vendor	= new_ordd_price_vendor.join('.').split('').reverse().join('');
 				    $("#CETAK_TOTAL_ORDD_PRICE_VENDOR"+ordd_id).text(new_ordd_price_vendor);
@@ -841,7 +1063,14 @@
 							ordv_total	= ordv_total.join('').split('').reverse().join('');
 				    	ordv_total_vendor += Number(ordv_total);
 
-				    });				    
+				    });
+
+				    // subtotal
+			    	var reverse_addcost = ordv_total_vendor.toString().split('').reverse().join(''),
+							subtotal 	= reverse_addcost.match(/\d{1,3}/g);
+							subtotal	= subtotal.join('.').split('').reverse().join('');
+
+				    $("#SUBTOTAL"+order_id).text(subtotal);				    
 
 			    	// addcost
 			    	var reverse_addcost = $("#ORDV_ADDCOST_VENDOR"+order_id).val().toString().split('').reverse().join(''),
@@ -863,14 +1092,22 @@
 						sub_total 		  = reverse_sub_total.match(/\d{1,3}/g);
 						sub_total	 	  = sub_total.join('.').split('').reverse().join('');
 			    	
-			    	$("#SUBTOTAL"+order_id).text(sub_total);
+			    	$("#TOTAL"+order_id).text(sub_total);
 			    	$("#ORDV_TOTAL_VENDOR"+order_id).val(sub_total);
 
 			    	// hitung grand total
-				    var grand = 0;
-			    	$(".SUBTOTAL").each(function(){
-				    	if($(this).text() != "") {
-				    		var sub_total = $(this).text();
+				    if ($("#CHECK_PAY_NOW"+order_id).is(":checked")){
+						var n = $("#TOTAL"+order_id).text();
+						$("#PAY_ORDER_ID"+order_id).val(order_id);
+					} else {
+						var n = 0;
+						$("#PAY_ORDER_ID"+order_id).val("");
+					}
+					$("#PAY_NOW"+order_id).val(n);
+					var grand = 0;
+					$("._PAY_NOW").each(function(){
+						if($(this).val() != "") {
+							var sub_total = $(this).val();
 				    	} else {
 				    		var sub_total = 0;
 				    	}
@@ -878,7 +1115,6 @@
 							total 	= reverse.match(/\d{1,3}/g);
 							total	= total.join('').split('').reverse().join('');
 				    	grand += Number(total);
-
 				    });
 
 				    if ($("#check-deposit").is(":checked")){
@@ -886,10 +1122,14 @@
 				    	var	reverse_deposit  = deposit.toString().split('').reverse().join(''),
 								deposit_curr = reverse_deposit.match(/\d{1,3}/g);
 								deposit_curr = deposit_curr.join('').split('').reverse().join('');
-				    	if(deposit >= 0) {
-				    		var after_deposit = parseInt(grand) - parseInt(deposit_curr);
-				    	} else {
+				    	if(parseInt(deposit) >= 0) {
 				    		var after_deposit = parseInt(grand) + parseInt(deposit_curr);
+				    	} else {
+				    		if(parseInt(deposit_curr) > parseInt(grand)) {
+						    	var after_deposit = 0;
+							} else {
+				    			var after_deposit = parseInt(grand) - parseInt(deposit_curr);
+							}
 				    	}
 				    	$("#VENDOR_DEPOSIT").val(deposit);
 					} else {
@@ -905,12 +1145,69 @@
 				    
 		    	});
 	    	});
+
+			$("._PAY_NOW").each(function(){
+				var id_order = "<?php echo $value->ORDER_ID ?>";
+				$("._PAY_NOW").ready(function(){
+					var n = $("#TOTAL"+id_order).text();
+					$("#PAY_NOW"+id_order).val(n);
+					$("#PAY_ORDER_ID"+id_order).val(id_order);
+			    });
+				$("#CHECK_PAY_NOW"+id_order).click(function(){
+					if ($("#CHECK_PAY_NOW"+id_order).is(":checked")){
+						var n = $("#TOTAL"+id_order).text();
+						$("#PAY_ORDER_ID"+id_order).val(id_order);
+					} else {
+						var n = 0;
+						$("#PAY_ORDER_ID"+id_order).val("");
+					}
+					$("#PAY_NOW"+id_order).val(n);
+					var grand = 0;
+					$("._PAY_NOW").each(function(){
+						if($(this).val() != "") {
+							var sub_total = $(this).val();
+				    	} else {
+				    		var sub_total = 0;
+				    	}
+						var	reverse = sub_total.toString().split('').reverse().join(''),
+							total 	= reverse.match(/\d{1,3}/g);
+							total	= total.join('').split('').reverse().join('');
+				    	grand += Number(total);
+				    });
+
+					if ($("#check-deposit").is(":checked")){
+						var	deposit = $("#DEPOSIT").text()
+				    	var	reverse_deposit  = deposit.toString().split('').reverse().join(''),
+								deposit_curr = reverse_deposit.match(/\d{1,3}/g);
+								deposit_curr = deposit_curr.join('').split('').reverse().join('');
+				    	if(parseInt(deposit) >= 0) {
+				    		var after_deposit = parseInt(grand) + parseInt(deposit_curr);
+				    	} else {
+				    		if(parseInt(deposit_curr) > parseInt(grand)) {
+						    	var after_deposit = 0;
+							} else {
+				    			var after_deposit = parseInt(grand) - parseInt(deposit_curr);
+							}
+				    	}
+				    	$("#VENDOR_DEPOSIT").val(deposit);
+					} else {
+						var after_deposit = parseInt(grand);
+					}
+
+					var	reverse_deposit  = after_deposit.toString().split('').reverse().join(''),
+						new_grand_curr = reverse_deposit.match(/\d{1,3}/g);
+						new_grand_curr = new_grand_curr.join('.').split('').reverse().join('');
+
+					$("#GRAND_TOTAL").text(new_grand_curr);
+					$("#INPUT_GRAND_TOTAL").val(new_grand_curr);
+				});
+			});
 		<?php endforeach ?>
 		$("#check-deposit").click(function(){
 		    var grand = 0;
-	    	$(".SUBTOTAL").each(function(){
-		    	if($(this).text() != "") {
-		    		var sub_total = $(this).text();
+	    	$("._PAY_NOW").each(function(){
+				if($(this).val() != "") {
+					var sub_total = $(this).val();
 		    	} else {
 		    		var sub_total = 0;
 		    	}
@@ -918,18 +1215,21 @@
 					total 	= reverse.match(/\d{1,3}/g);
 					total	= total.join('').split('').reverse().join('');
 		    	grand += Number(total);
-
 		    });
-
+	    	
 		    if ($("#check-deposit").is(":checked")){
 				var	deposit = $("#DEPOSIT").text()
 		    	var	reverse_deposit  = deposit.toString().split('').reverse().join(''),
 						deposit_curr = reverse_deposit.match(/\d{1,3}/g);
 						deposit_curr = deposit_curr.join('').split('').reverse().join('');
-		    	if(deposit >= 0) {
-		    		var after_deposit = parseInt(grand) - parseInt(deposit_curr);
-		    	} else {
+		    	if(parseInt(deposit) >= 0) {
 		    		var after_deposit = parseInt(grand) + parseInt(deposit_curr);
+		    	} else {
+		    		if(parseInt(deposit_curr) > parseInt(grand)) {
+				    	var after_deposit = 0;
+					} else {
+		    			var after_deposit = parseInt(grand) - parseInt(deposit_curr);
+					}
 		    	}
 		    	$("#DEPOSIT").css({'text-decoration' : 'none'});
 		    	$("#VENDOR_DEPOSIT").val(deposit);
@@ -956,44 +1256,5 @@
 				$("#VENDOR_DEPOSIT").val('');
 			}
 		});
-
-		// hitung grand total
-	    var grand = 0;
-		$(".SUBTOTAL").ready(function(){
-	    	$(".SUBTOTAL").each(function(){
-		    	if($(this).text() != "") {
-		    		var sub_total = $(this).text();
-		    	} else {
-		    		var sub_total = 0;
-		    	}
-				var	reverse = sub_total.toString().split('').reverse().join(''),
-					total 	= reverse.match(/\d{1,3}/g);
-					total	= total.join('').split('').reverse().join('');
-		    	grand += Number(total);
-
-		    });
-
-	    	if ($("#check-deposit").is(":checked")){
-				var	deposit = $("#DEPOSIT").text()
-		    	var	reverse_deposit  = deposit.toString().split('').reverse().join(''),
-						deposit_curr = reverse_deposit.match(/\d{1,3}/g);
-						deposit_curr = deposit_curr.join('').split('').reverse().join('');
-		    	if(deposit >= 0) {
-		    		var after_deposit = parseInt(grand) - parseInt(deposit_curr);
-		    	} else {
-		    		var after_deposit = parseInt(grand) + parseInt(deposit_curr);
-		    	}
-		    	$("#VENDOR_DEPOSIT").val(deposit);
-			} else {
-				var after_deposit = parseInt(grand);
-			}
-
-	    	var	reverse_grand = after_deposit.toString().split('').reverse().join(''),
-				grand_total   = reverse_grand.match(/\d{1,3}/g);
-				grand_total	  = grand_total.join('.').split('').reverse().join('');
-			$("#GRAND_TOTAL").text(grand_total);
-			$("#INPUT_GRAND_TOTAL").val(grand_total);
-			$("#GRAND_TANPA_DEPOSIT").val(grand);
-	    });
 	});    
 </script>

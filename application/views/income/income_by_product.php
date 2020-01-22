@@ -18,28 +18,28 @@
 			<div class="row">
 				<div class="col-md-3">			
 					<div class="form-group">
-						<input class="form-control datepicker" type="text" name="FROM" id="FROM" placeholder="From" autocomplete="off">
+						<input class="form-control form-control-sm datepicker" type="text" name="FROM" id="FROM" placeholder="From" autocomplete="off">
 					</div>
 				</div>
 				<div class="col-md-3">			
 					<div class="form-group">
-						<input class="form-control datepicker" type="text" name="TO" id="TO" placeholder="To" autocomplete="off">
+						<input class="form-control form-control-sm datepicker" type="text" name="TO" id="TO" placeholder="To" autocomplete="off">
 					</div>
 				</div>
 				<div class="col-md-3">			
 					<div class="form-group">
-						<select class="form-control selectpicker" title="--- Select Product ---" name="PRO_ID" id="PRODUCT_INCOME">
+						<select class="form-control form-control-sm selectpicker" title="--- Select Product ---" name="PRO_ID" id="PRODUCT_INCOME">
 				    		<option value="" selected disabled>--- Select Product ---</option>
 				    		<?php foreach($product as $field): ?>
-				    			<option value="<?php echo $field->PRO_ID ?>"><?php echo $field->PRO_NAME ?></option>
+				    			<option class="form-control-sm" value="<?php echo $field->PRO_ID ?>"><?php echo $field->PRO_NAME ?></option>
 				    		<?php endforeach ?>
 					    </select>
 					</div>
 				</div>
 				<div class="col-md-3">			
 					<div class="form-group" align="right">
-						<button class="btn btn-sm btn-info" style="margin-top: 3px;" id="GENERATE_REPORT_PRODUCT"><i class="fa fa-print"></i> Generate Report</button>
-						<a class="btn btn-sm btn-danger" style="margin-top: 3px;" href="<?php echo site_url('report/income_by_product') ?>"><i class="fa fa-redo"></i> Reset</a>
+						<button class="btn btn-sm btn-info" id="GENERATE_REPORT_PRODUCT"><i class="fa fa-print"></i> Generate Report</button>
+						<a class="btn btn-sm btn-danger" href="<?php echo site_url('report/income_by_product') ?>"><i class="fa fa-redo"></i> Reset</a>
 					</div>
 				</div>
 			</div>

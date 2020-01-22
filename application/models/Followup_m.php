@@ -185,7 +185,7 @@ class Followup_m extends CI_Model {
     }
 
     public function get_sample_cs($FROM = null, $TO = null, $USER_ID = null) {
-        $this->db->select('COUNT(tb_customer_log.CLOG_ID) AS total, COUNT(if(tb_customer_log.FLWS_ID=4,tb_customer_log.FLWS_ID, null)) AS total_flwp, tb_user.USER_NAME');
+        $this->db->select('COUNT(tb_customer_log.CLOG_ID) AS total, COUNT(if(tb_customer_log.FLWS_ID is not null,tb_customer_log.FLWS_ID, null)) AS total_flwp, COUNT(if(tb_customer_log.FLWS_ID=4,tb_customer_log.FLWS_ID, null)) AS total_order_flwp, tb_user.USER_NAME');
         $this->db->from('tb_customer_log');
         $this->db->join('tb_user', 'tb_user.USER_ID=tb_customer_log.USER_ID', 'left');
         if ($FROM != null && $TO != null) { // filter by date           
@@ -203,7 +203,7 @@ class Followup_m extends CI_Model {
     }
 
     public function get_check_stock_cs($FROM = null, $TO = null, $USER_ID = null) {
-        $this->db->select('COUNT(tb_customer_log.CLOG_ID) AS total, COUNT(if(tb_customer_log.FLWS_ID=4,tb_customer_log.FLWS_ID, null)) AS total_flwp, tb_user.USER_NAME');
+        $this->db->select('COUNT(tb_customer_log.CLOG_ID) AS total, COUNT(if(tb_customer_log.FLWS_ID is not null,tb_customer_log.FLWS_ID, null)) AS total_flwp, COUNT(if(tb_customer_log.FLWS_ID=4,tb_customer_log.FLWS_ID, null)) AS total_order_flwp, tb_user.USER_NAME');
         $this->db->from('tb_customer_log');
         $this->db->join('tb_user', 'tb_user.USER_ID=tb_customer_log.USER_ID', 'left');
         if ($FROM != null && $TO != null) { // filter by date           

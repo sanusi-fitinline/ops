@@ -19,12 +19,13 @@ class Customer_m extends CI_Model {
 		$modl = "Customer";
 		$view = 1;    
 		$viewall =  $this->access_m->isViewAll($modl, $view)->row();
-		$this->db->select('tb_customer.*, tb_country.CNTR_NAME, tb_state.STATE_NAME, tb_city.CITY_NAME, tb_subdistrict.SUBD_NAME');
+		$this->db->select('tb_customer.*, tb_country.CNTR_NAME, tb_state.STATE_NAME, tb_city.CITY_NAME, tb_subdistrict.SUBD_NAME, tb_user.USER_NAME');
 		$this->db->from($this->table);
 		$this->db->join('tb_country', 'tb_country.CNTR_ID=tb_customer.CNTR_ID', 'left');
 		$this->db->join('tb_state', 'tb_state.STATE_ID=tb_customer.STATE_ID', 'left');
 		$this->db->join('tb_city', 'tb_city.CITY_ID=tb_customer.CITY_ID', 'left');
 		$this->db->join('tb_subdistrict', 'tb_subdistrict.SUBD_ID=tb_customer.SUBD_ID', 'left');
+		$this->db->join('tb_user', 'tb_user.USER_ID=tb_customer.USER_ID', 'left');
         if ($this->session->GRP_SESSION !=3) {
 			if (!$viewall) {
 				$this->db->where('tb_customer.USER_ID', $this->session->USER_SESSION);

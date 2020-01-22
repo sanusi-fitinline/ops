@@ -3,8 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Ordervendor_m extends CI_Model {
     var $table = 'tb_order_vendor'; //nama tabel dari database
-    var $column_search = array('VEND_NAME', 'tb_order_vendor.ORDER_ID','ORDER_DATE', 'ORDV_TOTAL_VENDOR', 'tb_payment_to_vendor.PAYTOV_DATE'); //field yang diizin untuk pencarian 
-    var $order = array('ORDER_DATE' => 'DESC'); // default order 
+    var $column_search = array('tb_vendor.VEND_NAME', 'tb_order_vendor.ORDER_ID', 'tb_order_vendor.ORDV_TOTAL_VENDOR'); //field yang diizin untuk pencarian
 
     public function __construct()
     {
@@ -12,7 +11,7 @@ class Ordervendor_m extends CI_Model {
         $this->load->database();
     }
 
-    private function _get_datatables_query()
+    private function _get_datatables_query($STATUS_FILTER = null)
     {
         $this->load->model('access_m');
         $modul = "Payment To Vendor";
@@ -28,10 +27,28 @@ class Ordervendor_m extends CI_Model {
                 $this->db->where('tb_order.USER_ID', $this->session->USER_SESSION);
             }
         }
+        $this->db->group_start();
         $this->db->where('tb_order.ORDER_STATUS >=', 2);
         $this->db->where('tb_order.ORDER_STATUS <', 5);
-        $this->db->where('tb_payment_to_vendor.PAYTOV_DATE', null);
-        $this->db->or_where('tb_payment_to_vendor.PAYTOV_DATE IS NOT NULL', null, false);
+        $this->db->where('tb_order_vendor.PAYTOV_ID', null);
+        $this->db->or_where('tb_order_vendor.PAYTOV_ID IS NOT NULL', null, false);
+        $this->db->group_end();
+
+        if ($STATUS_FILTER != null) { // filter by status
+            $this->db->group_start();
+            if ($STATUS_FILTER == 1) { // filter not paid
+                $this->db->where('tb_order_vendor.PAYTOV_ID', null);
+                $this->db->where('tb_order.ORDER_STATUS !=', 5);
+            } elseif ($STATUS_FILTER == 2) { // filter paid
+                $this->db->where('tb_order_vendor.PAYTOV_ID IS NOT NULL', null, false);
+                $this->db->where('tb_order.ORDER_STATUS !=', 5);
+            } else { // filter status cancel
+                $this->db->where('tb_order_vendor.PAYTOV_ID IS NOT NULL', null, false);
+                $this->db->where('tb_order.ORDER_STATUS', 5);
+            }
+            $this->db->group_end();
+        }
+
         $this->db->order_by('tb_order.ORDER_ID', 'DESC');
 
         $i = 0;
@@ -56,33 +73,27 @@ class Ordervendor_m extends CI_Model {
             }
             $i++;
         }
-        
-        if(isset($this->order))
-        {
-            $order = $this->order;
-            $this->db->order_by(key($order), $order[key($order)]);
-        }
     }
 
-    function get_datatables()
+    function get_datatables($STATUS_FILTER = null)
     {
-        $this->_get_datatables_query();
+        $this->_get_datatables_query($STATUS_FILTER);
         if($_POST['length'] != -1)
         $this->db->limit($_POST['length'], $_POST['start']);
         $query = $this->db->get();
         return $query->result();
     }
 
-    function count_filtered()
+    function count_filtered($STATUS_FILTER = null)
     {
-        $this->_get_datatables_query();
+        $this->_get_datatables_query($STATUS_FILTER);
         $query = $this->db->get();
         return $query->num_rows();
     }
 
-    public function count_all()
+    public function count_all($STATUS_FILTER = null)
     {
-        $this->_get_datatables_query();
+        $this->_get_datatables_query($STATUS_FILTER);
         return $this->db->count_all_results();
     }
 	
@@ -137,6 +148,41 @@ class Ordervendor_m extends CI_Model {
         return $this->db->get('tb_order_detail');
     }
 
+    public function check_delivery_date($ORDER_ID) {
+        $this->db->where('ORDER_ID', $ORDER_ID);
+        $this->db->where('ORDV_DELIVERY_DATE ', '0000-00-00');
+        return $this->db->get('tb_order_vendor');
+    }
+
+    public function check_vendor_deposit($ORDER_ID, $ORDV_ID, $VEND_ID) {
+        $this->db->where('ORDER_ID', $ORDER_ID);
+        $this->db->where('ORDV_ID', $ORDV_ID);
+        $this->db->where('VEND_ID', $VEND_ID);
+        return $this->db->get('tb_vendor_deposit');
+    }
+
+    public function check_customer_deposit($ORDER_ID, $ORDV_ID) {
+        $this->db->where('ORDER_ID', $ORDER_ID);
+        $this->db->where('ORDV_ID', $ORDV_ID);
+        return $this->db->get('tb_customer_deposit');
+    }
+
+    public function get_shipcost_status($PAYTOV_ID) {
+        $this->db->select('PAYTOV_SHIPCOST_STATUS');
+        $this->db->from('tb_payment_to_vendor ');
+        $this->db->where('PAYTOV_ID', $PAYTOV_ID);
+        $query = $this->db->get();
+        return $query;
+    }
+
+    public function get_user_id($CUST_ID) {
+        $this->db->select('USER_ID');
+        $this->db->from('tb_customer');
+        $this->db->where('CUST_ID', $CUST_ID);
+        $query = $this->db->get();
+        return $query;
+    }
+
     public function update_payment_vendor($VEND_ID) {
         if (!empty($this->input->post('PAYTOV_DATE')) && !empty($this->input->post('VBA_ID'))) {
             $ORDD_ID              = $this->input->post('ORDD_ID', TRUE);
@@ -146,6 +192,12 @@ class Ordervendor_m extends CI_Model {
             $ORDV_ADDCOST_VENDOR  = str_replace(".", "", $this->input->post('ORDV_ADDCOST_VENDOR', TRUE));
             $ORDV_DISCOUNT_VENDOR = str_replace(".", "", $this->input->post('ORDV_DISCOUNT_VENDOR', TRUE));
             $ORDV_TOTAL_VENDOR    = str_replace(".", "", $this->input->post('ORDV_TOTAL_VENDOR', TRUE));
+            
+            $CUST_ID              = $this->input->post('CUST_ID', TRUE);
+            $ORDD_PRICE           = str_replace(".", "", $this->input->post('ORDD_PRICE', TRUE));
+            $ORDD_QUANTITY        = $this->input->post('ORDD_QUANTITY', TRUE);
+            $ORDD_QUANTITY_VENDOR = $this->input->post('ORDD_QUANTITY_VENDOR', TRUE);
+            $ORDD_OPTION_VENDOR   = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$this->input->post('ORDD_OPTION_VENDOR', TRUE));
             
             $PRO_ID    = $this->input->post('PRO_ID', TRUE);
             $UMEA_ID   = $this->input->post('UMEA_ID', TRUE);
@@ -184,9 +236,27 @@ class Ordervendor_m extends CI_Model {
             foreach($ORDD_ID as $i => $val){
                 $update_detail_vendor = array(
                     'ORDD_PRICE_VENDOR'    => $NEW_PRICE_VENDOR[$i],
+                    'ORDD_QUANTITY_VENDOR' => $ORDD_QUANTITY_VENDOR[$i],
+                    'ORDD_OPTION_VENDOR'   => $ORDD_OPTION_VENDOR[$i],
                 );
                 $this->db->where('ORDD_ID', $ORDD_ID[$i]);
                 $this->db->update('tb_order_detail', $update_detail_vendor);
+
+                if($ORDD_QUANTITY[$i] != $ORDD_QUANTITY_VENDOR[$i]) {
+                    $get_user[$i]       = $this->get_user_id($CUST_ID[$i])->row();
+                    $USER_ID[$i]        = $get_user[$i]->USER_ID;
+                    $HASIL_QUANTITY[$i] = $ORDD_QUANTITY[$i] - $ORDD_QUANTITY_VENDOR[$i];
+                    $DEPOSIT[$i]        = $HASIL_QUANTITY[$i] * $ORDD_PRICE[$i];
+
+                    $deposit['CUSTD_DATE']           = date('Y-m-d H:i:s');
+                    $deposit['ORDER_ID']             = $ORDER_ID[$i];
+                    $deposit['CUSTD_DEPOSIT']        = $DEPOSIT[$i];
+                    $deposit['CUSTD_DEPOSIT_STATUS'] = 0;
+                    $deposit['CUST_ID']              = $CUST_ID[$i];
+                    $deposit['USER_ID']              = $USER_ID[$i];
+                    $deposit['CUSTD_NOTES']          = $ORDER_ID[$i]." (".$ORDD_QUANTITY_VENDOR[$i].")";
+                    $this->db->insert('tb_customer_deposit', $this->db->escape_str($deposit));
+                }
             }
 
             // insert tb_payment_to_vendor
@@ -218,7 +288,7 @@ class Ordervendor_m extends CI_Model {
             if(!empty($this->input->post('PAYTOV_DEPOSIT'))) {
                 $VENDOR_DEPOSIT      = str_replace(".", "", $this->input->post('PAYTOV_DEPOSIT', TRUE));
                 $GRAND_TANPA_DEPOSIT = str_replace(".", "", $this->input->post('GRAND_TANPA_DEPOSIT', TRUE));
-                $SISA_DEPOSIT        = $VENDOR_DEPOSIT - $GRAND_TANPA_DEPOSIT;
+                $SISA_DEPOSIT = $GRAND_TANPA_DEPOSIT + $VENDOR_DEPOSIT;
                 
                 $this->load->model('venddeposit_m');
                 $check = $this->venddeposit_m->check_deposit($VEND_ID);
@@ -230,7 +300,7 @@ class Ordervendor_m extends CI_Model {
                     $this->db->update('tb_vendor_deposit', $this->db->escape_str($update_status));
                 }
 
-                if($VENDOR_DEPOSIT > $GRAND_TANPA_DEPOSIT) {
+                if($SISA_DEPOSIT < 0) {
                     $deposit_baru['VENDD_DATE']           = date('Y-m-d H:i:s');
                     $deposit_baru['VENDD_DEPOSIT']        = $SISA_DEPOSIT;
                     $deposit_baru['VENDD_DEPOSIT_STATUS'] = 0;
@@ -239,41 +309,6 @@ class Ordervendor_m extends CI_Model {
                 }
             }
         }
-    }
-
-    public function check($ORDER_ID) {
-        $this->db->where('ORDER_ID', $ORDER_ID);
-        $this->db->where('ORDV_DELIVERY_DATE ', '0000-00-00');
-        return $this->db->get('tb_order_vendor');
-    }
-
-    public function check_vendor_deposit($ORDER_ID, $ORDV_ID, $VEND_ID) {
-        $this->db->where('ORDER_ID', $ORDER_ID);
-        $this->db->where('ORDV_ID', $ORDV_ID);
-        $this->db->where('VEND_ID', $VEND_ID);
-        return $this->db->get('tb_vendor_deposit');
-    }
-
-    public function check_customer_deposit($ORDER_ID, $ORDV_ID) {
-        $this->db->where('ORDER_ID', $ORDER_ID);
-        $this->db->where('ORDV_ID', $ORDV_ID);
-        return $this->db->get('tb_customer_deposit');
-    }
-
-    public function get_shipcost_status($PAYTOV_ID) {
-        $this->db->select('PAYTOV_SHIPCOST_STATUS');
-        $this->db->from('tb_payment_to_vendor ');
-        $this->db->where('PAYTOV_ID', $PAYTOV_ID);
-        $query = $this->db->get();
-        return $query;
-    }
-
-    public function get_user_id($CUST_ID) {
-        $this->db->select('USER_ID');
-        $this->db->from('tb_customer');
-        $this->db->where('CUST_ID', $CUST_ID);
-        $query = $this->db->get();
-        return $query;
     }
 
     public function update_delivery_support($ORDER_ID) {
@@ -294,7 +329,8 @@ class Ordervendor_m extends CI_Model {
             $params['ORDV_DELIVERY_DATE'] = date('Y-m-d', strtotime($this->input->post('ORDV_DELIVERY_DATE', TRUE)));
         }
         $params['ORDV_SHIPCOST_VENDOR'] = str_replace(".", "", $this->input->post('ORDV_SHIPCOST_VENDOR', TRUE));
-        $params['ORDV_RECEIPT_NO']   = $this->input->post('ORDV_RECEIPT_NO', TRUE);
+        $params['ORDV_WEIGHT_VENDOR'] = $this->input->post('ORDV_WEIGHT_VENDOR', TRUE);
+        $params['ORDV_RECEIPT_NO']    = $this->input->post('ORDV_RECEIPT_NO', TRUE);
         $this->db->where('ORDER_ID', $ORDER_ID);
         $this->db->where('VEND_ID', $VEND_ID);
         $delivery = $this->db->update('tb_order_vendor', $this->db->escape_str($params));
@@ -344,6 +380,19 @@ class Ordervendor_m extends CI_Model {
                         );
                         $this->db->insert('tb_vendor_deposit', $this->db->escape_str($insert_vendor_deposit));
                     }
+                } else {
+                    if($check_cust_deposit->num_rows() > 0) {
+                        $this->db->where('ORDER_ID', $ORDER_ID);
+                        $this->db->where('ORDV_ID', $ORDV_ID);
+                        $this->db->delete('tb_customer_deposit');
+                    }
+
+                    if($check_vend_deposit->num_rows() > 0) {
+                        $this->db->where('ORDER_ID', $ORDER_ID);
+                        $this->db->where('ORDV_ID', $ORDV_ID);
+                        $this->db->where('VEND_ID', $VEND_ID);
+                        $this->db->delete('tb_vendor_deposit');
+                    }
                 }
             }
             // status pay later jika terjadi selisih maka meng-update customer deposit. Sistem akan mencatat kekurangan pembayaran ongkir ke vendor sebagai deposit minus (-) dengan notes (VENDD_NOTES)
@@ -390,6 +439,19 @@ class Ordervendor_m extends CI_Model {
                         $this->db->insert('tb_vendor_deposit', $this->db->escape_str($insert_vendor_deposit));
                     }
 
+                } else {
+                    if($check_cust_deposit->num_rows() > 0) {
+                        $this->db->where('ORDER_ID', $ORDER_ID);
+                        $this->db->where('ORDV_ID', $ORDV_ID);
+                        $this->db->delete('tb_customer_deposit');
+                    }
+
+                    if($check_vend_deposit->num_rows() > 0) {
+                        $this->db->where('ORDER_ID', $ORDER_ID);
+                        $this->db->where('ORDV_ID', $ORDV_ID);
+                        $this->db->where('VEND_ID', $VEND_ID);
+                        $this->db->delete('tb_vendor_deposit');
+                    }
                 }
             }
             // status 3 (not include) jika terjadi selisih, hanya meng-update customer deposit
@@ -413,6 +475,12 @@ class Ordervendor_m extends CI_Model {
                             'USER_ID'               => $USER_ID,
                         );
                         $this->db->insert('tb_customer_deposit', $this->db->escape_str($insert_customer_deposit));
+                    }
+                } else {
+                    if($check_cust_deposit->num_rows() > 0) {
+                        $this->db->where('ORDER_ID', $ORDER_ID);
+                        $this->db->where('ORDV_ID', $ORDV_ID);
+                        $this->db->delete('tb_customer_deposit');
                     }
                 }
             }
@@ -439,14 +507,20 @@ class Ordervendor_m extends CI_Model {
                     );
                     $this->db->insert('tb_customer_deposit', $this->db->escape_str($insert_customer_deposit));
                 }
+            } else {
+                if($check_cust_deposit->num_rows() > 0) {
+                    $this->db->where('ORDER_ID', $ORDER_ID);
+                    $this->db->where('ORDV_ID', $ORDV_ID);
+                    $this->db->delete('tb_customer_deposit');
+                }
             }
 
         }
 
         if($delivery) {
-            $check = $this->check($ORDER_ID);
+            $check_delivery = $this->check_delivery_date($ORDER_ID);
 
-            if($check->num_rows() > 0) {
+            if($check_delivery->num_rows() > 0) {
                 $query = $this->db->query("UPDATE tb_order INNER JOIN tb_order_vendor 
                 ON tb_order.ORDER_ID = tb_order_vendor.ORDER_ID
                 SET tb_order.ORDER_STATUS = '3'

@@ -43,26 +43,28 @@ class Report extends CI_Controller {
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
 		} else {
 			$data['get_cs'] = $this->followup_m->get_cs()->result();
-			$data['get_sample'] = $this->followup_m->get_sample_cs()->result();
+			// $data['get_sample'] = $this->followup_m->get_sample_cs()->result();
 			$this->template->load('template', 'report/sample_order', $data);
 		}
 	}
 
 	public function sample_order_json(){
-		$FROM      = $this->input->post('FROM', TRUE);
-		$TO 	   = $this->input->post('TO', TRUE);
-		$USER_ID 	= $this->input->post('USER_ID', TRUE);
+		$FROM      			= $this->input->post('FROM', TRUE);
+		$TO 	   			= $this->input->post('TO', TRUE);
+		$USER_ID   			= $this->input->post('USER_ID', TRUE);
 		$lists = "";
 		$sample = $this->followup_m->get_sample_cs($FROM, $TO, $USER_ID)->result();
 		foreach($sample as $field){
-			$lists .= $user_name[] = $field->USER_NAME;
-			$lists .= $jumlah_sample[] = (int) $field->total;
-			$lists .= $jumlah_flwp[] = (int) $field->total_flwp;
+			$lists .= $user_name[] 			= $field->USER_NAME;
+			$lists .= $jumlah_sample[] 		= (int) $field->total;
+			$lists .= $jumlah_flwp[] 		= (int) $field->total_flwp;
+			$lists .= $jumlah_order_flwp[] 	= (int) $field->total_order_flwp;
   		}
   		$callback = array(
-  			'list_user_name'		=>$user_name,
-  			'list_jumlah_sample'	=>$jumlah_sample,
-  			'list_jumlah_flwp'		=>$jumlah_flwp,
+  			'list_user_name'		 =>$user_name,
+  			'list_jumlah_sample'	 =>$jumlah_sample,
+  			'list_jumlah_flwp'		 =>$jumlah_flwp,
+  			'list_jumlah_order_flwp' =>$jumlah_order_flwp,
   		); 
 	    echo json_encode($callback);
 	}
@@ -75,7 +77,6 @@ class Report extends CI_Controller {
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
 		} else {
 			$data['get_cs'] = $this->followup_m->get_cs()->result();
-			$data['get_check_stock'] = $this->followup_m->get_check_stock_cs()->result();
 			$this->template->load('template', 'report/check_stock_order', $data);
 		}
 	}
@@ -87,14 +88,16 @@ class Report extends CI_Controller {
 		$lists = "";
 		$check_stock = $this->followup_m->get_check_stock_cs($FROM, $TO, $USER_ID)->result();
 		foreach($check_stock as $field){
-			$lists .= $user_name[] = $field->USER_NAME;
+			$lists .= $user_name[] 			= $field->USER_NAME;
 			$lists .= $jumlah_check_stock[] = (int) $field->total;
-			$lists .= $jumlah_flwp[] = (int) $field->total_flwp;
+			$lists .= $jumlah_flwp[] 		= (int) $field->total_flwp;
+			$lists .= $jumlah_order_flwp[] 	= (int) $field->total_order_flwp;
   		}
   		$callback = array(
   			'list_user_name'			=>$user_name,
   			'list_jumlah_check_stock'	=>$jumlah_check_stock,
   			'list_jumlah_flwp'			=>$jumlah_flwp,
+  			'list_jumlah_order_flwp'	=>$jumlah_order_flwp,
   		); 
 	    echo json_encode($callback);
 	}
@@ -106,10 +109,7 @@ class Report extends CI_Controller {
 			echo "<script>alert('Anda tidak punya akses ke $modul.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
 		} else {
-			$data['check_stock_unchecked'] = $this->followup_m->get_check_stock_unchecked()->result();
-			$data['check_stock_notavailable'] = $this->followup_m->get_check_stock_notavailable()->result();
-			$data['check_stock_available'] = $this->followup_m->get_check_stock_available()->result();
-			$this->template->load('template', 'report/check_stock_performance', $data);
+			$this->template->load('template', 'report/check_stock_performance');
 		}
 	}
 
@@ -147,10 +147,7 @@ class Report extends CI_Controller {
 			echo "<script>alert('Anda tidak punya akses ke $modul.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
 		} else {
-			$data['followup_closed'] = $this->followup_m->get_flwp_closed()->result();
-			$data['followup_inprogress'] = $this->followup_m->get_flwp_inprogress()->result();
-			$data['followup_order'] = $this->followup_m->get_flwp_order()->result();
-			$this->template->load('template', 'report/followup_performance', $data);
+			$this->template->load('template', 'report/followup_performance');
 		}
 	}
 
@@ -188,13 +185,7 @@ class Report extends CI_Controller {
 			echo "<script>alert('Anda tidak punya akses ke $modul.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
 		} else {
-			$data['closed1'] = $this->followup_m->get_closed_reason1()->result();
-			$data['closed2'] = $this->followup_m->get_closed_reason2()->result();
-			$data['closed3'] = $this->followup_m->get_closed_reason3()->result();
-			$data['closed4'] = $this->followup_m->get_closed_reason4()->result();
-			$data['closed5'] = $this->followup_m->get_closed_reason5()->result();
-			$data['closed6'] = $this->followup_m->get_closed_reason6()->result();
-			$this->template->load('template', 'report/failed_followup', $data);
+			$this->template->load('template', 'report/failed_followup');
 		}
 	}
 
@@ -288,11 +279,12 @@ class Report extends CI_Controller {
 	}
 
 	public function income_by_csjson() {
-		$FROM     = $this->input->post('FROM', TRUE);
-		$TO 	  = $this->input->post('TO', TRUE);
-		$USER_ID  = $this->input->post('USER_ID', TRUE);
-		$income   = $this->incomebycs_m->get($FROM, $TO, $USER_ID)->result_array();
-		$by_cs    = $this->incomebycs_m->get_by_cs($FROM, $TO, $USER_ID)->result();
+		$FROM     			= $this->input->post('FROM', TRUE);
+		$TO 	  			= $this->input->post('TO', TRUE);
+		$EXCLUDE_SHIPMENT 	= $this->input->post('EXCLUDE_SHIPMENT', TRUE);
+		$USER_ID  			= $this->input->post('USER_ID', TRUE);
+		$income   			= $this->incomebycs_m->get($FROM, $TO, $EXCLUDE_SHIPMENT, $USER_ID)->result_array();
+		$by_cs    			= $this->incomebycs_m->get_by_cs($FROM, $TO, $EXCLUDE_SHIPMENT, $USER_ID)->result();
 		$no = 1;
 		$body = "";
 		if(!$income && !$by_cs){
@@ -313,14 +305,14 @@ class Report extends CI_Controller {
 		} else {
 			$SUBTOTAL= 0;
 			foreach($income as $key => $field){
-				$SUBTOTAL 	  += $field['ORDER_GRAND_TOTAL'];
-				$GRANDTOTAL[]  = $field['ORDER_GRAND_TOTAL'];
+				$SUBTOTAL 	  += $field['ORDER_G_TOTAL'];
+				$GRANDTOTAL[]  = $field['ORDER_G_TOTAL'];
 				$body .= "<tr>
 						<td align='center'>".$no++."</td>
 						<td>".date('d-m-Y / H:i:s', strtotime($field['ORDER_DATE']))."</td>
 						<td>".$field['USER_NAME']."</td>
 						<td align='center'>".$field['ORDER_ID']."</td>
-						<td align='right'>".number_format($field['ORDER_GRAND_TOTAL'],0,',','.')."</td>
+						<td align='right'>".number_format($field['ORDER_G_TOTAL'],0,',','.')."</td>
 					</tr>";		
 				if(@$income[$key+1]['USER_ID'] != $field['USER_ID']) {
 					$body .= "<tr>
@@ -398,7 +390,7 @@ class Report extends CI_Controller {
 						<td>".date('d-m-Y / H:i:s', strtotime($field['ORDER_DATE']))."</td>
 						<td>".$field['PRO_NAME']."</td>
 						<td>".$field['ORDD_OPTION']."</td>
-						<td align='center'>".$field['ORDD_QUANTITY']."</td>
+						<td align='center'>".str_replace(".", ",", $field['ORDD_QUANTITY'])."</td>
 						<td align='right'>".number_format($field['ORDD_PRICE'],0,',','.')."</td>
 						<td align='right'>".number_format($field['ORDD_PRICE'] * $field['ORDD_QUANTITY'],0,',','.')."</td>
 					</tr>";
@@ -447,16 +439,17 @@ class Report extends CI_Controller {
 	}
 
 	public function income_by_vendorjson() {
-		$FROM    	= $this->input->post('FROM', TRUE);
-		$TO 	 	= $this->input->post('TO', TRUE);
-		$VEND_ID 	= $this->input->post('VEND_ID', TRUE);
-		$income  	= $this->incomebyvendor_m->get($FROM, $TO, $VEND_ID)->result_array();
-		$by_vendor  = $this->incomebyvendor_m->get_by_vendor($FROM, $TO, $VEND_ID)->result();
+		$FROM    			= $this->input->post('FROM', TRUE);
+		$TO 	 			= $this->input->post('TO', TRUE);
+		$EXCLUDE_SHIPMENT 	= $this->input->post('EXCLUDE_SHIPMENT', TRUE);
+		$VEND_ID 			= $this->input->post('VEND_ID', TRUE);
+		$income  			= $this->incomebyvendor_m->get($FROM, $TO, $EXCLUDE_SHIPMENT, $VEND_ID)->result_array();
+		$by_vendor  		= $this->incomebyvendor_m->get_by_vendor($FROM, $TO, $EXCLUDE_SHIPMENT, $VEND_ID)->result();
 		$no = 1;
 		$body = "";
 		if(!$income && !$by_vendor){
 			$body .= "<tr>
-					<td align='center' colspan='5'>No data available in table</td>
+					<td align='center' colspan='6'>No data available in table</td>
 				</tr>";
 			foreach($by_vendor as $row){
 				$body .= $vend_name[] = "";
@@ -472,14 +465,14 @@ class Report extends CI_Controller {
 		} else {
 			$SUBTOTAL = 0;
 			foreach($income as $key => $field){
-				$SUBTOTAL 	  +=$field['ORDV_TOTAL'];
-				$GRANDTOTAL[]  =$field['ORDV_TOTAL'];
+				$SUBTOTAL 	  +=$field['TOTAL_ORDV'];
+				$GRANDTOTAL[]  =$field['TOTAL_ORDV'];
 				$body .= "<tr>
 						<td align='center'>".$no++."</td>
 						<td>".date('d-m-Y / H:i:s', strtotime($field['ORDER_DATE']))."</td>
 						<td>".$field['VEND_NAME']."</td>
 						<td align='center'>".$field['ORDER_ID']."</td>
-						<td align='right'>".number_format($field['ORDV_TOTAL'],0,',','.')."</td>
+						<td align='right'>".number_format($field['TOTAL_ORDV'],0,',','.')."</td>
 					</tr>";
 
 				if(@$income[$key+1]['VEND_ID'] != $field['VEND_ID']) {
@@ -526,9 +519,10 @@ class Report extends CI_Controller {
 	}
 
 	public function profit_loss_json() {
-		$FROM    = $this->input->post('FROM', TRUE);
-		$TO 	 = $this->input->post('TO', TRUE);
-		$income  = $this->profitloss_m->get($FROM, $TO)->result();
+		$FROM   			= $this->input->post('FROM', TRUE);
+		$TO 	 			= $this->input->post('TO', TRUE);
+		$EXCLUDE_SHIPMENT 	= $this->input->post('EXCLUDE_SHIPMENT', TRUE);
+		$income  			= $this->profitloss_m->get($FROM, $TO, $EXCLUDE_SHIPMENT)->result();
 		$no = 1;
 		$body = "";
 		if(!$income){
@@ -541,19 +535,18 @@ class Report extends CI_Controller {
 			foreach($income as $field){
 				$GRAND_TOTAL[] 		  = $field->GRAND_TOTAL;
 				$GRAND_TOTAL_VENDOR[] = $field->GRAND_TOTAL_VENDOR;
-				$PROFIT_LOSS[] 		  = $field->PROFIT_LOSS;
 				$body .= "<tr>
 						<td align='center'>".$no++."</td>
 						<td>".date('d-m-Y / H:i:s', strtotime($field->ORDER_DATE))."</td>
 						<td align='center'>".$field->ORDER_ID."</td>
 						<td align='right'>".number_format($field->GRAND_TOTAL,0,',','.')."</td>
 						<td align='right'>".number_format($field->GRAND_TOTAL_VENDOR,0,',','.')."</td>
-						<td align='right'>".number_format($field->PROFIT_LOSS,0,',','.')."</td>
+						<td align='right'>".number_format($field->GRAND_TOTAL - $field->GRAND_TOTAL_VENDOR,0,',','.')."</td>
 					</tr>";
 			}
 			$TOTAL_GRAND_TOTAL 		  = array_sum($GRAND_TOTAL);
 			$TOTAL_GRAND_TOTAL_VENDOR = array_sum($GRAND_TOTAL_VENDOR);
-			$TOTAL_PROFIT_LOSS 		  = array_sum($PROFIT_LOSS);
+			$TOTAL_PROFIT_LOSS 		  = $TOTAL_GRAND_TOTAL - $TOTAL_GRAND_TOTAL_VENDOR;
 			$footer = "
 				<tr>
 					<td colspan='3' align='right' style='font-weight: bold;'>TOTAL</td>

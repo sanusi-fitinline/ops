@@ -1,5 +1,4 @@
 <?php
-	
 	// fungsi untuk membuat penyebut pada nominal angka
 	function penyebut($nilai) {
 		$nilai = abs($nilai);
@@ -56,23 +55,25 @@
 	} else {$CNTR = '';}
 
 	$pdf = new Pdf(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-    $pdf->SetTitle('Receipt '.$letter->ORDL_LNO);
+    $pdf->SetTitle('Invoice '.$letter->ORDL_LNO);
     $pdf->SetTopMargin(20);
     $pdf->setFooterMargin(20);
 
-    $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+	$pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
 	$pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
 	$pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
 
-	// set certificate file
-	// $certificate = 'file://data/cert/tcpdf.crt'
+	// remove default header/footer
+	$pdf->setPrintHeader(true);
+	$pdf->setPrintFooter(true);
 
     $pdf->SetAutoPageBreak(true, PDF_MARGIN_BOTTOM);
     $pdf->SetAuthor('Author');
     $pdf->SetDisplayMode('real', 'default');
     $pdf->AddPage('P', 'A4');
     $i=0;
-    $html= '<br><h3 align="center">NOTA PEMBELIAN</h4>
+
+	$html= '<br><h3 align="center">INVOICE</h4>
 	    <table cellpadding="1" style="font-size: 10px">
 	    	<tr>
 	    		<td width="13%">Tanggal</td>
@@ -102,58 +103,26 @@
 	    	<tr>
 	    		<td>Dokumen</td>
 	    		<td>:</td>
-	    		<td>Order</td>
+	    		<td>Sampling</td>
 	    	</tr>
 	    </table>';
-	$html.= '<br><br><table border="1" cellpadding="5" bgcolor="#666666" style="font-size: 10px">
+
+	
+	$html.= '<br><br><table border="0.5" cellpadding="3" bgcolor="#666666" style="font-size: 9px">
 	        <tr bgcolor="#ffffff">
-	            <th width="5%" align="center">#</th>
-	            <th width="30%" align="center">Nama Produk</th>
-	            <th width="15%" align="center">Warna</th>
-	            <th width="15%" align="center">Harga</th>
+	            <th width="70%" align="center">Produk</th>
 	            <th width="10%" align="center">Jumlah</th>
 	            <th width="10%" align="center">Satuan</th>
-	            <th width="15%" align="center">Subtotal</th>
-	        </tr>';
-	foreach ($detail as $field){
-	$i++;
-	$html.='<tr bgcolor="#ffffff">
-	            <td align="center">'.$i.'</td>
-	            <td>'.$field->PRO_NAME.'</td>
-	            <td>'.$field->ORDD_OPTION.'</td>
-	            <td align="right">'.number_format($field->ORDD_PRICE,0,",",".").'</td>
-	            <td align="center">'.$field->ORDD_QUANTITY.'</td>
-	            <td align="center">'.$field->UMEA_NAME.'</td>
-	            <td align="right">'.number_format($field->ORDD_PRICE * $field->ORDD_QUANTITY,0,",",".").'</td>
-	        </tr>';
-	}
-    $html.='<tr bgcolor="#ffffff">
-    			<td style="font-weight: bold;" colspan="6" align="right">Total</td>
-				<td align="right">'.number_format($row->ORDER_TOTAL,0,',','.').'</td>
-			</tr>
-			<tr bgcolor="#ffffff">
-				<td style="vertical-align: middle; font-weight: bold" colspan="6" align="right">Diskon</td>
-				<td align="right">'.number_format($row->ORDER_DISCOUNT,0,',','.').'</td>
-			</tr>
-			<tr bgcolor="#ffffff">
-				<td style="vertical-align: middle; font-weight: bold" colspan="6" align="right">Deposit</td>
-				<td align="right">'.number_format($row->ORDER_DEPOSIT,0,',','.').'</td>
-			</tr>
-			<tr bgcolor="#ffffff">
-				<td style="font-weight: bold;" colspan="6" align="right">Ongkos Kirim</td>
-				<td align="right">'.number_format($row->ORDER_SHIPCOST,0,',','.').'</td>
-			</tr>
-			<tr bgcolor="#ffffff">
-				<td style="font-weight: bold;" colspan="6" align="right">Pajak</td>
-				<td align="right">'.number_format($row->ORDER_TAX,0,',','.').'</td>
-			</tr>
-			<tr bgcolor="#ffffff">
-				<td style="font-weight: bold;" colspan="6" align="right">Grand Total</td>
-				<td style="font-weight: bold;" align="right">'.number_format($row->ORDER_GRAND_TOTAL,0,',','.').'
-				</td>
-			</tr>';
-    $html.='</table>';
-    $html.='<p style="font-size: 10px">Terbilang: <em>'.terbilang($row->ORDER_GRAND_TOTAL).' Rupiah</em></p>';
+	            <th width="10%" align="center">Total</th>
+	        </tr>
+	        <tr bgcolor="#ffffff">
+	            <td>Sample Kain: '.$row->LSAM_NOTES.'</td>
+	            <td align="center">1</td>
+	            <td align="center">Pax</td>
+	            <td align="center">'.number_format($row->LSAM_COST,0,',','.').'</td>
+	        </tr>
+	    </table>';
+	$html.='<p style="font-size: 10px">Terbilang: <em>'.terbilang($row->LSAM_COST).' Rupiah</em></p>';
     if($letter->ORDL_NOTES != null){
     	$html.= '<table cellpadding="1" style="font-size: 10px">
 				<tr bgcolor="#ffffff">
@@ -173,7 +142,7 @@
 		<img src="'.$img.'" alt="test alt attribute" width="55" height="55" border="0" />
 		<p style="font-size: 10px">(Istofani)</p>
 		<p style="font-size: 10px">Fitinline.com</p>';
-		
+
     $pdf->writeHTML($html, true, false, true, false, '');
-    $pdf->Output('receipt_'.str_replace("/", "-", $letter->ORDL_LNO).'.pdf', 'I');
+    $pdf->Output('invoice_'.str_replace("/", "-", $letter->ORDL_LNO).'.pdf', 'I');
 ?>

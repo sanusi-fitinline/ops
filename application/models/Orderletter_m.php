@@ -3,9 +3,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Orderletter_m extends CI_Model {
 
-	public function check($ORDER_ID, $ORDL_TYPE) {
+	public function check($ORDER_ID, $ORDL_TYPE, $ORDL_DOC) {
 		$this->db->where('ORDER_ID', $ORDER_ID);
 		$this->db->where('ORDL_TYPE', $ORDL_TYPE);
+		$this->db->where('ORDL_DOC', $ORDL_DOC);
 		return $this->db->get('tb_order_letter');
 	}
 
@@ -66,14 +67,50 @@ class Orderletter_m extends CI_Model {
 		$params['ORDL_NO']		= $this->input->post('ORDL_NO', TRUE);
 		$params['ORDL_LNO']		= $this->input->post('ORDL_LNO', TRUE);
 		$params['ORDL_NOTES']	= $this->input->post('ORDL_NOTES', TRUE);	
+		$params['ORDL_DOC']		= $this->input->post('ORDL_DOC', TRUE);	
 		$insert = $this->db->insert('tb_order_letter', $this->db->escape_str($params));
 		if($insert) {
-			if($this->input->post('ORDL_TYPE') == 1) {
-				echo "<script>window.location='".site_url('letter/quotation/'.$ORDER_ID)."'</script>";
-			} else if($this->input->post('ORDL_TYPE') == 2) {
-				echo "<script>window.location='".site_url('letter/invoice/'.$ORDER_ID)."'</script>";
+			if($this->input->post('ORDL_DOC') == 1) {
+				if($this->input->post('ORDL_TYPE') == 1) {
+					echo "<script>window.location='".site_url('letter/quotation/'.$ORDER_ID)."'</script>";
+				} else if($this->input->post('ORDL_TYPE') == 2) {
+					echo "<script>window.location='".site_url('letter/invoice/'.$ORDER_ID)."'</script>";
+				} else {
+					echo "<script>window.location='".site_url('letter/receipt/'.$ORDER_ID)."'</script>";
+				}
 			} else {
-				echo "<script>window.location='".site_url('letter/receipt/'.$ORDER_ID)."'</script>";
+				if($this->input->post('ORDL_TYPE') == 2) {
+					echo "<script>window.location='".site_url('letter/invoice_sampling/'.$ORDER_ID)."'</script>";
+				} else if($this->input->post('ORDL_TYPE') == 3) {
+					echo "<script>window.location='".site_url('letter/receipt_sampling/'.$ORDER_ID)."'</script>";
+				}
+			}
+		} else {
+			echo "<script>alert('Data gagal ditambah.')</script>";
+			echo "<script>window.location='".site_url('order')."'</script>";
+		}
+	}
+
+	public function update($ORDER_ID, $ORDL_DOC) {
+		date_default_timezone_set('Asia/Jakarta');
+		$params['ORDL_DATE']	= date('Y-m-d', strtotime($this->input->post('ORDL_DATE', TRUE)));
+		$params['ORDL_NOTES']	= $this->input->post('ORDL_NOTES', TRUE);
+		$update = $this->db->where('ORDER_ID', $ORDER_ID)->where('ORDL_DOC', $ORDL_DOC)->update('tb_order_letter', $this->db->escape_str($params));
+		if($update) {
+			if($this->input->post('ORDL_DOC') == 1) {
+				if($this->input->post('ORDL_TYPE') == 1) {
+					echo "<script>window.location='".site_url('letter/quotation/'.$ORDER_ID)."'</script>";
+				} else if($this->input->post('ORDL_TYPE') == 2) {
+					echo "<script>window.location='".site_url('letter/invoice/'.$ORDER_ID)."'</script>";
+				} else {
+					echo "<script>window.location='".site_url('letter/receipt/'.$ORDER_ID)."'</script>";
+				}
+			} else {
+				if($this->input->post('ORDL_TYPE') == 2) {
+					echo "<script>window.location='".site_url('letter/invoice_sampling/'.$ORDER_ID)."'</script>";
+				} else if($this->input->post('ORDL_TYPE') == 3) {
+					echo "<script>window.location='".site_url('letter/receipt_sampling/'.$ORDER_ID)."'</script>";
+				}
 			}
 		} else {
 			echo "<script>alert('Data gagal ditambah.')</script>";

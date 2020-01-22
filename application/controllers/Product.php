@@ -39,40 +39,41 @@ class Product extends CI_Controller {
 		$data = array();
 		$no = $_POST['start'];
 		foreach ($list as $field) {
-			if ($field->PRO_DESC!= null || $field->PRO_DESC !="") {
-				$DESCRIPTION = $field->PRO_DESC;
+			if($field->PRO_PRICE != 0){
+				$PRO_PRICE 	= "<div align='right'>".number_format($field->PRO_PRICE,0,',','.')."</div>";
+				$PRO_UMEA 	= $field->PRO_UMEA;
 			} else {
-				$DESCRIPTION = "<div align='center'>-</div>";
+				$PRO_PRICE 	= "<div align='right'>-</div>";
+				$PRO_UMEA 	= "-";
 			}
-
+			if($field->PRO_VOL_PRICE != 0){
+				$PRO_VOL_PRICE 	= "<div align='right'>".number_format($field->PRO_VOL_PRICE,0,',','.')."</div>";
+				$PRO_VOL_UMEA 	= $field->PRO_VOL_UMEA;
+			} else {
+				$PRO_VOL_PRICE 	= "<div align='right'>-</div>";
+				$PRO_VOL_UMEA = "-";
+			}
+			if($field->PRO_TOTAL_COUNT != 0){
+				$PRO_TOTAL_COUNT = $field->PRO_TOTAL_COUNT;
+			} else {
+				$PRO_TOTAL_COUNT = "-";
+			}
 			$no++;
 			$row = array();
 			$row[] = '<div style="vertical-align: middle; text-align: center;">'.$no.'</div>';
 			$row[] = $field->PRO_NAME;
-			$row[] = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$DESCRIPTION);
-			$row[] = $field->VEND_NAME;
-			if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Product Option')->row()) && ($this->session->GRP_SESSION !=3)) {
-				if((!$this->access_m->isDelete('Product', 1)->row()) && ($this->session->GRP_SESSION !=3)){
-					$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="'.$url.'product/edit/'.$field->PRO_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a></div>';
-				} else {
-					$row[] = '<form action="'.$url.'product/del'.'" method="post"><div style="vertical-align: middle; text-align: center;">
-							<a href="'.$url.'product/edit/'.$field->PRO_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
-							<input type="hidden" name="PRO_ID" value="'.$field->PRO_ID.'">
-							<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
-						</div></form>';
-				}	
-			} else {
-				if((!$this->access_m->isDelete('Product', 1)->row()) && ($this->session->GRP_SESSION !=3)){
-					$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="'.$url.'product/edit/'.$field->PRO_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
-						<a  href="'.$url.'product/option/'.$field->PRO_ID.'" class="btn btn-info btn-sm"><i class="fa fa-plus-square"></i> Option</a></div>';
-				} else {
-					$row[] = '<form action="'.$url.'product/del'.'" method="post"><div style="vertical-align: middle; text-align: center;">
-							<a href="'.$url.'product/edit/'.$field->PRO_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
-							<input type="hidden" name="PRO_ID" value="'.$field->PRO_ID.'">
-							<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
-							<a  href="'.$url.'product/option/'.$field->PRO_ID.'" class="btn btn-info btn-sm"><i class="fa fa-plus-square"></i> Option</a>
-						</div></form>';
-				}
+			$row[] = $PRO_PRICE;
+			$row[] = "<div align='center'>$PRO_UMEA</div>";
+			$row[] = $PRO_VOL_PRICE;
+			$row[] = "<div align='center'>$PRO_VOL_UMEA</div>";
+			$row[] = "<div align='center'>$PRO_TOTAL_COUNT</div>";
+			if($this->session->GRP_SESSION ==3){
+				$row[] = '<form action="'.$url.'product/del'.'" method="post"><div style="vertical-align: middle; text-align: center;">
+						<a href="'.$url.'product/edit/'.$field->PRO_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
+						<input type="hidden" name="PRO_ID" value="'.$field->PRO_ID.'">
+						<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
+						<a  href="'.$url.'product/option/'.$field->PRO_ID.'" class="btn btn-info btn-sm"><i class="fa fa-plus-square"></i> Option</a>
+					</div></form>';
 			}
 			$data[] = $row;
 		}

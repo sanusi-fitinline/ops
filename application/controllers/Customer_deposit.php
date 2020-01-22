@@ -23,11 +23,12 @@ class Customer_deposit extends CI_Controller {
     }
 
     public function depositjson() {
+    	$STATUS 	= $this->input->post('STATUS', TRUE);	
     	$CUSTD_DATE = $this->input->post('CUSTD_DATE', TRUE);	
 		$ORDER_ID   = $this->input->post('ORDER_ID', TRUE);
 		$CUST_NAME  = $this->input->post('CUST_NAME', TRUE);	
 		$url 	= $this->config->base_url();
-		$list   = $this->custdeposit_m->get_datatables($CUSTD_DATE, $ORDER_ID, $CUST_NAME);
+		$list   = $this->custdeposit_m->get_datatables($STATUS, $CUSTD_DATE, $ORDER_ID, $CUST_NAME);
 		$data = array();
 		$no = $_POST['start'];
 		foreach ($list as $field) {
@@ -71,8 +72,8 @@ class Customer_deposit extends CI_Controller {
 
 		$output = array(
 			"draw" => $_POST['draw'],
-			"recordsTotal" => $this->custdeposit_m->count_all($CUSTD_DATE, $ORDER_ID, $CUST_NAME),
-			"recordsFiltered" => $this->custdeposit_m->count_filtered($CUSTD_DATE, $ORDER_ID, $CUST_NAME),
+			"recordsTotal" => $this->custdeposit_m->count_all($STATUS, $CUSTD_DATE, $ORDER_ID, $CUST_NAME),
+			"recordsFiltered" => $this->custdeposit_m->count_filtered($STATUS, $CUSTD_DATE, $ORDER_ID, $CUST_NAME),
 			"data" => $data,
 		);
 		//output dalam format JSON

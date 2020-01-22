@@ -22,9 +22,32 @@
 		      		<div class="row">
 						<div class="col-md-12 offset-md-1">
 							<form action="<?php echo site_url('pm/edit_check_process/'.$row->LSTOCK_ID)?>" method="POST" enctype="multipart/form-data">
+								<?php
+									$nohp = $row->CUST_PHONE;
+									function hp($nohp) {
+									    $nohp = str_replace(array(" ", "(", ")", "-", "."), "", $nohp);
+									    // cek apakah no hp mengandung karakter + dan 0-9
+									    if(!preg_match("/[^+0-9]/",trim($nohp))){
+									        // cek apakah no hp karakter 1-3 adalah +62
+									        if(substr(trim($nohp), 0, 3)=="+62"){
+									            $hp = "".substr(trim($nohp), 1);
+									        }
+									        // cek apakah no hp karakter 1-2 adalah 62
+									        elseif(substr(trim($nohp), 0, 2)=="62"){
+									            $hp = trim($nohp);
+									        }
+									        // cek apakah no hp karakter 1 adalah 0
+									        elseif(substr(trim($nohp), 0, 1)=="0"){
+									            $hp = "62".substr(trim($nohp), 1);
+									        }
+									    }
+									    print $hp;
+									}
+								?>
 								<div class="row">
 									<div class="col-md-3">
 										<div class="form-group">
+											<input class="form-control" type="hidden" name="NO_WA" value="<?php echo hp($nohp) ?>">
 											<input class="form-control" type="hidden" name="USER_ID" value="<?php echo $row->USER_ID ?>" readonly>
 											<input class="form-control" type="text" name="CACT_ID" value="2" hidden>
 											<label>Activity</label>
@@ -33,7 +56,7 @@
 										<div class="form-group">
 											<label>Product</label>
 											<input class="form-control" type="hidden" name="PRO_ID" value="<?php echo $row->PRO_ID ?>" readonly>
-											<input class="form-control" type="text" name="PRO_ID" value="<?php echo $row->PRO_NAME ?>" readonly>
+											<input class="form-control" type="text" name="PRO_NAME" value="<?php echo $row->PRO_NAME ?>" readonly>
 										</div>
 										<div class="form-group">
 											<label>Price</label>
@@ -60,7 +83,7 @@
 										</div>
 										<div class="form-group">
 											<label>Unit Measure</label>
-											<input class="form-control" type="text" name="UMEA_ID" value="<?php echo $row->UMEA_NAME ?>" readonly>
+											<input class="form-control" type="text" name="UMEA_NAME" value="<?php echo $row->UMEA_NAME ?>" readonly>
 										</div>
 										<div class="form-group">
 											<label>Customer Note</label>

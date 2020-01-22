@@ -49,7 +49,7 @@
     $bulan 		  = date('n');
     $romawi 	  = getRomawi($bulan);
 	$tahun 		  = date('Y');
-	$format_nomor = $kode."/OPS/INV/".$romawi."/".$tahun;
+	$format_nomor = $kode."/OPS/RCP/".$romawi."/".$tahun;
 	//
 ?>
 <!-- Page Content -->
@@ -60,9 +60,9 @@
 	    	<a href="<?php echo site_url('dashboard') ?>">Dashboard</a>
 	  	</li>
 	  	<li class="breadcrumb-item">
-	    	<a href="<?php echo site_url('order') ?>">Order</a>
+	    	<a href="<?php echo site_url('cs/sampling') ?>">Sampling</a>
 	  	</li>
-	  	<li class="breadcrumb-item active">Print Invoice</li>
+	  	<li class="breadcrumb-item active">Print Receipt</li>
 	</ol>
     <!-- DataTables Example -->
     <div class="row">
@@ -70,7 +70,7 @@
 		    <div class="card mb-3">
 		    	<div class="card-header">
 		        	<i class="fas fa-print"></i>
-		        	Invoice
+		        	Receipt
 		        </div>
 		      	<div class="card-body">
 		      		<div class="row">
@@ -79,8 +79,8 @@
 								<div class="row">
 									<div class="col-md-3">
 										<div class="form-group">
-											<input type="hidden" name="ORDL_TYPE" value="2">
-											<input type="hidden" name="ORDL_DOC" value="1">
+											<input type="hidden" name="ORDL_TYPE" value="3">
+											<input type="hidden" name="ORDL_DOC" value="2">
 											<input type="hidden" name="ORDL_NO" value="<?php echo $no_urut ?>">
 											<input type="hidden" name="ORDL_LNO" value="<?php echo $format_nomor ?>">
 											<label>Date</label>
@@ -95,9 +95,8 @@
 									<div class="col-md-9">
 										<div class="form-group">
 											<label>Note</label>
-											<textarea class="form-control" cols="100%" rows="7" name="ORDL_NOTES">1. Proses order max 2 hari setelah pembayaran dilakukan.&#13;&#10;2. Info Pengiriman :&#13;&#10;<?php foreach ($courier_data as $key) {
-												echo "-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Pengiriman dari ".$key->CITY_NAME.", menggunakan ".$key->COURIER_NAME." ".$key->ORDV_SERVICE_TYPE." estimasi ".$key->ORDV_ETD.".&#13;&#10;";
-											} ?>3. Transaksi tanpa Pajak. Pembayaran dalam dapat ditransfer melalui Bank BCA: 8020169363 atau Bank Mandiri: 1240004177276 atas nama Istofani Api Diany.</textarea>
+											<textarea class="form-control" cols="100%" rows="7" name="ORDL_NOTES">1. Pengiriman dari <?php 
+												echo $sampling->ORIGIN_CITY_NAME.", menggunakan ".$sampling->COURIER_NAME." ".$sampling->LSAM_SERVICE_TYPE.".&#13;&#10;";?>2. Telah diterima pembayaran melalui <?php echo $sampling->BANK_NAME." pada ".date('d-m-Y', strtotime($sampling->LSAM_PAYDATE))." sebesar Rp. ".number_format($sampling->LSAM_COST,0,',','.').",-"?></textarea>
 										</div>
 										<div align="center">
 											<button type="submit" class="btn btn-info"><i class="fa fa-print"></i> Print</button>

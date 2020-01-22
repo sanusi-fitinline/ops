@@ -3,12 +3,18 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  
 class Incomebyvendor_m extends CI_Model {
  
-    public function get($FROM, $TO, $VEND_ID = null){
-        $this->db->select('tb_order.ORDER_DATE, tb_order_vendor.VEND_ID, tb_vendor.VEND_NAME, tb_order_vendor.ORDER_ID, tb_order_vendor.ORDV_TOTAL');
+    public function get($FROM, $TO, $EXCLUDE_SHIPMENT, $VEND_ID = null){
+        if($EXCLUDE_SHIPMENT != 0) {
+            $this->db->select('tb_order.ORDER_DATE, tb_order_vendor.VEND_ID, tb_vendor.VEND_NAME, tb_order_vendor.ORDER_ID, (tb_order_vendor.ORDV_TOTAL - tb_order_vendor.ORDV_SHIPCOST) AS TOTAL_ORDV');
+        } else {
+            $this->db->select('tb_order.ORDER_DATE, tb_order_vendor.VEND_ID, tb_vendor.VEND_NAME, tb_order_vendor.ORDER_ID, tb_order_vendor.ORDV_TOTAL AS TOTAL_ORDV');
+
+        }
         $this->db->from('tb_order_vendor');
         $this->db->join('tb_order', 'tb_order.ORDER_ID=tb_order_vendor.ORDER_ID', 'left');
         $this->db->join('tb_vendor', 'tb_vendor.VEND_ID=tb_order_vendor.VEND_ID', 'left');
-        $this->db->where('tb_order.ORDER_STATUS', 4);
+        $this->db->where('tb_order.ORDER_STATUS >=', 2);    
+        $this->db->where('tb_order.ORDER_STATUS <=', 4);
         // filter by date           
         $this->db->where('tb_order.ORDER_DATE >=', date('Y-m-d', strtotime($FROM)));
         $this->db->where('tb_order.ORDER_DATE <=', date('Y-m-d', strtotime('+1 days', strtotime($TO))));
@@ -21,12 +27,18 @@ class Incomebyvendor_m extends CI_Model {
         return $query;
     }
 
-    public function get_by_vendor($FROM, $TO, $VEND_ID = null){
-        $this->db->select('tb_vendor.VEND_NAME, SUM(tb_order_vendor.ORDV_TOTAL) AS GRAND_TOTAL');
+    public function get_by_vendor($FROM, $TO, $EXCLUDE_SHIPMENT, $VEND_ID = null){
+        if($EXCLUDE_SHIPMENT != 0) {
+            $this->db->select('tb_vendor.VEND_NAME, SUM(tb_order_vendor.ORDV_TOTAL - tb_order_vendor.ORDV_SHIPCOST) AS GRAND_TOTAL');
+        } else {
+            $this->db->select('tb_vendor.VEND_NAME, SUM(tb_order_vendor.ORDV_TOTAL) AS GRAND_TOTAL');
+
+        }
         $this->db->from('tb_order_vendor');
         $this->db->join('tb_order', 'tb_order.ORDER_ID=tb_order_vendor.ORDER_ID', 'left');
         $this->db->join('tb_vendor', 'tb_vendor.VEND_ID=tb_order_vendor.VEND_ID', 'left');
-        $this->db->where('tb_order.ORDER_STATUS', 4);
+        $this->db->where('tb_order.ORDER_STATUS >=', 2);    
+        $this->db->where('tb_order.ORDER_STATUS <=', 4);
         // filter by date           
         $this->db->where('tb_order.ORDER_DATE >=', date('Y-m-d', strtotime($FROM)));
         $this->db->where('tb_order.ORDER_DATE <=', date('Y-m-d', strtotime('+1 days', strtotime($TO))));

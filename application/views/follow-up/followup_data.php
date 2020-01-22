@@ -33,24 +33,24 @@
 							<div class="row">
 								<div class="col-md-3">			
 									<div class="form-group">
-										<input class="form-control" type="text" name="CUST_NAME" id="CUST_NAME" placeholder="Customer Name" autocomplete="off">
+										<input class="form-control form-control-sm" type="text" name="CUST_NAME" id="CUST_NAME" placeholder="Customer Name" autocomplete="off">
 									</div>
 								</div>
 								<div class="col-md-2">			
 									<div class="form-group">
-										<input class="form-control datepicker" type="text" name="FROM" id="FROM" placeholder="From" autocomplete="off">
+										<input class="form-control form-control-sm datepicker" type="text" name="FROM" id="FROM" placeholder="From" autocomplete="off">
 									</div>
 								</div>
 								<div class="col-md-2">			
 									<div class="form-group">
-										<input class="form-control datepicker" type="text" name="TO" id="TO" placeholder="To" autocomplete="off">
+										<input class="form-control form-control-sm datepicker" type="text" name="TO" id="TO" placeholder="To" autocomplete="off">
 									</div>
 								</div>
 								<div class="col-md-2">			
 									<div class="form-group">
-										<select class="form-control selectpicker" title="-Select Status-" name="STATUS" id="STATUS">
+										<select class="form-control form-control-sm selectpicker" title="-Select Status-" name="STATUS" id="STATUS">
 											<?php foreach($followup_status as $flw_status): ?>
-									    		<option value="<?php echo $flw_status->FLWS_ID; ?>" 
+									    		<option class="form-control-sm" value="<?php echo $flw_status->FLWS_ID; ?>" 
 									    			<?php if($this->uri->segment(2) == "open"):?>
 									    				<?php if($flw_status->FLWS_ID == 0):?>
 									    					<?php echo "selected"; ?>
@@ -67,12 +67,12 @@
 								</div>
 								<div class="col-md-3">			
 									<div class="form-group" align="right">
-										<button class="btn btn-sm btn-default" style="margin-top: 3px; border: 2px solid #17a2b8;" id="search-followup"><i class="fa fa-search"></i> Search</button>
-										<a class="btn btn-sm btn-default" style="margin-top: 3px; border: 2px solid #dc3545;" href="<?php echo site_url('followup') ?>"><i class="fa fa-redo"></i> Reset</a>
+										<button class="form-control-sm btn btn-sm btn-default" style="border: 2px solid #17a2b8;" id="search-followup"><i class="fa fa-search"></i> Search</button>
+										<a class="form-control-sm btn btn-sm btn-default" style="border: 2px solid #dc3545;" href="<?php echo site_url('followup') ?>"><i class="fa fa-redo"></i> Reset</a>
 									</div>
 								</div>
 							</div>
-							<div class="table-responsive" id="list-followup1">
+							<div class="table-responsive">
 				          		<table class="table table-bordered" id="tableCustomerLog" width="100%" cellspacing="0">
 				            		<thead style="font-size: 14px;">
 					                	<tr>
@@ -81,21 +81,6 @@
 											<th style="vertical-align: middle; text-align: center;">ACTIVITY</th>
 											<th style="vertical-align: middle; text-align: center;">STATUS</th>
 											<th style="vertical-align: middle; text-align: center; width: 80px">ACTION</th>
-					                  	</tr>
-					                </thead>
-					                <tbody style="font-size: 14px;">
-									</tbody>
-				          		</table>
-				        	</div>
-				        	<div class="table-responsive" id="list-followup2">
-				          		<table class="table table-bordered" id="tableCustomerLog2" width="100%" cellspacing="0">
-				            		<thead style="font-size: 14px;">
-					                	<tr>
-					                    	<th style="vertical-align: middle; text-align: center;">DATE</th>
-											<th style="vertical-align: middle; text-align: center;">CUSTOMER NAME</th>
-											<th style="vertical-align: middle; text-align: center;">ACTIVITY</th>
-											<th style="vertical-align: middle; text-align: center;">STATUS</th>
-											<th style="vertical-align: middle; text-align: center; width: 80px;">ACTION</th>
 					                  	</tr>
 					                </thead>
 					                <tbody style="font-size: 14px;">

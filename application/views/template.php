@@ -22,6 +22,59 @@
 		<!-- Custom styles for this template-->
 		<link href="<?php echo base_url() ?>assets/css/sb-admin.css" rel="stylesheet">
 		<link href="<?php echo base_url() ?>assets/css/style.css" rel="stylesheet">
+		<style type="text/css">
+			/* BANNER PROMO MODAL */
+			.modal-promo-popup {
+				display: block;
+				position: fixed; 
+				z-index: 1; 
+				padding-top: 100px; 
+				left: 0;
+				top: 0;
+				width: 100%; 
+				height: 100%; 
+				overflow: auto; 
+				background-color: rgb(0,0,0); 
+				background-color: rgba(0,0,0,0.9); 
+			}
+			.modal-content.custom {
+    			margin: auto;
+    			display: block;
+    			width: 80%;
+    			max-width: 600px;
+    			border-radius: 0 !important;
+    		}
+    		.caption {
+    			margin: auto;
+    			display: block;
+    			width: 80%;
+    			max-width: 700px;
+    			text-align: center;
+    			color: #ccc;
+    			padding: 10px 0;
+    			height: 150px;
+    		}
+    		.modal-content.custom, .caption {  
+    			-webkit-animation-name: zoom;
+    			-webkit-animation-duration: 0.6s;
+    			animation-name: zoom;
+    			animation-duration: 0.6s;
+    		}
+    		@-webkit-keyframes zoom {
+    			from {-webkit-transform:scale(0)} 
+    			to {-webkit-transform:scale(1)}
+    		}
+    		@keyframes zoom {
+    			from {transform:scale(0)} 
+    			to {transform:scale(1)}
+    		}
+    		@media only screen and (max-width: 700px){
+    			.modal-content.custom {
+    				width: 90%;
+    			}
+    		}
+    		/* END BANNER PROMO MODAL */
+		</style>
 	</head>
 
 	<body id="page-top">
@@ -207,6 +260,33 @@
 			  	</div>
 			</div>
 		</div>
+
+		<!-- <div id="popupModal" class="modal-promo-popup">
+			<img class="modal-content custom" src="<?php echo base_url('assets/images/banner.png') ?>">
+			<div class="caption"><span id="close" class="" style="color:#FCB549 !important;font-size:20px;"><i class="fa fa-times-circle" aria-hidden="true"></i> Close</span></div>
+		</div> -->
+		<!-- <script>
+			// BANNER POP UP
+		    var modal = document.getElementById("popupModal");
+			var tutup = document.getElementById("close");
+			if (document.cookie.indexOf("visited=") >= 0) {
+
+				// modal.style.display = "none";
+				modal.setAttribute("hidden", true);
+			} else {
+				expiry = new Date();
+				expiry.setTime(expiry.getTime()+(1440*60*1000)); // 1440 minutes atau 1 day
+		        // expiry.setTime(expiry.getTime()+(60*60*1000)); // 60 minutes atau 1 hour
+
+				document.cookie = "visited=yes; expires=" + expiry.toGMTString();	
+			}
+			tutup.onclick = function() {
+			  	modal.style.display = "none";
+			  	// modal.style.visibility = "hidden";
+			  	// modal.setAttribute("hidden", true);
+			}
+		    // END BANNER POP UP
+		</script> -->
 	</body>
 </html>
 
@@ -853,6 +933,7 @@
 		        	COURIER_NAME 		: COURIER_N,
 		        	}, 
 		        dataType: "json",
+		        timeout: 3000,
 		        beforeSend: function(e) {
 		        	if(COURIER_A==1){
 						$(".spinner2").css("display","block");
@@ -879,15 +960,15 @@
 		        		$("#tarf").html(response.list_courier).show('slow');
 		        		$("#deposit").html(response.list_deposit).show('slow');
 		        		$("#total").html(response.list_total).show('slow');
-
+		        		$('#LSAM_COST').mask('#.##0', {reverse: true});
 						if($("#DEPOSIT_VALUE").val() < 0) {
 							$("#pilih-deposit").attr("checked", "checked");
 							$("#pilih-deposit").attr("disabled", "disabled");
 						}
 
 						$("#pilih-deposit").ready(function(){
-						    if ($("#pilih-deposit").is(":checked")){
-						    	var cost = $("#COST_VALUE").val();
+						    if ($("#pilih-deposit").is(":checked")) {
+						    	var cost = $("#LSAM_COST").val();
 						    	var	reverse_cost  = cost.toString().split('').reverse().join(''),
 										cost_conv = reverse_cost.match(/\d{1,3}/g);
 										cost_conv = cost_conv.join('').split('').reverse().join('');
@@ -898,8 +979,10 @@
 										deposit_conv = deposit_conv.join('').split('').reverse().join('');
 
 								if (deposit < 0) {
+									var depo = parseInt(-deposit_conv);
 									var total = parseInt(cost_conv) - parseInt(-deposit_conv);
 								} else {
+									var depo = parseInt(deposit_conv);
 									var total = parseInt(cost_conv) - parseInt(deposit_conv);
 								}
 								var	reverse_total  = total.toString().split('').reverse().join(''),
@@ -908,7 +991,7 @@
 						    	
 						    	$("#SAMPLING_DEPOSIT").val(deposit_conv);
 						    	
-						    	if(deposit_conv >= cost_conv) {
+						    	if(depo >= cost_conv) {
 						    		$("#CETAK_TOTAL").val('0');
 						    		if($("#INPUT_BANK").val() != 34) {
 							    		$("#INPUT_BANK").selectpicker('val', 'refresh');
@@ -917,16 +1000,18 @@
 						    	} else {
 						    		$("#CETAK_TOTAL").val(total_conv);
 						    	}
+
 							} else {
-								var cost = $("#COST_VALUE").val();
+								var cost = $("#LSAM_COST").val();
 								$("#SAMPLING_DEPOSIT").val('');
 						    	$("#CETAK_TOTAL").val(cost);
 							}
 						});
 
+
 						$("#pilih-deposit").click(function(){
 						    if ($("#pilih-deposit").is(":checked")){
-						    	var cost = $("#COST_VALUE").val();
+						    	var cost = $("#LSAM_COST").val();
 						    	var	reverse_cost  = cost.toString().split('').reverse().join(''),
 										cost_conv = reverse_cost.match(/\d{1,3}/g);
 										cost_conv = cost_conv.join('').split('').reverse().join('');
@@ -937,8 +1022,10 @@
 										deposit_conv = deposit_conv.join('').split('').reverse().join('');
 
 								if (deposit < 0) {
+									var depo = parseInt(-deposit_conv);
 									var total = parseInt(cost_conv) - parseInt(-deposit_conv);
 								} else {
+									var depo = parseInt(deposit_conv);
 									var total = parseInt(cost_conv) - parseInt(deposit_conv);
 								}
 								var	reverse_total  = total.toString().split('').reverse().join(''),
@@ -947,7 +1034,7 @@
 						    	
 						    	$("#SAMPLING_DEPOSIT").val(deposit_conv);
 						    	
-						    	if(parseInt(deposit_conv) >= parseInt(cost_conv)) {
+						    	if(parseInt(depo) >= parseInt(cost_conv)) {
 						    		$("#CETAK_TOTAL").val('0');
 						    		if($("#INPUT_BANK").val() != 34) {
 							    		$("#INPUT_BANK").selectpicker('val', 'refresh');
@@ -957,17 +1044,96 @@
 						    		$("#CETAK_TOTAL").val(total_conv);
 						    	}
 							} else {
-								var cost = $("#COST_VALUE").val();
+								var cost = $("#LSAM_COST").val();
+								$("#SAMPLING_DEPOSIT").val('');
+						    	$("#CETAK_TOTAL").val(cost);
+							}
+						});
+
+						$("#pilih-cod").click(function(){
+							if ($("#pilih-cod").is(":checked")){
+						    	$("#LSAM_COST").val(0);
+						    	$("#SAMPLING_DEPOSIT").val('');
+						    	$("#CETAK_TOTAL").val(0);
+						    	$("#pilih-deposit").prop("checked", false);
+						    	$("#pilih-deposit").attr("disabled", "disabled");
+						    	// $("#INPUT_BANK").selectpicker('val', 'refresh');
+						    	// $("#INPUT_BANK").selectpicker('val', '38');
+						    } else {
+						    	var hidden_cost = $("#HIDDEN_LSAM_COST").val();
+						    	$("#LSAM_COST").val(hidden_cost);
+								$("#SAMPLING_DEPOSIT").val('');
+						    	$("#CETAK_TOTAL").val(hidden_cost);
+						    	$("#pilih-deposit").prop("checked", false);
+						    	if ($("#DEPOSIT_VALUE").val() == 0) {
+						    		$("#pilih-deposit").attr("disabled", "disabled");
+						    	} else {
+						    		$("#pilih-deposit").removeAttr("disabled", "disabled");
+						    	}
+						    	// $("#INPUT_BANK").selectpicker('val', 'refresh');
+						    };
+						});
+
+						$("#LSAM_COST").on('keyup',function(){
+							if ($("#pilih-deposit").is(":checked")){
+								if($("#LSAM_COST").val() != ""){
+						    		var cost = $("#LSAM_COST").val();
+
+								} else {
+						    		var cost = 0;
+								}
+						    	var	reverse_cost  = cost.toString().split('').reverse().join(''),
+										cost_conv = reverse_cost.match(/\d{1,3}/g);
+										cost_conv = cost_conv.join('').split('').reverse().join('');
+
+						    	var deposit = $("#DEPOSIT_VALUE").val();
+						    	var	reverse_deposit  = deposit.toString().split('').reverse().join(''),
+										deposit_conv = reverse_deposit.match(/\d{1,3}/g);
+										deposit_conv = deposit_conv.join('').split('').reverse().join('');
+
+								if (deposit < 0) {
+									var depo = parseInt(-deposit_conv);
+									var total = parseInt(cost_conv) - parseInt(-deposit_conv);
+								} else {
+									var depo = parseInt(deposit_conv);
+									var total = parseInt(cost_conv) - parseInt(deposit_conv);
+								}
+								var	reverse_total  = total.toString().split('').reverse().join(''),
+										total_conv = reverse_total.match(/\d{1,3}/g);
+										total_conv = total_conv.join('.').split('').reverse().join('');
+						    	
+						    	$("#SAMPLING_DEPOSIT").val(deposit_conv);
+						    	
+						    	if(parseInt(depo) >= parseInt(cost_conv)) {
+						    		$("#CETAK_TOTAL").val('0');
+						    		if($("#INPUT_BANK").val() != 34) {
+							    		$("#INPUT_BANK").selectpicker('val', 'refresh');
+							    		$("#INPUT_BANK").selectpicker('val', '34');
+							    	}
+						    	} else {
+						    		$("#CETAK_TOTAL").val(total_conv);
+						    	}
+							} else {
+								if($("#LSAM_COST").val() != ""){
+						    		var cost = $("#LSAM_COST").val();
+
+								} else {
+						    		var cost = 0;
+								}
 								$("#SAMPLING_DEPOSIT").val('');
 						    	$("#CETAK_TOTAL").val(cost);
 							}
 						});
 		        	}
 		        },
-		        error: function (xhr, ajaxOptions, thrownError) {
+		        error: function (xhr, status, ajaxOptions, thrownError) {
 		        	$(".spinner2").css("display","none"); 
 		        	$(".spinner3").css("display","none"); 
-		          	alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError); 
+		          	if(status === 'timeout'){   
+			            alert('Respon terlalu lama, coba lagi.');
+			        } else {
+		          		alert(xhr.responseText);
+			        }
 		        }
 		    });
 	    });
@@ -1008,6 +1174,7 @@
 					$("#tarf").selectpicker('refresh');
 					$("#deposit").html(response.list_deposit).show('slow');
 					$("#total").html(response.list_total).show('slow');
+		        	$('#LSAM_COST').mask('#.##0', {reverse: true});
 					
 					if($("#DEPOSIT_VALUE").val() < 0) {
 						$("#pilih-deposit").attr("checked", "checked");
@@ -1016,7 +1183,7 @@
 
 					$("#pilih-deposit").ready(function(){
 					    if ($("#pilih-deposit").is(":checked")){
-					    	var cost = $("#COST_VALUE").val();
+					    	var cost = $("#LSAM_COST").val();
 					    	var	reverse_cost  = cost.toString().split('').reverse().join(''),
 									cost_conv = reverse_cost.match(/\d{1,3}/g);
 									cost_conv = cost_conv.join('').split('').reverse().join('');
@@ -1027,8 +1194,10 @@
 									deposit_conv = deposit_conv.join('').split('').reverse().join('');
 
 							if (deposit < 0) {
+								var depo = parseInt(-deposit_conv);
 								var total = parseInt(cost_conv) - parseInt(-deposit_conv);
 							} else {
+								var depo = parseInt(deposit_conv);
 								var total = parseInt(cost_conv) - parseInt(deposit_conv);
 							}
 							var	reverse_total  = total.toString().split('').reverse().join(''),
@@ -1037,7 +1206,7 @@
 					    	
 					    	$("#SAMPLING_DEPOSIT").val(deposit_conv);
 					    	
-					    	if(deposit_conv >= cost_conv) {
+					    	if(depo >= cost_conv) {
 					    		$("#CETAK_TOTAL").val('0');
 					    		if($("#INPUT_BANK").val() != 34) {
 						    		$("#INPUT_BANK").selectpicker('val', 'refresh');
@@ -1047,7 +1216,7 @@
 					    		$("#CETAK_TOTAL").val(total_conv);
 					    	}
 						} else {
-							var cost = $("#COST_VALUE").val();
+							var cost = $("#LSAM_COST").val();
 							$("#SAMPLING_DEPOSIT").val('');
 					    	$("#CETAK_TOTAL").val(cost);
 						}
@@ -1055,7 +1224,7 @@
 					
 					$("#pilih-deposit").click(function(){
 					    if ($("#pilih-deposit").is(":checked")){
-					    	var cost = $("#COST_VALUE").val();
+					    	var cost = $("#LSAM_COST").val();
 					    	var	reverse_cost  = cost.toString().split('').reverse().join(''),
 									cost_conv = reverse_cost.match(/\d{1,3}/g);
 									cost_conv = cost_conv.join('').split('').reverse().join('');
@@ -1066,8 +1235,10 @@
 									deposit_conv = deposit_conv.join('').split('').reverse().join('');
 
 							if (deposit < 0) {
+								var depo = parseInt(-deposit_conv);
 								var total = parseInt(cost_conv) - parseInt(-deposit_conv);
 							} else {
+								var depo = parseInt(deposit_conv);
 								var total = parseInt(cost_conv) - parseInt(deposit_conv);
 							}
 							var	reverse_total  = total.toString().split('').reverse().join(''),
@@ -1076,7 +1247,7 @@
 					    	
 					    	$("#SAMPLING_DEPOSIT").val(deposit_conv);
 					    	
-					    	if(parseInt(deposit_conv) >= parseInt(cost_conv)) {
+					    	if(parseInt(depo) >= parseInt(cost_conv)) {
 					    		$("#CETAK_TOTAL").val('0');
 					    		if($("#INPUT_BANK").val() != 34) {
 						    		$("#INPUT_BANK").selectpicker('val', 'refresh');
@@ -1086,7 +1257,82 @@
 					    		$("#CETAK_TOTAL").val(total_conv);
 					    	}
 						} else {
-							var cost = $("#COST_VALUE").val();
+							var cost = $("#LSAM_COST").val();
+							$("#SAMPLING_DEPOSIT").val('');
+					    	$("#CETAK_TOTAL").val(cost);
+						}
+					});
+
+					$("#pilih-cod").click(function(){
+						if ($("#pilih-cod").is(":checked")){
+					    	$("#LSAM_COST").val(0);
+					    	$("#SAMPLING_DEPOSIT").val('');
+					    	$("#CETAK_TOTAL").val(0);
+					    	$("#pilih-deposit").prop("checked", false);
+					    	$("#pilih-deposit").attr("disabled", "disabled");
+					    	// $("#INPUT_BANK").selectpicker('val', 'refresh');
+					    	// $("#INPUT_BANK").selectpicker('val', '38');
+					    } else {
+					    	var hidden_cost = $("#HIDDEN_LSAM_COST").val();
+					    	$("#LSAM_COST").val(hidden_cost);
+							$("#SAMPLING_DEPOSIT").val('');
+					    	$("#CETAK_TOTAL").val(hidden_cost);
+					    	$("#pilih-deposit").prop("checked", false);
+					    	if ($("#DEPOSIT_VALUE").val() == 0) {
+					    		$("#pilih-deposit").attr("disabled", "disabled");
+					    	} else {
+					    		$("#pilih-deposit").removeAttr("disabled", "disabled");
+					    	}
+					    	// $("#INPUT_BANK").selectpicker('val', 'refresh');
+					    };
+					});
+
+					$("#LSAM_COST").on('keyup',function(){
+						if ($("#pilih-deposit").is(":checked")){
+							if($("#LSAM_COST").val() != ""){
+					    		var cost = $("#LSAM_COST").val();
+
+							} else {
+					    		var cost = 0;
+							}
+					    	var	reverse_cost  = cost.toString().split('').reverse().join(''),
+									cost_conv = reverse_cost.match(/\d{1,3}/g);
+									cost_conv = cost_conv.join('').split('').reverse().join('');
+
+					    	var deposit = $("#DEPOSIT_VALUE").val();
+					    	var	reverse_deposit  = deposit.toString().split('').reverse().join(''),
+									deposit_conv = reverse_deposit.match(/\d{1,3}/g);
+									deposit_conv = deposit_conv.join('').split('').reverse().join('');
+
+							if (deposit < 0) {
+								var depo = parseInt(-deposit_conv);
+								var total = parseInt(cost_conv) - parseInt(-deposit_conv);
+							} else {
+								var depo = parseInt(deposit_conv);
+								var total = parseInt(cost_conv) - parseInt(deposit_conv);
+							}
+							var	reverse_total  = total.toString().split('').reverse().join(''),
+									total_conv = reverse_total.match(/\d{1,3}/g);
+									total_conv = total_conv.join('.').split('').reverse().join('');
+					    	
+					    	$("#SAMPLING_DEPOSIT").val(deposit_conv);
+					    	
+					    	if(parseInt(depo) >= parseInt(cost_conv)) {
+					    		$("#CETAK_TOTAL").val('0');
+					    		if($("#INPUT_BANK").val() != 34) {
+						    		$("#INPUT_BANK").selectpicker('val', 'refresh');
+						    		$("#INPUT_BANK").selectpicker('val', '34');
+						    	}
+					    	} else {
+					    		$("#CETAK_TOTAL").val(total_conv);
+					    	}
+						} else {
+							if($("#LSAM_COST").val() != ""){
+					    		var cost = $("#LSAM_COST").val();
+
+							} else {
+					    		var cost = 0;
+							}
 							$("#SAMPLING_DEPOSIT").val('');
 					    	$("#CETAK_TOTAL").val(cost);
 						}
@@ -1307,13 +1553,13 @@
 					
 					// total berat
 					if ($("#PRO_WEIGHT").val() != null) {
-						var berat_satuan = $("#PRO_WEIGHT").val();
+						var berat_satuan = $("#PRO_WEIGHT").val().replace(',', '.');
 					} else {
 						var berat_satuan = 0;
 					}
 					var jumlah = $("#ORDD_QUANTITY").val();
 					total_berat = jumlah * berat_satuan;
-					$("#ORDD_WEIGHT").val(total_berat.toFixed(2));
+					$("#ORDD_WEIGHT").val(total_berat.toFixed(2).replace('.', ','));
 					
 					// total harga
 					if ($("#HARGA").val() != null) {
@@ -1323,21 +1569,10 @@
 					}
 					var jumlah = $("#ORDD_QUANTITY").val();
 					var total_harga = jumlah * harga_satuan;
-					var	reverse = total_harga.toString().split('').reverse().join(''),
+					var	reverse = total_harga.toFixed(0).toString().split('').reverse().join(''),
 						ribuan 	= reverse.match(/\d{1,3}/g);
 						ribuan	= ribuan.join('.').split('').reverse().join('');
 					$("#TOTAL_ORDD_PRICE").val(ribuan);
-
-					// total harga vendor
-					if ($("#HARGA_VENDOR").val() != null) {
-						var harga_satuan_vendor = $("#HARGA_VENDOR").val();
-					} else {
-						var harga_satuan_vendor = 0;
-					}
-					var total_harga_vendor  = jumlah * harga_satuan_vendor;
-					var	reverse_vendor 		= total_harga_vendor.toString().split('').reverse().join(''),
-						ribuan_vendor 		= reverse_vendor.match(/\d{1,3}/g);
-						ribuan_vendor		= ribuan_vendor.join('.').split('').reverse().join('');
 				}
 		    });
 	    });
@@ -1348,13 +1583,13 @@
 		$("#ORDD_QUANTITY").on('keyup mouseup',function(){
 			// total berat
 			if ($("#PRO_WEIGHT").val() != null) {
-				var berat_satuan = $("#PRO_WEIGHT").val();
+				var berat_satuan = $("#PRO_WEIGHT").val().replace(',', '.');
 			} else {
 				var berat_satuan = 0;
 			}
 			var jumlah = $("#ORDD_QUANTITY").val();
 			total_berat = jumlah * berat_satuan;
-			$("#ORDD_WEIGHT").val(total_berat.toFixed(2));
+			$("#ORDD_WEIGHT").val(total_berat.toFixed(2).replace('.', ','));
 
 			// total harga
 			if ($("#HARGA").val() != null) {
@@ -1364,22 +1599,10 @@
 			}
 			var jumlah = $("#ORDD_QUANTITY").val();
 			var total_harga = jumlah * harga_satuan;
-			var	reverse = total_harga.toString().split('').reverse().join(''),
+			var	reverse = total_harga.toFixed(0).toString().split('').reverse().join(''),
 				ribuan 	= reverse.match(/\d{1,3}/g);
 				ribuan	= ribuan.join('.').split('').reverse().join('');
-			$("#TOTAL_ORDD_PRICE").val(ribuan);
-
-			// total harga vendor
-			if ($("#HARGA_VENDOR").val() != null) {
-				var harga_satuan_vendor = $("#HARGA_VENDOR").val();
-			} else {
-				var harga_satuan_vendor = 0;
-			}
-			var total_harga_vendor  = jumlah * harga_satuan_vendor;
-			var	reverse_vendor 		= total_harga_vendor.toString().split('').reverse().join(''),
-				ribuan_vendor 		= reverse_vendor.match(/\d{1,3}/g);
-				ribuan_vendor		= ribuan_vendor.join('.').split('').reverse().join('');
-			
+			$("#TOTAL_ORDD_PRICE").val(ribuan);			
 		});
 	});
 	
@@ -1573,6 +1796,28 @@
         });
 
         // sampling
+        // default sampling cs
+        var table = $('#myTableSampling').dataTable({
+            "processing": true, 
+            "serverSide": true, 
+            "ordering": false,
+            "searching": false, 
+            "order": [], 
+            "ajax": {
+                "url": "<?php echo site_url('cs/samplingjson')?>",
+                "type": "POST",
+                "data": {
+                	"segment" 	: "<?php echo $this->uri->segment(2) ?>",
+                },
+            },
+            "columnDefs": [
+	            { 
+	                "targets": [ 0 ], 
+	                "orderable": false, 
+	            },
+            ],
+        });
+
         // search sampling cs
         $("#search-sampling").click(function(){
         	if ($('#FROM').val() == null) {
@@ -1585,9 +1830,8 @@
 	    	} else {
 		    	var TO_VALUE  = $('#TO').val();
 	    	}
-        	$("#sampling1").css("display","none");
-			$("#sampling2").css("display","block");
-        	var table = $('#myTableSampling2').dataTable({
+        	var table = $('#myTableSampling').dataTable({
+        		"destroy": true,
 	            "processing": true, 
 	            "serverSide": true, 
 	            "ordering": false,
@@ -1612,31 +1856,6 @@
 	            ],
 	        });
 	        $("#search-sampling").attr("disabled","disabled");
-
-        });
-
-        // default sampling cs
-        $("#sampling1").css("display","block");
-		$("#sampling2").css("display","none");
-        var table = $('#myTableSampling').dataTable({
-            "processing": true, 
-            "serverSide": true, 
-            "ordering": false,
-            "searching": false, 
-            "order": [], 
-            "ajax": {
-                "url": "<?php echo site_url('cs/samplingjson')?>",
-                "type": "POST",
-                "data": {
-                	"segment" 	: "<?php echo $this->uri->segment(2) ?>",
-                },
-            },
-            "columnDefs": [
-	            { 
-	                "targets": [ 0 ], 
-	                "orderable": false, 
-	            },
-            ],
         });
 
         // sampling pm
@@ -1659,6 +1878,27 @@
         //
 
 		// check stock
+		// default stock cs
+		var table = $('#tableCsCheck').dataTable({ 
+            "processing": true, 
+            "serverSide": true, 
+            "ordering": false,
+            "searching": false, 
+            "order": [], 
+            "ajax": {
+                "url": "<?php echo site_url('cs/ckstockjson')?>",
+                "type": "POST",
+                "data": {
+                	"segment" 	: "<?php echo $this->uri->segment(2) ?>",
+                },
+            },
+            "columnDefs": [
+            { 
+                "targets": [ 0 ], 
+                "orderable": false, 
+            },
+            ],
+        });
 		//search stock cs
 		$("#search-stock").click(function(){
         	if ($('#FROM').val() == null) {
@@ -1671,9 +1911,8 @@
 	    	} else {
 		    	var TO_VALUE  = $('#TO').val();
 	    	}
-        	$("#check-stock1").css("display","none");
-			$("#check-stock2").css("display","block");
-        	var table = $('#tableCsCheck2').dataTable({
+        	var table = $('#tableCsCheck').dataTable({
+        		"destroy": true,
 	            "processing": true, 
 	            "serverSide": true, 
 	            "ordering": false,
@@ -1699,31 +1938,6 @@
 	            ],
 	        });
 	        $("#search-stock").attr("disabled","disabled");
-
-        });
-
-		// default stock cs
-		$("#check-stock1").css("display","block");
-		$("#check-stock2").css("display","none");
-		var table = $('#tableCsCheck').dataTable({ 
-            "processing": true, 
-            "serverSide": true, 
-            "ordering": false,
-            "searching": false, 
-            "order": [], 
-            "ajax": {
-                "url": "<?php echo site_url('cs/ckstockjson')?>",
-                "type": "POST",
-                "data": {
-                	"segment" 	: "<?php echo $this->uri->segment(2) ?>",
-                },
-            },
-            "columnDefs": [
-            { 
-                "targets": [ 0 ], 
-                "orderable": false, 
-            },
-            ],
         });
 
         // daftar data check-stock di dalam menu follow up pada check stock cs
@@ -1767,6 +1981,7 @@
         //
 
         //Follow Up
+        //
         var table = $('#tableFollowUp').dataTable({ 
             "processing": true, 
             "serverSide": true, 
@@ -1778,6 +1993,28 @@
                 "data" : {
                 	"segment" : "<?php echo $this->uri->segment(2) ?>",
                 	"clog" : "<?php echo $this->uri->segment(3) ?>",
+                },
+            },
+            "columnDefs": [
+            { 
+                "targets": [ 0 ], 
+                "orderable": false, 
+            },
+            ],
+        });
+
+        // default follow up
+        var table = $('#tableCustomerLog').dataTable({ 
+            "processing": true, 
+            "serverSide": true, 
+            "ordering": false,
+            "searching": false, 
+            "order": [], 
+            "ajax": {
+                "url": "<?php echo site_url('followup/clog_json')?>",
+                "type": "POST",
+                "data": {
+                	"segment" 	: "<?php echo $this->uri->segment(2) ?>",
                 },
             },
             "columnDefs": [
@@ -1800,9 +2037,8 @@
 	    	} else {
 		    	var TO_VALUE  = $('#TO').val();
 	    	}
-        	$("#list-followup1").css("display","none");
-			$("#list-followup2").css("display","block");
-        	var table = $('#tableCustomerLog2').dataTable({
+        	var table = $('#tableCustomerLog').dataTable({
+        		"destroy": true,
 	            "processing": true, 
 	            "serverSide": true, 
 	            "ordering": false,
@@ -1827,32 +2063,8 @@
 	            ],
 	        });
 	        $("#search-followup").attr("disabled","disabled");
-
         });
-
-        // default follow up
-		$("#list-followup1").css("display","block");
-		$("#list-followup2").css("display","none");
-        var table = $('#tableCustomerLog').dataTable({ 
-            "processing": true, 
-            "serverSide": true, 
-            "ordering": false,
-            "searching": false, 
-            "order": [], 
-            "ajax": {
-                "url": "<?php echo site_url('followup/clog_json')?>",
-                "type": "POST",
-                "data": {
-                	"segment" 	: "<?php echo $this->uri->segment(2) ?>",
-                },
-            },
-            "columnDefs": [
-            { 
-                "targets": [ 0 ], 
-                "orderable": false, 
-            },
-            ],
-        });
+        //
 
         // order
         var table = $('#myTableOrder').dataTable({
@@ -1870,6 +2082,30 @@
 	                "orderable": false, 
 	            },
             ],
+        });
+
+        $("#FILTER_ORDER").click(function(){
+        	var table = $('#myTableOrder').dataTable({
+	            "destroy": true,
+	            "processing": true, 
+	            "serverSide": true, 
+	            "ordering": false, 
+	            "order": [], 
+	            "ajax": {
+	                "url": "<?php echo site_url('order/orderjson')?>",
+	                "type": "POST",
+	                "data": {
+	                	STATUS_FILTER : $('#STATUS').val()
+	                },
+	            },
+	            "columnDefs": [
+		            { 
+		                "targets": [ 0 ], 
+		                "orderable": false, 
+		            },
+	            ],
+	        });
+	        $("#FILTER_ORDER").attr("disabled","disabled");
         });
 
         // order-support
@@ -1890,6 +2126,30 @@
             ],
         });
 
+        $("#FILTER_ORDER_SUPPORT").click(function(){
+        	var table = $('#my-order-support').dataTable({
+	            "destroy": true,
+	            "processing": true, 
+	            "serverSide": true, 
+	            "ordering": false, 
+	            "order": [], 
+	            "ajax": {
+	                "url": "<?php echo site_url('order_support/orderjson')?>",
+	                "type": "POST",
+	                "data": {
+	                	STATUS_FILTER : $('#STATUS').val()
+	                },
+	            },
+	            "columnDefs": [
+		            { 
+		                "targets": [ 0 ], 
+		                "orderable": false, 
+		            },
+	            ],
+	        });
+	        $("#FILTER_ORDER_SUPPORT").attr("disabled","disabled");
+        });
+
         // payment-vendor
         var table = $('#my-payment-vendor').dataTable({
             "processing": true, 
@@ -1908,31 +2168,18 @@
             ],
         });
 
-        // customer deposit
-		//search customer deposit
-		$("#search-cust-deposit").click(function(){
-        	if ($('#CUSTD_DATE').val() == null) {
-		        var CUSTD_DATE = null;
-	    	} else {
-		    	var CUSTD_DATE = $('#CUSTD_DATE').val();
-	    	}
-
-        	$("#cust-deposit1").css("display","none");
-			$("#cust-deposit2").css("display","block");
-        	var table = $('#table-cust-deposit2').dataTable({
+        $("#FILTER_PAYTOV").click(function(){
+        	var table = $('#my-payment-vendor').dataTable({
+	            "destroy": true,
 	            "processing": true, 
 	            "serverSide": true, 
-	            "ordering": false,
-	            "searching": false,
-	            "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]], 
+	            "ordering": false, 
 	            "order": [], 
 	            "ajax": {
-	                "url": "<?php echo site_url('customer_deposit/depositjson')?>",
+	                "url": "<?php echo site_url('payment_vendor/paymentjson')?>",
 	                "type": "POST",
 	                "data": {
-	                	CUSTD_DATE 	: CUSTD_DATE,
-	                	ORDER_ID 	: $('#ORDER_ID').val(),
-	                	CUST_NAME 	: $('#CUST_NAME').val(),
+	                	STATUS_FILTER : $('#STATUS').val()
 	                },
 	            },
 	            "columnDefs": [
@@ -1942,13 +2189,11 @@
 		            },
 	            ],
 	        });
-	        $("#search-cust-deposit").attr("disabled","disabled");
-
+	        $("#FILTER_PAYTOV").attr("disabled","disabled");
         });
 
+        // customer deposit
 		// default customer deposit
-		$("#cust-deposit1").css("display","block");
-		$("#cust-deposit2").css("display","none");
 		var table = $('#table-cust-deposit').dataTable({ 
             "processing": true, 
             "serverSide": true, 
@@ -1968,18 +2213,16 @@
         });
         //
 
-        // vendor deposit
-		//search vendor deposit
-		$("#search-vend-deposit").click(function(){
-        	if ($('#VENDD_DATE').val() == null) {
-		        var VENDD_DATE = null;
+        //search customer deposit
+		$("#search-cust-deposit").click(function(){
+        	if ($('#CUSTD_DATE').val() == null) {
+		        var CUSTD_DATE = null;
 	    	} else {
-		    	var VENDD_DATE = $('#VENDD_DATE').val();
+		    	var CUSTD_DATE = $('#CUSTD_DATE').val();
 	    	}
 
-        	$("#vend-deposit1").css("display","none");
-			$("#vend-deposit2").css("display","block");
-        	var table = $('#table-vend-deposit2').dataTable({
+        	var table = $('#table-cust-deposit').dataTable({
+        		"destroy": true,
 	            "processing": true, 
 	            "serverSide": true, 
 	            "ordering": false,
@@ -1987,12 +2230,13 @@
 	            "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]], 
 	            "order": [], 
 	            "ajax": {
-	                "url": "<?php echo site_url('vendor_deposit/depositjson')?>",
+	                "url": "<?php echo site_url('customer_deposit/depositjson')?>",
 	                "type": "POST",
 	                "data": {
-	                	VENDD_DATE : VENDD_DATE,
-	                	ORDER_ID   : $('#ORDER_ID').val(),
-	                	VEND_NAME  : $('#VEND_NAME').val(),
+	                	STATUS 		: $('#STATUS').val(),
+	                	CUSTD_DATE 	: CUSTD_DATE,
+	                	ORDER_ID 	: $('#ORDER_ID').val(),
+	                	CUST_NAME 	: $('#CUST_NAME').val(),
 	                },
 	            },
 	            "columnDefs": [
@@ -2002,13 +2246,12 @@
 		            },
 	            ],
 	        });
-	        $("#search-vend-deposit").attr("disabled","disabled");
+	        $("#search-cust-deposit").attr("disabled","disabled");
 
         });
 
-		// default vendor deposit
-		$("#vend-deposit1").css("display","block");
-		$("#vend-deposit2").css("display","none");
+        // vendor deposit
+        // default vendor deposit
 		var table = $('#table-vend-deposit').dataTable({ 
             "processing": true, 
             "serverSide": true, 
@@ -2025,6 +2268,44 @@
                 "orderable": false, 
             },
             ],
+        });
+        //
+
+		//search vendor deposit
+		$("#search-vend-deposit").click(function(){
+        	if ($('#VENDD_DATE').val() == null) {
+		        var VENDD_DATE = null;
+	    	} else {
+		    	var VENDD_DATE = $('#VENDD_DATE').val();
+	    	}
+
+        	var table = $('#table-vend-deposit').dataTable({
+        		"destroy": true,
+	            "processing": true, 
+	            "serverSide": true, 
+	            "ordering": false,
+	            "searching": false,
+	            "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]], 
+	            "order": [], 
+	            "ajax": {
+	                "url": "<?php echo site_url('vendor_deposit/depositjson')?>",
+	                "type": "POST",
+	                "data": {
+	                	STATUS     : $('#STATUS').val(),
+	                	VENDD_DATE : VENDD_DATE,
+	                	ORDER_ID   : $('#ORDER_ID').val(),
+	                	VEND_NAME  : $('#VEND_NAME').val(),
+	                },
+	            },
+	            "columnDefs": [
+		            { 
+		                "targets": [ 0 ], 
+		                "orderable": false, 
+		            },
+	            ],
+	        });
+	        $("#search-vend-deposit").attr("disabled","disabled");
+
         });
         //
 

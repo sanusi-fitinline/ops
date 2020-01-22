@@ -202,7 +202,7 @@
 													
 													$ALAMAT = $CUST_ADDRESS.$SUBD_NAME.$CITY_NAME.$STATE_NAME;
 												?>
-												<p id="order<?php echo $data->VEND_ID ?>">ORDER : <?php echo$row->ORDER_ID ?></p>
+												<p id="order<?php echo $data->VEND_ID ?>">ORDER <?php echo$row->ORDER_ID ?>:</p>
 												<?php foreach ($detail as $key):?>
 													<?php if($data->VEND_ID == $key->VEND_ID): ?>
 														<?php 
@@ -210,13 +210,13 @@
 																$PRODUCT = $key->PRO_NAME."/".$key->ORDD_OPTION;
 															} else { $PRODUCT = $key->PRO_NAME;}
 														?>
-														<p class="produk produk<?php echo $data->VEND_ID ?>"><?php echo $PRODUCT."/".$key->ORDD_QUANTITY." ".$key->UMEA_NAME; ?></p>
+														<p class="produk produk<?php echo $data->VEND_ID ?>"><?php echo $PRODUCT."/".$key->ORDD_QUANTITY." ".$key->UMEA_NAME."\n"; ?></p>
 													<?php endif ?>
 												<?php endforeach ?>
 												<p id="kurir<?php echo $data->VEND_ID ?>" style="text-transform: uppercase;">KURIR : <?php echo $data->COURIER_NAME." ".$data->ORDV_SERVICE_TYPE; ?></p>
 												<p id="penerima-asli<?php echo $data->VEND_ID ?>" style="text-transform: uppercase;">PENERIMA : <?php echo stripslashes($row->CUST_NAME).", ".$ALAMAT.", ".$row->CUST_PHONE; ?></p>
 												<p id="penerima<?php echo $data->VEND_ID ?>" style="text-transform: uppercase;">PENERIMA : <?php echo stripslashes($row->CUST_NAME).", ".$ALAMAT.", 0812-2569-6886"; ?></p>
-												<p id="pengirim<?php echo $data->VEND_ID ?>" style="display: none;" id="sender<?php echo $data->VEND_ID ?>">PENGIRIM : FITINLINE, JL.GODEAN KM 4.5 YOGYAKARTA, 0274-5305094</p>
+												<p id="pengirim<?php echo $data->VEND_ID ?>" style="display: none;" id="sender<?php echo $data->VEND_ID ?>">PENGIRIM : FITINLINE, KOTA YOGYAKARTA, 0274-4293090.</p>
 											</div>
 											<div class="form-group grp_copy" align="right">
 										     	<a style="color: #ffffff" class="btn btn-sm btn-info btn_copy<?php echo $data->VEND_ID ?>" id="INSTRUCTION<?php echo $data->VEND_ID ?>" data-clipboard-action="copy" data-clipboard-target="#foo<?php echo $data->VEND_ID ?>"><i class="fa fa-paste"></i> Order Instruction</a>
@@ -245,7 +245,7 @@
 										                			<td><?php echo $field->PRO_NAME ?></td>
 										                			<td><?php echo $field->ORDD_OPTION ?></td>
 										                			<td align="center">
-										                				<?php echo $field->ORDD_QUANTITY ?></td>
+										                				<?php echo str_replace(".", ",", $field->ORDD_QUANTITY)?></td>
 										                			<td align="center"><?php echo $field->UMEA_NAME ?></td>
 										                		</tr>
 										                	<?php endif ?>
@@ -265,6 +265,30 @@
 														<input type="hidden" name="ORDV_SHIPCOST" value="<?php echo $data->ORDV_SHIPCOST ?>">
 														<input type="hidden" name="PAYTOV_ID" value="<?php echo $data->PAYTOV_ID ?>">
 														<div class="form-group">
+															<label>Courier Service</label>
+															<input class="form-control" type="text" value="<?php echo $data->COURIER_NAME." ".$data->ORDV_SERVICE_TYPE?>" readonly>
+														</div>
+														<div class="form-group">
+															<label>Weight</label>
+															<div class="input-group">
+																<input class="form-control" type="text" value="<?php echo str_replace(".", ",", $data->ORDV_WEIGHT)?>" autocomplete="off" readonly required>
+																<div class="input-group-prepend">
+														          	<span class="input-group-text">Kg</span>
+														        </div>
+														    </div>
+														</div>
+														<div class="form-group">
+															<label>Actual Weight</label>
+															<div class="input-group">
+																<input class="form-control" type="number" step="0.01" name="ORDV_WEIGHT_VENDOR" value="<?php echo $data->ORDV_WEIGHT_VENDOR ?>" autocomplete="off">
+																<div class="input-group-prepend">
+														          	<span class="input-group-text">Kg</span>
+														        </div>
+														    </div>
+														</div>
+													</div>
+													<div class="col-md-6">
+														<div class="form-group">
 															<label>Delivery Date</label>
 															<div class="input-group">
 																<div class="input-group-prepend">
@@ -277,23 +301,22 @@
 															<label>Receipt No</label>
 															<input class="form-control" type="text" name="ORDV_RECEIPT_NO" autocomplete="off" value="<?php echo $data->ORDV_RECEIPT_NO ?>" required>
 														</div>
-													</div>
-													<div class="col-md-6">
-														<div class="form-group">
-															<label>Courier Service</label>
-															<input class="form-control" type="text" name="" value="<?php echo $data->COURIER_NAME." ".$data->ORDV_SERVICE_TYPE?>" readonly>
-														</div>
 														<div class="form-group">
 															<label>Actual Shipcost</label>
 															<input class="form-control uang" type="text" name="ORDV_SHIPCOST_VENDOR" autocomplete="off" value="<?php echo $data->ORDV_SHIPCOST_VENDOR ?>" required>
 														</div>
 													</div>
 												</div>													
-												<div align="right">
+												<div align="left">
+													<div class="custom-control custom-checkbox">
+												     	<input type="checkbox" class="custom-control-input" id="cetak_total<?php echo $data->VEND_ID ?>" name="cetak_total">
+												     	<label class="custom-control-label" for="cetak_total<?php echo $data->VEND_ID ?>">Cetak Total</label>
+												    </div>
+													<a style="color: #FFFF" class="btn btn-sm btn-info CETAK_LABEL" id="CETAK_LABEL<?php echo $data->VEND_ID ?>"><i class="fa fa-print"></i> LABEL</a>
 													<?php if((!$this->access_m->isEdit('Order SS', 1)->row()) && ($this->session->GRP_SESSION !=3)) : ?>
 										        		<button class="btn btn-sm btn-secondary" type="submit" name="UPDATE_SHIPMENT" disabled><i class="fa fa-shipping-fast"></i> UPDATE SHIPMENT</button>
 											        <?php else: ?>
-											        	<button class="btn btn-sm btn-primary" type="submit" name="UPDATE_SHIPMENT"><i class="fa fa-shipping-fast"></i> UPDATE SHIPMENT</button>
+											        	<button style="float: right;" class="btn btn-sm btn-primary" type="submit" name="UPDATE_SHIPMENT"><i class="fa fa-shipping-fast"></i> UPDATE SHIPMENT</button>
 											        <?php endif ?>
 										        </div>
 											</form>
@@ -314,6 +337,7 @@
 <script type="text/javascript">
 	<?php $this->load->model('orderdetail_m');?>
 	<?php $_detail = $this->orderdetail_m->get($this->uri->segment(3))->result(); ?>
+	<?php $by_vendor = $this->ordervendor_m->get_by_vendor($this->uri->segment(3))->result(); ?>
 	$(document).ready(function(){
 		<?php foreach ($_detail as $value): ?>
 			$(".grp_copy").each(function(){
@@ -364,6 +388,33 @@
 						setTooltip('Failed!');
 						hideTooltip();
 					});					
+				});
+			});
+
+		<?php endforeach ?>
+
+		<?php foreach ($by_vendor as $field): ?>
+			$(this).each(function(){
+				var order_id = "<?php echo $row->ORDER_ID ?>";
+				var vendor_id = "<?php echo $field->VEND_ID ?>";
+				$("#CETAK_LABEL"+vendor_id).click(function(){
+					if ($("#cetak_total"+vendor_id).is(":checked")){
+						var cetak_total = 1;
+					} else {
+						var cetak_total = 0;
+					}
+					var url = "<?php echo base_url()?>"+"order_support/label_order/"+order_id+"/"+vendor_id+"/"+cetak_total;
+					$.ajax({
+				        type: "POST", 
+				        url: url, 
+				        dataType: "html",
+				        success: function(response){
+				        	window.open(url, '_blank');
+				        },
+				        error: function (xhr, ajaxOptions, thrownError) {
+				          	alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError); 
+				        }
+				    });
 				});
 			});
 		<?php endforeach ?>

@@ -17,6 +17,12 @@
 		    	<div class="card-header">
 		        	<i class="fas fa-table"></i>
 		        	Edit Data
+		        	<a href="<?php echo base_url('cs/invoice_sampling/'.$row->LSAM_ID)?>" target="_blank" class="btn btn-sm btn-info" id="INVOICE"><i class="fa fa-print"></i> INVOICE</a>
+		        	<?php if($row->LSAM_PAYDATE != null): ?>
+						<a href="<?php echo base_url('cs/receipt_sampling/'.$row->LSAM_ID)?>" target="_blank" class="btn btn-sm btn-info" id="RECEIPT"><i class="fa fa-print"></i> RECEIPT</a>
+					<?php else: ?>
+						<a class="btn btn-sm btn-secondary" style="opacity: 0.5; pointer-events: none; cursor: default; color: #FFFFFF" id="RECEIPT"><i class="fa fa-print"></i> RECEIPT</a>
+					<?php endif ?>
 		        </div>
 		      	<div class="card-body">
 		      		<div class="row">
@@ -88,7 +94,7 @@
 												<option value="269" <?php if($row->ORIGIN_CITY_ID == 269) {echo "selected";} ?>>Kota Yogyakarta</option>
 										    </select>
 										</div>
-										<div class="form-group" id="COURIER_SAMPLING2">
+										<div class="form-group">
 											<label>Courier</label>
 											<select class="form-control selectpicker" data-live-search="true" name="COURIER_ID" id="COURIER_SAMPLING" title="-- Select One --" required>
 												<?php foreach($courier as $data): ?>
@@ -107,16 +113,23 @@
 										</div>
 										<div id="cetak-service" class="form-group">
 											<label>Service</label>
-											<input class="form-control" type="text" name="" value="<?php echo $row->LSAM_SERVICE_TYPE!=null ? $row->LSAM_SERVICE_TYPE : ""  ?>" readonly>
+											<input class="form-control" type="text" name="SERVICE" value="<?php echo $row->LSAM_SERVICE_TYPE!=null ? $row->LSAM_SERVICE_TYPE : ""  ?>" readonly>
 										</div>
 										<div class="spinner3" style="display:none;" align="center">
 											<img width="70px" src="<?php echo base_url('assets/images/loading.gif') ?>">
 										</div>
-										<div class="form-group">
-											<input class="form-control" type="hidden" name="LSAM_SERVICE_TYPE" id="service-type" value="<?php echo $row->LSAM_SERVICE_TYPE!=null ? $row->LSAM_SERVICE_TYPE : ""  ?>">
-										</div>
 										<div id="tarf" class="form-group">
-											<label>Cost</label>
+											<div class="row">
+												<div class="col-md-6">
+													<label>Cost</label>
+												</div>
+												<div class="col-md-6">
+													<div class="custom-control custom-checkbox" <?php if(($row->LSAM_COST == 0 && $row->LSAM_DEPOSIT != null) || ($row->LSAM_COST != 0 && $row->LSAM_DEPOSIT == null)) { echo "hidden";}?>>
+												     	<input type="checkbox" class="custom-control-input" id="pilih-cod" name="pilih-cod" <?php if($row->LSAM_COST == 0 && $row->LSAM_DEPOSIT == null) { echo "checked";} ?> disabled>
+												     	<label class="custom-control-label" for="pilih-cod">COD</label>
+												    </div>
+												</div>
+											</div>
 											<div class="input-group">
 												<div class="input-group-prepend">
 										          	<span class="input-group-text">Rp.</span>

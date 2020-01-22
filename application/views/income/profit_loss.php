@@ -18,18 +18,24 @@
 			<div class="row">
 				<div class="col-md-3">			
 					<div class="form-group">
-						<input class="form-control datepicker" type="text" name="FROM" id="FROM" placeholder="From" autocomplete="off">
+						<input class="form-control form-control-sm datepicker" type="text" name="FROM" id="FROM" placeholder="From" autocomplete="off">
 					</div>
 				</div>
 				<div class="col-md-3">			
 					<div class="form-group">
-						<input class="form-control datepicker" type="text" name="TO" id="TO" placeholder="To" autocomplete="off">
+						<input class="form-control form-control-sm datepicker" type="text" name="TO" id="TO" placeholder="To" autocomplete="off">
 					</div>
 				</div>
-				<div class="col-md-6">			
+				<div class="col-md-3">
+					<div class="form-control-sm custom-control custom-checkbox">
+				     	<input type="checkbox" class="custom-control-input" id="exclude_shipment_cost" name="check-deposit">
+				     	<label class="custom-control-label" for="exclude_shipment_cost">Exclude Shipment Cost</label>
+				    </div>
+				</div>
+				<div class="col-md-3">			
 					<div class="form-group" align="right">
-						<button class="btn btn-sm btn-info" style="margin-top: 3px;" id="GENERATE_REPORT"><i class="fa fa-print"></i> Generate Report</button>
-						<a class="btn btn-sm btn-danger" style="margin-top: 3px;" href="<?php echo site_url('report/profit_loss') ?>"><i class="fa fa-redo"></i> Reset</a>
+						<button class="btn btn-sm btn-info" id="GENERATE_REPORT"><i class="fa fa-print"></i> Generate Report</button>
+						<a class="btn btn-sm btn-danger" href="<?php echo site_url('report/profit_loss') ?>"><i class="fa fa-redo"></i> Reset</a>
 					</div>
 				</div>
 			</div>
@@ -77,12 +83,18 @@
 	    	} else {
 		    	var TO_VALUE  = $('#TO').val();
 	    	}
+	    	if ($('#exclude_shipment_cost').is(":checked")) {
+		        var EXCLUDE_SHIPMENT = 1;
+	    	} else {
+		    	var EXCLUDE_SHIPMENT = 0;
+	    	}
 	    	$.ajax({
 		        type: "POST", 
 		        url: "<?php echo site_url('report/profit_loss_json'); ?>", 
 		        data: {
-		        	FROM 	: FROM_VALUE,
-		        	TO 		: TO_VALUE,
+		        	FROM 			 : FROM_VALUE,
+		        	TO 				 : TO_VALUE,
+		        	EXCLUDE_SHIPMENT : EXCLUDE_SHIPMENT,
 		        	}, 
 		        dataType: "json",
 		        beforeSend: function(e) {

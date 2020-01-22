@@ -101,7 +101,7 @@
 									<div class="col-md-3">
 										<div class="form-group">
 											<label>Amount</label>
-											<input class="form-control" step="0.1" min="1" type="number" name="LSTOCK_AMOUNT" required>
+											<input class="form-control" step="0.01" min="1" type="number" name="LSTOCK_AMOUNT" required>
 										</div>
 										<div class="form-group">
 											<label>Unit Measure</label>

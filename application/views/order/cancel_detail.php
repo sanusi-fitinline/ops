@@ -138,7 +138,7 @@
 						                			<td style="vertical-align: middle;"><?php echo $value->PRO_NAME ?></td>
 						                			<td style="vertical-align: middle;"><?php echo $value->ORDD_OPTION ?></td>
 						                			<td align="right" style="vertical-align: middle;"><?php echo number_format($value->ORDD_PRICE,0,',','.') ?></td>
-						                			<td align="center" style="vertical-align: middle;"><?php echo $value->ORDD_QUANTITY ?></td>
+						                			<td align="center" style="vertical-align: middle;"><?php echo str_replace(".", ",", $value->ORDD_QUANTITY) ?></td>
 						                			<td align="center" style="vertical-align: middle;"><?php echo $value->UMEA_NAME ?></td>
 						                			<td style="vertical-align: middle;" align="right"><?php echo number_format($value->ORDD_PRICE * $value->ORDD_QUANTITY,0,',','.') ?></td>
 						                		</tr>
@@ -150,31 +150,39 @@
 												<td align="right"><?php echo number_format($row->ORDER_TOTAL,0,',','.') ?></td>
 											</tr>
 											<tr>
-												<td style="vertical-align: middle; font-weight: bold" colspan="6" align="right">DISCOUNT</td>
+												<td style="vertical-align: middle; font-weight: bold" colspan="6" align="right">DISCOUNT (-)</td>
 												<td align="right"><?php echo $row->ORDER_DISCOUNT !=null ? number_format($row->ORDER_DISCOUNT,0,',','.') : "0" ?></td>
 											</tr>
 											<tr>
-												<td style="font-weight: bold;" colspan="6" align="right">SHIPMENT COST</td>
+												<td style="font-weight: bold;" colspan="6" align="right">SHIPMENT COST (+)</td>
 												<td align="right"><?php echo number_format($row->ORDER_SHIPCOST,0,',','.') ?></td>
 											</tr>
 											<tr>
-												<td style="vertical-align: middle; font-weight: bold;" colspan="6" align="right">TAX</td>
+												<td style="vertical-align: middle; font-weight: bold;" colspan="6" align="right">TAX (+)</td>
 												<td align="right"><?php echo $row->ORDER_TAX!=null ? $row->ORDER_TAX : "0"  ?></td>
 											</tr>
 											<tr>
-												<td style="font-weight: bold;" colspan="6" align="right">DEPOSIT</td>
-												<?php 
-													$this->load->model('custdeposit_m');
-													$check = $this->custdeposit_m->check_deposit($row->CUST_ID);
-													$deposit = $this->custdeposit_m->get_deposit($row->CUST_ID)->row();
-													if($check->num_rows() > 0) {
-														$DEPOSIT = number_format($deposit->CUSTD_DEPOSIT,0,',','.');
-													} else {
-														$DEPOSIT = 0;
-													}
-												?>
-												<td align="right" id="DEPOSIT" style="color: blue; font-weight: bold;"><?php echo $DEPOSIT ?></td>
+												<td style="font-weight: bold;" colspan="6" align="right">DEPOSIT (-)</td>
+												<td align="right"><?php echo number_format($row->ORDER_DEPOSIT,0,',','.') ?></td>
 											</tr>
+											<tr>
+												<td style="font-weight: bold;" colspan="6" align="right">GRAND TOTAL</td>
+												<td align="right" style="color: blue; font-weight: bold;"><?php echo number_format($row->ORDER_GRAND_TOTAL,0,',','.') ?></td>
+											</tr>
+											<?php
+												$this->load->model('custdeposit_m');
+												$check = $this->custdeposit_m->check_order_deposit($row->ORDER_ID);
+											?>
+											<?php if($check->num_rows() > 0) : ?>
+												<tr>
+													<td style="font-weight: bold;" colspan="6" align="right">TOTAL DEPOSIT</td>
+													<?php if($row->ORDER_GRAND_TOTAL == 0): ?>
+														<td align="right" style="color: green; font-weight: bold;"><?php echo number_format($row->ORDER_DEPOSIT,0,',','.') ?></td>
+													<?php else: ?>
+														<td align="right" style="color: green; font-weight: bold;"><?php echo number_format($row->ORDER_GRAND_TOTAL,0,',','.') ?></td>
+													<?php endif ?>
+												</tr>
+											<?php endif ?>
 										</tfoot>
 					          		</table>
 					        	</div>
@@ -211,7 +219,7 @@
 										                			<td style="vertical-align: middle;"><?php echo $field->ORDD_OPTION ?></td>
 										                			<td align="right" style="vertical-align: middle;"><?php echo number_format($field->ORDD_PRICE,0,',','.') ?></td>
 										                			<td align="center" style="vertical-align: middle;">
-										                				<?php echo $field->ORDD_QUANTITY ?></td>
+										                				<?php echo str_replace(".", ",", $field->ORDD_QUANTITY)?></td>
 										                			<td align="center" style="vertical-align: middle;"><?php echo $field->UMEA_NAME ?></td>
 										                			<td align="right" style="vertical-align: middle;"><?php echo number_format($field->ORDD_PRICE * $field->ORDD_QUANTITY,0,',','.') ?></td>
 										                			
@@ -235,7 +243,7 @@
 										<div class="col-md-3">
 											<div class="form-group">
 												<div class="input-group">
-													<input type="" class="form-control" name="" value="<?php echo $data->ORDV_WEIGHT ?>" readonly>
+													<input type="" class="form-control" name="" value="<?php echo str_replace(".", ",", $data->ORDV_WEIGHT) ?>" readonly>
 													<div class="input-group-prepend">
 											          	<span class="input-group-text">Kg</span>
 											        </div>

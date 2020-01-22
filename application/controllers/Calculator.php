@@ -118,16 +118,16 @@ class Calculator extends CI_Controller {
 		$apinol  = $this->coutariff_m->getTariff2($COURIER_ID, $O_CNTR_ID, $O_STATE_ID, $O_CITY_ID, $O_SUBD_ID, $D_CNTR_ID, $D_STATE_ID, $D_CITY_ID, $D_SUBD_ID)->result();
 		foreach($apinol as $k) {
 	    	if($k->RULE_ID == 1) {
-				if ($WEIGHT <= $k->COUTAR_MIN_KG) {
+				if (round($WEIGHT) <= $k->COUTAR_MIN_KG) {
 					$tarif = ($k->COUTAR_MIN_KG * $k->COUTAR_KG_FIRST) + $k->COUTAR_ADMIN_FEE;
-				} else if ($WEIGHT > $k->COUTAR_MIN_KG) {
-					$tarif = ($WEIGHT * $k->COUTAR_KG_FIRST) + $k->COUTAR_ADMIN_FEE;
+				} else if (round($WEIGHT) > $k->COUTAR_MIN_KG) {
+					$tarif = (round($WEIGHT) * $k->COUTAR_KG_FIRST) + $k->COUTAR_ADMIN_FEE;
 				}
 			}else if($k->RULE_ID == 2){
-				if ($WEIGHT <= $k->COUTAR_MIN_KG) {
+				if (round($WEIGHT) <= $k->COUTAR_MIN_KG) {
 					$tarif = ($k->COUTAR_KG_FIRST + $k->COUTAR_ADMIN_FEE);
-				} else if ($WEIGHT > $k->COUTAR_MIN_KG) {
-					$tarif = ((($WEIGHT - $k->COUTAR_MIN_KG) * $k->COUTAR_KG_NEXT) + $k->COUTAR_KG_FIRST) + $k->COUTAR_ADMIN_FEE;
+				} else if (round($WEIGHT) > $k->COUTAR_MIN_KG) {
+					$tarif = (((round($WEIGHT) - $k->COUTAR_MIN_KG) * $k->COUTAR_KG_NEXT) + $k->COUTAR_KG_FIRST) + $k->COUTAR_ADMIN_FEE;
 				}
 			}
 			$etd = $k->COUTAR_ETD;

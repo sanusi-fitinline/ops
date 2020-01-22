@@ -57,7 +57,7 @@
 									<div class="col-md-3">
 										<div class="form-group">
 											<label>Quantity</label>
-											<input class="form-control" type="number" step="0.1" min="1" name="ORDD_QUANTITY" id="ORDD_QUANTITY" value="1" required>
+											<input class="form-control" type="number" step="0.01" min="1" name="ORDD_QUANTITY" id="ORDD_QUANTITY" value="1" required>
 										</div>
 										<div class="form-group">
 											<label>Unit Measure</label>

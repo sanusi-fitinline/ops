@@ -27,6 +27,7 @@
 							<th style="vertical-align: middle; text-align: center;">PHONE</th>
 							<th style="vertical-align: middle; text-align: center;">EMAIL</th>
 							<th style="vertical-align: middle; text-align: center;">ADDRESS</th>
+							<th style="vertical-align: middle; text-align: center;">CS</th>
 							<th style="vertical-align: middle; text-align: center; width: 80px;">ACTION</th>
 	                  	</tr>
 	                </thead>

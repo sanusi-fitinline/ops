@@ -3,8 +3,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Product_m extends CI_Model {
 	var $table = 'tb_product'; //nama tabel dari database
-    var $column_order = array(null, 'PRO_NAME','PRO_DESC','VEND_NAME'); //field yang ada di table user
-    var $column_search = array('PRO_NAME','PRO_DESC','VEND_NAME'); //field yang diizin untuk pencarian 
+    var $column_order = array(null, 'PRO_NAME'); //field yang ada di table user
+    var $column_search = array('PRO_NAME'); //field yang diizin untuk pencarian 
     var $order = array('PRO_NAME' => 'ASC'); // default order 
 
     public function __construct()
@@ -16,9 +16,10 @@ class Product_m extends CI_Model {
     private function _get_datatables_query()
     {
         
-        $this->db->select('tb_vendor.VEND_NAME, tb_product.*');
+        $this->db->select('tb_product.*, umea_a.UMEA_NAME AS PRO_UMEA, umea_b.UMEA_NAME AS PRO_VOL_UMEA');
         $this->db->from($this->table);
-        $this->db->join('tb_vendor', 'tb_vendor.VEND_ID=tb_product.VEND_ID', 'left');
+        $this->db->join('tb_unit_measure AS umea_a', 'umea_a.UMEA_ID=tb_product.PRO_UNIT', 'left');
+        $this->db->join('tb_unit_measure AS umea_b', 'umea_b.UMEA_ID=tb_product.PRO_VOL_UNIT', 'left');
 
         $i = 0;
     

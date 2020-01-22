@@ -20,17 +20,17 @@
 		      		<div class="row">
 						<div class="col-md-2 offset-md-3">			
 							<div class="form-group">
-								<input class="form-control datepicker" type="text" name="FROM" id="FROM" placeholder="From" autocomplete="off">
+								<input class="form-control form-control-sm datepicker" type="text" name="FROM" id="FROM" placeholder="From" autocomplete="off">
 							</div>
 						</div>
 						<div class="col-md-2">			
 							<div class="form-group">
-								<input class="form-control datepicker" type="text" name="TO" id="TO" placeholder="To" autocomplete="off">
+								<input class="form-control form-control-sm datepicker" type="text" name="TO" id="TO" placeholder="To" autocomplete="off">
 							</div>
 						</div>
 						<div class="col-md-2">			
 							<div class="form-group">
-								<select class="form-control selectpicker" title="-Select Cs-" name="USER_ID" id="USER_ID">
+								<select class="form-control form-control-sm selectpicker" title="-Select Cs-" name="USER_ID" id="USER_ID">
 						    		<option value="" selected disabled>-Select Cs-</option>
 						    		<?php foreach($get_cs as $cs): ?>
 						    			<option value="<?php echo $cs->USER_ID ?>"><?php echo $cs->USER_NAME ?></option>
@@ -40,20 +40,12 @@
 						</div>
 						<div class="col-md-3">			
 							<div class="form-group" align="right">
-								<button class="btn btn-sm btn-default" style="margin-top: 3px; border: 2px solid #17a2b8;" id="cari"><i class="fa fa-search"></i> Search</button>
-								<a class="btn btn-sm btn-default" style="margin-top: 3px; border: 2px solid #dc3545;" href="<?php echo site_url('report/check_stock_order') ?>"><i class="fa fa-redo"></i> Reset</a>
+								<button class="btn btn-sm btn-default" style="border: 2px solid #17a2b8;" id="cari"><i class="fa fa-search"></i> Search</button>
+								<a class="btn btn-sm btn-default" style="border: 2px solid #dc3545;" href="<?php echo site_url('report/check_stock_order') ?>"><i class="fa fa-redo"></i> Reset</a>
 							</div>
 						</div>
 					</div>
 					<br>
-		      		<?php
-			      		foreach($get_check_stock as $field){
-					        $user_name[] = $field->USER_NAME;
-					        $jumlah_check_stock[] = (int) $field->total;
-					        $jumlah_flwp[] = (int) $field->total_flwp;
-			      		}
-			      		
-					?>
 		      		<div class="row">
 		      			<div class="col-md-10 offset-md-1">
 							<canvas id="myChart" style="position: relative; height: 60vh; width: 60vw;margin: 0px auto;"></canvas>
@@ -73,10 +65,10 @@
 	var chart = new Chart(ctx, {
 		type: 'bar',
 		data: {
-			labels: <?php echo json_encode($user_name) ?>,
+			labels: '',
 			datasets: [{
 				label: ['Check Stock'],
-				data: <?php echo json_encode($jumlah_check_stock) ?>,
+				data: '',
 				datalabels: {
 					align: 'start',
 					anchor: 'end'
@@ -86,14 +78,25 @@
 				borderWidth: 1
 			},
 			{
-				label: ['Order'],
-				data: <?php echo json_encode($jumlah_flwp) ?>,
+				label: ['Follow Up'],
+				data: '',
 				datalabels: {
 					align: 'start',
 					anchor: 'end'
 				},
-				backgroundColor: 'rgba(255, 206, 86, 0.5)',
-				borderColor: 'rgba(255, 206, 86, 1)',
+				backgroundColor: 'rgba(153, 102, 255, 0.5)',
+                borderColor: 'rgba(153, 102, 255, 1)',
+				borderWidth: 1
+			},
+			{
+				label: ['Order'],
+				data: '',
+				datalabels: {
+					align: 'start',
+					anchor: 'end'
+				},
+				backgroundColor: 'rgba(50, 205, 50, 0.5)',
+                borderColor: 'rgba(50, 205, 50, 1)',
 				borderWidth: 1
 			}
 			]
@@ -157,24 +160,35 @@
 	        	if(e && e.overrideMimeType) {
 	            	e.overrideMimeType("application/json;charset=UTF-8");
 	          	}
-	          	$('#myChart').hide();
 	        },
 	        success: function(response){
-	        	$('#myChart').show();
 	        	if ((FROM_VALUE != null && TO_VALUE != null) && $('#USER_ID').val() == null) {
 	        		chart.data.labels= response.list_user_name;
 					chart.data.datasets[0].data = response.list_jumlah_check_stock;
 					chart.data.datasets[1].data = response.list_jumlah_flwp;
+					chart.data.datasets[2].data = response.list_jumlah_order_flwp;
 				}
 				if ((FROM_VALUE != null && TO_VALUE != null) && $('#USER_ID').val() != null) {
 		        	chart.data.labels= response.list_user_name;
 					chart.data.datasets[0].data = response.list_jumlah_check_stock;
 					chart.data.datasets[1].data = response.list_jumlah_flwp;
+					chart.data.datasets[2].data = response.list_jumlah_order_flwp;
 				}
-    			chart.update();
+	          	chart.update({
+				    duration: 600,
+				    easing: 'easeInQuad'
+				});
 	        },
 	        error: function (xhr, ajaxOptions, thrownError) {
 	          	alert('Data tidak ditemukan.');
+	          	chart.data.labels= [''];
+				chart.data.datasets[0].data = [''];
+				chart.data.datasets[1].data = [''];
+				chart.data.datasets[2].data = [''];
+	          	chart.update({
+				    duration: 600,
+				    easing: 'easeInQuad'
+				});
 	        }
 	    });
     });

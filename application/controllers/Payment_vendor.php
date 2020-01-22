@@ -40,8 +40,9 @@ class Payment_vendor extends CI_Controller {
     }
 
     public function paymentjson() {
+    	$STATUS_FILTER = $this->input->post('STATUS_FILTER', TRUE);
 		$url 	= $this->config->base_url();
-		$list   = $this->ordervendor_m->get_datatables();
+		$list   = $this->ordervendor_m->get_datatables($STATUS_FILTER);
 		$data = array();
 		$no = $_POST['start'];
 		foreach ($list as $field) {
@@ -102,8 +103,8 @@ class Payment_vendor extends CI_Controller {
 
 		$output = array(
 			"draw" => $_POST['draw'],
-			"recordsTotal" => $this->ordervendor_m->count_all(),
-			"recordsFiltered" => $this->ordervendor_m->count_filtered(),
+			"recordsTotal" => $this->ordervendor_m->count_all($STATUS_FILTER),
+			"recordsFiltered" => $this->ordervendor_m->count_filtered($STATUS_FILTER),
 			"data" => $data,
 		);
 		//output dalam format JSON
@@ -144,7 +145,7 @@ class Payment_vendor extends CI_Controller {
 		if ($query->num_rows() > 0) {
 			$data['row'] 	 = $query->row();
 			$data['order'] 	 = $this->order_m->get_for_payment($VEND_ID, $PAYTOV_ID)->result();
-			$data['detail']  = $this->orderdetail_m->detail_by_vendor($VEND_ID)->result();
+			$data['detail']  = $this->orderdetail_m->detail_by_vendor($VEND_ID, $PAYTOV_ID)->result();
 			$this->template->load('template', 'payment-vendor/payment_view', $data);
 		} else {
 			echo "<script>alert('Data tidak ditemukan.')</script>";
@@ -166,8 +167,9 @@ class Payment_vendor extends CI_Controller {
 			echo "<script>alert('Data berhasil diubah.')</script>";
 			echo "<script>window.location='".site_url('payment_vendor')."'</script>";
 		} else {
-			echo "<script>alert('Data gagal diubah.')</script>";
-			echo "<script>window.location='".site_url('payment_vendor/detail/'.$VEND_ID)."'</script>";
+			echo "<script>alert('Data berhasil diubah.')</script>";
+			echo "<script>window.location='".site_url('payment_vendor')."'</script>";
+			// echo "<script>window.location='".site_url('payment_vendor/detail/'.$VEND_ID)."'</script>";
 		}
 	}
 }

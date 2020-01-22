@@ -42,8 +42,9 @@ class Order extends CI_Controller {
 	}
 
 	public function orderjson() {
+		$STATUS_FILTER = $this->input->post('STATUS_FILTER', TRUE);
 		$url 	   = $this->config->base_url();
-		$list      = $this->order_m->get_datatables();
+		$list      = $this->order_m->get_datatables($STATUS_FILTER);
 		$data = array();
 		$no = $_POST['start'];
 		foreach ($list as $field) {
@@ -71,6 +72,7 @@ class Order extends CI_Controller {
 			$row[] = date('d-m-Y / H:i:s', strtotime($field->ORDER_DATE));
 			$row[] = stripslashes($field->CUST_NAME);
 			$row[] = $ORDER_NOTES;
+			$row[] = stripslashes($field->USER_NAME);
 			if((!$this->access_m->isDelete('Order', 1)->row()) && ($this->session->GRP_SESSION !=3))
 			{
 				if($field->ORDER_STATUS == 5) {
@@ -100,8 +102,8 @@ class Order extends CI_Controller {
 
 		$output = array(
 			"draw" => $_POST['draw'],
-			"recordsTotal" => $this->order_m->count_all(),
-			"recordsFiltered" => $this->order_m->count_filtered(),
+			"recordsTotal" => $this->order_m->count_all($STATUS_FILTER),
+			"recordsFiltered" => $this->order_m->count_filtered($STATUS_FILTER),
 			"data" => $data,
 		);
 		//output dalam format JSON
@@ -141,7 +143,7 @@ class Order extends CI_Controller {
 				<div class='form-group'>
 					<label>Weight</label>
 					<div class='input-group'>
-						<input class='form-control' type='text' id='PRO_WEIGHT' value='$product->PRO_WEIGHT' readonly>
+						<input class='form-control' type='text' id='PRO_WEIGHT' value='".str_replace(".", ",", $product->PRO_WEIGHT)."' readonly>
 						<div class='input-group-prepend'>
 				          	<span class='input-group-text'>Kg</i></span>
 				        </div>
@@ -176,7 +178,7 @@ class Order extends CI_Controller {
 				<div class='form-group'>
 					<label>Weight</label>
 					<div class='input-group'>
-						<input class='form-control' type='text' id='PRO_WEIGHT' value='$product->PRO_TOTAL_WEIGHT' readonly>
+						<input class='form-control' type='text' id='PRO_WEIGHT' value='".str_replace(".", ",", $product->PRO_TOTAL_WEIGHT)."' readonly>
 						<div class='input-group-prepend'>
 				          	<span class='input-group-text'>Kg</i></span>
 				        </div>
@@ -275,86 +277,61 @@ class Order extends CI_Controller {
 		$vendor 		= $this->vendor_m->get($VEND_ID)->row();
 		$apinol  		= $this->coutariff_m->getTariff2($COURIER_ID, $vendor->CNTR_ID, $vendor->STATE_ID, $vendor->CITY_ID, $vendor->SUBD_ID, $customer->CNTR_ID, $customer->STATE_ID, $customer->CITY_ID, $customer->SUBD_ID)->result();
 		$key 			= $this->courier_m->getCourier($COURIER_ID)->row();
-	    if($key->COURIER_API == 1){
-	    	$WEIGHT_RO = $WEIGHT*1000;
-			$lists = "<option value='' selected disabled>--- Select one ---</option>";
-	    	if($customer->SUBD_ID!=0){
-	    		$dataCost = $this->rajaongkir->cost($vendor->RO_CITY_ID, $customer->SUBD_ID, $WEIGHT_RO, strtolower($key->COURIER_NAME), 'subdistrict');
-	    	} else{
-	    		$dataCost = $this->rajaongkir->cost($vendor->RO_CITY_ID, $customer->CITY_ID, $WEIGHT_RO, strtolower($key->COURIER_NAME), 'city');
-	    	}
-			$detailCost = json_decode($dataCost, true);
-			$status = $detailCost['rajaongkir']['status']['code'];
-			if ($status == 200) {
-				for ($i=0; $i < count($detailCost['rajaongkir']['results']); $i++) {
-					for ($j=0; $j < count($detailCost['rajaongkir']['results'][$i]['costs']); $j++) {
-						$service = $detailCost['rajaongkir']['results'][$i]['costs'][$j]['service'];
-						$tarif = $detailCost['rajaongkir']['results'][$i]['costs'][$j]['cost'][0]['value'];
-						$etd = $detailCost['rajaongkir']['results'][$i]['costs'][$j]['cost'][0]['etd']." Hari";
-						$lists .= "<option value='$tarif,$service,$etd'>$service</option>";
+		if($customer->CITY_ID!=0){
+		    if($key->COURIER_API == 1){
+		    	$WEIGHT_RO = $WEIGHT*1000;
+				$lists = "<option value='' selected disabled>--- Select one ---</option>";
+		    	if($customer->SUBD_ID!=0){
+		    		$dataCost = $this->rajaongkir->cost($vendor->RO_CITY_ID, $customer->SUBD_ID, $WEIGHT_RO, strtolower($key->COURIER_NAME), 'subdistrict');
+		    	} else{
+		    		$dataCost = $this->rajaongkir->cost($vendor->RO_CITY_ID, $customer->CITY_ID, $WEIGHT_RO, strtolower($key->COURIER_NAME), 'city');
+		    	}
+				$detailCost = json_decode($dataCost, true);
+				$status = $detailCost['rajaongkir']['status']['code'];
+				if ($status == 200) {
+					for ($i=0; $i < count($detailCost['rajaongkir']['results']); $i++) {
+						for ($j=0; $j < count($detailCost['rajaongkir']['results'][$i]['costs']); $j++) {
+							$service = $detailCost['rajaongkir']['results'][$i]['costs'][$j]['service'];
+							$tarif = $detailCost['rajaongkir']['results'][$i]['costs'][$j]['cost'][0]['value'];
+							$etd = $detailCost['rajaongkir']['results'][$i]['costs'][$j]['cost'][0]['etd']." Hari";
+							$lists .= "<option value='$tarif,$service,$etd'>$service</option>";
+						}
 					}
 				}
 			}
-		}
-		else{
-			// $lists = "";
-			if(!$apinol){
-					$lists = 0;
-					$etd = "";
-					$status = "<p style='font-size:14px;color:red;'><small>* </small>Tarif tidak ditemukan, ganti kurir lain atau input manual.</p>";
-			} else{
-				foreach($apinol as $k) {
-			    	if($k->RULE_ID == 1) {
-						if ($WEIGHT <= $k->COUTAR_MIN_KG) {
-							$tarif = ($k->COUTAR_MIN_KG * $k->COUTAR_KG_FIRST) + $k->COUTAR_ADMIN_FEE;
-						} else if ($WEIGHT > $k->COUTAR_MIN_KG) {
-							$tarif = ($WEIGHT * $k->COUTAR_KG_FIRST) + $k->COUTAR_ADMIN_FEE;
+			else{
+				// $lists = "";
+				if(!$apinol){
+						$lists = 0;
+						$etd = "";
+						$status = "<p style='font-size:14px;color:red;'><small>* </small>Tarif tidak ditemukan, ganti kurir lain atau input manual.</p>";
+				} else{
+					foreach($apinol as $k) {
+				    	if($k->RULE_ID == 1) {
+							if (round($WEIGHT) <= $k->COUTAR_MIN_KG) {
+								$tarif = ($k->COUTAR_MIN_KG * $k->COUTAR_KG_FIRST) + $k->COUTAR_ADMIN_FEE;
+							} else if (round($WEIGHT) > $k->COUTAR_MIN_KG) {
+								$tarif = (round($WEIGHT) * $k->COUTAR_KG_FIRST) + $k->COUTAR_ADMIN_FEE;
+							}
+						}else if($k->RULE_ID == 2){
+							if (round($WEIGHT) <= $k->COUTAR_MIN_KG) {
+								$tarif = ($k->COUTAR_KG_FIRST + $k->COUTAR_ADMIN_FEE);
+							} else if (round($WEIGHT) > $k->COUTAR_MIN_KG) {
+								$tarif = (((round($WEIGHT) - $k->COUTAR_MIN_KG) * $k->COUTAR_KG_NEXT) + $k->COUTAR_KG_FIRST) + $k->COUTAR_ADMIN_FEE;
+							}
 						}
-					}else if($k->RULE_ID == 2){
-						if ($WEIGHT <= $k->COUTAR_MIN_KG) {
-							$tarif = ($k->COUTAR_KG_FIRST + $k->COUTAR_ADMIN_FEE);
-						} else if ($WEIGHT > $k->COUTAR_MIN_KG) {
-							$tarif = ((($WEIGHT - $k->COUTAR_MIN_KG) * $k->COUTAR_KG_NEXT) + $k->COUTAR_KG_FIRST) + $k->COUTAR_ADMIN_FEE;
-						}
+						
+						$lists = number_format($tarif,0,',','.');
+						$etd = $k->COUTAR_ETD;
+						$status = "";
+						
 					}
-					
-					$lists = number_format($tarif,0,',','.');
-					$etd = $k->COUTAR_ETD;
-					$status = "";
-					
 				}
 			}
-
-		}
-		$callback = array('list_courier'=>$lists, 'list_status'=>$status, 'list_estimasi'=>$etd); 
-	    echo json_encode($callback);
-	}
-
-	public function edit_payment($ORDER_ID) {
-		$update['update'] = $this->order_m->update_payment($ORDER_ID);
-		if($update) {
-			echo "<script>alert('Data berhasil diubah.')</script>";
-			if (($this->input->post('ORDER_PAYMENT_DATE') != null)) {
-				require_once(APPPATH.'third_party/pusher/vendor/autoload.php');
-				$options = array(
-					'cluster' => 'ap1',
-					'useTLS' => true
-				);
-				$pusher = new Pusher\Pusher(
-					'3de920bf0bfb448a7809',
-					'0799716e5d66b96f5b61',
-					'845132',
-					$options
-				);
-
-				$data['message'] = "\nNew Order from Customer!";
-				$data['url'] 	 = site_url('order_support/detail/'.$ORDER_ID);
-				$pusher->trigger('channel-pm', 'event-pm', $data);
-			}
-			echo "<script>window.location='".site_url('order/detail/'.$ORDER_ID)."'</script>";
+			$callback = array('list_courier'=>$lists, 'list_status'=>$status, 'list_estimasi'=>$etd); 
+		    echo json_encode($callback);
 		} else {
-			echo "<script>alert('Data gagal diubah.')</script>";
-			echo "<script>window.location='".site_url('order/detail/'.$ORDER_ID)."'</script>";
+			echo "Alamat customer belum lengkap.";
 		}
 	}
 
@@ -367,6 +344,32 @@ class Order extends CI_Controller {
 			} else {
 				echo "<script>alert('Cancel order gagal.')</script>";
 				echo "<script>window.location='".site_url('order/cancel_detail/'.$ORDER_ID)."'</script>";
+			}
+		} else if(isset($_POST['UPDATE_PAYMENT'])) {
+			$payment['payment'] = $this->order_m->update_payment($ORDER_ID);
+			if($payment) {
+				echo "<script>alert('Data berhasil diubah.')</script>";
+				if (($this->input->post('ORDER_PAYMENT_DATE') != null)) {
+					require_once(APPPATH.'third_party/pusher/vendor/autoload.php');
+					$options = array(
+						'cluster' => 'ap1',
+						'useTLS' => true
+					);
+					$pusher = new Pusher\Pusher(
+						'3de920bf0bfb448a7809',
+						'0799716e5d66b96f5b61',
+						'845132',
+						$options
+					);
+
+					$data['message'] = "\nNew Order from Customer!";
+					$data['url'] 	 = site_url('order_support/detail/'.$ORDER_ID);
+					$pusher->trigger('channel-pm', 'event-pm', $data);
+				}
+				echo "<script>window.location='".site_url('order/detail/'.$ORDER_ID)."'</script>";
+			} else {
+				echo "<script>alert('Data gagal diubah.')</script>";
+				echo "<script>window.location='".site_url('order/detail/'.$ORDER_ID)."'</script>";
 			}
 		} else {
 			$update['data'] = $this->order_m->update_detail($ORDER_ID);
@@ -404,17 +407,18 @@ class Order extends CI_Controller {
 		$DETAIL_PRICE 	 		= $detail->ORDD_PRICE * $detail->ORDD_QUANTITY;
 		$DETAIL_PRICE_VENDOR 	= $detail->ORDD_PRICE_VENDOR * $detail->ORDD_QUANTITY;
 		$SHIPCOST 				= $order_vendor->ORDV_SHIPCOST;
+		$ORDV_ID 	 			= $order_vendor->ORDV_ID;
 		$ORDV_TOTAL 	 		= $order_vendor->ORDV_TOTAL;
 		$ORDV_TOTAL_VENDOR 		= $order_vendor->ORDV_TOTAL_VENDOR;
 		// update data baru
 		$NEW_ORDV_TOTAL 		= $ORDV_TOTAL - $DETAIL_PRICE - $SHIPCOST;
 		$NEW_ORDV_TOTAL_VENDOR 	= $ORDV_TOTAL_VENDOR - $DETAIL_PRICE_VENDOR - $SHIPCOST;
 		if($order->ORDER_GRAND_TOTAL != null && $order->ORDER_GRAND_TOTAL != 0){
-			$NEW_GRAND_TOTAL 		= $GRAND_TOTAL - $DETAIL_PRICE - $SHIPCOST;
+			$NEW_GRAND_TOTAL 	= $GRAND_TOTAL - $DETAIL_PRICE - $SHIPCOST;
 		} else {
-			$NEW_GRAND_TOTAL 		= 0;
+			$NEW_GRAND_TOTAL 	= 0;
 		}
-		$this->order_m->delete_item($ORDER_ID, $ORDD_ID, $VEND_ID, $NEW_ORDV_TOTAL, $NEW_ORDV_TOTAL_VENDOR, $NEW_GRAND_TOTAL);
+		$this->order_m->delete_item($ORDER_ID, $ORDD_ID, $ORDV_ID, $VEND_ID, $NEW_ORDV_TOTAL, $NEW_ORDV_TOTAL_VENDOR, $NEW_GRAND_TOTAL);
 		if($this->db->affected_rows() > 0) {
 			echo "<script>window.location='".site_url('order/detail/'.$ORDER_ID)."'</script>";
 		}
@@ -441,28 +445,32 @@ class Order extends CI_Controller {
 	}
 
 	public function quotation($ORDER_ID) {
-		$ORDL_TYPE = 1;
-		$data['check'] 			= $this->orderletter_m->check($ORDER_ID, $ORDL_TYPE);
-		$data['pernah_dicetak'] = $this->orderletter_m->get_pernah_dicetak($ORDER_ID, $ORDL_TYPE)->row();
+		$ORDL_TYPE 	= 1;
+		$ORDL_DOC 	= 1;
+		$data['check'] 			= $this->orderletter_m->check($ORDER_ID, $ORDL_TYPE, $ORDL_DOC);
+		$data['pernah_dicetak'] = $this->orderletter_m->get_pernah_dicetak($ORDER_ID, $ORDL_TYPE, $ORDL_DOC)->row();
 		$data['row'] 			= $this->orderletter_m->get()->row();
 		$data['courier_data'] 	= $this->ordervendor_m->get_by_vendor($ORDER_ID)->result();
     	$this->template->load('template', 'letter/quotation', $data);
     }
 
     public function invoice($ORDER_ID) {
-    	$ORDL_TYPE = 2;
-    	$data['check'] 			= $this->orderletter_m->check($ORDER_ID, $ORDL_TYPE);
-		$data['pernah_dicetak'] = $this->orderletter_m->get_pernah_dicetak($ORDER_ID, $ORDL_TYPE)->row();
+    	$ORDL_TYPE 	= 2;
+    	$ORDL_DOC 	= 1;
+    	$data['check'] 			= $this->orderletter_m->check($ORDER_ID, $ORDL_TYPE, $ORDL_DOC);
+		$data['pernah_dicetak'] = $this->orderletter_m->get_pernah_dicetak($ORDER_ID, $ORDL_TYPE, $ORDL_DOC)->row();
 		$data['row'] 			= $this->orderletter_m->get()->row();
 		$data['courier_data'] 	= $this->ordervendor_m->get_by_vendor($ORDER_ID)->result();
     	$this->template->load('template', 'letter/invoice', $data);
     }
 
     public function receipt($ORDER_ID) {
-    	$ORDL_TYPE = 3;
-    	$data['check'] 			= $this->orderletter_m->check($ORDER_ID, $ORDL_TYPE);
-		$data['pernah_dicetak'] = $this->orderletter_m->get_pernah_dicetak($ORDER_ID, $ORDL_TYPE)->row();
+    	$ORDL_TYPE 	= 3;
+    	$ORDL_DOC 	= 1;
+    	$data['check'] 			= $this->orderletter_m->check($ORDER_ID, $ORDL_TYPE, $ORDL_DOC);
+		$data['pernah_dicetak'] = $this->orderletter_m->get_pernah_dicetak($ORDER_ID, $ORDL_TYPE, $ORDL_DOC)->row();
 		$data['row'] 			= $this->orderletter_m->get()->row();
+		$data['order'] 			= $this->order_m->get($ORDER_ID)->row();
 		$data['courier_data'] 	= $this->ordervendor_m->get_by_vendor($ORDER_ID)->result();
     	$this->template->load('template', 'letter/receipt', $data);
     }

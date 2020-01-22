@@ -39,8 +39,9 @@ class Order_support extends CI_Controller {
 	}
 
 	public function orderjson() {
+		$STATUS_FILTER = $this->input->post('STATUS_FILTER', TRUE);
 		$url 	   = $this->config->base_url();
-		$list      = $this->order_m->get_datatables();
+		$list      = $this->order_m->get_datatables($STATUS_FILTER);
 		$data = array();
 		$no = $_POST['start'];
 		foreach ($list as $field) {
@@ -84,8 +85,8 @@ class Order_support extends CI_Controller {
 
 		$output = array(
 			"draw" => $_POST['draw'],
-			"recordsTotal" => $this->order_m->count_all(),
-			"recordsFiltered" => $this->order_m->count_filtered(),
+			"recordsTotal" => $this->order_m->count_all($STATUS_FILTER),
+			"recordsFiltered" => $this->order_m->count_filtered($STATUS_FILTER),
 			"data" => $data,
 		);
 		//output dalam format JSON
@@ -133,6 +134,19 @@ class Order_support extends CI_Controller {
 		} else {
 			echo "<script>alert('Data gagal diubah.')</script>";
 			echo "<script>window.location='".site_url('order_support/detail/'.$ORDER_ID)."'</script>";
+		}
+	}
+
+	public function label_order($ORDER_ID, $VEND_ID) {
+		$query = $this->order_m->get($ORDER_ID);
+    	if ($query->num_rows() > 0) {
+			$data['row'] 		= $query->row();
+			$data['detail'] 	= $this->orderdetail_m->get_detail_vendor($ORDER_ID, $VEND_ID)->result();
+			$data['get_vendor'] = $this->ordervendor_m->get_by_vendor($ORDER_ID, $VEND_ID)->row();
+			$this->load->view('order-support/label_print', $data);
+		} else {
+			echo "<script>alert('Data tidak ditemukan.')</script>";
+			echo "<script>window.location='".site_url('order_support')."'</script>";
 		}
 	}
 }

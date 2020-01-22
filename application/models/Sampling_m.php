@@ -41,6 +41,7 @@ class Sampling_m extends CI_Model {
 		if ($STATUS_FILTER != null) { // filter by status
 			if ($STATUS_FILTER == 1) { // filter status requested
 				$this->db->where('tb_log_sample.LSAM_PAYDATE', null);
+				$this->db->where('tb_log_sample.LSAM_DELDATE', null);
 			} elseif ($STATUS_FILTER == 2) { // filter status paid
 				$this->db->where('tb_log_sample.LSAM_PAYDATE is NOT NULL', null, false);
 				$this->db->where('tb_log_sample.LSAM_DELDATE', null);
@@ -50,6 +51,8 @@ class Sampling_m extends CI_Model {
 		} 
 		if ($this->uri->segment(1) == "pm") {
 			$this->db->where('tb_log_sample.LSAM_PAYDATE is NOT NULL', NULL, FALSE);
+			$this->db->or_where('tb_log_sample.LSAM_COST', 0);
+			$this->db->where('tb_log_sample.LSAM_DEPOSIT', null);
 		}
 		if ($SEGMENT != null) {
 			if ($SEGMENT == "sampling_unpaid") {
@@ -222,6 +225,14 @@ class Sampling_m extends CI_Model {
 		return $query;
 	}
 
+	public function get_user_id($CUST_ID) {
+        $this->db->select('USER_ID');
+        $this->db->from('tb_customer');
+        $this->db->where('CUST_ID', $CUST_ID);
+        $query = $this->db->get();
+        return $query;
+    }
+
 	public function insert() {
 		date_default_timezone_set('Asia/Jakarta');
 		$date 		= date('Y-m-d', strtotime($this->input->post('LSAM_DATE', TRUE)));
@@ -239,9 +250,9 @@ class Sampling_m extends CI_Model {
 			$id_log 	= $this->db->insert_id();			
 			$params['LSAM_DATE']		= $date.' '.$time;
 			$params['LSAM_NOTES']		= str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$this->input->post('LSAM_NOTES', TRUE));
-			$params['LSAM_COST']		= $this->input->post('LSAM_COST', TRUE);
+			$params['LSAM_COST']		= str_replace(".", "", $this->input->post('LSAM_COST', TRUE));
 			if (!empty($this->input->post('LSAM_DEPOSIT', TRUE))) {
-				$params['LSAM_DEPOSIT'] = $this->input->post('LSAM_DEPOSIT', TRUE);
+				$params['LSAM_DEPOSIT'] = str_replace(".", "", $this->input->post('LSAM_DEPOSIT', TRUE));
 			}
 			if (!empty($this->input->post('LSAM_PAYDATE', TRUE))) {
 				$params['LSAM_PAYDATE'] = date('Y-m-d', strtotime($this->input->post('LSAM_PAYDATE', TRUE)));
@@ -257,8 +268,8 @@ class Sampling_m extends CI_Model {
 
 			if (!empty($this->input->post('LSAM_DEPOSIT', TRUE))) {
 				$CUSTOMER = $this->input->post('CUST_ID', TRUE);
-				$COST     = $this->input->post('LSAM_COST', TRUE);
-				$DEPOSIT  = $this->input->post('LSAM_DEPOSIT', TRUE);
+				$COST     = str_replace(".", "", $this->input->post('LSAM_COST', TRUE));
+				$DEPOSIT  = str_replace(".", "", $this->input->post('LSAM_DEPOSIT', TRUE));
 				// check customer deposit yang masih open
 				$this->load->model('custdeposit_m');
 				$check = $this->custdeposit_m->check_deposit($CUSTOMER);
@@ -272,12 +283,14 @@ class Sampling_m extends CI_Model {
 
 				// insert tb_customer_deposit jika deposit > cost
 				if($DEPOSIT > $COST) {
+					$get_user 	  = $this->get_user_id($CUSTOMER)->row();
+	        		$USER_ID 	  = $get_user->USER_ID;
 					$SISA_DEPOSIT = $DEPOSIT - $COST;
 					$deposit_baru['CUSTD_DATE'] 		  = date('Y-m-d H:i:s');
 					$deposit_baru['CUSTD_DEPOSIT'] 		  = $SISA_DEPOSIT;
 					$deposit_baru['CUSTD_DEPOSIT_STATUS'] = 0;
 					$deposit_baru['CUST_ID'] 			  = $CUSTOMER;
-					$deposit_baru['USER_ID'] 			  = $this->session->USER_SESSION;
+					$deposit_baru['USER_ID'] 			  = $USER_ID;
 					$this->db->insert('tb_customer_deposit', $this->db->escape_str($deposit_baru));
 				}
 			}
@@ -294,9 +307,9 @@ class Sampling_m extends CI_Model {
 
 		$NOTES = $this->input->post('LSAM_NOTES', TRUE);
 		$params['LSAM_NOTES']   = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$NOTES);
-		$params['LSAM_COST']		= $this->input->post('LSAM_COST', TRUE);
+		$params['LSAM_COST']	= str_replace(".", "", $this->input->post('LSAM_COST', TRUE));
 		if (!empty($this->input->post('LSAM_DEPOSIT', TRUE))) {
-			$params['LSAM_DEPOSIT'] = $this->input->post('LSAM_DEPOSIT', TRUE);
+			$params['LSAM_DEPOSIT'] = str_replace(".", "", $this->input->post('LSAM_DEPOSIT', TRUE));
 		}
 		$params['LSAM_PAYDATE'] = date('Y-m-d', strtotime($this->input->post('LSAM_PAYDATE', TRUE)));
 		$params['COURIER_ID']		 = $this->input->post('COURIER_ID', TRUE);
@@ -308,8 +321,8 @@ class Sampling_m extends CI_Model {
 
 		if (!empty($this->input->post('LSAM_DEPOSIT', TRUE))) {
 			$CUSTOMER = $this->input->post('CUST_ID', TRUE);
-			$COST     = $this->input->post('LSAM_COST', TRUE);
-			$DEPOSIT  = $this->input->post('LSAM_DEPOSIT', TRUE);
+			$COST     = str_replace(".", "", $this->input->post('LSAM_COST', TRUE));
+			$DEPOSIT  = str_replace(".", "", $this->input->post('LSAM_DEPOSIT', TRUE));
 			// check customer deposit yang masih open
 			$this->load->model('custdeposit_m');
 			$check = $this->custdeposit_m->check_deposit($CUSTOMER);
@@ -323,12 +336,14 @@ class Sampling_m extends CI_Model {
 
 			// insert tb_customer_deposit jika deposit > cost
 			if($DEPOSIT > $COST) {
+				$get_user 	  = $this->get_user_id($CUSTOMER)->row();
+	        	$USER_ID 	  = $get_user->USER_ID;
 				$SISA_DEPOSIT = $DEPOSIT - $COST;
 				$deposit_baru['CUSTD_DATE'] 		  = date('Y-m-d H:i:s');
 				$deposit_baru['CUSTD_DEPOSIT'] 		  = $SISA_DEPOSIT;
 				$deposit_baru['CUSTD_DEPOSIT_STATUS'] = 0;
 				$deposit_baru['CUST_ID'] 			  = $CUSTOMER;
-				$deposit_baru['USER_ID'] 			  = $this->session->USER_SESSION;
+				$deposit_baru['USER_ID'] 			  = $USER_ID;
 				$this->db->insert('tb_customer_deposit', $this->db->escape_str($deposit_baru));
 			}
 		}

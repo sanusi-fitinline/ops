@@ -24,11 +24,12 @@ class Vendor_deposit extends CI_Controller {
     }
 
     public function depositjson() {
+		$STATUS  	 = $this->input->post('STATUS', TRUE);	
 		$VENDD_DATE  = $this->input->post('VENDD_DATE', TRUE);	
-    	$ORDER_ID = $this->input->post('ORDER_ID', TRUE);	
+    	$ORDER_ID 	 = $this->input->post('ORDER_ID', TRUE);	
 		$VEND_NAME   = $this->input->post('VEND_NAME', TRUE);
 		$url 	= $this->config->base_url();
-		$list   = $this->venddeposit_m->get_datatables($VENDD_DATE, $ORDER_ID, $VEND_NAME);
+		$list   = $this->venddeposit_m->get_datatables($STATUS, $VENDD_DATE, $ORDER_ID, $VEND_NAME);
 		$data = array();
 		$no = $_POST['start'];
 		foreach ($list as $field) {
@@ -79,8 +80,8 @@ class Vendor_deposit extends CI_Controller {
 
 		$output = array(
 			"draw" => $_POST['draw'],
-			"recordsTotal" => $this->venddeposit_m->count_all($VENDD_DATE, $ORDER_ID, $VEND_NAME),
-			"recordsFiltered" => $this->venddeposit_m->count_filtered($VENDD_DATE, $ORDER_ID, $VEND_NAME),
+			"recordsTotal" => $this->venddeposit_m->count_all($STATUS, $VENDD_DATE, $ORDER_ID, $VEND_NAME),
+			"recordsFiltered" => $this->venddeposit_m->count_filtered($STATUS, $VENDD_DATE, $ORDER_ID, $VEND_NAME),
 			"data" => $data,
 		);
 		//output dalam format JSON

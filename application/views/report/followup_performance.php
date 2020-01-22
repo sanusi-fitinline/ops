@@ -20,33 +20,22 @@
 		      		<div class="row">
 						<div class="col-md-2 offset-md-3">			
 							<div class="form-group">
-								<input class="form-control datepicker" type="text" name="FROM" id="FROM" placeholder="From" autocomplete="off">
+								<input class="form-control form-control-sm datepicker" type="text" name="FROM" id="FROM" placeholder="From" autocomplete="off">
 							</div>
 						</div>
 						<div class="col-md-2">			
 							<div class="form-group">
-								<input class="form-control datepicker" type="text" name="TO" id="TO" placeholder="To" autocomplete="off">
+								<input class="form-control form-control-sm datepicker" type="text" name="TO" id="TO" placeholder="To" autocomplete="off">
 							</div>
 						</div>
 						<div class="col-md-3">			
 							<div class="form-group" align="right">
-								<button class="btn btn-sm btn-default" style="margin-top: 3px; border: 2px solid #17a2b8;" id="cari"><i class="fa fa-search"></i> Search</button>
-								<a class="btn btn-sm btn-default" style="margin-top: 3px; border: 2px solid #dc3545;" href="<?php echo site_url('report/followup_performance') ?>"><i class="fa fa-redo"></i> Reset</a>
+								<button class="btn btn-sm btn-default" style="border: 2px solid #17a2b8;" id="cari"><i class="fa fa-search"></i> Search</button>
+								<a class="btn btn-sm btn-default" style="border: 2px solid #dc3545;" href="<?php echo site_url('report/followup_performance') ?>"><i class="fa fa-redo"></i> Reset</a>
 							</div>
 						</div>
 					</div>
 					<br>
-		      		<?php
-			      		foreach($followup_closed as $closed){
-					        $jumlah_closed = (int) $closed->total;
-			      		}
-			      		foreach($followup_inprogress as $inprogress){
-					        $jumlah_inprogress = (int) $inprogress->total;
-			      		}
-			      		foreach($followup_order as $order){
-					        $jumlah_order = (int) $order->total;
-			      		}
-					?>
 		      		<div class="row">
 		      			<div class="col-md-10 offset-md-1">
 							<canvas id="myChart" style="position: relative; height: 60vh; width: 60vw;margin: 0px auto;"></canvas>
@@ -69,7 +58,7 @@
 			labels: ['Closed', 'In Progress', 'Order'],
 			datasets: [{
 				label: [''],
-				data: [<?php echo json_encode($jumlah_closed) ?>, <?php echo json_encode($jumlah_inprogress) ?>, <?php echo json_encode($jumlah_order) ?>],
+				data: ['', '', ''],
 				datalabels: {
 					align: 'center',
 					anchor: 'center'
@@ -140,19 +129,27 @@
 	        	if(e && e.overrideMimeType) {
 	            	e.overrideMimeType("application/json;charset=UTF-8");
 	          	}
-	          	$('#myChart').hide();
 	        },
 	        success: function(response){
-	        	$('#myChart').show();
 	        	if ((FROM_VALUE != null && TO_VALUE != null)) {
 					chart.data.datasets[0].data[0] = response.list_jumlah_closed;
 					chart.data.datasets[0].data[1] = response.list_jumlah_inprogress;
 					chart.data.datasets[0].data[2] = response.list_jumlah_order;
 				}
-    			chart.update();
+    			chart.update({
+				    duration: 600,
+				    easing: 'easeInQuad'
+				});
 	        },
 	        error: function (xhr, ajaxOptions, thrownError) {
 	          	alert('Data tidak ditemukan.');
+	          	chart.data.datasets[0].data[0] = [''];
+				chart.data.datasets[0].data[1] = [''];
+				chart.data.datasets[0].data[2] = [''];
+	          	chart.update({
+				    duration: 600,
+				    easing: 'easeInQuad'
+				});
 	        }
 	    });
     });

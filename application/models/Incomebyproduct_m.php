@@ -8,7 +8,8 @@ class Incomebyproduct_m extends CI_Model {
         $this->db->from('tb_order_detail');
         $this->db->join('tb_order', 'tb_order.ORDER_ID=tb_order_detail.ORDER_ID', 'left');
         $this->db->join('tb_product', 'tb_product.PRO_ID=tb_order_detail.PRO_ID', 'left');
-        $this->db->where('tb_order.ORDER_STATUS', 4);
+        $this->db->where('tb_order.ORDER_STATUS >=', 2);    
+        $this->db->where('tb_order.ORDER_STATUS <=', 4);
         // filter by date           
         $this->db->where('tb_order.ORDER_DATE >=', date('Y-m-d', strtotime($FROM)));
         $this->db->where('tb_order.ORDER_DATE <=', date('Y-m-d', strtotime('+1 days', strtotime($TO))));
@@ -26,7 +27,8 @@ class Incomebyproduct_m extends CI_Model {
         $this->db->from('tb_order_detail');
         $this->db->join('tb_order', 'tb_order.ORDER_ID=tb_order_detail.ORDER_ID', 'left');
         $this->db->join('tb_product', 'tb_product.PRO_ID=tb_order_detail.PRO_ID', 'left');
-        $this->db->where('tb_order.ORDER_STATUS', 4);
+        $this->db->where('tb_order.ORDER_STATUS >=', 2);    
+        $this->db->where('tb_order.ORDER_STATUS <=', 4);
         // filter by date           
         $this->db->where('tb_order.ORDER_DATE >=', date('Y-m-d', strtotime($FROM)));
         $this->db->where('tb_order.ORDER_DATE <=', date('Y-m-d', strtotime('+1 days', strtotime($TO))));

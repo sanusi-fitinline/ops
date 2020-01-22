@@ -60,7 +60,7 @@
 	    	<a href="<?php echo site_url('dashboard') ?>">Dashboard</a>
 	  	</li>
 	  	<li class="breadcrumb-item">
-	    	<a href="<?php echo site_url('order') ?>">Order</a>
+	    	<a href="<?php echo site_url('cs/sampling') ?>">Sampling</a>
 	  	</li>
 	  	<li class="breadcrumb-item active">Print Invoice</li>
 	</ol>
@@ -80,7 +80,7 @@
 									<div class="col-md-3">
 										<div class="form-group">
 											<input type="hidden" name="ORDL_TYPE" value="2">
-											<input type="hidden" name="ORDL_DOC" value="1">
+											<input type="hidden" name="ORDL_DOC" value="2">
 											<input type="hidden" name="ORDL_NO" value="<?php echo $no_urut ?>">
 											<input type="hidden" name="ORDL_LNO" value="<?php echo $format_nomor ?>">
 											<label>Date</label>
@@ -95,9 +95,8 @@
 									<div class="col-md-9">
 										<div class="form-group">
 											<label>Note</label>
-											<textarea class="form-control" cols="100%" rows="7" name="ORDL_NOTES">1. Proses order max 2 hari setelah pembayaran dilakukan.&#13;&#10;2. Info Pengiriman :&#13;&#10;<?php foreach ($courier_data as $key) {
-												echo "-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Pengiriman dari ".$key->CITY_NAME.", menggunakan ".$key->COURIER_NAME." ".$key->ORDV_SERVICE_TYPE." estimasi ".$key->ORDV_ETD.".&#13;&#10;";
-											} ?>3. Transaksi tanpa Pajak. Pembayaran dalam dapat ditransfer melalui Bank BCA: 8020169363 atau Bank Mandiri: 1240004177276 atas nama Istofani Api Diany.</textarea>
+											<textarea class="form-control" cols="100%" rows="7" name="ORDL_NOTES">1. Pengiriman dari <?php 
+												echo $sampling->ORIGIN_CITY_NAME.", menggunakan ".$sampling->COURIER_NAME." ".$sampling->LSAM_SERVICE_TYPE.".&#13;&#10;";?>2. Transaksi tanpa Pajak. Pembayaran dalam dapat ditransfer melalui Bank BCA: 8020169363 atau Bank Mandiri: 1240004177276 atas nama Istofani Api Diany.</textarea>
 										</div>
 										<div align="center">
 											<button type="submit" class="btn btn-info"><i class="fa fa-print"></i> Print</button>

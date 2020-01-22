@@ -55,10 +55,8 @@
 		$CNTR = $row->CNTR_NAME.'.';
 	} else {$CNTR = '';}
 
-	$nama_cetak = str_replace("/", "-", $letter->ORDL_LNO);
-
-	$pdf = new Pdf('P', 'mm', 'A4', true, 'UTF-8', false);
-    $pdf->SetTitle('Quotation');
+	$pdf = new Pdf(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+    $pdf->SetTitle('Quotation '.$letter->ORDL_LNO);
     $pdf->SetTopMargin(20);
     $pdf->setFooterMargin(20);
 
@@ -69,7 +67,7 @@
     $pdf->SetAutoPageBreak(true, PDF_MARGIN_BOTTOM);
     $pdf->SetAuthor('Author');
     $pdf->SetDisplayMode('real', 'default');
-    $pdf->AddPage();
+    $pdf->AddPage('P', 'A4');
     $i=0;
     $html= '<br><h3 align="center">QUOTATION</h4>
 	    <table cellpadding="1" style="font-size: 10px">
@@ -97,6 +95,11 @@
 	    		<td>Telepon</td>
 	    		<td>:</td>
 	    		<td>'.$row->CUST_PHONE.'</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Dokumen</td>
+	    		<td>:</td>
+	    		<td>Order</td>
 	    	</tr>
 	    </table>';
 	$html.= '<br><br><table border="1" cellpadding="5" bgcolor="#666666" style="font-size: 10px">
@@ -147,7 +150,7 @@
 				</td>
 			</tr>';
     $html.='</table>';
-    $html.='<p style="font-size: 10px">Terbilang: <em>'.terbilang($row->ORDER_GRAND_TOTAL).'</em></p>';
+    $html.='<p style="font-size: 10px">Terbilang: <em>'.terbilang($row->ORDER_GRAND_TOTAL).' Rupiah</em></p>';
     if($letter->ORDL_NOTES != null){
     	$html.= '<table cellpadding="1" style="font-size: 10px">
 				<tr bgcolor="#ffffff">
@@ -168,5 +171,5 @@
 		<p style="font-size: 10px">(Istofani)</p>
 		<p style="font-size: 10px">Fitinline.com</p>';
     $pdf->writeHTML($html, true, false, true, false, '');
-    $pdf->Output('"'.$nama_cetak.'".pdf', 'I');
+    $pdf->Output('quotation_'.str_replace("/", "-", $letter->ORDL_LNO).'.pdf', 'I');
 ?>

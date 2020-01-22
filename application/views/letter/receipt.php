@@ -80,6 +80,7 @@
 									<div class="col-md-3">
 										<div class="form-group">
 											<input type="hidden" name="ORDL_TYPE" value="3">
+											<input type="hidden" name="ORDL_DOC" value="1">
 											<input type="hidden" name="ORDL_NO" value="<?php echo $no_urut ?>">
 											<input type="hidden" name="ORDL_LNO" value="<?php echo $format_nomor ?>">
 											<label>Date</label>
@@ -95,8 +96,8 @@
 										<div class="form-group">
 											<label>Note</label>
 											<textarea class="form-control" cols="100%" rows="7" name="ORDL_NOTES">1. Proses order max 2 hari setelah pembayaran dilakukan.&#13;&#10;2. Info Pengiriman :&#13;&#10;<?php foreach ($courier_data as $key) {
-												echo $kurir ="-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Pengiriman dari ".$key->CITY_NAME.", menggunakan ".$key->COURIER_NAME." ".$key->ORDV_SERVICE_TYPE." estimasi ".$key->ORDV_ETD.".&#13;&#10;";
-											} ?>3. Transaksi tanpa Pajak. Pembayaran dalam dapat ditransfer melalui Bank BCA: 8020169363 atau Bank Mandiri: 1240004177276 atas nama Istofani Api Diany.</textarea>
+												echo "-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Pengiriman dari ".$key->CITY_NAME.", menggunakan ".$key->COURIER_NAME." ".$key->ORDV_SERVICE_TYPE." estimasi ".$key->ORDV_ETD.".&#13;&#10;";
+											} ?>3. Telah diterima pembayaran melalui <?php echo $order->BANK_NAME." pada ".date('d-m-Y', strtotime($order->ORDER_PAYMENT_DATE))." sebesar Rp. ".number_format($order->ORDER_GRAND_TOTAL,0,',','.').",-"?></textarea>
 										</div>
 										<div align="center">
 											<button type="submit" class="btn btn-info"><i class="fa fa-print"></i> Print</button>

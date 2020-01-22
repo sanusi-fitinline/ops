@@ -22,9 +22,11 @@ class Cs extends CI_Controller {
 		$this->load->model('clog_m');
 		$this->load->model('followup_m');
 		$this->load->model('custdeposit_m');
+		$this->load->model('orderletter_m');
 		check_not_login();
 		$this->load->library('form_validation');
 		$this->load->library('rajaongkir');
+		$this->load->library('pdf');
 	}
 
 	public function index() {
@@ -96,7 +98,7 @@ class Cs extends CI_Controller {
 			if ($field->LSAM_DELDATE!=null) {
 				$STATUS = "<div class='btn btn-info btn-sm' style='font-size: 12px; border-radius: 6px; padding: 2px 5px 5px 3px; width:80px;'><i class='fa fa-check-circle'></i><span><b> Delivered</b></span></div>";
 			} else {
-				if ($field->LSAM_PAYDATE!=null) {
+				if ($field->LSAM_PAYDATE!=null || ($field->LSAM_COST==0 && $field->LSAM_DEPOSIT == null)) {
 				 	$STATUS = "<div class='btn btn-warning btn-sm' style='font-size: 12px; color: #fff; background-color:#20c997; border-color:#20c997; border-radius: 6px; padding: 2px 5px 5px 3px; width:80px;'><i class='fa fa-minus-circle'></i><span><b> Paid</b></span></div>";
 				} else {
 					$STATUS = "<div class='btn btn-default btn-sm' style='font-size: 12px; color: #fff; background-color:#8e9397; border-color:#8e9397; border-radius: 6px; padding: 2px 5px 5px 3px; width:80px;'><b>Requested</b></div>";
@@ -250,101 +252,114 @@ class Cs extends CI_Controller {
 		$origin 	  = $this->city_m->getAreaCity($CITY_ID)->row();
 		$apinol  	  = $this->coutariff_m->getTariff2($COURIER_ID, $origin->CNTR_ID, $origin->STATE_ID, $origin->CITY_ID, 0, $cust->CNTR_ID, $cust->STATE_ID, $cust->CITY_ID, $cust->SUBD_ID)->result();
 		$key = $this->courier_m->getCourier($COURIER_ID)->row();
-	    if($key->COURIER_API == 1){
-			$lists = "<option value='' selected disabled>--- Select one ---</option>";
-	    	if($cust->SUBD_ID!=0){
-	    		$dataCost = $this->rajaongkir->cost($origin->RO_CITY_ID, $cust->SUBD_ID, 1000, strtolower($key->COURIER_NAME), 'subdistrict');
-	    	} else{
-	    		$dataCost = $this->rajaongkir->cost($origin->RO_CITY_ID, $cust->RO_CITY_ID, 1000, strtolower($key->COURIER_NAME), 'city');
-	    	}
-			$detailCost = json_decode($dataCost, true);
-			$status = $detailCost['rajaongkir']['status']['code'];
-			if ($status == 200) {
-				for ($i=0; $i < count($detailCost['rajaongkir']['results']); $i++) {
-					for ($j=0; $j < count($detailCost['rajaongkir']['results'][$i]['costs']); $j++) {
-						$service = $detailCost['rajaongkir']['results'][$i]['costs'][$j]['service'];
-						$tarif = $detailCost['rajaongkir']['results'][$i]['costs'][$j]['cost'][0]['value'];
-						$etd = $detailCost['rajaongkir']['results'][$i]['costs'][$j]['cost'][0]['etd'];
-						$lists .= "<option value='$tarif,$service'>$service</option>";
+		if($cust->CITY_ID!=0){
+		    if($key->COURIER_API == 1){
+				$lists = "<option value='' selected disabled>--- Select one ---</option>";
+		    	if($cust->SUBD_ID!=0){
+		    		$dataCost = $this->rajaongkir->cost($origin->RO_CITY_ID, $cust->SUBD_ID, 1000, strtolower($key->COURIER_NAME), 'subdistrict');
+		    	} else{
+		    		$dataCost = $this->rajaongkir->cost($origin->RO_CITY_ID, $cust->RO_CITY_ID, 1000, strtolower($key->COURIER_NAME), 'city');
+		    	}
+				$detailCost = json_decode($dataCost, true);
+				$status = $detailCost['rajaongkir']['status']['code'];
+				if ($status == 200) {
+					for ($i=0; $i < count($detailCost['rajaongkir']['results']); $i++) {
+						for ($j=0; $j < count($detailCost['rajaongkir']['results'][$i]['costs']); $j++) {
+							$service = $detailCost['rajaongkir']['results'][$i]['costs'][$j]['service'];
+							$tarif = $detailCost['rajaongkir']['results'][$i]['costs'][$j]['cost'][0]['value'];
+							$etd = $detailCost['rajaongkir']['results'][$i]['costs'][$j]['cost'][0]['etd'];
+							$lists .= "<option value='$tarif,$service'>$service</option>";
+						}
 					}
 				}
+				$callback = array('list_courier'=>$lists);
 			}
-			$callback = array('list_courier'=>$lists);
-		}
-		else{
-			$lists = "";
-			$deposit = "";
-			$total = "";
-			if(!$apinol){
-					$lists .= "<p style='font-size:14px;color:red;'><small>* </small>Tarif tidak ditemukan, ganti kurir lain.</p>";
-			} else{
-				foreach($apinol as $k) {
-			    	if($k->RULE_ID == 1) {
-						if ($WEIGHT <= $k->COUTAR_MIN_KG) {
-							$tarif = ($k->COUTAR_MIN_KG * $k->COUTAR_KG_FIRST) + $k->COUTAR_ADMIN_FEE;
-						} else if ($WEIGHT > $k->COUTAR_MIN_KG) {
-							$tarif = ($WEIGHT * $k->COUTAR_KG_FIRST) + $k->COUTAR_ADMIN_FEE;
+			else{
+				$lists = "";
+				$deposit = "";
+				$total = "";
+				if(!$apinol){
+						$lists .= "<p style='font-size:14px;color:red;'><small>* </small>Tarif tidak ditemukan, ganti kurir lain.</p>";
+				} else{
+					foreach($apinol as $k) {
+				    	if($k->RULE_ID == 1) {
+							if (round($WEIGHT) <= $k->COUTAR_MIN_KG) {
+								$tarif = ($k->COUTAR_MIN_KG * $k->COUTAR_KG_FIRST) + $k->COUTAR_ADMIN_FEE;
+							} else if (round($WEIGHT) > $k->COUTAR_MIN_KG) {
+								$tarif = (round($WEIGHT) * $k->COUTAR_KG_FIRST) + $k->COUTAR_ADMIN_FEE;
+							}
+						}else if($k->RULE_ID == 2){
+							if (round($WEIGHT) <= $k->COUTAR_MIN_KG) {
+								$tarif = ($k->COUTAR_KG_FIRST + $k->COUTAR_ADMIN_FEE);
+							} else if (round($WEIGHT) > $k->COUTAR_MIN_KG) {
+								$tarif = (((round($WEIGHT) - $k->COUTAR_MIN_KG) * $k->COUTAR_KG_NEXT) + $k->COUTAR_KG_FIRST) + $k->COUTAR_ADMIN_FEE;
+							}
 						}
-					}else if($k->RULE_ID == 2){
-						if ($WEIGHT <= $k->COUTAR_MIN_KG) {
-							$tarif = ($k->COUTAR_KG_FIRST + $k->COUTAR_ADMIN_FEE);
-						} else if ($WEIGHT > $k->COUTAR_MIN_KG) {
-							$tarif = ((($WEIGHT - $k->COUTAR_MIN_KG) * $k->COUTAR_KG_NEXT) + $k->COUTAR_KG_FIRST) + $k->COUTAR_ADMIN_FEE;
-						}
-					}
-					$etd = $k->COUTAR_ETD;
-					
-					$lists .= "
-					<label>Cost</label>
-					<div class='input-group'>
-						<div class='input-group-prepend'>
-				          	<span class='input-group-text'>Rp.</span>
-				        </div>
-						<input class='form-control' type='text' name='' id='COST_VALUE' value='".number_format($tarif,0,',','.')."' readonly>
-				    </div>
-					<input class='form-control' type='hidden' name='COURIER' value='$COURIER_NAME'>
-					<input class='form-control' type='hidden' name='LSAM_COST' value='$tarif'>
-					<input class='form-control' type='hidden' name='LSAM_SERVICE_TYPE' value=''>";
-
-					$check   = $this->custdeposit_m->check_deposit($CUST_ID);
-					if($check->num_rows() > 0) {
-						$field = $this->custdeposit_m->get_deposit($CUST_ID)->row();
-						$deposit .= "
-							<div class='custom-control custom-checkbox'>
-						     	<input type='checkbox' class='custom-control-input' id='pilih-deposit' name='pilih-deposit'>
-						     	<label class='custom-control-label' for='pilih-deposit'>Deposit</label>
-						    </div>
-							<div class='input-group'>
-								<div class='input-group-prepend'>
-						          	<span class='input-group-text'>Rp.</span>
-						        </div>
-								<input class='form-control' type='text' id='DEPOSIT_VALUE' value='".number_format($field->CUSTD_DEPOSIT,0,',','.')."' readonly>
-						    </div>";
-					} else {
-						$deposit .= "
-							<div class='custom-control custom-checkbox'>
-						     	<input type='checkbox' class='custom-control-input' id='pilih-deposit' name='pilih-deposit' disabled>
-						     	<label class='custom-control-label' for='pilih-deposit'>Deposit</label>
-						    </div>
-							<div class='input-group'>
-								<div class='input-group-prepend'>
-						          	<span class='input-group-text'>Rp.</span>
-						        </div>
-								<input class='form-control' type='text' name='' value='0' readonly>
-						    </div>";
-					}
-					$total .= "
-						<label>Total</label>
+						$etd = $k->COUTAR_ETD;
+						
+						$lists .= "
+						<div class='row'>
+							<div class='col-md-6'>
+								<label>Cost</label>
+							</div>
+							<div class='col-md-6'>
+								<div class='custom-control custom-checkbox'>
+							     	<input type='checkbox' class='custom-control-input' id='pilih-cod' name='pilih-cod'>
+							     	<label class='custom-control-label' for='pilih-cod'>COD</label>
+							    </div>
+							</div>
+						</div>
 						<div class='input-group'>
 							<div class='input-group-prepend'>
 					          	<span class='input-group-text'>Rp.</span>
 					        </div>
-							<input class='form-control' type='text' name='' id='CETAK_TOTAL' value='".number_format($tarif,0,',','.')."' readonly>";
+							<input class='form-control' type='text' name='LSAM_COST' id='LSAM_COST' value='".number_format($tarif,0,',','.')."' autocomplete='off'>
+					    </div>
+						<input class='form-control' type='hidden' name='COURIER' value='$COURIER_NAME'>
+						<input class='form-control' type='hidden' name='SERVICE' value=''>";
+
+						$check   = $this->custdeposit_m->check_deposit($CUST_ID);
+						if($check->num_rows() > 0) {
+							$field = $this->custdeposit_m->get_deposit($CUST_ID)->row();
+							$deposit .= "
+								<div class='custom-control custom-checkbox'>
+							     	<input type='checkbox' class='custom-control-input' id='pilih-deposit' name='pilih-deposit'>
+							     	<label class='custom-control-label' for='pilih-deposit'>Deposit</label>
+							    </div>
+								<div class='input-group'>
+									<div class='input-group-prepend'>
+							          	<span class='input-group-text'>Rp.</span>
+							        </div>
+									<input class='form-control' type='text' id='DEPOSIT_VALUE' value='".number_format($field->CUSTD_DEPOSIT,0,',','.')."' readonly>
+							    </div>";
+						} else {
+							$deposit .= "
+								<div class='custom-control custom-checkbox'>
+							     	<input type='checkbox' class='custom-control-input' id='pilih-deposit' name='pilih-deposit' disabled>
+							     	<label class='custom-control-label' for='pilih-deposit'>Deposit</label>
+							    </div>
+								<div class='input-group'>
+									<div class='input-group-prepend'>
+							          	<span class='input-group-text'>Rp.</span>
+							        </div>
+									<input class='form-control' type='text' id='DEPOSIT_VALUE' name='' value='0' readonly>
+							    </div>";
+						}
+						$total .= "
+							<label>Total</label>
+							<div class='input-group'>
+								<div class='input-group-prepend'>
+						          	<span class='input-group-text'>Rp.</span>
+						        </div>
+								<input class='form-control' type='text' name='' id='CETAK_TOTAL' value='".number_format($tarif,0,',','.')."' readonly>";
+					}
 				}
+				$callback = array('list_courier'=>$lists, 'list_deposit'=>$deposit, 'list_total'=>$total);
 			}
-			$callback = array('list_courier'=>$lists, 'list_deposit'=>$deposit, 'list_total'=>$total);
+		    echo json_encode($callback);
+	    } else {
+			echo "Alamat customer belum lengkap.";
 		}
-	    echo json_encode($callback);
 	}
 
 	public function datatarif(){
@@ -355,16 +370,26 @@ class Cs extends CI_Controller {
 		$check   = $this->custdeposit_m->check_deposit($CUST_ID);
 		$lists = "";
 		$lists .= "
-			<label>Cost</label>
+			<div class='row'>
+				<div class='col-md-6'>
+					<label>Cost</label>
+				</div>
+				<div class='col-md-6'>
+					<div class='custom-control custom-checkbox'>
+				     	<input type='checkbox' class='custom-control-input' id='pilih-cod' name='pilih-cod'>
+				     	<label class='custom-control-label' for='pilih-cod'>COD</label>
+				    </div>
+				</div>
+			</div>
 			<div class='input-group'>
 				<div class='input-group-prepend'>
 		          	<span class='input-group-text'>Rp.</span>
 		        </div>
-				<input class='form-control' type='text' name='' id='COST_VALUE' value='".number_format($tarif,0,',','.')."' readonly>
+				<input class='form-control' type='text' name='LSAM_COST' id='LSAM_COST' value='".number_format($tarif,0,',','.')."' autocomplete='off'>
+				<input class='form-control' type='hidden' name='' id='HIDDEN_LSAM_COST' value='".number_format($tarif,0,',','.')."' readonly>
 		    </div>
 			<input class='form-control' type='hidden' name='COURIER' value='$courier'>
-			<input class='form-control' type='hidden' name='SERVICE' value='$service'>
-			<input class='form-control' type='hidden' name='LSAM_COST' value='$tarif'>";
+			<input class='form-control' type='hidden' name='SERVICE' value='$service'>";
 		if($check->num_rows() > 0) {
 			$field = $this->custdeposit_m->get_deposit($CUST_ID)->row();
 			$deposit = "
@@ -388,7 +413,7 @@ class Cs extends CI_Controller {
 					<div class='input-group-prepend'>
 			          	<span class='input-group-text'>Rp.</span>
 			        </div>
-					<input class='form-control' type='text' name='' value='0' readonly>
+					<input class='form-control' type='text' id='DEPOSIT_VALUE' name='' value='0' readonly>
 			    </div>";
 		}
 		$total = "
@@ -404,12 +429,12 @@ class Cs extends CI_Controller {
 	}
 
 	public function add($CUST_ID = null) {
-		$data['customer'] = $this->customer_m->get()->result();
-		$data['channel'] = $this->channel_m->getCha()->result();
+		$data['customer'] 	= $this->customer_m->get()->result();
+		$data['channel'] 	= $this->channel_m->getCha()->result();
 		$data['bank'] 		= $this->bank_m->getBank()->result();
-		$data['courier'] = $this->courier_m->getCourier()->result();
+		$data['courier'] 	= $this->courier_m->getCourier()->result();
 		if($CUST_ID != null) {
-			$data['row'] = $this->customer_m->get($CUST_ID)->row();
+			$data['row'] 	= $this->customer_m->get($CUST_ID)->row();
 			$this->template->load('template', 'sampling/cs/sampling_cs_add_by_status', $data);
 		} else {
 			$this->template->load('template', 'sampling/cs/sampling_cs_add', $data);
@@ -503,6 +528,26 @@ class Cs extends CI_Controller {
 		}
 	}
 
+	public function invoice_sampling($LSAM_ID) {
+		$ORDL_TYPE = 2;
+		$ORDL_DOC = 2;
+    	$data['check'] 			= $this->orderletter_m->check($LSAM_ID, $ORDL_TYPE, $ORDL_DOC);
+		$data['pernah_dicetak'] = $this->orderletter_m->get_pernah_dicetak($LSAM_ID, $ORDL_TYPE, $ORDL_DOC)->row();
+		$data['row'] 			= $this->orderletter_m->get()->row();
+		$data['sampling'] 		= $this->sampling_m->get($LSAM_ID)->row();
+    	$this->template->load('template', 'letter/invoice_sampling', $data);
+	}
+
+	public function receipt_sampling($LSAM_ID) {
+		$ORDL_TYPE = 3;
+		$ORDL_DOC = 2;
+    	$data['check'] 			= $this->orderletter_m->check($LSAM_ID, $ORDL_TYPE, $ORDL_DOC);
+		$data['pernah_dicetak'] = $this->orderletter_m->get_pernah_dicetak($LSAM_ID, $ORDL_TYPE, $ORDL_DOC)->row();
+		$data['row'] 			= $this->orderletter_m->get()->row();
+		$data['sampling'] 		= $this->sampling_m->get($LSAM_ID)->row();
+    	$this->template->load('template', 'letter/receipt_sampling', $data);
+	}
+
 	public function check_stock() {
 		$modul = "Check Stock CS";
 		$access =  $this->access_m->isAccess($this->session->GRP_SESSION, $modul)->row();
@@ -564,7 +609,7 @@ class Cs extends CI_Controller {
 			$row[] = stripslashes($field->CUST_NAME);
 			$row[] = $field->PRO_NAME;
 			$row[] = "<div align='center'>$field->LSTOCK_COLOR</div>";
-			$row[] = "<div align='center'>".$field->LSTOCK_AMOUNT." ".$field->UMEA_NAME."</div>";
+			$row[] = "<div align='center'>".str_replace(".", ",", $field->LSTOCK_AMOUNT)." ".$field->UMEA_NAME."</div>";
 			if((!$this->access_m->isDelete('Check Stock CS', 1)->row()) && ($this->session->GRP_SESSION !=3)){
 				if($field->LSTOCK_STATUS==null) {
 					$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="'.$url.'cs/edit_check/'.$field->LSTOCK_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>';
@@ -622,7 +667,7 @@ class Cs extends CI_Controller {
 			$row[] = stripslashes($field->CUST_NAME);
 			$row[] = $field->PRO_NAME;
 			$row[] = "<div align='center'>$field->LSTOCK_COLOR</div>";
-			$row[] = "<div align='center'>$field->LSTOCK_AMOUNT</div>";
+			$row[] = "<div align='center'>".str_replace(".", ",", $field->LSTOCK_AMOUNT)."</div>";
 			$row[] = "<div align='center'>$field->UMEA_NAME</div>";
 			$data[] = $row;
 		}
