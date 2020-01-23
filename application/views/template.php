@@ -22,59 +22,6 @@
 		<!-- Custom styles for this template-->
 		<link href="<?php echo base_url() ?>assets/css/sb-admin.css" rel="stylesheet">
 		<link href="<?php echo base_url() ?>assets/css/style.css" rel="stylesheet">
-		<style type="text/css">
-			/* BANNER PROMO MODAL */
-			.modal-promo-popup {
-				display: block;
-				position: fixed; 
-				z-index: 1; 
-				padding-top: 100px; 
-				left: 0;
-				top: 0;
-				width: 100%; 
-				height: 100%; 
-				overflow: auto; 
-				background-color: rgb(0,0,0); 
-				background-color: rgba(0,0,0,0.9); 
-			}
-			.modal-content.custom {
-    			margin: auto;
-    			display: block;
-    			width: 80%;
-    			max-width: 600px;
-    			border-radius: 0 !important;
-    		}
-    		.caption {
-    			margin: auto;
-    			display: block;
-    			width: 80%;
-    			max-width: 700px;
-    			text-align: center;
-    			color: #ccc;
-    			padding: 10px 0;
-    			height: 150px;
-    		}
-    		.modal-content.custom, .caption {  
-    			-webkit-animation-name: zoom;
-    			-webkit-animation-duration: 0.6s;
-    			animation-name: zoom;
-    			animation-duration: 0.6s;
-    		}
-    		@-webkit-keyframes zoom {
-    			from {-webkit-transform:scale(0)} 
-    			to {-webkit-transform:scale(1)}
-    		}
-    		@keyframes zoom {
-    			from {transform:scale(0)} 
-    			to {transform:scale(1)}
-    		}
-    		@media only screen and (max-width: 700px){
-    			.modal-content.custom {
-    				width: 90%;
-    			}
-    		}
-    		/* END BANNER PROMO MODAL */
-		</style>
 	</head>
 
 	<body id="page-top">
@@ -180,12 +127,12 @@
 		          		<span>Report</span>
 		        	</a>
 			        <div class="dropdown-menu" aria-labelledby="pagesDropdown">
-			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Report')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('report/sample_order') ?>">Sample to Order<hr style="margin: 0;"></a>
-			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Report')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('report/check_stock_order') ?>">Check Stock to Order<hr style="margin: 0;"></a>
+			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Sample to Order')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('report/sample_order') ?>">Sample to Order<hr style="margin: 0;"></a>
+			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Check Stock to Order')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('report/check_stock_order') ?>">Check Stock to Order<hr style="margin: 0;"></a>
 			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Report')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('report/check_stock_performance') ?>">Check Stock<br>Performance<hr style="margin: 0;"></a>
 			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Report')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('report/followup_performance') ?>">Follow Up<br>Performance<hr style="margin: 0;"></a>
 			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Report')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('report/failed_followup') ?>">Failed Follow Up<hr style="margin: 0;"></a>
-			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Report')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('report/income_by_cs') ?>">Income by CS<hr style="margin: 0;"></a>
+			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Income by CS')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('report/income_by_cs') ?>">Income by CS<hr style="margin: 0;"></a>
 			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Report')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('report/income_by_product') ?>">Income by Product<hr style="margin: 0;"></a>
 			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Report')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('report/income_by_vendor') ?>">Income by Vendor<hr style="margin: 0;"></a>
 			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Report')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('report/profit_loss') ?>">Profit and Loss<hr style="margin: 0;"></a>
@@ -260,33 +207,6 @@
 			  	</div>
 			</div>
 		</div>
-
-		<!-- <div id="popupModal" class="modal-promo-popup">
-			<img class="modal-content custom" src="<?php echo base_url('assets/images/banner.png') ?>">
-			<div class="caption"><span id="close" class="" style="color:#FCB549 !important;font-size:20px;"><i class="fa fa-times-circle" aria-hidden="true"></i> Close</span></div>
-		</div> -->
-		<!-- <script>
-			// BANNER POP UP
-		    var modal = document.getElementById("popupModal");
-			var tutup = document.getElementById("close");
-			if (document.cookie.indexOf("visited=") >= 0) {
-
-				// modal.style.display = "none";
-				modal.setAttribute("hidden", true);
-			} else {
-				expiry = new Date();
-				expiry.setTime(expiry.getTime()+(1440*60*1000)); // 1440 minutes atau 1 day
-		        // expiry.setTime(expiry.getTime()+(60*60*1000)); // 60 minutes atau 1 hour
-
-				document.cookie = "visited=yes; expires=" + expiry.toGMTString();	
-			}
-			tutup.onclick = function() {
-			  	modal.style.display = "none";
-			  	// modal.style.visibility = "hidden";
-			  	// modal.setAttribute("hidden", true);
-			}
-		    // END BANNER POP UP
-		</script> -->
 	</body>
 </html>
 

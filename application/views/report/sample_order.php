@@ -28,16 +28,19 @@
 								<input class="form-control form-control-sm datepicker" type="text" name="TO" id="TO" placeholder="To" autocomplete="off">
 							</div>
 						</div>
-						<div class="col-md-2">			
-							<div class="form-group">
-								<select class="form-control form-control-sm selectpicker" title="-Select Cs-" name="USER_ID" id="USER_ID">
-						    		<option value="" selected disabled>-Select Cs-</option>
-						    		<?php foreach($get_cs as $cs): ?>
-						    			<option value="<?php echo $cs->USER_ID ?>"><?php echo $cs->USER_NAME ?></option>
-						    		<?php endforeach ?>
-							    </select>
+						<?php if((!$this->access_m->isViewAll('Sample to Order', 1)->row()) && ($this->session->GRP_SESSION !=3)):?>
+							<input class="form-control form-control-sm" type="hidden" name="USER_ID" id="USER_ID" value="<?php echo $this->session->USER_SESSION ?>">
+						<?php else: ?>
+							<div class="col-md-2">			
+								<div class="form-group">
+									<select class="form-control form-control-sm selectpicker" title="-Select Cs-" name="USER_ID" id="USER_ID">
+							    		<?php foreach($get_cs as $cs): ?>
+							    			<option value="<?php echo $cs->USER_ID ?>"><?php echo $cs->USER_NAME ?></option>
+							    		<?php endforeach ?>
+								    </select>
+								</div>
 							</div>
-						</div>
+						<?php endif ?>
 						<div class="col-md-3">			
 							<div class="form-group" align="right">
 								<button class="btn btn-sm btn-default" style="border: 2px solid #17a2b8;" id="cari"><i class="fa fa-search"></i> Search</button>

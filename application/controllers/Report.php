@@ -36,7 +36,7 @@ class Report extends CI_Controller {
 	}
 
 	public function sample_order(){
-		$modul = "Report";
+		$modul = "Sample to Order";
 		$access =  $this->access_m->isAccess($this->session->GRP_SESSION, $modul)->row();
 		if ((!$access) && ($this->session->GRP_SESSION !=3)) {
 			echo "<script>alert('Anda tidak punya akses ke $modul.')</script>";
@@ -70,7 +70,7 @@ class Report extends CI_Controller {
 	}
 
 	public function check_stock_order(){
-		$modul = "Report";
+		$modul = "Check Stock to Order";
 		$access =  $this->access_m->isAccess($this->session->GRP_SESSION, $modul)->row();
 		if ((!$access) && ($this->session->GRP_SESSION !=3)) {
 			echo "<script>alert('Anda tidak punya akses ke $modul.')</script>";
@@ -267,7 +267,7 @@ class Report extends CI_Controller {
 	}
 
 	public function income_by_cs(){
-	    $modul = "Report";
+	    $modul = "Income by CS";
 		$access =  $this->access_m->isAccess($this->session->GRP_SESSION, $modul)->row();
 		if ((!$access) && ($this->session->GRP_SESSION !=3)) {
 			echo "<script>alert('Anda tidak punya akses ke $modul.')</script>";

@@ -68,8 +68,7 @@
 							</div>
 							<div class="form-group">
 								<label>Module</label>
-							    <select class="form-control selectpicker" name="MOD_ID" required>
-						    		<option value="">-- Select One --</option>
+							    <select class="form-control selectpicker" title="-- Select One --" data-live-search="true" name="MOD_ID" required>
 							    	<?php foreach($module as $row): ?>
 								    	<option value="<?php echo $row->MOD_ID ?>">
 								    		<?php echo stripslashes($row->MOD_NAME) ?>
@@ -160,20 +159,16 @@
 									<div class="col-md-6">
 										<label>Add</label>
 										<select class="form-control selectpicker" name="GACC_ADD" required>
-								    		<option value="<?php echo $data->GACC_ADD ?>"><?php echo $data->GACC_ADD == 1 ? "Yes" : "No" ?></option>
-								    		<option value="" disabled>-----</option>
-								    		<option value="1">Yes</option>
-								    		<option value="0">No</option>
+								    		<option <?php if($data->GACC_ADD == 1){echo "selected";} ?> value="1">Yes</option>
+								    		<option <?php if($data->GACC_ADD == 0){echo "selected";} ?> value="0">No</option>
 									    </select>
 									</div>
 									<div class="col-md-6">
 										<div class="form-group">
 										<label>Edit</label>
 										<select class="form-control selectpicker" name="GACC_EDIT" required>
-								    		<option value="<?php echo $data->GACC_EDIT ?>"><?php echo $data->GACC_EDIT == 1 ? "Yes" : "No" ?></option>
-								    		<option value="" disabled>-----</option>
-								    		<option value="1">Yes</option>
-								    		<option value="0">No</option>
+								    		<option <?php if($data->GACC_EDIT == 1){echo "selected";} ?> value="1">Yes</option>
+								    		<option <?php if($data->GACC_EDIT == 0){echo "selected";} ?> value="0">No</option>
 									    </select>
 									</div>
 									</div>
@@ -185,20 +180,16 @@
 									<div class="col-md-6">
 										<label>Delete</label>
 										<select class="form-control selectpicker" name="GACC_DELETE" required>
-								    		<option value="<?php echo $data->GACC_DELETE ?>"><?php echo $data->GACC_DELETE == 1 ? "Yes" : "No" ?></option>
-								    		<option value="" disabled>-----</option>
-								    		<option value="1">Yes</option>
-								    		<option value="0">No</option>
+								    		<option <?php if($data->GACC_DELETE == 1){echo "selected";} ?> value="1">Yes</option>
+								    		<option <?php if($data->GACC_DELETE == 0){echo "selected";} ?> value="0">No</option>
 									    </select>
 									</div>
 									<div class="col-md-6">
 										<div class="form-group">
 											<label>View All</label>
 											<select class="form-control selectpicker" name="GACC_VIEWALL" required>
-									    		<option value="<?php echo $data->GACC_VIEWALL ?>"><?php echo $data->GACC_VIEWALL == 1 ? "Yes" : "No" ?></option>
-									    		<option value="" disabled>-----</option>
-									    		<option value="1">Yes</option>
-									    		<option value="0">No</option>
+									    		<option <?php if($data->GACC_VIEWALL == 1){echo "selected";} ?> value="1">Yes</option>
+									    		<option <?php if($data->GACC_VIEWALL == 0){echo "selected";} ?> value="0">No</option>
 										    </select>
 										</div>
 									</div>
