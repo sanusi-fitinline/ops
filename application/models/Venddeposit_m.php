@@ -13,7 +13,7 @@ class Venddeposit_m extends CI_Model {
         $this->load->database();
     }
 
-    private function _get_datatables_query($STATUS = null, $VENDD_DATE = null, $ORDER_ID = null, $VEND_NAME = null)
+    private function _get_datatables_query($STATUS_FILTER = null, $VENDD_DATE = null, $ORDER_ID = null, $VEND_NAME = null)
     {
         
         $this->db->select('tb_vendor_deposit.*, tb_vendor.VEND_NAME, tb_bank.BANK_NAME');
@@ -21,10 +21,10 @@ class Venddeposit_m extends CI_Model {
         $this->db->join('tb_vendor', 'tb_vendor.VEND_ID=tb_vendor_deposit.VEND_ID', 'left');
         $this->db->join('tb_bank', 'tb_bank.BANK_ID=tb_vendor_deposit.BANK_ID', 'left');
 
-		if($STATUS != null){
-            if ($STATUS == 1) { // filter refund
+		if($STATUS_FILTER != null){
+            if ($STATUS_FILTER == 1) { // filter refund
                 $this->db->where('tb_vendor_deposit.VENDD_DEPOSIT_STATUS', 1);
-            } elseif ($STATUS == 2) { // filter used
+            } elseif ($STATUS_FILTER == 2) { // filter used
                 $this->db->where('tb_vendor_deposit.VENDD_DEPOSIT_STATUS', 2);
             } else { // filter status open
                 $this->db->where('tb_vendor_deposit.VENDD_DEPOSIT_STATUS', 0);
@@ -71,25 +71,25 @@ class Venddeposit_m extends CI_Model {
         }
     }
 
-    function get_datatables($STATUS = null, $VENDD_DATE = null, $ORDER_ID = null, $VEND_NAME = null)
+    function get_datatables($STATUS_FILTER = null, $VENDD_DATE = null, $ORDER_ID = null, $VEND_NAME = null)
     {
-        $this->_get_datatables_query($STATUS, $VENDD_DATE, $ORDER_ID, $VEND_NAME);
+        $this->_get_datatables_query($STATUS_FILTER, $VENDD_DATE, $ORDER_ID, $VEND_NAME);
         if($_POST['length'] != -1)
         $this->db->limit($_POST['length'], $_POST['start']);
         $query = $this->db->get();
         return $query->result();
     }
 
-    function count_filtered($STATUS = null, $VENDD_DATE = null, $ORDER_ID = null, $VEND_NAME = null)
+    function count_filtered($STATUS_FILTER = null, $VENDD_DATE = null, $ORDER_ID = null, $VEND_NAME = null)
     {
-        $this->_get_datatables_query($STATUS, $VENDD_DATE, $ORDER_ID, $VEND_NAME);
+        $this->_get_datatables_query($STATUS_FILTER, $VENDD_DATE, $ORDER_ID, $VEND_NAME);
         $query = $this->db->get();
         return $query->num_rows();
     }
 
-    public function count_all($STATUS = null, $VENDD_DATE = null, $ORDER_ID = null, $VEND_NAME = null)
+    public function count_all($STATUS_FILTER = null, $VENDD_DATE = null, $ORDER_ID = null, $VEND_NAME = null)
     {
-        $this->_get_datatables_query($STATUS, $VENDD_DATE, $ORDER_ID, $VEND_NAME);
+        $this->_get_datatables_query($STATUS_FILTER, $VENDD_DATE, $ORDER_ID, $VEND_NAME);
         return $this->db->count_all_results();
     }
 

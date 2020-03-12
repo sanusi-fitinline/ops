@@ -18,17 +18,17 @@ class Customer_deposit extends CI_Controller {
 			echo "<script>alert('Anda tidak punya akses ke $modul.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
 		} else {
-			$this->template->load('template', 'customer-deposit/customer_deposit_data');
+			$this->template->load('template', 'finance/customer-deposit/customer_deposit_data');
 		}
     }
 
     public function depositjson() {
-    	$STATUS 	= $this->input->post('STATUS', TRUE);	
-    	$CUSTD_DATE = $this->input->post('CUSTD_DATE', TRUE);	
-		$ORDER_ID   = $this->input->post('ORDER_ID', TRUE);
-		$CUST_NAME  = $this->input->post('CUST_NAME', TRUE);	
-		$url 	= $this->config->base_url();
-		$list   = $this->custdeposit_m->get_datatables($STATUS, $CUSTD_DATE, $ORDER_ID, $CUST_NAME);
+    	$STATUS_FILTER  = $this->input->post('STATUS_FILTER', TRUE);	
+    	$CUSTD_DATE 	= $this->input->post('CUSTD_DATE', TRUE);	
+		$ORDER_ID   	= $this->input->post('ORDER_ID', TRUE);
+		$CUST_NAME  	= $this->input->post('CUST_NAME', TRUE);	
+		$url 			= $this->config->base_url();
+		$list   		= $this->custdeposit_m->get_datatables($STATUS_FILTER, $CUSTD_DATE, $ORDER_ID, $CUST_NAME);
 		$data = array();
 		$no = $_POST['start'];
 		foreach ($list as $field) {
@@ -72,8 +72,8 @@ class Customer_deposit extends CI_Controller {
 
 		$output = array(
 			"draw" => $_POST['draw'],
-			"recordsTotal" => $this->custdeposit_m->count_all($STATUS, $CUSTD_DATE, $ORDER_ID, $CUST_NAME),
-			"recordsFiltered" => $this->custdeposit_m->count_filtered($STATUS, $CUSTD_DATE, $ORDER_ID, $CUST_NAME),
+			"recordsTotal" => $this->custdeposit_m->count_all($STATUS_FILTER, $CUSTD_DATE, $ORDER_ID, $CUST_NAME),
+			"recordsFiltered" => $this->custdeposit_m->count_filtered($STATUS_FILTER, $CUSTD_DATE, $ORDER_ID, $CUST_NAME),
 			"data" => $data,
 		);
 		//output dalam format JSON
@@ -84,7 +84,7 @@ class Customer_deposit extends CI_Controller {
 		$query = $this->custdeposit_m->get_for_payment($CUSTD_ID);
 		if ($query->num_rows() > 0) {
 			$data['row'] 			= $query->row();
-			$this->template->load('template', 'customer-deposit/customer_deposit_payment', $data);
+			$this->template->load('template', 'finance/customer-deposit/customer_deposit_payment', $data);
 		} else {
 			echo "<script>alert('Data tidak ditemukan.')</script>";
 			echo "<script>window.location='".site_url('customer_deposit')."'</script>";

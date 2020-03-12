@@ -80,9 +80,8 @@
 								    </select>
 								</div>
 								<div class="form-group">
-									<label>Status</label>
-									<select class="form-control selectpicker" name="VEND_STATUS">
-							    		<option value="0">-- Select One --</option>
+									<label>Status <small>*</small></label>
+									<select class="form-control selectpicker" name="VEND_STATUS" title="-- Select One --" required>
 							    		<option value="1">Aktif</option>
 							    		<option value="2">Nonaktif</option>
 								    </select>

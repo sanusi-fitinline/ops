@@ -19,17 +19,17 @@ class Vendor_deposit extends CI_Controller {
 			echo "<script>alert('Anda tidak punya akses ke $modul.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
 		} else {
-			$this->template->load('template', 'vendor-deposit/vendor_deposit_data');
+			$this->template->load('template', 'finance/vendor-deposit/vendor_deposit_data');
 		}
     }
 
     public function depositjson() {
-		$STATUS  	 = $this->input->post('STATUS', TRUE);	
-		$VENDD_DATE  = $this->input->post('VENDD_DATE', TRUE);	
-    	$ORDER_ID 	 = $this->input->post('ORDER_ID', TRUE);	
-		$VEND_NAME   = $this->input->post('VEND_NAME', TRUE);
-		$url 	= $this->config->base_url();
-		$list   = $this->venddeposit_m->get_datatables($STATUS, $VENDD_DATE, $ORDER_ID, $VEND_NAME);
+		$STATUS_FILTER 	= $this->input->post('STATUS_FILTER', TRUE);	
+		$VENDD_DATE  	= $this->input->post('VENDD_DATE', TRUE);	
+    	$ORDER_ID 	 	= $this->input->post('ORDER_ID', TRUE);	
+		$VEND_NAME   	= $this->input->post('VEND_NAME', TRUE);
+		$url 			= $this->config->base_url();
+		$list   		= $this->venddeposit_m->get_datatables($STATUS_FILTER, $VENDD_DATE, $ORDER_ID, $VEND_NAME);
 		$data = array();
 		$no = $_POST['start'];
 		foreach ($list as $field) {
@@ -80,8 +80,8 @@ class Vendor_deposit extends CI_Controller {
 
 		$output = array(
 			"draw" => $_POST['draw'],
-			"recordsTotal" => $this->venddeposit_m->count_all($STATUS, $VENDD_DATE, $ORDER_ID, $VEND_NAME),
-			"recordsFiltered" => $this->venddeposit_m->count_filtered($STATUS, $VENDD_DATE, $ORDER_ID, $VEND_NAME),
+			"recordsTotal" => $this->venddeposit_m->count_all($STATUS_FILTER, $VENDD_DATE, $ORDER_ID, $VEND_NAME),
+			"recordsFiltered" => $this->venddeposit_m->count_filtered($STATUS_FILTER, $VENDD_DATE, $ORDER_ID, $VEND_NAME),
 			"data" => $data,
 		);
 		//output dalam format JSON
@@ -94,7 +94,7 @@ class Vendor_deposit extends CI_Controller {
 			$data['row'] 		 = $query->row();
 			$VEND_ID 			 = $query->row()->VEND_ID;
 			$data['vendor_bank'] = $this->vendorbank_m->get_by_vendor($VEND_ID)->result();
-			$this->template->load('template', 'vendor-deposit/vendor_deposit_close', $data);
+			$this->template->load('template', 'finance/vendor-deposit/vendor_deposit_close', $data);
 		} else {
 			echo "<script>alert('Data tidak ditemukan.')</script>";
 			echo "<script>window.location='".site_url('vendor_deposit')."'</script>";

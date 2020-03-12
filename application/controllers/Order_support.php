@@ -34,7 +34,7 @@ class Order_support extends CI_Controller {
 			echo "<script>alert('Anda tidak punya akses ke $modl.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
 		} else {
-			$this->template->load('template', 'order-support/order_support_data');
+			$this->template->load('template', 'order/order-support/order_support_data');
 		}
 	}
 
@@ -74,7 +74,7 @@ class Order_support extends CI_Controller {
 				$row[] = '<div style="vertical-align: middle; text-align: center;">
 					<a href="'.$url.'order_support/detail/'.$field->ORDER_ID.'" class="btn btn-sm btn-primary" title="Detail"><i class="fa fa-search-plus"></i></a></div>';
 			} else {
-				$row[] = '<form action="'.$url.'order_support/delete_order'.'" method="post"><div style="vertical-align: middle; text-align: center;">
+				$row[] = '<form action="'.$url.'order_support/delete_order" method="post"><div style="vertical-align: middle; text-align: center;">
 					<a href="'.$url.'order_support/detail/'.$field->ORDER_ID.'" class="btn btn-sm btn-primary" title="Detail"><i class="fa fa-search-plus"></i></a>
 					<input type="hidden" name="ORDER_ID" value="'.$field->ORDER_ID.'">
 					<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></button>
@@ -101,7 +101,7 @@ class Order_support extends CI_Controller {
 			$data['courier'] 	= $this->courier_m->getCourier()->result();
 			$data['detail'] 	= $this->orderdetail_m->get($ORDER_ID)->result();
 			$data['get_by_vendor'] 	= $this->ordervendor_m->get_by_vendor($ORDER_ID)->result();
-			$this->template->load('template', 'order-support/order_support_detail', $data);
+			$this->template->load('template', 'order/order-support/order_support_detail', $data);
 		} else {
 			echo "<script>alert('Data tidak ditemukan.')</script>";
 			echo "<script>window.location='".site_url('order_support')."'</script>";
@@ -143,7 +143,7 @@ class Order_support extends CI_Controller {
 			$data['row'] 		= $query->row();
 			$data['detail'] 	= $this->orderdetail_m->get_detail_vendor($ORDER_ID, $VEND_ID)->result();
 			$data['get_vendor'] = $this->ordervendor_m->get_by_vendor($ORDER_ID, $VEND_ID)->row();
-			$this->load->view('order-support/label_print', $data);
+			$this->load->view('order/order-support/label_print', $data);
 		} else {
 			echo "<script>alert('Data tidak ditemukan.')</script>";
 			echo "<script>window.location='".site_url('order_support')."'</script>";

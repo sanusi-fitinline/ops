@@ -36,7 +36,7 @@ class Followup extends CI_Controller {
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
 		} else {
 			$data['followup_status'] = $this->followup_m->get_followup_status()->result();
-			$this->template->load('template', 'follow-up/followup_data', $data);
+			$this->template->load('template', 'pre-order/follow-up/followup_data', $data);
 		}
 	}
 
@@ -48,7 +48,7 @@ class Followup extends CI_Controller {
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
 		} else {
 			$data['followup_status'] = $this->followup_m->get_followup_status()->result();
-			$this->template->load('template', 'follow-up/followup_data', $data);
+			$this->template->load('template', 'pre-order/follow-up/followup_data', $data);
 		}
 	}
 
@@ -60,7 +60,7 @@ class Followup extends CI_Controller {
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
 		} else {
 			$data['followup_status'] = $this->followup_m->get_followup_status()->result();
-			$this->template->load('template', 'follow-up/followup_data', $data);
+			$this->template->load('template', 'pre-order/follow-up/followup_data', $data);
 		}
 	}
 
@@ -98,7 +98,7 @@ class Followup extends CI_Controller {
 				}
 			} else {
 				if ($SEGMENT == "sampling_followup"){
-					$row[] = '<form action="'.$url.'cs/del_followup'.'" method="post"><div style="vertical-align: middle; text-align: center;">
+					$row[] = '<form action="'.$url.'cs/del_followup" method="post"><div style="vertical-align: middle; text-align: center;">
 							<a href="'.$url.'followup/sampling_followup_edit/'.$field->FLWP_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
 							<input type="hidden" name="FLWP_ID" value="'.$field->FLWP_ID.'">
 							<input type="hidden" name="CLOG_ID" value="'.$field->CLOG_ID.'">
@@ -106,7 +106,7 @@ class Followup extends CI_Controller {
 						</div></form>';
 				}
 				elseif ($SEGMENT == "check_stock_followup"){
-					$row[] = '<form action="'.$url.'cs/del_followup_ck'.'" method="post"><div style="vertical-align: middle; text-align: center;">
+					$row[] = '<form action="'.$url.'cs/del_followup_ck" method="post"><div style="vertical-align: middle; text-align: center;">
 							<a href="'.$url.'followup/check_stock_followup_edit/'.$field->FLWP_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
 							<input type="hidden" name="FLWP_ID" value="'.$field->FLWP_ID.'">
 							<input type="hidden" name="CLOG_ID" value="'.$field->CLOG_ID.'">
@@ -114,7 +114,7 @@ class Followup extends CI_Controller {
 						</div></form>';
 				}
 				elseif ($SEGMENT == "assign_followup"){
-					$row[] = '<form action="'.$url.'cs/del_followup_assign'.'" method="post"><div style="vertical-align: middle; text-align: center;">
+					$row[] = '<form action="'.$url.'cs/del_followup_assign" method="post"><div style="vertical-align: middle; text-align: center;">
 							<a href="'.$url.'followup/assign_followup_edit/'.$field->FLWP_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
 							<input type="hidden" name="FLWP_ID" value="'.$field->FLWP_ID.'">
 							<input type="hidden" name="CLOG_ID" value="'.$field->CLOG_ID.'">
@@ -122,7 +122,7 @@ class Followup extends CI_Controller {
 						</div></form>';
 				}
 				else {
-					$row[] = '<form action="'.$url.'followup/del_followup'.'" method="post"><div style="vertical-align: middle; text-align: center;">
+					$row[] = '<form action="'.$url.'followup/del_followup" method="post"><div style="vertical-align: middle; text-align: center;">
 							<a href="#" data-toggle="modal" data-target="#edit-followup'.$field->FLWP_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
 							<input type="hidden" name="FLWP_ID" value="'.$field->FLWP_ID.'">
 							<input type="hidden" name="CLOG_ID" value="'.$field->CLOG_ID.'">
@@ -144,14 +144,14 @@ class Followup extends CI_Controller {
 	}
 
 	public function assign_followup_edit($FLWP_ID) {
-		$query 				= $this->followup_m->get($FLWP_ID);
-		$data['clog'] 		= $this->clog_m->get($query->row()->CLOG_ID)->row();
-		$data['followup'] 	= $this->followup_m->get()->result();
-		$data['flws'] 		= $this->followup_m->get_followup_status()->result();
-		$data['followup_closed'] 		= $this->followup_m->get_followup_closed()->result();
+		$query = $this->followup_m->get($FLWP_ID);
 		if ($query->num_rows() > 0) {
-			$data['row'] =	$query->row();
-			$this->template->load('template', 'follow-up/followup_assign_edit', $data);
+			$data['row'] 			 = $query->row();
+			$data['clog'] 			 = $this->clog_m->get($query->row()->CLOG_ID)->row();
+			$data['followup'] 		 = $this->followup_m->get()->result();
+			$data['flws'] 			 = $this->followup_m->get_followup_status()->result();
+			$data['followup_closed'] = $this->followup_m->get_followup_closed()->result();
+			$this->template->load('template', 'pre-order/follow-up/followup_assign_edit', $data);
 		} else {
 			echo "<script>alert('Data tidak ditemukan.')</script>";
 			echo "<script>window.location='".site_url('followup')."'</script>";
@@ -235,17 +235,17 @@ class Followup extends CI_Controller {
 	}
 
 	public function assign_edit($CLOG_ID) {
-		$query 					 = $this->followup_m->get_assign($CLOG_ID);
-		$data['customer'] 		 = $this->customer_m->get()->result();
-		$data['channel']		 = $this->channel_m->getCha()->result();
-		$data['bank'] 			 = $this->bank_m->getBank()->result();
-		$data['clog'] 			 = $this->clog_m->get($query->row()->CLOG_ID)->row();
-		$data['activity'] 		 = $this->cactivity_m->get()->result();
-		$data['user'] 			 = $this->user_m->getCs(null, 1)->result();
-		$data['followup_status'] = $this->followup_m->get_followup_status()->result();
+		$query = $this->followup_m->get_assign($CLOG_ID);
 		if ($query->num_rows() > 0) {
-			$data['row'] =	$query->row();
-			$this->template->load('template', 'follow-up/edit_assign', $data);
+			$data['row'] 			 = $query->row();
+			$data['customer'] 		 = $this->customer_m->get()->result();
+			$data['channel']		 = $this->channel_m->getCha()->result();
+			$data['bank'] 			 = $this->bank_m->getBank()->result();
+			$data['clog'] 			 = $this->clog_m->get($query->row()->CLOG_ID)->row();
+			$data['activity'] 		 = $this->cactivity_m->get()->result();
+			$data['user'] 			 = $this->user_m->getCs(null, 1)->result();
+			$data['followup_status'] = $this->followup_m->get_followup_status()->result();
+			$this->template->load('template', 'pre-order/follow-up/edit_assign', $data);
 		} else {
 			echo "<script>alert('Data tidak ditemukan.')</script>";
 			echo "<script>window.location='".site_url('followup')."'</script>";
@@ -270,14 +270,14 @@ class Followup extends CI_Controller {
 			echo "<script>alert('Anda tidak punya akses ke $modl.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
 		} else {
-			$query 				= $this->sampling_m->get_by_log($CLOG_ID);
-			$data['clog'] 		= $this->clog_m->get($query->row()->CLOG_ID)->row();
-			$data['followup'] 	= $this->followup_m->get()->result();
-			$data['flws'] 		= $this->followup_m->get_followup_status()->result();
-			$data['followup_closed'] 		= $this->followup_m->get_followup_closed()->result();
+			$query = $this->sampling_m->get_by_log($CLOG_ID);
 			if ($query->num_rows() > 0) {
-				$data['row'] =	$query->row();
-				$this->template->load('template', 'follow-up/followup_sampling', $data);
+				$data['row'] 			 = $query->row();
+				$data['clog'] 			 = $this->clog_m->get($query->row()->CLOG_ID)->row();
+				$data['followup'] 		 = $this->followup_m->get()->result();
+				$data['flws'] 			 = $this->followup_m->get_followup_status()->result();
+				$data['followup_closed'] = $this->followup_m->get_followup_closed()->result();
+				$this->template->load('template', 'pre-order/follow-up/followup_sampling', $data);
 			} else {
 				echo "<script>alert('Data tidak ditemukan.')</script>";
 				echo "<script>window.location='".site_url('followup')."'</script>";
@@ -286,14 +286,14 @@ class Followup extends CI_Controller {
 	}
 
 	public function sampling_followup_edit($FLWP_ID) {
-		$query 					 = $this->followup_m->get($FLWP_ID);
-		$data['clog'] 			 = $this->clog_m->get($query->row()->CLOG_ID)->row();
-		$data['followup'] 		 = $this->followup_m->get()->result();
-		$data['flws'] 			 = $this->followup_m->get_followup_status()->result();
-		$data['followup_closed'] = $this->followup_m->get_followup_closed()->result();
+		$query = $this->followup_m->get($FLWP_ID);
 		if ($query->num_rows() > 0) {
-			$data['row'] =	$query->row();
-			$this->template->load('template', 'follow-up/followup_sampling_edit', $data);
+			$data['row'] 			 = $query->row();
+			$data['clog'] 			 = $this->clog_m->get($query->row()->CLOG_ID)->row();
+			$data['followup'] 		 = $this->followup_m->get()->result();
+			$data['flws'] 			 = $this->followup_m->get_followup_status()->result();
+			$data['followup_closed'] = $this->followup_m->get_followup_closed()->result();
+			$this->template->load('template', 'pre-order/follow-up/followup_sampling_edit', $data);
 		} else {
 			echo "<script>alert('Data tidak ditemukan.')</script>";
 			echo "<script>window.location='".site_url('followup')."'</script>";
@@ -307,15 +307,15 @@ class Followup extends CI_Controller {
 			echo "<script>alert('Anda tidak punya akses ke $modl.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
 		} else {
-			$query 					 = $this->ckstock_m->get_by_log($CLOG_ID);
-			$data['clog'] 			 = $this->clog_m->get($query->row()->CLOG_ID)->row();
-			$data['followup'] 		 = $this->followup_m->get()->result();
-			$data['flws'] 		     = $this->followup_m->get_followup_status()->result();
-			$data['followup_closed'] = $this->followup_m->get_followup_closed()->result();
-			$data['product'] 		 = $this->ckstock_m->get_product($CLOG_ID)->result();
+			$query = $this->ckstock_m->get_by_log($CLOG_ID);
 			if ($query->num_rows() > 0) {
-				$data['row'] =	$query->row();
-				$this->template->load('template', 'follow-up/followup_ckstock', $data);
+				$data['row'] 			 = $query->row();
+				$data['clog'] 			 = $this->clog_m->get($query->row()->CLOG_ID)->row();
+				$data['followup'] 		 = $this->followup_m->get()->result();
+				$data['flws'] 		     = $this->followup_m->get_followup_status()->result();
+				$data['followup_closed'] = $this->followup_m->get_followup_closed()->result();
+				$data['product'] 		 = $this->ckstock_m->get_product($CLOG_ID)->result();
+				$this->template->load('template', 'pre-order/follow-up/followup_ckstock', $data);
 			} else {
 				echo "<script>alert('Data tidak ditemukan.')</script>";
 				echo "<script>window.location='".site_url('followup')."'</script>";
@@ -325,15 +325,15 @@ class Followup extends CI_Controller {
 	}
 
 	public function check_stock_followup_edit($FLWP_ID) {
-		$query 					 = $this->followup_m->get($FLWP_ID);
-		$data['clog'] 			 = $this->clog_m->get($query->row()->CLOG_ID)->row();
-		$data['followup'] 		 = $this->followup_m->get()->result();
-		$data['flws'] 			 = $this->followup_m->get_followup_status()->result();
-		$data['followup_closed'] = $this->followup_m->get_followup_closed()->result();
-		$data['product'] 		 = $this->ckstock_m->get_product($query->row()->CLOG_ID)->result();
+		$query = $this->followup_m->get($FLWP_ID);
 		if ($query->num_rows() > 0) {
-			$data['row'] =	$query->row();
-			$this->template->load('template', 'follow-up/followup_ckstock_edit', $data);
+			$data['row'] 			 = $query->row();
+			$data['clog'] 			 = $this->clog_m->get($query->row()->CLOG_ID)->row();
+			$data['followup'] 		 = $this->followup_m->get()->result();
+			$data['flws'] 			 = $this->followup_m->get_followup_status()->result();
+			$data['followup_closed'] = $this->followup_m->get_followup_closed()->result();
+			$data['product'] 		 = $this->ckstock_m->get_product($query->row()->CLOG_ID)->result();
+			$this->template->load('template', 'pre-order/follow-up/followup_ckstock_edit', $data);
 		} else {
 			echo "<script>alert('Data tidak ditemukan.')</script>";
 			echo "<script>window.location='".site_url('followup')."'</script>";
@@ -347,14 +347,14 @@ class Followup extends CI_Controller {
 			echo "<script>alert('Anda tidak punya akses ke $modl.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
 		} else {
-			$query 					 = $this->followup_m->get_assign($CLOG_ID);
-			$data['clog'] 			 = $this->clog_m->get($query->row()->CLOG_ID)->row();
-			$data['followup'] 		 = $this->followup_m->get()->result();
-			$data['flws'] 			 = $this->followup_m->get_followup_status()->result();
-			$data['followup_closed'] = $this->followup_m->get_followup_closed()->result();
+			$query = $this->followup_m->get_assign($CLOG_ID);
 			if ($query->num_rows() > 0) {
-				$data['row'] =	$query->row();
-				$this->template->load('template', 'follow-up/followup_assign', $data);
+				$data['row'] 			 = $query->row();
+				$data['clog'] 			 = $this->clog_m->get($query->row()->CLOG_ID)->row();
+				$data['followup'] 		 = $this->followup_m->get()->result();
+				$data['flws'] 			 = $this->followup_m->get_followup_status()->result();
+				$data['followup_closed'] = $this->followup_m->get_followup_closed()->result();
+				$this->template->load('template', 'pre-order/follow-up/followup_assign', $data);
 			} else {
 				echo "<script>alert('Data tidak ditemukan.')</script>";
 				echo "<script>window.location='".site_url('followup')."'</script>";
@@ -375,7 +375,7 @@ class Followup extends CI_Controller {
 			$data['activity'] 		 = $this->cactivity_m->get()->result();
 			$data['user'] 			 = $this->user_m->getCs(null, 1)->result();
 			$data['followup_status'] = $this->followup_m->get_followup_status()->result();
-			$this->template->load('template', 'follow-up/add_assign', $data);
+			$this->template->load('template', 'pre-order/follow-up/add_assign', $data);
 		}
 	}
 
@@ -394,7 +394,7 @@ class Followup extends CI_Controller {
 		$data['bank'] 		= $this->bank_m->getBank()->result();
 		$data['channel'] 	= $this->channel_m->getCha()->result();
 		$data['country'] 	= $this->country_m->getCountry()->result();
-		$this->template->load('template', 'follow-up/customer_form_add', $data);
+		$this->template->load('template', 'pre-order/follow-up/customer_form_add', $data);
 	}
 
 	public function newcust_process(){

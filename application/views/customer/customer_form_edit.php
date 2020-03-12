@@ -103,11 +103,9 @@
 							<div class="col-md-3">
 								<div class="form-group">
 									<label>Bank</label>
-									<select class="form-control selectpicker" name="BANK_ID" data-live-search="true">
-							    		<option value="<?php echo $row->BANK_ID?>"><?php echo $row->BANK_ID != 0 ? "".stripslashes($row->BANK_NAME) : "-";?></option>
-							    		<option value="" disabled="">----</option>
+									<select class="form-control selectpicker" name="BANK_ID" title="-- Select One --" data-live-search="true">
 								    	<?php foreach($bank as $bank): ?>
-									    	<option value="<?php echo $bank->BANK_ID ?>">
+									    	<option <?php echo $row->BANK_ID == $bank->BANK_ID ? "selected" : ""; ?> value="<?php echo $bank->BANK_ID ?>">
 									    		<?php echo stripslashes($bank->BANK_NAME) ?>
 									    	</option>
 									    <?php endforeach ?>
@@ -123,11 +121,9 @@
 								</div>
 								<div class="form-group">
 									<label>Channel <small>*</small></label>
-									<select class="form-control selectpicker" name="CHA_ID" data-live-search="true">
-							    		<option value="<?php echo $row->CHA_ID ?>"><?php echo $row->CHA_ID != 0 ? "".stripslashes($row->CHA_NAME) : "-";?></option>
-							    		<option value="" disabled="">----</option>
+									<select class="form-control selectpicker" name="CHA_ID" title="-- Select One --" data-live-search="true" required>
 								    	<?php foreach($channel as $cha): ?>
-									    	<option value="<?php echo $cha->CHA_ID ?>">
+									    	<option <?php echo $row->CHA_ID == $cha->CHA_ID ? "selected" : ""; ?> value="<?php echo $cha->CHA_ID ?>">
 									    		<?php echo stripslashes($cha->CHA_NAME) ?>
 									    	</option>
 									    <?php endforeach ?>

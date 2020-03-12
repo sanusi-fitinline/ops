@@ -34,6 +34,7 @@
 							<div class="col-md-3">
 								<div class="form-group">
 									<label>Product Name <small>*</small></label>
+									<input type="hidden" id="PRO_ID" value="<?php echo $row->PRO_ID ?>">
 									<input class="form-control" type="text" name="PRO_NAME" value="<?php echo stripslashes($row->PRO_NAME) ?>" autocomplete="off" required>
 								</div>
 								<div class="form-group" style="margin-bottom: 23px;">
@@ -51,31 +52,25 @@
 								<div class="form-group">
 								    <label>Status <small>*</small></label>
 								    <select class="form-control selectpicker" name="PRO_STATUS" data-live-search="true" required>
-							    		<option value="<?php echo $row->PRO_STATUS?>"><?php echo $row->PRO_STATUS == 1 ? "Onstock": ($row->PRO_STATUS == 2 ? "Sold": ($row->PRO_STATUS == 3 ? "Sample" : ($row->PRO_STATUS == 4 ? "Booked": ($row->PRO_STATUS == 5 ? "Unapproved":  "-"))));?></option>
-							    		<option value="" disabled="">----</option>
-							    		<option value="1">Onstock</option>
-							    		<option value="2">Sold</option>
-							    		<option value="3">Sample</option>
-							    		<option value="4">Booked</option>
-							    		<option value="5">Unapproved</option>
+							    		<option <?php echo $row->PRO_STATUS == 1 ? "selected" : "" ?> value="1">Onstock</option>
+							    		<option <?php echo $row->PRO_STATUS == 2 ? "selected" : "" ?> value="2">Sold</option>
+							    		<option <?php echo $row->PRO_STATUS == 3 ? "selected" : "" ?> value="3">Sample</option>
+							    		<option <?php echo $row->PRO_STATUS == 4 ? "selected" : "" ?> value="4">Booked</option>
+							    		<option <?php echo $row->PRO_STATUS == 5 ? "selected" : "" ?> value="5">Unapproved</option>
 								    </select>
 								</div>
 								<div class="form-group">
 									<label>Available <small>*</small></label>
 								    <select class="form-control selectpicker" name="PRO_AVAIL" data-live-search="true" required>
-							    		<option value="<?php echo $row->PRO_AVAIL?>"><?php echo $row->PRO_AVAIL == 0 ? "Ready on Stock": ($row->PRO_AVAIL == 1 ? "Purchase Order" : "-");?></option>
-							    		<option value="" disabled="">----</option>
-							    		<option value="0">Ready on Stock</option>
-							    		<option value="1">Purchase Order</option>
+							    		<option <?php echo $row->PRO_AVAIL == 0 ? "selected" : "" ?> value="0">Ready on Stock</option>
+							    		<option <?php echo $row->PRO_AVAIL == 1 ? "selected" : "" ?> value="1">Purchase Order</option>
 								    </select>
 								</div>
 								<div class="form-group">
 								    <label>Currency <small>*</small></label>
 								    <select class="form-control selectpicker" name="CURR_ID" data-live-search="true" required>
-							    		<option value="<?php echo $row->CURR_ID ?>"><?php echo $row->CURR_ID != 0 ? "".$row->CURR_NAME : "-"?></option>
-							    		<option value="" disabled="">----</option>
 							    		<?php foreach($currency as $curr): ?>
-									    	<option value="<?php echo $curr->CURR_ID ?>">
+									    	<option <?php echo $row->CURR_ID == $curr->CURR_ID ? "selected" : "" ?> value="<?php echo $curr->CURR_ID ?>">
 									    		<?php echo stripslashes($curr->CURR_NAME) ?>
 									    	</option>
 									    <?php endforeach ?>
@@ -84,10 +79,8 @@
 								<div class="form-group">
 								    <label>Vendor</label>
 								    <select class="form-control selectpicker" name="VEND_ID" id="VEND_ID" data-live-search="true">
-										<option value="<?php echo $row->VEND_ID ?>"><?php echo $row->VEND_ID != 0 ? "".$row->VEND_NAME : "-"?></option>
-							    		<option value="" disabled="">----</option>
 							    		<<?php foreach($vendor as $vend): ?>
-									    	<option value="<?php echo $vend->VEND_ID ?>">
+									    	<option <?php echo $row->VEND_ID == $vend->VEND_ID ? "selected" : "" ?> value="<?php echo $vend->VEND_ID ?>">
 									    		<?php echo ($vend->VEND_NAME) ?>
 									    	</option>
 									    <?php endforeach ?>
@@ -106,19 +99,22 @@
 									    <?php endforeach ?>
 								    </select>
 								</div>
-
 								<div class="form-group">
 								    <label>Type <small>*</small></label>
 								    <select class="form-control selectpicker" name="TYPE_ID" id="TYPE_ID" data-live-search="true" required>
-							    		<option value="<?php echo $row->TYPE_ID ?>"><?php echo $row->TYPE_ID != 0 ? "".$row->TYPE_NAME : "-"?></option>
-							    		<option value="" disabled="">----</option>
 							    		<?php foreach($type as $typ): ?>
-									    	<option value="<?php echo $typ->TYPE_ID ?>">
+									    	<option <?php echo $row->TYPE_ID == $typ->TYPE_ID ? "selected" : "" ?> value="<?php echo $typ->TYPE_ID ?>">
 									    		<?php echo stripslashes($typ->TYPE_NAME) ?>
 									    	</option>
 									    <?php endforeach ?>
 								    </select>
-								</div>		
+								</div>
+								<div class="form-group">
+								    <label>Subtype</label>
+								    <select class="form-control selectpicker" name="STYPE_ID" id="STYPE_ID" title="-- Select One --" data-live-search="true">
+								    	<option selected disabled></option>
+								    </select>
+								</div>	
 							</div>
 							<div class="col-md-3">
 								<div class="form-group">
@@ -142,11 +138,9 @@
 								</div>
 								<div class="form-group">
 									<label>Unit Measure</label>
-									<select class="form-control selectpicker" name="PRO_UNIT" data-live-search="true">
-										<option value="<?php echo $row->PRO_UNIT ?>"><?php echo $row->PRO_UNIT != 0 ? "".$row->UMEA_NAME_A : "-"?></option>
-							    		<option value="" disabled="">----</option>
+									<select class="form-control selectpicker" name="PRO_UNIT" title="-- Select One --" data-live-search="true">
 							    		<?php foreach($umea as $unit): ?>
-									    	<option value="<?php echo $unit->UMEA_ID ?>">
+									    	<option <?php echo $row->PRO_UNIT == $unit->UMEA_ID ? "selected" : "" ?> value="<?php echo $unit->UMEA_ID ?>">
 									    		<?php echo $unit->UMEA_NAME ?>
 									    	</option>
 									    <?php endforeach ?>
@@ -184,11 +178,9 @@
 								</div>
 								<div class="form-group">
 									<label>Volume Unit Measure</label>
-								    <select class="form-control selectpicker" name="PRO_VOL_UNIT" data-live-search="true">
-										<option value="<?php echo $row->PRO_VOL_UNIT ?>"><?php echo $row->PRO_VOL_UNIT != 0 ? "".$row->UMEA_NAME_B : "-"?></option>
-							    		<option value="" disabled="">----</option>
+								    <select class="form-control selectpicker" name="PRO_VOL_UNIT" title="-- Select One --" data-live-search="true">
 							    		<?php foreach($umea as $unit): ?>
-									    	<option value="<?php echo $unit->UMEA_ID ?>">
+									    	<option <?php echo $row->PRO_VOL_UNIT == $unit->UMEA_ID ? "selected" : "" ?> value="<?php echo $unit->UMEA_ID ?>">
 									    		<?php echo $unit->UMEA_NAME ?>
 									    	</option>
 									    <?php endforeach ?>
@@ -200,11 +192,9 @@
 								</div>
 								<div class="form-group">
 									<label>Total Unit Measure</label>
-								    <select class="form-control selectpicker" name="PRO_TOTAL_UNIT" data-live-search="true">
-										<option value="<?php echo $row->PRO_TOTAL_UNIT ?>"><?php echo $row->PRO_TOTAL_UNIT != 0 ? "".$row->UMEA_NAME_C : "-"?></option>
-							    		<option value="" disabled="">----</option>
+								    <select class="form-control selectpicker" name="PRO_TOTAL_UNIT" title="-- Select One --" data-live-search="true">
 							    		<?php foreach($umea as $unit): ?>
-									    	<option value="<?php echo $unit->UMEA_ID ?>">
+									    	<option <?php echo $row->PRO_TOTAL_UNIT == $unit->UMEA_ID ? "selected" : "" ?> value="<?php echo $unit->UMEA_ID ?>">
 									    		<?php echo $unit->UMEA_NAME ?>
 									    	</option>
 									    <?php endforeach ?>

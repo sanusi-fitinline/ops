@@ -19,7 +19,7 @@ class Profile extends CI_Controller {
 		$data['group'] 	= $this->group_m->get()->result();
 		if ($query->num_rows() > 0) {
 			$data['row'] =	$query->row();
-			$this->template->load('template', 'user/user_detail', $data);
+			$this->template->load('template', 'user-management/user/user_detail', $data);
 		} else {
 			echo "<script>alert('Data tidak ditemukan.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
@@ -51,7 +51,7 @@ class Profile extends CI_Controller {
 
 			$this->form_validation->set_error_delimiters('<span class="invalid-feedback" style="font-size: 14px;">', '</span>');
 			if($this->form_validation->run() == FALSE) {
-				$this->template->load('template', 'user/user_detail', $data);
+				$this->template->load('template', 'user-management/user/user_detail', $data);
 			} else {
 				$this->user_m->update($USER_ID);
 				if($this->db->affected_rows() > 0) {

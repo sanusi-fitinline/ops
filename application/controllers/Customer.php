@@ -67,7 +67,7 @@ class Customer extends CI_Controller {
 			if((!$this->access_m->isDelete('Customer', 1)->row()) && ($this->session->GRP_SESSION !=3)){
 				$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="'.$url.'customer/edit/'.$field->CUST_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a></div>';
 			} else {
-				$row[] = '<form action="'.$url.'customer/del'.'" method="post"><div style="vertical-align: middle; text-align: center;"><a href="'.$url.'customer/edit/'.$field->CUST_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
+				$row[] = '<form action="'.$url.'customer/del" method="post"><div style="vertical-align: middle; text-align: center;"><a href="'.$url.'customer/edit/'.$field->CUST_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
 					<input type="hidden" name="CUST_ID" value="'.$field->CUST_ID.'">
 					<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button></div></form>';
 			}
@@ -104,15 +104,15 @@ class Customer extends CI_Controller {
 	}
 
 	public function edit($CUST_ID) {
-		$query 				= $this->customer_m->get($CUST_ID);
-		$data['country'] 	= $this->country_m->getCountry()->result();
-		$data['state'] 		= $this->state_m->getState($query->row('CNTR_ID'))->result();
-		$data['city'] 		= $this->city_m->getCity($query->row('STATE_ID'))->result();
-		$data['subd'] 		= $this->subd_m->getSubdistrict($query->row('CITY_ID'))->result();
-		$data['bank'] 		= $this->bank_m->getBank()->result();
-		$data['channel'] 	= $this->channel_m->getCha()->result();
+		$query = $this->customer_m->get($CUST_ID);
 		if ($query->num_rows() > 0) {
-			$data['row'] =	$query->row();
+			$data['row'] 		= $query->row();
+			$data['country'] 	= $this->country_m->getCountry()->result();
+			$data['state'] 		= $this->state_m->getState($query->row('CNTR_ID'))->result();
+			$data['city'] 		= $this->city_m->getCity($query->row('STATE_ID'))->result();
+			$data['subd'] 		= $this->subd_m->getSubdistrict($query->row('CITY_ID'))->result();
+			$data['bank'] 		= $this->bank_m->getBank()->result();
+			$data['channel'] 	= $this->channel_m->getCha()->result();
 			$this->template->load('template', 'customer/customer_form_edit', $data);
 		} else {
 			echo "<script>alert('Data tidak ditemukan.')</script>";

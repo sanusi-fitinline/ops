@@ -1,3 +1,4 @@
+<?php $this->load->model('access_m');?>
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -14,8 +15,8 @@
 		<link href="<?php echo base_url() ?>assets/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
 
 		<!-- Page level plugin CSS-->
-		<link href="<?php echo base_url() ?>assets/vendor/datatables/dataTables.bootstrap4.css" rel="stylesheet">
-		<link href="<?php echo base_url()?>assets/vendor/bootstrap-select/dist/css/bootstrap-select.css" rel="stylesheet">
+		<link href="<?php echo base_url() ?>assets/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+		<link href="<?php echo base_url()?>assets/vendor/bootstrap-select/dist/css/bootstrap-select.min.css" rel="stylesheet">
 		
 		<link href="<?php echo base_url()?>assets/vendor/jquery-ui-1.12.1/jquery-ui.css" rel="stylesheet">
 
@@ -30,7 +31,6 @@
 		    <button class="btn btn-link btn-sm text-white order-1 order-sm-0" id="sidebarToggle" href="#">
 			    <i class="fas fa-bars"></i>
 		    </button>
-		    <?php $this->load->model('access_m');?>
 		    <!-- <ul class="navbar-nav ml-auto ml-md-0"> -->
 		    <ul class="navbar-nav ml-auto mr-0 mr-md-3 my-2 my-md-0">
 		      	<li class="nav-item dropdown no-arrow">
@@ -85,11 +85,21 @@
 		      	<li class="nav-item dropdown <?php if($this->uri->segment(1)=="order" || $this->uri->segment(1)=="order_support"){echo "active";}?>">
 		        	<a class="nav-link dropdown-toggle" href="#" id="pagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 		          		<i class="fas fa-fw fa-tasks"></i>
-		          		<span>Order</span>
+		          		<span>Order-Material</span>
 		        	</a>
 			        <div class="dropdown-menu" aria-labelledby="pagesDropdown">
 			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Order')->row()) && ($this->session->GRP_SESSION !=3) ){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('order') ?>">Order (CS)<hr style="margin: 0;"></a>
 			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Order SS')->row()) && ($this->session->GRP_SESSION !=3) ){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('order_support') ?>">Order (SS)<hr style="margin: 0;"></a>
+			        </div>
+		      	</li>
+		      	<li class="nav-item dropdown <?php if($this->uri->segment(1)=="project" || $this->uri->segment(1)=="project_followup" || $this->uri->segment(1)=="installment"){echo "active";}?>">
+		        	<a class="nav-link dropdown-toggle" href="#" id="pagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		          		<i class="fas fa-fw fa-pencil-ruler"></i>
+		          		<span>Order-Custom</span>
+		        	</a>
+			        <div class="dropdown-menu" aria-labelledby="pagesDropdown">
+			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Order Custom')->row()) && ($this->session->GRP_SESSION !=3) ){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('project') ?>">Order (CS)<hr style="margin: 0;"></a>
+			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Follow Up VR')->row()) && ($this->session->GRP_SESSION !=3) ){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('project_followup') ?>">Follow Up (VR)<hr style="margin: 0;"></a>
 			        </div>
 		      	</li>
 		      	<li class="nav-item dropdown <?php if($this->uri->segment(1)=="payment_vendor" || $this->uri->segment(1)=="customer_deposit" || $this->uri->segment(1)=="vendor_deposit"){echo "active";}?>">
@@ -107,6 +117,12 @@
 			        <a class="nav-link" href="<?php echo site_url('vendor') ?>">
 			    	    <i class="fas fa-fw fa-handshake"></i>
 			        	<span>Vendor</span>
+			        </a>
+			    </li>
+			    <li <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Producer')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="nav-item <?php if($this->uri->segment(1)=="producer"){echo "active";}?>">
+			        <a class="nav-link" href="<?php echo site_url('producer') ?>">
+			    	    <i class="fas fa-fw fa-box-open"></i>
+			        	<span>Producer</span>
 			        </a>
 			    </li>
 			    <li <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Courier')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="nav-item <?php if($this->uri->segment(1)=="courier"){echo "active";}?>">
@@ -141,7 +157,7 @@
 			    <li class="nav-item dropdown <?php if($this->uri->segment(1)=="master"){echo "active";}?>">
 		        	<a class="nav-link dropdown-toggle" href="#" id="pagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 		          		<i class="fas fa-fw fa-folder-open"></i>
-		          		<span>Master</span>
+		          		<span>Master-Ops</span>
 		        	</a>
 			        <div class="dropdown-menu" aria-labelledby="pagesDropdown">
 			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Bank')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('master/bank') ?>">Bank<hr style="margin: 0;"></a>
@@ -153,6 +169,24 @@
 			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Subdistrict')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('master/subdistrict/') ?>">Subdistrict<hr style="margin: 0;"></a>
 			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Product Type')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('master/type') ?>">Product Type<hr style="margin: 0;"></a>
 			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Unit Measure')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('master/umea') ?>">Unit Measure<hr style="margin: 0;"></a>
+			        </div>
+		      	</li>
+		      	<li class="nav-item dropdown <?php if($this->uri->segment(1)=="master_producer"){echo "active";}?>">
+		        	<a class="nav-link dropdown-toggle" href="#" id="pagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		          		<i class="fas fa-fw fa-layer-group"></i>
+		          		<span>Master-Producer</span>
+		        	</a>
+			        <div class="dropdown-menu" aria-labelledby="pagesDropdown">
+			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Producer Category')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('master_producer/producer_category') ?>">Producer Category<hr style="margin: 0;"></a>
+			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Producer Product')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('master_producer/producer_product') ?>">Producer Product<hr style="margin: 0;"></a>
+			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Producer Type')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('master_producer/producer_type') ?>">Producer Type<hr style="margin: 0;"></a>
+			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Size')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('master_producer/size_group') ?>">Size Group<hr style="margin: 0;"></a>
+			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Size')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('master_producer/size_product') ?>">Size Product<hr style="margin: 0;"></a>
+			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Size')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('master_producer/size') ?>">Size<hr style="margin: 0;"></a>
+			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Size')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('master_producer/size_value') ?>">Size Value<hr style="margin: 0;"></a>
+			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Project Activity')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('master_producer/project_activity') ?>">Project Activity<hr style="margin: 0;"></a>
+			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Project Criteria')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('master_producer/project_criteria') ?>">Project Criteria<hr style="margin: 0;"></a>
+			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Project Type')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('master_producer/project_type') ?>">Project Type<hr style="margin: 0;"></a>
 			        </div>
 		      	</li>
 		      	<li <?php if($this->session->GRP_SESSION !=3){echo "hidden";}?> class="nav-item dropdown <?php if($this->uri->segment(1)=="management"){echo "active";}?>">
@@ -225,8 +259,8 @@
 <script src="<?php echo base_url()?>assets/vendor/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
 
 <!-- Datatables core plugin JavaScript-->
-<script src="<?php echo base_url()?>assets/vendor/datatables/jquery.dataTables.js"></script>
-<script src="<?php echo base_url()?>assets/vendor/datatables/dataTables.bootstrap4.js"></script>
+<script src="<?php echo base_url()?>assets/vendor/datatables/jquery.dataTables.min.js"></script>
+<script src="<?php echo base_url()?>assets/vendor/datatables/dataTables.bootstrap4.min.js"></script>
 
 <!-- Custom scripts for all pages-->
 <script src="<?php echo base_url()?>assets/js/sb-admin.min.js"></script>
@@ -400,8 +434,8 @@
 	    	$("#STATE_ID").hide(); // Sembunyikan dulu combobox kota nya
 		    $("#loading").show(); // Tampilkan loadingnya
 		    $.ajax({
-		        type: "POST", // Method pengiriman data bisa dengan GET atau POST
 		        url: "<?php echo site_url('area/listState'); ?>", // Isi dengan url/path file php yang dituju
+		        type: "POST", // Method pengiriman data bisa dengan GET atau POST
 		        data: {
 		        	CNTR_ID 			: $("#CNTR_ID").val(),
 		        }, // data yang akan dikirim ke file yang dituju
@@ -428,8 +462,8 @@
 	    	$("#CITY_ID").hide(); 
 		    $("#loading").show(); 
 		    $.ajax({
-		        type: "POST", 
 		        url: "<?php echo site_url('area/listCity'); ?>", 
+		        type: "POST", 
 		        data: {
 		        	STATE_ID 			: $("#STATE_ID").val(),
 		        	}, 
@@ -454,8 +488,8 @@
 	    	$("#SUBD_ID").hide(); 
 		    $("#loading").show(); 
 		    $.ajax({
-		        type: "POST", 
 		        url: "<?php echo site_url('area/listSubdistrict'); ?>",
+		        type: "POST", 
 		        data: {
 		        	CITY_ID : $("#CITY_ID").val(),
 		        	},
@@ -486,8 +520,8 @@
 	    	$("#STATE_ID2").hide(); // Sembunyikan dulu combobox kota nya
 		    $("#loading").show(); // Tampilkan loadingnya
 		    $.ajax({
-		        type: "POST", // Method pengiriman data bisa dengan GET atau POST
 		        url: "<?php echo site_url('area/listState'); ?>", // Isi dengan url/path file php yang dituju
+		        type: "POST", // Method pengiriman data bisa dengan GET atau POST
 		        data: {
 		        	CNTR_ID 			: $("#CNTR_ID2").val(),
 		        }, // data yang akan dikirim ke file yang dituju
@@ -514,8 +548,8 @@
 	    	$("#CITY_ID2").hide(); 
 		    $("#loading").show(); 
 		    $.ajax({
-		        type: "POST", 
 		        url: "<?php echo site_url('area/listCity'); ?>", 
+		        type: "POST", 
 		        data: {
 		        	STATE_ID 			: $("#STATE_ID2").val(),
 		        	}, 
@@ -540,8 +574,8 @@
 	    	$("#SUBD_ID2").hide(); 
 		    $("#loading").show(); 
 		    $.ajax({
-		        type: "POST", 
 		        url: "<?php echo site_url('area/listSubdistrict'); ?>",
+		        type: "POST", 
 		        data: {
 		        	CITY_ID : $("#CITY_ID2").val(),
 		        	},
@@ -563,67 +597,38 @@
 	    });
 	});
 
-
-	// untuk tab area
-	$(document).ready(() => {
-  		let url = location.href.replace(/\/$/, "");
- 
-  		if (location.hash) {
-		    const hash = url.split("#");
-		    $('#myTabArea a[href="#'+hash[1]+'"]').tab("show");
-		    url = location.href.replace(/\/#/, "#");
-		    history.replaceState(null, null, url);
-		    setTimeout(() => {
-		    	$(window).scrollTop(0);
-		    }, 400);
-  		} 
-   
-	  	$('a[data-toggle="tab"]').on("click", function() {
-		    let newUrl;
-		    const hash = $(this).attr("href");
-		    if(hash == "#home") {
-		    	newUrl = url.split("#")[0];
-		    } else {
-		      	newUrl = url.split("#")[0] + hash;
-		    }
-		    newUrl += "/";
-		    history.replaceState(null, null, newUrl);
-		});
-	});
-
-
 	// untuk validasi input user
 	$(document).ready(function(){
-		$('#userlogin').change(function(){    
-	      	var user 	= $('#userlogin').val();
+		$("#userlogin").on("keyup", function(){    
+	      	var user 	= $("#userlogin").val();
         	if(user.length >=5 ){
-        		$('#userlogin').removeClass('is-invalid');
+        		$("#userlogin").removeClass("is-invalid");
             	document.getElementById("valduser").innerHTML = '';
           	}else{
-          		$('#userlogin').addClass('is-invalid');
+          		$("#userlogin").addClass("is-invalid");
             	document.getElementById("valduser").innerHTML = 'Userlogin minimal 5 karakter.';
           	}
 	   	});
 
-	   	$('#pass').change(function(){    
+	   	$("#pass").on("keyup", function(){    
 	      	var user 	= $('#pass').val();
         	if(user.length >=5 ){
-        		$('#pass').removeClass('is-invalid');
+        		$("#pass").removeClass("is-invalid");
             	document.getElementById("valdpass").innerHTML = '';
           	}else{
-          		$('#pass').addClass('is-invalid');
+          		$("#pass").addClass("is-invalid");
             	document.getElementById("valdpass").innerHTML = 'Password minimal 5 karakter.';
           	}
 	   	});
 	    
-	    $('#passconf').change(function(){    
-	      	var fnew 		= $('#pass').val();  
-	      	var fconfirm 	= $('#passconf').val();  
+	    $("#passconf").on("keyup", function(){    
+	      	var fnew 		= $("#pass").val();  
+	      	var fconfirm 	= $("#passconf").val();  
         	if(fnew==fconfirm){
-        		$('#passconf').removeClass('is-invalid');
+        		$("#passconf").removeClass("is-invalid");
             	document.getElementById("valdconf").innerHTML = '';
           	}else{
-            	$('#passconf').addClass('is-invalid');
+            	$("#passconf").addClass("is-invalid");
             	document.getElementById("valdconf").innerHTML = 'Password Confirmation tidak sesuai.';
           	}
 	   });
@@ -676,8 +681,8 @@
 	    	$("#CITY_ID").hide(); 
 		    $("#loading").show(); 
 		    $.ajax({
-		        type: "POST", 
 		        url: "<?php echo site_url('product/listCity'); ?>", 
+		        type: "POST", 
 		        data: {
 		        	VEND_ID 			: $("#VEND_ID").val(),
 		        	}, 
@@ -705,8 +710,8 @@
 		    $("#serv").hide();
 		    $("#tarf").hide();
 		    $.ajax({
-		        type: "POST", 
 		        url: "<?php echo site_url('cs/custdata'); ?>", 
+		        type: "POST", 
 		        data: {
 		        	CUST_ID : $("#CUST_SELECT").val(),
 		        	}, 
@@ -736,8 +741,8 @@
 		    $("#serv").hide();
 		    $("#tarf").hide();
 		    $.ajax({
-		        type: "POST", 
 		        url: "<?php echo site_url('cs/custdata'); ?>", 
+		        type: "POST", 
 		        data: {
 		        	CUST_ID : $("#CUST_SELECT").val(),
 		        	CHANNEL : "<?php echo $this->uri->segment(3) ?>",
@@ -765,8 +770,8 @@
 
 	    $("#CHECK_PRODUCT").change(function(){
 		    $.ajax({
-		        type: "POST", 
 		        url: "<?php echo site_url('cs/list_umea'); ?>",
+		        type: "POST", 
 		        data: {
 		        	PRO_ID : $("#CHECK_PRODUCT").val(),
 		        	},
@@ -784,7 +789,78 @@
 		          	alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
 		        }
 		    });
-	    }); 
+	    });
+
+	    $("#TYPE_ID").ready(function(){
+		    $.ajax({
+		        url: "<?php echo site_url('product/list_subtype'); ?>",
+		        type: "POST", 
+		        data: {
+		        	PRO_ID  : $("#PRO_ID").val(),
+		        	TYPE_ID : $("#TYPE_ID").val(),
+		        	},
+		        dataType: "json",
+		        beforeSend: function(e) {
+		        	if(e && e.overrideMimeType) {
+		            	e.overrideMimeType("application/json;charset=UTF-8");
+		          	}
+		        },
+		        success: function(response){
+					$("#STYPE_ID").html(response.list_subtype).show();
+					$("#STYPE_ID").selectpicker('refresh');
+		        },
+		        error: function (xhr, ajaxOptions, thrownError) { 
+		          	alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+		        }
+		    });
+	    });
+
+	    $("#TYPE_ID").change(function(){
+		    $.ajax({
+		        url: "<?php echo site_url('product/list_subtype'); ?>",
+		        type: "POST", 
+		        data: {
+		        	PRO_ID  : null,
+		        	TYPE_ID : $("#TYPE_ID").val(),
+		        	},
+		        dataType: "json",
+		        beforeSend: function(e) {
+		        	if(e && e.overrideMimeType) {
+		            	e.overrideMimeType("application/json;charset=UTF-8");
+		          	}
+		        },
+		        success: function(response){
+					$("#STYPE_ID").html(response.list_subtype).show();
+					$("#STYPE_ID").selectpicker('refresh');
+		        },
+		        error: function (xhr, ajaxOptions, thrownError) { 
+		          	alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+		        }
+		    });
+	    });
+
+	    $("#PRINT_TYPE_ID").change(function(){
+		    $.ajax({
+		        url: "<?php echo site_url('product/list_subtype_print'); ?>",
+		        type: "POST", 
+		        data: {
+		        	TYPE_ID : $("#PRINT_TYPE_ID").val(),
+		        	},
+		        dataType: "json",
+		        beforeSend: function(e) {
+		        	if(e && e.overrideMimeType) {
+		            	e.overrideMimeType("application/json;charset=UTF-8");
+		          	}
+		        },
+		        success: function(response){
+					$("#PRINT_STYPE_ID").html(response.list_subtype_print).show();
+					$("#PRINT_STYPE_ID").selectpicker('refresh');
+		        },
+		        error: function (xhr, ajaxOptions, thrownError) { 
+		          	alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+		        }
+		    });
+	    });
 
 	    $("#CUST_ID").change(function(){ 
 		    $("#result").hide();
@@ -794,10 +870,10 @@
 		    $("#deposit").hide();
 		    $("#total").hide();
 		    $.ajax({
-		        type: "POST", 
 		        url: "<?php echo site_url('cs/custdata'); ?>", 
+		        type: "POST", 
 		        data: {
-		        	CUST_ID 			: $("#CUST_ID").val(),
+		        	CUST_ID : $("#CUST_ID").val(),
 		        	}, 
 		        dataType: "json",
 		        beforeSend: function(e) {
@@ -812,6 +888,7 @@
 					$("#cha-result").html(response.list_channel).show('slow');
 					$("#cha-result").selectpicker('refresh');
 					$("#COURIER_SAMPLING").selectpicker('val','refresh');
+					$("#SAMPLING_DEPOSIT").val('');
 		        },
 		        error: function (xhr, ajaxOptions, thrownError) {
 		        	$(".spinner").css("display","none"); 
@@ -828,6 +905,7 @@
 	    	$("#tarf").hide('slow');
 	    	$("#deposit").hide();
 	    	$("#total").hide();
+	    	$("#SAMPLING_DEPOSIT").val('');
 	    });
 
 		$("#serv").hide();
@@ -844,8 +922,8 @@
 	    	var COURIER_A = COURIER_R[1];
 	    	var COURIER_N = COURIER_R[2];
 		    $.ajax({
-		        type: "POST", 
 		        url: "<?php echo site_url('cs/datacal'); ?>", 
+		        type: "POST", 
 		        data: {
 		        	CUST_ID 			: $("#CUST_ID").val(),
 		        	CITY_ID 			: $("#ORIGIN_CITY").val(),
@@ -862,6 +940,7 @@
 		        		$(".spinner2").css("display","none");
 		        		$(".spinner3").css("display","block");
 		        	}
+		        	$("#SAMPLING_DEPOSIT").val('');
 		        	if(e && e.overrideMimeType) {
 		            	e.overrideMimeType("application/json;charset=UTF-8");
 		          	}
@@ -881,7 +960,10 @@
 		        		$("#deposit").html(response.list_deposit).show('slow');
 		        		$("#total").html(response.list_total).show('slow');
 		        		$('#LSAM_COST').mask('#.##0', {reverse: true});
-						if($("#DEPOSIT_VALUE").val() < 0) {
+		        		if ($("#DEPOSIT_VALUE").val() == 0) {
+				    		$("#pilih-deposit").attr("disabled", "disabled");
+				    	}
+						if($("#DEPOSIT_VALUE").val() < 0 && !($("#pilih-cod").is(":checked"))) {
 							$("#pilih-deposit").attr("checked", "checked");
 							$("#pilih-deposit").attr("disabled", "disabled");
 						}
@@ -977,20 +1059,49 @@
 						    	$("#CETAK_TOTAL").val(0);
 						    	$("#pilih-deposit").prop("checked", false);
 						    	$("#pilih-deposit").attr("disabled", "disabled");
-						    	// $("#INPUT_BANK").selectpicker('val', 'refresh');
-						    	// $("#INPUT_BANK").selectpicker('val', '38');
 						    } else {
 						    	var hidden_cost = $("#HIDDEN_LSAM_COST").val();
-						    	$("#LSAM_COST").val(hidden_cost);
-								$("#SAMPLING_DEPOSIT").val('');
-						    	$("#CETAK_TOTAL").val(hidden_cost);
-						    	$("#pilih-deposit").prop("checked", false);
+
 						    	if ($("#DEPOSIT_VALUE").val() == 0) {
 						    		$("#pilih-deposit").attr("disabled", "disabled");
 						    	} else {
-						    		$("#pilih-deposit").removeAttr("disabled", "disabled");
+							    	if ($("#DEPOSIT_VALUE").val() < 0) {
+							    		$("#pilih-deposit").prop("checked", true);
+							    		$("#pilih-deposit").attr("disabled", "disabled");
+							    	} else {
+							    		$("#pilih-deposit").prop("checked", false);
+							    		$("#pilih-deposit").removeAttr("disabled", "disabled");
+							    	}
 						    	}
-						    	// $("#INPUT_BANK").selectpicker('val', 'refresh');
+						    	if ($("#pilih-deposit").is(":checked")){
+						    		var deposit = $("#DEPOSIT_VALUE").val();
+						    		$("#SAMPLING_DEPOSIT").val(deposit);
+								} else {
+									var deposit = 0;
+						    		$("#SAMPLING_DEPOSIT").val('');
+								}
+
+						    	var	reverse_cost  = hidden_cost.toString().split('').reverse().join(''),
+										cost_conv = reverse_cost.match(/\d{1,3}/g);
+										cost_conv = cost_conv.join('').split('').reverse().join('');
+
+						    	var	reverse_deposit  = deposit.toString().split('').reverse().join(''),
+										deposit_conv = reverse_deposit.match(/\d{1,3}/g);
+										deposit_conv = deposit_conv.join('').split('').reverse().join('');
+
+								if (deposit < 0) {
+									var depo = parseInt(-deposit_conv);
+									var total = parseInt(cost_conv) - parseInt(-deposit_conv);
+								} else {
+									var depo = parseInt(deposit_conv);
+									var total = parseInt(cost_conv) - parseInt(deposit_conv);
+								}
+								var	reverse_total  = total.toString().split('').reverse().join(''),
+										total_conv = reverse_total.match(/\d{1,3}/g);
+										total_conv = total_conv.join('.').split('').reverse().join('');
+
+						    	$("#LSAM_COST").val(hidden_cost);
+						    	$("#CETAK_TOTAL").val(total_conv);
 						    };
 						});
 
@@ -1069,8 +1180,8 @@
 	    	var TARIF_V = SERVICE_R[0];
 	    	var SERVICE_N = SERVICE_R[1];
 	    	$.ajax({
-		        type: "POST", 
 		        url: "<?php echo site_url('cs/datatarif'); ?>", 
+		        type: "POST", 
 		        data: {
 		        	courier 		: COURIER_N,
 		        	service 		: SERVICE_N,
@@ -1083,6 +1194,7 @@
 		        	$("#tarf").hide();
 		        	$("#deposit").hide();
 		        	$("#total").hide();
+		        	$("#SAMPLING_DEPOSIT").val('');
 		        	if(e && e.overrideMimeType) {
 		            	e.overrideMimeType("application/json;charset=UTF-8");
 		          	}
@@ -1095,8 +1207,10 @@
 					$("#deposit").html(response.list_deposit).show('slow');
 					$("#total").html(response.list_total).show('slow');
 		        	$('#LSAM_COST').mask('#.##0', {reverse: true});
-					
-					if($("#DEPOSIT_VALUE").val() < 0) {
+					if ($("#DEPOSIT_VALUE").val() == 0) {
+			    		$("#pilih-deposit").attr("disabled", "disabled");
+			    	}
+					if($("#DEPOSIT_VALUE").val() < 0 && !($("#pilih-cod").is(":checked"))) {
 						$("#pilih-deposit").attr("checked", "checked");
 						$("#pilih-deposit").attr("disabled", "disabled");
 					}
@@ -1180,6 +1294,7 @@
 							var cost = $("#LSAM_COST").val();
 							$("#SAMPLING_DEPOSIT").val('');
 					    	$("#CETAK_TOTAL").val(cost);
+					    	$("#INPUT_BANK").selectpicker('val', 'refresh');
 						}
 					});
 
@@ -1190,20 +1305,49 @@
 					    	$("#CETAK_TOTAL").val(0);
 					    	$("#pilih-deposit").prop("checked", false);
 					    	$("#pilih-deposit").attr("disabled", "disabled");
-					    	// $("#INPUT_BANK").selectpicker('val', 'refresh');
-					    	// $("#INPUT_BANK").selectpicker('val', '38');
 					    } else {
 					    	var hidden_cost = $("#HIDDEN_LSAM_COST").val();
-					    	$("#LSAM_COST").val(hidden_cost);
-							$("#SAMPLING_DEPOSIT").val('');
-					    	$("#CETAK_TOTAL").val(hidden_cost);
-					    	$("#pilih-deposit").prop("checked", false);
+
 					    	if ($("#DEPOSIT_VALUE").val() == 0) {
 					    		$("#pilih-deposit").attr("disabled", "disabled");
 					    	} else {
-					    		$("#pilih-deposit").removeAttr("disabled", "disabled");
+						    	if ($("#DEPOSIT_VALUE").val() < 0) {
+						    		$("#pilih-deposit").prop("checked", true);
+						    		$("#pilih-deposit").attr("disabled", "disabled");
+						    	} else {
+						    		$("#pilih-deposit").prop("checked", false);
+						    		$("#pilih-deposit").removeAttr("disabled", "disabled");
+						    	}
 					    	}
-					    	// $("#INPUT_BANK").selectpicker('val', 'refresh');
+					    	if ($("#pilih-deposit").is(":checked")){
+					    		var deposit = $("#DEPOSIT_VALUE").val();
+					    		$("#SAMPLING_DEPOSIT").val(deposit);
+							} else {
+								var deposit = 0;
+					    		$("#SAMPLING_DEPOSIT").val('');
+							}
+
+					    	var	reverse_cost  = hidden_cost.toString().split('').reverse().join(''),
+									cost_conv = reverse_cost.match(/\d{1,3}/g);
+									cost_conv = cost_conv.join('').split('').reverse().join('');
+
+					    	var	reverse_deposit  = deposit.toString().split('').reverse().join(''),
+									deposit_conv = reverse_deposit.match(/\d{1,3}/g);
+									deposit_conv = deposit_conv.join('').split('').reverse().join('');
+
+							if (deposit < 0) {
+								var depo = parseInt(-deposit_conv);
+								var total = parseInt(cost_conv) - parseInt(-deposit_conv);
+							} else {
+								var depo = parseInt(deposit_conv);
+								var total = parseInt(cost_conv) - parseInt(deposit_conv);
+							}
+							var	reverse_total  = total.toString().split('').reverse().join(''),
+									total_conv = reverse_total.match(/\d{1,3}/g);
+									total_conv = total_conv.join('.').split('').reverse().join('');
+
+					    	$("#LSAM_COST").val(hidden_cost);
+					    	$("#CETAK_TOTAL").val(total_conv);
 					    };
 					});
 
@@ -1392,8 +1536,8 @@
 	        }
 
 		    $.ajax({
-		        type: "POST", 
 		        url: "<?php echo site_url('calculator/datacal'); ?>", 
+		        type: "POST", 
 		        data: {
 		        	COURIER_ID 			: COURIER_V,
 		        	COURIER_NAME 		: COURIER_N,
@@ -1458,8 +1602,8 @@
 		    $("#option").css("display","none");
 		    $("#ORDD_OPTION").val('');
 		    $.ajax({
-		        type: "POST", 
 		        url: "<?php echo site_url('order/productdata'); ?>", 
+		        type: "POST", 
 		        data: {
 		        	PRO_ID 			: $("#PRO_ID").val(),
 		        	JENIS 			: $("#JENIS").val(),
@@ -1545,7 +1689,7 @@
 	// datatables area
 	$(document).ready(function(){
         //subdistrict
-        var table = $('#myTableSubd').dataTable({ 
+        var myTableSubd = $('#myTableSubd').dataTable({ 
             "processing": true, 
             "serverSide": true, 
             "ordering": false, 
@@ -1563,7 +1707,7 @@
         });
 
         // city
-    	var table = $('#myTableCity').dataTable({ 
+    	var myTableCity = $('#myTableCity').dataTable({ 
             "processing": true, 
             "serverSide": true, 
             "ordering": false, 
@@ -1581,7 +1725,7 @@
         });
 
         // state
-    	var table = $('#myTableState').dataTable({ 
+    	var myTableState = $('#myTableState').dataTable({ 
             "processing": true, 
             "serverSide": true, 
             "ordering": false, 
@@ -1599,7 +1743,7 @@
         });
 
         // country
-    	var table = $('#myTableCountry').dataTable({ 
+    	var myTableCountry = $('#myTableCountry').dataTable({ 
             "processing": true, 
             "serverSide": true, 
             "ordering": false, 
@@ -1658,14 +1802,14 @@
     // datatables product
 	$(document).ready(function(){
         //subdistrict
-        var table = $('#myTableProduct').dataTable({ 
+        var myTableProduct = $('#myTableProduct').dataTable({ 
             "processing": true, 
             "serverSide": true, 
             "ordering": false, 
             "order": [], 
             "ajax": {
-                "type": "POST",
                 "url": "<?php echo site_url('product/productjson')?>",
+                "type": "POST",
             },
             "columnDefs": [
             { 
@@ -1675,14 +1819,14 @@
             ],
         });
 
-        var table = $('#myTablePoption').dataTable({ 
+        var myTablePoption = $('#myTablePoption').dataTable({ 
             "processing": true, 
             "serverSide": true, 
             "ordering": false, 
             "order": [], 
             "ajax": {
-                "type": "POST",
                 "url": "<?php echo site_url('product/poptionjson')?>",
+                "type": "POST",
                 "data": {
                 	"id": "<?php echo $this->uri->segment(3) ?>",
                 },
@@ -1697,8 +1841,9 @@
     });
 
     $(document).ready(function(){
+    	$('#STATUS').selectpicker('render');
         //customer
-        var table = $('#myTableCustomer').dataTable({ 
+        var myTableCustomer = $('#myTableCustomer').dataTable({ 
             "processing": true, 
             "serverSide": true, 
             "ordering": false, 
@@ -1717,7 +1862,7 @@
 
         // sampling
         // default sampling cs
-        var table = $('#myTableSampling').dataTable({
+        var myTableSampling = $('#myTableSampling').dataTable({
             "processing": true, 
             "serverSide": true, 
             "ordering": false,
@@ -1750,7 +1895,7 @@
 	    	} else {
 		    	var TO_VALUE  = $('#TO').val();
 	    	}
-        	var table = $('#myTableSampling').dataTable({
+        	var myTableSampling = $('#myTableSampling').dataTable({
         		"destroy": true,
 	            "processing": true, 
 	            "serverSide": true, 
@@ -1761,11 +1906,11 @@
 	                "url": "<?php echo site_url('cs/samplingjson')?>",
 	                "type": "POST",
 	                "data": {
-	                	CUST_NAME 	: $('#CUST_NAME').val(),
-	                	FROM 		: FROM_VALUE,
-	                	TO 			: TO_VALUE,
-	                	STATUS_FILTER : $('#STATUS').val(),
-	                	segment 	: "<?php echo $this->uri->segment(2) ?>",
+	                	"CUST_NAME" 	: $('#CUST_NAME').val(),
+	                	"FROM" 			: FROM_VALUE,
+	                	"TO" 			: TO_VALUE,
+	                	"STATUS_FILTER" : $('#STATUS').val(),
+	                	"segment" 		: "<?php echo $this->uri->segment(2) ?>",
 	                },
 	            },
 	            "columnDefs": [
@@ -1779,7 +1924,7 @@
         });
 
         // sampling pm
-        var table = $('#myPmSampling').dataTable({ 
+        var myPmSampling = $('#myPmSampling').dataTable({ 
             "processing": true, 
             "serverSide": true, 
             "ordering": false, 
@@ -1799,7 +1944,7 @@
 
 		// check stock
 		// default stock cs
-		var table = $('#tableCsCheck').dataTable({ 
+		var tableCsCheck = $('#tableCsCheck').dataTable({ 
             "processing": true, 
             "serverSide": true, 
             "ordering": false,
@@ -1831,7 +1976,7 @@
 	    	} else {
 		    	var TO_VALUE  = $('#TO').val();
 	    	}
-        	var table = $('#tableCsCheck').dataTable({
+        	var tableCsCheck = $('#tableCsCheck').dataTable({
         		"destroy": true,
 	            "processing": true, 
 	            "serverSide": true, 
@@ -1843,11 +1988,11 @@
 	                "url": "<?php echo site_url('cs/ckstockjson')?>",
 	                "type": "POST",
 	                "data": {
-	                	CUST_NAME 	: $('#CUST_NAME').val(),
-	                	FROM 		: FROM_VALUE,
-	                	TO 			: TO_VALUE,
-	                	STATUS_FILTER : $('#STATUS').val(),
-	                	segment 	: "<?php echo $this->uri->segment(2) ?>",
+	                	"CUST_NAME" 	: $('#CUST_NAME').val(),
+	                	"FROM" 			: FROM_VALUE,
+	                	"TO" 			: TO_VALUE,
+	                	"STATUS_FILTER" : $('#STATUS').val(),
+	                	"segment" 		: "<?php echo $this->uri->segment(2) ?>",
 	                },
 	            },
 	            "columnDefs": [
@@ -1861,7 +2006,7 @@
         });
 
         // daftar data check-stock di dalam menu follow up pada check stock cs
-        var table = $('#tableCsCheckFollowUp').dataTable({ 
+        var tableCsCheckFollowUp = $('#tableCsCheckFollowUp').dataTable({ 
             "processing": true, 
             "serverSide": true, 
             "ordering": false, 
@@ -1882,7 +2027,7 @@
         });
 
         // table check stock pm
-        var table = $('#tablePmCheck').dataTable({ 
+        var tablePmCheck = $('#tablePmCheck').dataTable({ 
             "processing": true, 
             "serverSide": true, 
             "ordering": false, 
@@ -1902,7 +2047,7 @@
 
         //Follow Up
         //
-        var table = $('#tableFollowUp').dataTable({ 
+        var tableFollowUp = $('#tableFollowUp').dataTable({ 
             "processing": true, 
             "serverSide": true, 
             "ordering": false, 
@@ -1924,7 +2069,7 @@
         });
 
         // default follow up
-        var table = $('#tableCustomerLog').dataTable({ 
+        var tableCustomerLog = $('#tableCustomerLog').dataTable({ 
             "processing": true, 
             "serverSide": true, 
             "ordering": false,
@@ -1957,7 +2102,7 @@
 	    	} else {
 		    	var TO_VALUE  = $('#TO').val();
 	    	}
-        	var table = $('#tableCustomerLog').dataTable({
+        	var tableCustomerLog = $('#tableCustomerLog').dataTable({
         		"destroy": true,
 	            "processing": true, 
 	            "serverSide": true, 
@@ -1968,11 +2113,11 @@
 	                "url": "<?php echo site_url('followup/clog_json')?>",
 	                "type": "POST",
 	                "data": {
-	                	CUST_NAME 	: $('#CUST_NAME').val(),
-	                	FROM 		: FROM_VALUE,
-	                	TO 			: TO_VALUE,
-	                	STATUS_FILTER : $('#STATUS').val(),
-	                	segment 	: "<?php echo $this->uri->segment(2) ?>",
+	                	"CUST_NAME" 	: $('#CUST_NAME').val(),
+	                	"FROM" 			: FROM_VALUE,
+	                	"TO" 			: TO_VALUE,
+	                	"STATUS_FILTER" : $('#STATUS').val(),
+	                	"segment" 		: "<?php echo $this->uri->segment(2) ?>",
 	                },
 	            },
 	            "columnDefs": [
@@ -1987,7 +2132,7 @@
         //
 
         // order
-        var table = $('#myTableOrder').dataTable({
+        var myTableOrder = $('#myTableOrder').dataTable({
             "processing": true, 
             "serverSide": true, 
             "ordering": false, 
@@ -2005,7 +2150,7 @@
         });
 
         $("#FILTER_ORDER").click(function(){
-        	var table = $('#myTableOrder').dataTable({
+        	var myTableOrder = $('#myTableOrder').dataTable({
 	            "destroy": true,
 	            "processing": true, 
 	            "serverSide": true, 
@@ -2015,7 +2160,7 @@
 	                "url": "<?php echo site_url('order/orderjson')?>",
 	                "type": "POST",
 	                "data": {
-	                	STATUS_FILTER : $('#STATUS').val()
+	                	"STATUS_FILTER" : $('#STATUS').val()
 	                },
 	            },
 	            "columnDefs": [
@@ -2029,7 +2174,7 @@
         });
 
         // order-support
-        var table = $('#my-order-support').dataTable({
+        var my_order_support = $('#my-order-support').dataTable({
             "processing": true, 
             "serverSide": true, 
             "ordering": false, 
@@ -2047,7 +2192,7 @@
         });
 
         $("#FILTER_ORDER_SUPPORT").click(function(){
-        	var table = $('#my-order-support').dataTable({
+        	var my_order_support = $('#my-order-support').dataTable({
 	            "destroy": true,
 	            "processing": true, 
 	            "serverSide": true, 
@@ -2057,7 +2202,7 @@
 	                "url": "<?php echo site_url('order_support/orderjson')?>",
 	                "type": "POST",
 	                "data": {
-	                	STATUS_FILTER : $('#STATUS').val()
+	                	"STATUS_FILTER" : $('#STATUS').val()
 	                },
 	            },
 	            "columnDefs": [
@@ -2071,7 +2216,7 @@
         });
 
         // payment-vendor
-        var table = $('#my-payment-vendor').dataTable({
+        var my_payment_vendor = $('#my-payment-vendor').dataTable({
             "processing": true, 
             "serverSide": true, 
             "ordering": false, 
@@ -2089,7 +2234,7 @@
         });
 
         $("#FILTER_PAYTOV").click(function(){
-        	var table = $('#my-payment-vendor').dataTable({
+        	var my_payment_vendor = $('#my-payment-vendor').dataTable({
 	            "destroy": true,
 	            "processing": true, 
 	            "serverSide": true, 
@@ -2099,7 +2244,7 @@
 	                "url": "<?php echo site_url('payment_vendor/paymentjson')?>",
 	                "type": "POST",
 	                "data": {
-	                	STATUS_FILTER : $('#STATUS').val()
+	                	"STATUS_FILTER" : $('#STATUS').val()
 	                },
 	            },
 	            "columnDefs": [
@@ -2114,7 +2259,7 @@
 
         // customer deposit
 		// default customer deposit
-		var table = $('#table-cust-deposit').dataTable({ 
+		var table_cust_deposit = $('#table-cust-deposit').dataTable({ 
             "processing": true, 
             "serverSide": true, 
             "ordering": false,
@@ -2141,7 +2286,7 @@
 		    	var CUSTD_DATE = $('#CUSTD_DATE').val();
 	    	}
 
-        	var table = $('#table-cust-deposit').dataTable({
+        	var table_cust_deposit = $('#table-cust-deposit').dataTable({
         		"destroy": true,
 	            "processing": true, 
 	            "serverSide": true, 
@@ -2153,10 +2298,10 @@
 	                "url": "<?php echo site_url('customer_deposit/depositjson')?>",
 	                "type": "POST",
 	                "data": {
-	                	STATUS 		: $('#STATUS').val(),
-	                	CUSTD_DATE 	: CUSTD_DATE,
-	                	ORDER_ID 	: $('#ORDER_ID').val(),
-	                	CUST_NAME 	: $('#CUST_NAME').val(),
+	                	"STATUS_FILTER" : $('#STATUS').val(),
+	                	"CUSTD_DATE" 	: CUSTD_DATE,
+	                	"ORDER_ID" 		: $('#ORDER_ID').val(),
+	                	"CUST_NAME" 	: $('#CUST_NAME').val(),
 	                },
 	            },
 	            "columnDefs": [
@@ -2172,7 +2317,7 @@
 
         // vendor deposit
         // default vendor deposit
-		var table = $('#table-vend-deposit').dataTable({ 
+		var table_vend_deposit = $('#table-vend-deposit').dataTable({ 
             "processing": true, 
             "serverSide": true, 
             "ordering": false,
@@ -2191,7 +2336,7 @@
         });
         //
 
-		//search vendor deposit
+		// search vendor deposit
 		$("#search-vend-deposit").click(function(){
         	if ($('#VENDD_DATE').val() == null) {
 		        var VENDD_DATE = null;
@@ -2199,7 +2344,7 @@
 		    	var VENDD_DATE = $('#VENDD_DATE').val();
 	    	}
 
-        	var table = $('#table-vend-deposit').dataTable({
+        	var table_vend_deposit = $('#table-vend-deposit').dataTable({
         		"destroy": true,
 	            "processing": true, 
 	            "serverSide": true, 
@@ -2211,10 +2356,10 @@
 	                "url": "<?php echo site_url('vendor_deposit/depositjson')?>",
 	                "type": "POST",
 	                "data": {
-	                	STATUS     : $('#STATUS').val(),
-	                	VENDD_DATE : VENDD_DATE,
-	                	ORDER_ID   : $('#ORDER_ID').val(),
-	                	VEND_NAME  : $('#VEND_NAME').val(),
+	                	"STATUS_FILTER" : $('#STATUS').val(),
+	                	"VENDD_DATE" 	: VENDD_DATE,
+	                	"ORDER_ID"   	: $('#ORDER_ID').val(),
+	                	"VEND_NAME"  	: $('#VEND_NAME').val(),
 	                },
 	            },
 	            "columnDefs": [
@@ -2229,8 +2374,8 @@
         });
         //
 
-        //vendor
-        var table = $('#myTableVendor').dataTable({ 
+        // vendor
+        var myTableVendor = $('#myTableVendor').dataTable({ 
             "processing": true, 
             "serverSide": true, 
             "ordering": false, 
@@ -2248,7 +2393,7 @@
         });
 
         // vendor bank
-        var table = $('#myTableVendorBank').dataTable({ 
+        var myTableVendorBank = $('#myTableVendorBank').dataTable({ 
             "processing": true, 
             "serverSide": true, 
             "ordering": false, 
@@ -2268,8 +2413,8 @@
             ],
         });
 
-        //courier
-        var table = $('#myTableCourier').dataTable({ 
+        // courier
+        var myTableCourier = $('#myTableCourier').dataTable({ 
             "processing": true, 
             "serverSide": true, 
             "ordering": false, 
@@ -2287,15 +2432,15 @@
         });
 
         // courier address
-        var table = $('#myTableCouaddress').dataTable({ 
+        var myTableCouaddress = $('#myTableCouaddress').dataTable({ 
             "processing": true, 
             "serverSide": true, 
             "ordering": false, 
             "order": [], 
             "ajax": {
-                "type": "POST",
                 "url": "<?php echo site_url('courier/addressjson')?>",
-                data : {id : "<?php echo $this->uri->segment(3) ?>"},
+                "type": "POST",
+                "data" : {"id" : "<?php echo $this->uri->segment(3) ?>"},
             },
             "columnDefs": [
             { 
@@ -2306,15 +2451,15 @@
         });
 
         // courier tariff
-        var table = $('#myTableCoutariff').dataTable({ 
+        var myTableCoutariff = $('#myTableCoutariff').dataTable({ 
             "processing": true, 
             "serverSide": true, 
             "ordering": false, 
             "order": [], 
             "ajax": {
-                "type": "POST",
                 "url": "<?php echo site_url('courier/tariffjson')?>",
-                data : {id : "<?php echo $this->uri->segment(3) ?>"},
+                "type": "POST",
+                "data" : {"id" : "<?php echo $this->uri->segment(3) ?>"},
             },
             "columnDefs": [
             { 
@@ -2325,7 +2470,7 @@
         });
 
         // bank
-        var table = $('#myTableBank').dataTable({ 
+        var myTableBank = $('#myTableBank').dataTable({ 
             "processing": true, 
             "serverSide": true, 
             "ordering": false, 
@@ -2343,7 +2488,7 @@
         });
 
         // channel
-        var table = $('#myTableChannel').dataTable({ 
+        var myTableChannel = $('#myTableChannel').dataTable({ 
             "processing": true, 
             "serverSide": true, 
             "ordering": false, 
@@ -2379,7 +2524,7 @@
         });
 
         // type
-        var table = $('#myTableType').dataTable({ 
+        var myTableType = $('#myTableType').dataTable({ 
             "processing": true, 
             "serverSide": true, 
             "ordering": false, 
@@ -2396,8 +2541,29 @@
             ],
         });
 
+        // subtype
+        var myTableSubtype = $('#myTableSubtype').dataTable({ 
+            "processing": true, 
+            "serverSide": true, 
+            "ordering": false, 
+            "order": [], 
+            "ajax": {
+                "url": "<?php echo site_url('master/subtypejson')?>",
+                "type": "POST",
+                "data": {
+                	"type_id": "<?php echo $this->uri->segment(3) ?>",
+                },
+            },
+            "columnDefs": [
+            { 
+                "targets": [ 0 ], 
+                "orderable": false, 
+            },
+            ],
+        });
+
         // umea
-        var table = $('#myTableUmea').dataTable({ 
+        var myTableUmea = $('#myTableUmea').dataTable({ 
             "processing": true, 
             "serverSide": true, 
             "ordering": false, 
@@ -2414,8 +2580,334 @@
             ],
         });
 
+        // project
+        var myTableProject = $('#myTableProject').dataTable({
+            "processing": true, 
+            "serverSide": true, 
+            "ordering": false, 
+            "order": [], 
+            "ajax": {
+                "url": "<?php echo site_url('project/project_json')?>",
+                "type": "POST"
+            },
+            "columnDefs": [
+	            { 
+	                "targets": [ 0 ], 
+	                "orderable": false, 
+	            },
+            ],
+        });
+
+        $("#FILTER_PROJECT").click(function(){
+        	var myTableProject = $('#myTableProject').dataTable({
+	            "destroy": true,
+	            "processing": true, 
+	            "serverSide": true, 
+	            "ordering": false, 
+	            "order": [], 
+	            "ajax": {
+	                "url": "<?php echo site_url('project/project_json')?>",
+	                "type": "POST",
+	                "data": {
+	                	"STATUS_FILTER" : $('#STATUS').val()
+	                },
+	            },
+	            "columnDefs": [
+		            { 
+		                "targets": [ 0 ], 
+		                "orderable": false, 
+		            },
+	            ],
+	        });
+	        $("#FILTER_PROJECT").attr("disabled","disabled");
+        });
+
+        // project follow up
+        var myTableProjectFollowUp = $('#myTableProjectFollowUp').dataTable({
+            "processing": true, 
+            "serverSide": true, 
+            "ordering": false, 
+            "order": [], 
+            "ajax": {
+                "url": "<?php echo site_url('project_followup/project_json')?>",
+                "type": "POST"
+            },
+            "columnDefs": [
+	            { 
+	                "targets": [ 0 ], 
+	                "orderable": false, 
+	            },
+            ],
+        });
+
+        $("#FILTER_PROJECT_FOLLOW_UP").click(function(){
+        	var myTableProjectFollowUp = $('#myTableProjectFollowUp').dataTable({
+	            "destroy": true,
+	            "processing": true, 
+	            "serverSide": true, 
+	            "ordering": false, 
+	            "order": [], 
+	            "ajax": {
+	                "url": "<?php echo site_url('project_followup/project_json')?>",
+	                "type": "POST",
+	                "data": {
+	                	"STATUS_FILTER" : $('#STATUS').val()
+	                },
+	            },
+	            "columnDefs": [
+		            { 
+		                "targets": [ 0 ], 
+		                "orderable": false, 
+		            },
+	            ],
+	        });
+	        $("#FILTER_PROJECT_FOLLOW_UP").attr("disabled","disabled");
+        });
+
+        // producer
+        var myTableProducer = $('#myTableProducer').dataTable({ 
+            "processing": true, 
+            "serverSide": true, 
+            "ordering": false, 
+            "order": [], 
+            "ajax": {
+                "url": "<?php echo site_url('producer/producerjson')?>",
+                "type": "POST"
+            },
+            "columnDefs": [
+            { 
+                "targets": [ 0 ], 
+                "orderable": false, 
+            },
+            ],
+        });
+
+        var myTableProducer_x_Product = $('#myTableProducer_x_Product').dataTable({ 
+            "processing": true, 
+            "serverSide": true, 
+            "ordering": false, 
+            "order": [], 
+            "ajax": {
+                "url": "<?php echo site_url('producer/productjson')?>",
+                "type": "POST",
+                "data": {
+                	"prdu_id": "<?php echo $this->uri->segment(3) ?>",
+                },
+            },
+            "columnDefs": [
+            { 
+                "targets": [ 0 ], 
+                "orderable": false, 
+            },
+            ],
+        });
+
+        // producer category
+        var myTableProducerCategory = $('#myTableProducerCategory').dataTable({ 
+            "processing": true, 
+            "serverSide": true, 
+            "ordering": false, 
+            "order": [], 
+            "ajax": {
+                "url": "<?php echo site_url('master_producer/producer_category_json')?>",
+                "type": "POST",
+            },
+            "columnDefs": [
+            { 
+                "targets": [ 0 ], 
+                "orderable": false, 
+            },
+            ],
+        });
+
+        // producer type
+        var myTableProducerType = $('#myTableProducerType').dataTable({ 
+            "processing": true, 
+            "serverSide": true, 
+            "ordering": false, 
+            "order": [], 
+            "ajax": {
+                "url": "<?php echo site_url('master_producer/producer_type_json')?>",
+                "type": "POST",
+            },
+            "columnDefs": [
+            { 
+                "targets": [ 0 ], 
+                "orderable": false, 
+            },
+            ],
+        });
+
+        // producer product
+        var myTableProducerProduct = $('#myTableProducerProduct').dataTable({ 
+            "processing": true, 
+            "serverSide": true, 
+            "ordering": false, 
+            "order": [], 
+            "ajax": {
+                "url": "<?php echo site_url('master_producer/producer_product_json')?>",
+                "type": "POST",
+                "data": {
+                	"prdu_id": "<?php echo $this->uri->segment(3) ?>",
+                },
+            },
+            "columnDefs": [
+            { 
+                "targets": [ 0 ], 
+                "orderable": false, 
+            },
+            ],
+        });
+
+         // producer product property
+        var myTableProducerProductProperty = $('#myTableProducerProductProperty').dataTable({ 
+            "processing": true, 
+            "serverSide": true, 
+            "ordering": false, 
+            "order": [], 
+            "ajax": {
+                "url": "<?php echo site_url('master_producer/product_property_json')?>",
+                "type": "POST",
+                "data": {
+                	"prdup_id": "<?php echo $this->uri->segment(3) ?>",
+                },
+            },
+            "columnDefs": [
+            { 
+                "targets": [ 0 ], 
+                "orderable": false, 
+            },
+            ],
+        });
+
+        // size group
+        var myTableSizeGroup = $('#myTableSizeGroup').dataTable({ 
+            "processing": true, 
+            "serverSide": true, 
+            "ordering": false, 
+            "order": [], 
+            "ajax": {
+                "url": "<?php echo site_url('master_producer/size_group_json')?>",
+                "type": "POST",
+            },
+            "columnDefs": [
+            { 
+                "targets": [ 0 ], 
+                "orderable": false, 
+            },
+            ],
+        });
+
+        // size product
+        var myTableSizeProduct = $('#myTableSizeProduct').dataTable({ 
+            "processing": true, 
+            "serverSide": true, 
+            "ordering": false, 
+            "order": [], 
+            "ajax": {
+                "url": "<?php echo site_url('master_producer/size_product_json')?>",
+                "type": "POST",
+            },
+            "columnDefs": [
+            { 
+                "targets": [ 0 ], 
+                "orderable": false, 
+            },
+            ],
+        });
+
+        // size
+        var myTableSize = $('#myTableSize').dataTable({ 
+            "processing": true, 
+            "serverSide": true, 
+            "ordering": false, 
+            "order": [], 
+            "ajax": {
+                "url": "<?php echo site_url('master_producer/size_json')?>",
+                "type": "POST",
+            },
+            "columnDefs": [
+            { 
+                "targets": [ 0 ], 
+                "orderable": false, 
+            },
+            ],
+        });
+
+        // size value
+        var myTableSizeValue = $('#myTableSizeValue').dataTable({ 
+            "processing": true, 
+            "serverSide": true, 
+            "ordering": false, 
+            "order": [], 
+            "ajax": {
+                "url": "<?php echo site_url('master_producer/size_value_json')?>",
+                "type": "POST",
+            },
+            "columnDefs": [
+            { 
+                "targets": [ 0 ], 
+                "orderable": false, 
+            },
+            ],
+        });
+
+        // project type
+        var myTableProjectType = $('#myTableProjectType').dataTable({ 
+            "processing": true, 
+            "serverSide": true, 
+            "ordering": false, 
+            "order": [], 
+            "ajax": {
+                "url": "<?php echo site_url('master_producer/project_type_json')?>",
+                "type": "POST",
+            },
+            "columnDefs": [
+            { 
+                "targets": [ 0 ], 
+                "orderable": false, 
+            },
+            ],
+        });
+
+        // project activity
+        var myTableProjectActivity = $('#myTableProjectActivity').dataTable({ 
+            "processing": true, 
+            "serverSide": true, 
+            "ordering": false, 
+            "order": [], 
+            "ajax": {
+                "url": "<?php echo site_url('master_producer/project_activity_json')?>",
+                "type": "POST",
+            },
+            "columnDefs": [
+            { 
+                "targets": [ 0 ], 
+                "orderable": false, 
+            },
+            ],
+        });
+
+        // project criteria
+        var myTableProjectCriteria = $('#myTableProjectCriteria').dataTable({ 
+            "processing": true, 
+            "serverSide": true, 
+            "ordering": false, 
+            "order": [], 
+            "ajax": {
+                "url": "<?php echo site_url('master_producer/project_criteria_json')?>",
+                "type": "POST",
+            },
+            "columnDefs": [
+            { 
+                "targets": [ 0 ], 
+                "orderable": false, 
+            },
+            ],
+        });
+
         // user
-        var table = $('#myTableUser').dataTable({ 
+        var myTableUser = $('#myTableUser').dataTable({ 
             "processing": true, 
             "serverSide": true, 
             "ordering": false, 
@@ -2433,7 +2925,7 @@
         });
 
         // group
-        var table = $('#myTableGroup').dataTable({ 
+        var myTableGroup = $('#myTableGroup').dataTable({ 
             "processing": true, 
             "serverSide": true, 
             "ordering": false, 
@@ -2451,15 +2943,15 @@
         });
 
         // access
-        var table = $('#myTableAccess').dataTable({ 
+        var myTableAccess = $('#myTableAccess').dataTable({ 
             "processing": true, 
             "serverSide": true, 
             "ordering": false, 
             "order": [], 
             "ajax": {
-                "type": "POST",
                 "url": "<?php echo site_url('management/accessjson')?>",
-                data : {id : "<?php echo $this->uri->segment(3) ?>"},
+                "type": "POST",
+                "data" : {"id" : "<?php echo $this->uri->segment(3) ?>"},
             },
             "columnDefs": [
             { 
@@ -2470,7 +2962,7 @@
         });
 
         // module
-        var table = $('#myTableModule').dataTable({ 
+        var myTableModule = $('#myTableModule').dataTable({ 
             "processing": true, 
             "serverSide": true, 
             "ordering": false, 

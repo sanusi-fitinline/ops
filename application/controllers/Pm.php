@@ -33,7 +33,7 @@ class Pm extends CI_Controller {
 			echo "<script>alert('Anda tidak punya akses ke $modul.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
 		} else {
-			$this->template->load('template', 'sampling/pm/sampling_pm');
+			$this->template->load('template', 'pre-order/sampling/pm/sampling_pm');
 		}
 	}
 
@@ -44,7 +44,7 @@ class Pm extends CI_Controller {
 			echo "<script>alert('Anda tidak punya akses ke $modul.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
 		} else {
-			$this->template->load('template', 'sampling/pm/sampling_pm');
+			$this->template->load('template', 'pre-order/sampling/pm/sampling_pm');
 		}
 	}
 
@@ -87,7 +87,7 @@ class Pm extends CI_Controller {
 			if((!$this->access_m->isDelete('Product Sampling PM', 1)->row()) && ($this->session->GRP_SESSION !=3)){
 				$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="'.$url.'pm/edit_sampling/'.$field->LSAM_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a></div>';
 			} else {
-				$row[] = '<form action="'.$url.'pm/del_sampling'.'" method="post"><div style="vertical-align: middle; text-align: center;"><a href="'.$url.'pm/edit_sampling/'.$field->LSAM_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
+				$row[] = '<form action="'.$url.'pm/del_sampling" method="post"><div style="vertical-align: middle; text-align: center;"><a href="'.$url.'pm/edit_sampling/'.$field->LSAM_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
 					<input type="hidden" name="LSAM_ID" value="'.$field->LSAM_ID.'">
 					<input type="hidden" name="CLOG_ID" value="'.$field->CLOG_ID.'">
 					<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button></div></form>';
@@ -106,15 +106,15 @@ class Pm extends CI_Controller {
 	}
 
 	public function edit_sampling($LSAM_ID) {
-		$query 				= $this->sampling_m->get($LSAM_ID);
-		$data['customer'] 	= $this->customer_m->get()->result();
-		$data['channel']	= $this->channel_m->getCha()->result();
-		$data['bank'] 		= $this->bank_m->getBank()->result();
-		$data['courier'] 	= $this->courier_m->getCourier()->result();
-		$data['clog'] 		= $this->clog_m->get($query->row()->CLOG_ID)->row();
+		$query = $this->sampling_m->get($LSAM_ID);
 		if ($query->num_rows() > 0) {
-			$data['row'] =	$query->row();
-			$this->template->load('template', 'sampling/pm/sampling_pm_edit', $data);
+			$data['row'] 		= $query->row();
+			$data['customer'] 	= $this->customer_m->get()->result();
+			$data['channel']	= $this->channel_m->getCha()->result();
+			$data['bank'] 		= $this->bank_m->getBank()->result();
+			$data['courier'] 	= $this->courier_m->getCourier()->result();
+			$data['clog'] 		= $this->clog_m->get($query->row()->CLOG_ID)->row();
+			$this->template->load('template', 'pre-order/sampling/pm/sampling_pm_edit', $data);
 		} else {
 			echo "<script>alert('Data tidak ditemukan.')</script>";
 			echo "<script>window.location='".site_url('sampling')."'</script>";
@@ -160,7 +160,7 @@ class Pm extends CI_Controller {
 		$query = $this->sampling_m->get($LSAM_ID);
     	if ($query->num_rows() > 0) {
 			$data['row'] 		= $query->row();
-			$this->load->view('sampling/pm/label_print', $data);
+			$this->load->view('pre-order/sampling/pm/label_print', $data);
 		} else {
 			echo "<script>alert('Data tidak ditemukan.')</script>";
 			echo "<script>window.location='".site_url('pm/sampling')."'</script>";
@@ -188,7 +188,7 @@ class Pm extends CI_Controller {
 			echo "<script>alert('Anda tidak punya akses ke $modul.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
 		} else {
-			$this->template->load('template', 'check-stock/pm/stock_pm');
+			$this->template->load('template', 'pre-order/check-stock/pm/stock_pm');
 		}
 	}
 
@@ -218,7 +218,7 @@ class Pm extends CI_Controller {
 			if((!$this->access_m->isDelete('Check Stock PM', 1)->row()) && ($this->session->GRP_SESSION !=3)){
 				$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="'.$url.'pm/edit_check/'.$field->LSTOCK_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a></div>';
 			} else {
-				$row[] = '<form action="'.$url.'pm/del_stock'.'" method="post"><div style="vertical-align: middle; text-align: center;"><a href="'.$url.'pm/edit_check/'.$field->LSTOCK_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
+				$row[] = '<form action="'.$url.'pm/del_stock" method="post"><div style="vertical-align: middle; text-align: center;"><a href="'.$url.'pm/edit_check/'.$field->LSTOCK_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
 					<input type="hidden" name="LSTOCK_ID" value="'.$field->LSTOCK_ID.'">
 					<input type="hidden" name="CLOG_ID" value="'.$field->CLOG_ID.'">
 					<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button></div></form>';
@@ -237,15 +237,15 @@ class Pm extends CI_Controller {
 	}
 
 	public function edit_check($LSTOCK_ID) {
-		$query 				= $this->ckstock_m->get($LSTOCK_ID);
-		$data['customer'] 	= $this->customer_m->get()->result();
-		$data['channel'] 	= $this->channel_m->getCha()->result();
-		$data['product'] 	= $this->product_m->get()->result();
-		$data['umea'] 		= $this->umea_m->get()->result();
-		$data['clog'] 		= $this->clog_m->get($query->row()->CLOG_ID)->row();
+		$query = $this->ckstock_m->get($LSTOCK_ID);
 		if ($query->num_rows() > 0) {
-			$data['row'] =	$query->row();
-			$this->template->load('template', 'check-stock/pm/stock_pm_edit', $data);
+			$data['row'] 		= $query->row();
+			$data['customer'] 	= $this->customer_m->get()->result();
+			$data['channel'] 	= $this->channel_m->getCha()->result();
+			$data['product'] 	= $this->product_m->get()->result();
+			$data['umea'] 		= $this->umea_m->get()->result();
+			$data['clog'] 		= $this->clog_m->get($query->row()->CLOG_ID)->row();
+			$this->template->load('template', 'pre-order/check-stock/pm/stock_pm_edit', $data);
 		} else {
 			echo "<script>alert('Data tidak ditemukan.')</script>";
 			echo "<script>window.location='".site_url('pm/check_stock')."'</script>";

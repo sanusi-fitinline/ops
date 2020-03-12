@@ -72,7 +72,7 @@ class Vendor extends CI_Controller {
 				if((!$this->access_m->isDelete('Vendor', 1)->row()) && ($this->session->GRP_SESSION !=3)){
 					$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="'.$url.'vendor/edit/'.$field->VEND_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a></div>';
 				} else {
-					$row[] = '<form action="'.$url.'vendor/del'.'" method="post"><div style="vertical-align: middle; text-align: center;"><a href="'.$url.'vendor/edit/'.$field->VEND_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
+					$row[] = '<form action="'.$url.'vendor/del" method="post"><div style="vertical-align: middle; text-align: center;"><a href="'.$url.'vendor/edit/'.$field->VEND_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
 						<input type="hidden" name="VEND_ID" value="'.$field->VEND_ID.'">
 						<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button></div></form>';
 				}	
@@ -81,7 +81,7 @@ class Vendor extends CI_Controller {
 					$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="'.$url.'vendor/edit/'.$field->VEND_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
 						<a  href="'.$url.'vendor/bank/'.$field->VEND_ID.'" class="btn btn-info btn-sm"><i class="fa fa-plus-square"></i> Bank</a></div>';
 				} else {
-					$row[] = '<form action="'.$url.'vendor/del'.'" method="post"><div style="vertical-align: middle; text-align: center;">
+					$row[] = '<form action="'.$url.'vendor/del" method="post"><div style="vertical-align: middle; text-align: center;">
 							<a href="'.$url.'vendor/edit/'.$field->VEND_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
 							<input type="hidden" name="VEND_ID" value="'.$field->VEND_ID.'">
 							<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
@@ -119,13 +119,13 @@ class Vendor extends CI_Controller {
 	}
 
 	public function edit($VEND_ID) {
-		$query 				= $this->vendor_m->get($VEND_ID);
-		$data['country'] 	= $this->country_m->getCountry()->result();
-		$data['state'] 		= $this->state_m->getState($query->row('CNTR_ID'))->result();
-		$data['city'] 		= $this->city_m->getCity($query->row('STATE_ID'))->result();
-		$data['subd'] 		= $this->subd_m->getSubdistrict($query->row('CITY_ID'))->result();
+		$query = $this->vendor_m->get($VEND_ID);
 		if ($query->num_rows() > 0) {
-			$data['row'] =	$query->row();
+			$data['row'] 		= $query->row();
+			$data['country'] 	= $this->country_m->getCountry()->result();
+			$data['state'] 		= $this->state_m->getState($query->row('CNTR_ID'))->result();
+			$data['city'] 		= $this->city_m->getCity($query->row('STATE_ID'))->result();
+			$data['subd'] 		= $this->subd_m->getSubdistrict($query->row('CITY_ID'))->result();
 			$this->template->load('template', 'vendor/vendor_form_edit', $data);
 		} else {
 			echo "<script>alert('Data tidak ditemukan.')</script>";
@@ -194,7 +194,7 @@ class Vendor extends CI_Controller {
 			if((!$this->access_m->isDelete('Vendor Bank', 1)->row()) && ($this->session->GRP_SESSION !=3)){
 				$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-bank'.$field->VBA_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a></div>';
 			} else {
-				$row[] = '<form action="'.$url.'vendor/delete_bank'.'" method="post"><div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-bank'.$field->VBA_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
+				$row[] = '<form action="'.$url.'vendor/delete_bank" method="post"><div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-bank'.$field->VBA_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
 					<input type="hidden" name="VBA_ID" value="'.$field->VBA_ID.'">
 					<input type="hidden" name="VEND_ID" value="'.$field->VEND_ID.'">
 					<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button></div></form>';

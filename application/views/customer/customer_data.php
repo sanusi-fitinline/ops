@@ -1,5 +1,4 @@
 <!-- Page Content -->
-<?php $this->load->model('access_m');?>
 <div class="container-fluid">
 	<!-- Breadcrumbs-->
 	<ol class="breadcrumb">

@@ -90,9 +90,21 @@ class Product_m extends CI_Model {
 		$this->db->join('tb_user AS user_created', 'user_created.USER_ID=tb_product.PRO_CREATEDBY', 'left');
 		$this->db->join('tb_user AS user_edited', 'user_edited.USER_ID=tb_product.PRO_EDITEDBY', 'left');
 		if($PRO_ID != null) {
-			$this->db->where('PRO_ID', $PRO_ID);
+			$this->db->where('tb_product.PRO_ID', $PRO_ID);
 		}
-		$this->db->order_by('PRO_NAME', 'ASC');
+		$this->db->order_by('tb_product.PRO_NAME', 'ASC');
+		$query = $this->db->get();
+		return $query;
+	}
+
+	public function get_by_subtype($PRO_ID = null) {
+		$this->db->select('tb_product.STYPE_ID, tb_subtype.STYPE_NAME');
+		$this->db->from('tb_product');
+		$this->db->join('tb_subtype', 'tb_subtype.STYPE_ID=tb_product.STYPE_ID', 'left');
+		if ($PRO_ID != null) {
+			$this->db->where('tb_product.PRO_ID', $PRO_ID);
+		}
+		$this->db->order_by('tb_subtype.STYPE_NAME', 'ASC');
 		$query = $this->db->get();
 		return $query;
 	}
@@ -109,6 +121,46 @@ class Product_m extends CI_Model {
         $this->db->order_by('c.UMEA_NAME', 'ASC');
         $query = $this->db->get();
         return $query;
+    }
+
+    public function get_subtype_price_list() {
+    	$STYPE_ID = $this->input->post('STYPE_ID', TRUE);
+    	$SUBTYPE = array();
+    	foreach($STYPE_ID as $i => $val){
+			$SUBTYPE[] = $STYPE_ID[$i];
+		}
+
+    	$this->db->select('tb_product.STYPE_ID, tb_subtype.STYPE_NAME');
+		$this->db->from('tb_product');
+		$this->db->join('tb_subtype', 'tb_subtype.STYPE_ID=tb_product.STYPE_ID', 'inner');
+		$this->db->where_in('tb_product.STYPE_ID', $SUBTYPE);
+		$this->db->order_by('tb_subtype.STYPE_NAME', 'ASC');
+		$this->db->group_by('tb_product.STYPE_ID');
+		$query = $this->db->get();
+		return $query;
+    }
+
+    public function get_price_list() {
+    	$TYPE_ID  = $this->input->post('TYPE_ID', TRUE);
+    	$STYPE_ID = $this->input->post('STYPE_ID', TRUE);
+    	$SUBTYPE = array();
+    	foreach($STYPE_ID as $i => $val){
+			$SUBTYPE[] = $STYPE_ID[$i];
+		}
+
+    	$this->db->select('tb_product.*, umea_a.UMEA_NAME AS UMEA_NAME_A, umea_b.UMEA_NAME AS UMEA_NAME_B, umea_c.UMEA_NAME AS UMEA_NAME_C, tb_type.TYPE_NAME, tb_subtype.STYPE_NAME');
+		$this->db->from('tb_product');
+		$this->db->join('tb_unit_measure AS umea_a', 'umea_a.UMEA_ID=tb_product.PRO_UNIT', 'left');
+		$this->db->join('tb_unit_measure AS umea_b', 'umea_b.UMEA_ID=tb_product.PRO_VOL_UNIT', 'left');
+		$this->db->join('tb_unit_measure AS umea_c', 'umea_c.UMEA_ID=tb_product.PRO_TOTAL_UNIT', 'left');
+		$this->db->join('tb_type', 'tb_type.TYPE_ID=tb_product.TYPE_ID', 'left');
+		$this->db->join('tb_subtype', 'tb_subtype.STYPE_ID=tb_product.STYPE_ID', 'inner');
+		$this->db->where('tb_product.TYPE_ID', $TYPE_ID);
+		$this->db->where_in('tb_product.STYPE_ID', $SUBTYPE);
+		$this->db->order_by('tb_subtype.STYPE_NAME', 'ASC');
+		$this->db->order_by('tb_product.PRO_NAME', 'ASC');
+		$query = $this->db->get();
+		return $query;
     }
 
 	public function insert(){
@@ -153,6 +205,7 @@ class Product_m extends CI_Model {
 			'CURR_ID'				=> $this->input->post('CURR_ID', TRUE),
 			'CITY_ID'				=> $this->input->post('CITY_ID', TRUE),
 			'TYPE_ID'				=> $this->input->post('TYPE_ID', TRUE),
+			'STYPE_ID'				=> $this->input->post('STYPE_ID', TRUE),
 			'PRO_CREATEDON'			=> date('Y-m-d H:i:s'),
 			'PRO_CREATEDBY'			=> $this->session->USER_SESSION,
 
@@ -206,6 +259,7 @@ class Product_m extends CI_Model {
 			'CURR_ID'				=> $this->input->post('CURR_ID', TRUE),
 			'CITY_ID'				=> $this->input->post('CITY_ID', TRUE),
 			'TYPE_ID'				=> $this->input->post('TYPE_ID', TRUE),
+			'STYPE_ID'				=> $this->input->post('STYPE_ID', TRUE),
 			'PRO_EDITEDON'			=> date('Y-m-d H:i:s'),
 			'PRO_EDITEDBY'			=> $this->session->USER_SESSION,
 		);

@@ -17,6 +17,8 @@ class Product extends CI_Controller {
 		$this->load->model('vendor_m');
 		$this->load->model('currency_m');
 		$this->load->model('type_m');
+		$this->load->model('subtype_m');
+		$this->load->library('pdf');
 		$this->load->library('form_validation');
 	}
 
@@ -28,7 +30,8 @@ class Product extends CI_Controller {
 			echo "<script>alert('Anda tidak punya akses ke $modl.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
 		} else {
-			$data['product'] 	= $this->product_m->get()->result();
+			$data['product'] = $this->product_m->get()->result();
+			$data['type'] 	 = $this->type_m->get()->result();
 			$this->template->load('template', 'product/product_data', $data);
 		}
 	}
@@ -68,7 +71,7 @@ class Product extends CI_Controller {
 			$row[] = "<div align='center'>$PRO_VOL_UMEA</div>";
 			$row[] = "<div align='center'>$PRO_TOTAL_COUNT</div>";
 			if($this->session->GRP_SESSION ==3){
-				$row[] = '<form action="'.$url.'product/del'.'" method="post"><div style="vertical-align: middle; text-align: center;">
+				$row[] = '<form action="'.$url.'product/del" method="post"><div style="vertical-align: middle; text-align: center;">
 						<a href="'.$url.'product/edit/'.$field->PRO_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
 						<input type="hidden" name="PRO_ID" value="'.$field->PRO_ID.'">
 						<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
@@ -93,13 +96,47 @@ class Product extends CI_Controller {
 	    $vend  	 = $this->vendor_m->get($VEND_ID)->row();
 	    $city2 	 = $this->city_m->getAreaCity($vend->CITY_ID)->row();
 	    $city3 	 = $this->city_m->getAreaCity()->result();
-	    $lists 	 = "<option value='".$vend->CITY_ID."'>".$city2->CITY_NAME.', '.$city2->STATE_NAME.', '.$city2->CNTR_NAME.'.'."</option>";
+	    $lists 	 = "<option value='".$vend->CITY_ID."' selected>".$city2->CITY_NAME.', '.$city2->STATE_NAME.', '.$city2->CNTR_NAME.'.'."</option>";
 	    $lists .= "<option value='' disabled>-----</option>";
 	    foreach($city3 as $cty) {
 			$lists .= "<option value='".$cty->CITY_ID."'>".$cty->CITY_NAME.', '.$cty->STATE_NAME.', '.$cty->CNTR_NAME.'.'."</option>";
 	    }
 	    $callback = array('list_city'=>$lists); 
 	    echo json_encode($callback);
+	}
+
+	public function list_subtype(){
+		$PRO_ID  = $this->input->post('PRO_ID');
+		$TYPE_ID = $this->input->post('TYPE_ID');
+		$pro 	 = $this->product_m->get_by_subtype($PRO_ID)->row();
+		$subtype = $this->subtype_m->get_by_type($TYPE_ID)->result();
+		$lists = "";
+		foreach($subtype as $field) {
+			if($pro->STYPE_ID == $field->STYPE_ID){
+    			$lists .= "<option value='".$field->STYPE_ID."' selected>".$field->STYPE_NAME."</option>";
+			} else {
+    			$lists .= "<option value='".$field->STYPE_ID."'>".$field->STYPE_NAME."</option>";
+			}
+		}
+	    $callback = array('list_subtype'=>$lists);
+	    echo json_encode($callback);
+	}
+
+	public function list_subtype_print(){
+		$TYPE_ID = $this->input->post('TYPE_ID');
+		$subtype = $this->subtype_m->get_by_type($TYPE_ID)->result();
+		$lists = "";
+		foreach($subtype as $field) {
+    		$lists .= "<option value='".$field->STYPE_ID."'>".$field->STYPE_NAME."</option>";
+		}
+	    $callback = array('list_subtype_print'=>$lists);
+	    echo json_encode($callback);
+	}
+
+	public function print_price_list(){
+		$data['subtype'] = $this->product_m->get_subtype_price_list()->result();
+		$data['product'] = $this->product_m->get_price_list()->result();
+		$this->load->view('product/price_list_print', $data);
 	}
 
 	public function add(){
@@ -125,16 +162,16 @@ class Product extends CI_Controller {
 
 	public function edit($PRO_ID) {
 		$query 				= $this->product_m->get($PRO_ID);
-		$data['umea'] 		= $this->umea_m->get()->result();
-		$data['vendor'] 	= $this->vendor_m->get()->result();
-		$data['currency'] 	= $this->currency_m->get()->result();
-		$data['city'] 		= $this->city_m->getCity()->result();
-		$data['areacity'] 	= $this->city_m->getAreaCity()->result();
-		$vend 				= $this->vendor_m->get($this->input->get('VEND_ID'))->row();
-	    $data['city2'] 		= $this->city_m->getAreaCity($query->row()->CITY_ID)->row();
-		$data['type'] 		= $this->type_m->get()->result();
 		if ($query->num_rows() > 0) {
-			$data['row'] =	$query->row();
+			$data['row'] 		= $query->row();
+			$data['umea'] 		= $this->umea_m->get()->result();
+			$data['vendor'] 	= $this->vendor_m->get()->result();
+			$data['currency'] 	= $this->currency_m->get()->result();
+			$data['city'] 		= $this->city_m->getCity()->result();
+			$data['areacity'] 	= $this->city_m->getAreaCity()->result();
+			// $vend 				= $this->vendor_m->get($this->input->get('VEND_ID'))->row();
+		    $data['city2'] 		= $this->city_m->getAreaCity($query->row()->CITY_ID)->row();
+			$data['type'] 		= $this->type_m->get()->result();
 			$this->template->load('template', 'product/product_form_edit', $data);
 		} else {
 			echo "<script>alert('Data tidak ditemukan.')</script>";
@@ -194,7 +231,7 @@ class Product extends CI_Controller {
 			if((!$this->access_m->isDelete('Product Option', 1)->row()) && ($this->session->GRP_SESSION !=3)){
 				$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="'.$url.'product/editoption/'.$field->POPT_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a></div>';
 			} else {
-				$row[] = '<form action="'.$url.'product/deloption'.'" method="post"><div style="vertical-align: middle; text-align: center;"><a href="'.$url.'product/editoption/'.$field->POPT_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
+				$row[] = '<form action="'.$url.'product/deloption" method="post"><div style="vertical-align: middle; text-align: center;"><a href="'.$url.'product/editoption/'.$field->POPT_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
 					<input type="hidden" name="PRO_ID" value="'.$field->PRO_ID.'" autocomplete="off" required>
 					<input type="hidden" name="POPT_ID" value="'.$field->POPT_ID.'">
 					<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button></div></form>';

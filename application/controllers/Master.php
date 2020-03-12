@@ -15,11 +15,19 @@ class Master extends CI_Controller {
 		$this->load->model('vendor_m');
 		$this->load->model('currency_m');
 		$this->load->model('type_m');
+		$this->load->model('subtype_m');
 		$this->load->model('subd_m');
 		$this->load->model('city_m');
 		$this->load->model('state_m');
 		$this->load->model('country_m');
-		// $this->load->model('vendorbank_m');
+		$this->load->model('producer_category_m');
+		$this->load->model('producer_type_m');
+		$this->load->model('producer_product_m');
+		$this->load->model('producer_product_property_m');
+		$this->load->model('size_group_m');
+		$this->load->model('size_product_m');
+		$this->load->model('size_m');
+		$this->load->model('size_value_m');
 		check_not_login();
 		// check_master();
 		// check_management_access();
@@ -34,7 +42,7 @@ class Master extends CI_Controller {
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
 		} else {
 			$data['row'] = $this->bank_m->getBank()->result();
-			$this->template->load('template', 'bank/bank_data', $data);
+			$this->template->load('template', 'master-ops/bank/bank_data', $data);
 		}
 	}
 
@@ -52,7 +60,7 @@ class Master extends CI_Controller {
 			if((!$this->access_m->isDelete('Bank', 1)->row()) && ($this->session->GRP_SESSION !=3)){
 				$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-bank'.$field->BANK_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a></div>';
 			} else {
-				$row[] = '<form action="'.$url.'master/delbank'.'" method="post"><div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-bank'.$field->BANK_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i>
+				$row[] = '<form action="'.$url.'master/delbank" method="post"><div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-bank'.$field->BANK_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i>
 						</a>
 					<input type="hidden" name="BANK_ID" value="'.$field->BANK_ID.'">
 					<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button></div></form>';
@@ -114,7 +122,7 @@ class Master extends CI_Controller {
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
 		} else {
 			$data['row'] = $this->currency_m->get()->result();
-			$this->template->load('template', 'currency/currency_data', $data);
+			$this->template->load('template', 'master-ops/currency/currency_data', $data);
 		}
 	}
 
@@ -131,7 +139,7 @@ class Master extends CI_Controller {
 			if((!$this->access_m->isDelete('Currency', 1)->row()) && ($this->session->GRP_SESSION !=3)){
 				$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-currency'.$field->CURR_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a></div>';
 			} else {
-				$row[] = '<form action="'.$url.'master/delcurrency'.'" method="post"><div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-currency'.$field->CURR_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i>
+				$row[] = '<form action="'.$url.'master/delcurrency" method="post"><div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-currency'.$field->CURR_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i>
 						</a>
 					<input type="hidden" name="CURR_ID" value="'.$field->CURR_ID.'">
 					<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button></div></form>';
@@ -192,7 +200,7 @@ class Master extends CI_Controller {
 			echo "<script>alert('Anda tidak punya akses ke $modl.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
 		} else {
-			$this->template->load('template', 'area/country_data');
+			$this->template->load('template', 'master-ops/area/country_data');
 		}
 	}
 
@@ -209,7 +217,7 @@ class Master extends CI_Controller {
 			if((!$this->access_m->isDelete('Country', 1)->row()) && ($this->session->GRP_SESSION !=3)){
 				$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="'.$url.'master/editcountry/'.$field->CNTR_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a></div>';
 			} else {
-				$row[] = '<form action="'.$url.'master/delcountry'.'" method="post"><div style="vertical-align: middle; text-align: center;"><a href="'.$url.'master/editcountry/'.$field->CNTR_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
+				$row[] = '<form action="'.$url.'master/delcountry" method="post"><div style="vertical-align: middle; text-align: center;"><a href="'.$url.'master/editcountry/'.$field->CNTR_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
 					<input type="hidden" name="CNTR_ID" value="'.$field->CNTR_ID.'">
 					<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button></div></form>';
 			}
@@ -226,7 +234,7 @@ class Master extends CI_Controller {
 	}
 
 	public function addcountry() {
-		$this->template->load('template', 'area/country_form_add');
+		$this->template->load('template', 'master-ops/area/country_form_add');
 	}
 
 	public function addcountryprocess() {
@@ -244,7 +252,7 @@ class Master extends CI_Controller {
 		$query 	= $this->country_m->getCountry($CNTR_ID);
 		if ($query->num_rows() > 0) {
 			$data['row'] =	$query->row();
-			$this->template->load('template', 'area/country_form_edit', $data);
+			$this->template->load('template', 'master-ops/area/country_form_edit', $data);
 		} else {
 			echo "<script>alert('Data tidak ditemukan.')</script>";
 			echo "<script>window.location='".site_url('master/country/')."'</script>";
@@ -282,7 +290,7 @@ class Master extends CI_Controller {
 			echo "<script>alert('Anda tidak punya akses ke $modl.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
 		} else {
-			$this->template->load('template', 'area/state_data');
+			$this->template->load('template', 'master-ops/area/state_data');
 		}
 	}
 
@@ -299,7 +307,7 @@ class Master extends CI_Controller {
 			if((!$this->access_m->isDelete('State', 1)->row()) && ($this->session->GRP_SESSION !=3)){
 				$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="'.$url.'master/editsubd/'.$field->STATE_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a></div>';
 			} else {
-				$row[] = '<form action="'.$url.'master/delstate'.'" method="post"><div style="vertical-align: middle; text-align: center;"><a href="'.$url.'master/editstate/'.$field->STATE_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
+				$row[] = '<form action="'.$url.'master/delstate" method="post"><div style="vertical-align: middle; text-align: center;"><a href="'.$url.'master/editstate/'.$field->STATE_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
 					<input type="hidden" name="STATE_ID" value="'.$field->STATE_ID.'">
 					<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button></div></form>';
 			}
@@ -316,8 +324,8 @@ class Master extends CI_Controller {
 	}
 
 	public function addstate() {
-		$data['country'] 			= $this->country_m->getCountry()->result();
-		$this->template->load('template', 'area/state_form_add', $data);
+		$data['country'] = $this->country_m->getCountry()->result();
+		$this->template->load('template', 'master-ops/area/state_form_add', $data);
 	}
 
 	public function addstateprocess() {
@@ -332,12 +340,12 @@ class Master extends CI_Controller {
 	}
 
 	public function editstate($STATE_ID) {
-		$query 					= $this->state_m->getAreaState($STATE_ID);
-		$data['areastate_id'] 	= $this->state_m->getAreaState($STATE_ID)->result();
-		$data['country'] 		= $this->country_m->getCountry()->result();
+		$query = $this->state_m->getAreaState($STATE_ID);
 		if ($query->num_rows() > 0) {
-			$data['row'] =	$query->row();
-			$this->template->load('template', 'area/state_form_edit', $data);
+			$data['row'] 		  = $query->row();
+			$data['areastate_id'] = $this->state_m->getAreaState($STATE_ID)->result();
+			$data['country'] 	  = $this->country_m->getCountry()->result();
+			$this->template->load('template', 'master-ops/area/state_form_edit', $data);
 		} else {
 			echo "<script>alert('Data tidak ditemukan.')</script>";
 			echo "<script>window.location='".site_url('master/state/')."'</script>";
@@ -375,7 +383,7 @@ class Master extends CI_Controller {
 			echo "<script>alert('Anda tidak punya akses ke $modl.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
 		} else {
-			$this->template->load('template', 'area/city_data');
+			$this->template->load('template', 'master-ops/area/city_data');
 		}
 	}
 
@@ -392,7 +400,7 @@ class Master extends CI_Controller {
 			if((!$this->access_m->isDelete('City', 1)->row()) && ($this->session->GRP_SESSION !=3)){
 				$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="'.$url.'master/editsubd/'.$field->CITY_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a></div>';
 			} else {
-				$row[] = '<form action="'.$url.'master/delcity'.'" method="post"><div style="vertical-align: middle; text-align: center;"><a href="'.$url.'master/editcity/'.$field->CITY_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
+				$row[] = '<form action="'.$url.'master/delcity" method="post"><div style="vertical-align: middle; text-align: center;"><a href="'.$url.'master/editcity/'.$field->CITY_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
 					<input type="hidden" name="CITY_ID" value="'.$field->CITY_ID.'">
 					<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button></div></form>';
 			}
@@ -409,9 +417,9 @@ class Master extends CI_Controller {
 	}
 
 	public function addcity() {
-		$data['country'] 	= $this->country_m->getCountry()->result();
-		$data['state'] 		= $this->state_m->getState()->result();
-		$this->template->load('template', 'area/city_form_add', $data);
+		$data['country'] = $this->country_m->getCountry()->result();
+		$data['state'] 	 = $this->state_m->getState()->result();
+		$this->template->load('template', 'master-ops/area/city_form_add', $data);
 	}
 
 	public function addcityprocess() {
@@ -426,12 +434,12 @@ class Master extends CI_Controller {
 	}
 
 	public function editcity($CITY_ID) {
-		$query 					= $this->city_m->getAreaCity($CITY_ID);
-		$data['areacity_id'] 	= $this->city_m->getAreaCity($CITY_ID)->result();
-		$data['country'] 		= $this->country_m->getCountry()->result();
+		$query = $this->city_m->getAreaCity($CITY_ID);
 		if ($query->num_rows() > 0) {
-			$data['row'] =	$query->row();
-			$this->template->load('template', 'area/city_form_edit', $data);
+			$data['row']		 = $query->row();
+			$data['areacity_id'] = $this->city_m->getAreaCity($CITY_ID)->result();
+			$data['country'] 	 = $this->country_m->getCountry()->result();
+			$this->template->load('template', 'master-ops/area/city_form_edit', $data);
 		} else {
 			echo "<script>alert('Data tidak ditemukan.')</script>";
 			echo "<script>window.location='".site_url('master/city/')."'</script>";
@@ -469,7 +477,7 @@ class Master extends CI_Controller {
 			echo "<script>alert('Anda tidak punya akses ke $modl.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
 		} else {
-			$this->template->load('template', 'area/subd_data');
+			$this->template->load('template', 'master-ops/area/subd_data');
 		}
 	}
 
@@ -486,7 +494,7 @@ class Master extends CI_Controller {
 			if((!$this->access_m->isDelete('Subdistrict', 1)->row()) && ($this->session->GRP_SESSION !=3)){
 				$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="'.$url.'master/editsubd/'.$field->SUBD_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a></div>';
 			} else {
-				$row[] = '<form action="'.$url.'master/delsubd'.'" method="post"><div style="vertical-align: middle; text-align: center;"><a href="'.$url.'master/editsubd/'.$field->SUBD_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
+				$row[] = '<form action="'.$url.'master/delsubd" method="post"><div style="vertical-align: middle; text-align: center;"><a href="'.$url.'master/editsubd/'.$field->SUBD_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
 					<input type="hidden" name="SUBD_ID" value="'.$field->SUBD_ID.'">
 					<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button></div></form>';
 			}
@@ -508,7 +516,7 @@ class Master extends CI_Controller {
 		$data['country'] 	= $this->country_m->getCountry()->result();
 		$data['state'] 		= $this->state_m->getState()->result();
 		$data['city'] 		= $this->city_m->getCity()->result();
-		$this->template->load('template', 'area/subd_form_add', $data);
+		$this->template->load('template', 'master-ops/area/subd_form_add', $data);
 	}
 
 	public function addsubdprocess() {
@@ -523,12 +531,12 @@ class Master extends CI_Controller {
 	}
 
 	public function editsubd($SUBD_ID) {
-		$query 					= $this->subd_m->getAreaSubd($SUBD_ID);
-		$data['areasubd_id'] 	= $this->subd_m->getAreaSubd($SUBD_ID)->result();
-		$data['country'] 		= $this->country_m->getCountry()->result();
+		$query = $this->subd_m->getAreaSubd($SUBD_ID);
 		if ($query->num_rows() > 0) {
-			$data['row'] =	$query->row();
-			$this->template->load('template', 'area/subd_form_edit', $data);
+			$data['row'] 		 = $query->row();
+			$data['areasubd_id'] = $this->subd_m->getAreaSubd($SUBD_ID)->result();
+			$data['country'] 	 = $this->country_m->getCountry()->result();
+			$this->template->load('template', 'master-ops/area/subd_form_edit', $data);
 		} else {
 			echo "<script>alert('Data tidak ditemukan.')</script>";
 			echo "<script>window.location='".site_url('master/subdistrict/')."'</script>";
@@ -567,7 +575,7 @@ class Master extends CI_Controller {
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
 		} else {
 			$data['channel'] 	= $this->channel_m->getCha()->result();
-			$this->template->load('template', 'channel/channel_data', $data);
+			$this->template->load('template', 'master-ops/channel/channel_data', $data);
 		}
 	}
 
@@ -584,7 +592,7 @@ class Master extends CI_Controller {
 			if((!$this->access_m->isDelete('Channel', 1)->row()) && ($this->session->GRP_SESSION !=3)){
 				$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-cha'.$field->CHA_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a></div>';
 			} else {
-				$row[] = '<form action="'.$url.'master/delcha'.'" method="post"><div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-cha'.$field->CHA_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i>
+				$row[] = '<form action="'.$url.'master/delcha" method="post"><div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-cha'.$field->CHA_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i>
 						</a>
 					<input type="hidden" name="CHA_ID" value="'.$field->CHA_ID.'">
 					<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button></div></form>';
@@ -646,7 +654,7 @@ class Master extends CI_Controller {
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
 		} else {
 			$data['row'] = $this->type_m->get()->result();
-			$this->template->load('template', 'type/type_data', $data);
+			$this->template->load('template', 'master-ops/type/type_data', $data);
 		}
 	}
 
@@ -661,12 +669,15 @@ class Master extends CI_Controller {
 			$row[] = '<div style="vertical-align: middle; text-align: center;">'.$no.'</div>';
 			$row[] = $field->TYPE_NAME;
 			if((!$this->access_m->isDelete('Product Type', 1)->row()) && ($this->session->GRP_SESSION !=3)){
-				$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-type'.$field->TYPE_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a></div>';
+				$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-type'.$field->TYPE_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
+					<a  href="'.$url.'master/subtype/'.$field->TYPE_ID.'" class="btn btn-info btn-sm"><i class="fa fa-plus-square"></i> Subtype</a></div>';
 			} else {
-				$row[] = '<form action="'.$url.'master/deltype'.'" method="post"><div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-type'.$field->TYPE_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i>
+				$row[] = '<form action="'.$url.'master/deltype" method="post"><div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-type'.$field->TYPE_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i>
 						</a>
 					<input type="hidden" name="TYPE_ID" value="'.$field->TYPE_ID.'">
-					<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button></div></form>';
+					<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
+					<a  href="'.$url.'master/subtype/'.$field->TYPE_ID.'" class="btn btn-info btn-sm"><i class="fa fa-plus-square"></i> Subtype</a>
+					</div></form>';
 			}
 			$data[] = $row;
 		
@@ -717,6 +728,98 @@ class Master extends CI_Controller {
 		}
 	}
 
+	public function subtype($TYPE_ID) {
+		$modl 	= "Product Type";    
+		$access =  $this->access_m->isAccess($this->session->GRP_SESSION, $modl)->row();
+		if ((!$access) && ($this->session->GRP_SESSION !=3)) {
+			echo "<script>alert('Anda tidak punya akses ke $modl.')</script>";
+			echo "<script>window.location='".site_url('dashboard')."'</script>";
+		} else {
+			$query = $this->type_m->get($TYPE_ID);
+			if ($query->num_rows() > 0) {
+				$data['row']  	 = $query->row();
+				$data['subtype'] = $this->subtype_m->get()->result();
+				$this->template->load('template', 'master-ops/type/subtype_data', $data);
+			} else {
+				echo "<script>alert('Data tidak ditemukan.')</script>";
+				echo "<script>window.location='".site_url('master/type')."'</script>";
+			}
+		}
+	}
+
+	public function subtypejson() {
+		$url 	 = $this->config->base_url();
+		$TYPE_ID = $this->input->post('type_id', true);
+		$list 	 = $this->subtype_m->get_datatables($TYPE_ID);
+		$data 	 = array();
+		$no 	 = $_POST['start'];
+		foreach ($list as $field) {
+			$no++;
+			$row = array();
+			$row[] = '<div style="vertical-align: middle; text-align: center;">'.$no.'</div>';
+			$row[] = $field->TYPE_NAME;
+			$row[] = $field->STYPE_NAME;
+			if((!$this->access_m->isDelete('Product Type', 1)->row()) && ($this->session->GRP_SESSION !=3)){
+				$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-subtype'.$field->STYPE_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a></div>';
+			} else {
+				$row[] = '<form action="'.$url.'master/delsubtype" method="post"><div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-subtype'.$field->STYPE_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i>
+						</a>
+					<input type="hidden" name="TYPE_ID" value="'.$field->TYPE_ID.'">
+					<input type="hidden" name="STYPE_ID" value="'.$field->STYPE_ID.'">
+					<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button></div></form>';
+			}
+			$data[] = $row;
+		
+		}
+
+		$output = array(
+			"draw" => $_POST['draw'],
+			"recordsTotal" => $this->subtype_m->count_all($TYPE_ID),
+			"recordsFiltered" => $this->subtype_m->count_filtered($TYPE_ID),
+			"data" => $data,
+		);
+		//output dalam format JSON
+		echo json_encode($output);
+	}
+
+	public function addsubtype() {
+		$TYPE_ID = $this->input->post('TYPE_ID', true);
+		$data['row'] = $this->subtype_m->insert();
+		if ($data) {
+			echo "<script>alert('Data berhasil ditambah.')</script>";
+			echo "<script>window.location='".site_url('master/subtype/'.$TYPE_ID)."'</script>";
+		} else{
+			echo "<script>alert('Data gagal ditambah.')</script>";
+			echo "<script>window.location='".site_url('master/subtype/'.$TYPE_ID)."'</script>";
+		}
+	}
+
+	public function editsubtype($STYPE_ID) {
+		$TYPE_ID = $this->input->post('TYPE_ID', true);
+		$this->subtype_m->update($STYPE_ID);
+		if($this->db->affected_rows() > 0) {
+			echo "<script>alert('Data berhasil diubah.')</script>";
+			echo "<script>window.location='".site_url('master/subtype/'.$TYPE_ID)."'</script>";
+		} else {
+			echo "<script>alert('Data gagal diubah.')</script>";
+			echo "<script>window.location='".site_url('master/subtype/'.$TYPE_ID)."'</script>";
+		}
+	}
+
+	public function delsubtype() {
+		$TYPE_ID = $this->input->post('TYPE_ID', true);
+		$STYPE_ID = $this->input->post('STYPE_ID');
+		$this->subtype_m->delete($STYPE_ID);
+
+		if($this->db->affected_rows() > 0) {
+			echo "<script>alert('Data berhasil dihapus.')</script>";
+			echo "<script>window.location='".site_url('master/subtype/'.$TYPE_ID)."'</script>";
+		} else {
+			echo "<script>alert('Data gagal dihapus.')</script>";
+			echo "<script>window.location='".site_url('master/subtype/'.$TYPE_ID)."'</script>";
+		}
+	}
+
 	public function umea(){
 		$modl 	= "Unit Measure";
 		$access =  $this->access_m->isAccess($this->session->GRP_SESSION, $modl)->row();
@@ -725,7 +828,7 @@ class Master extends CI_Controller {
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
 		} else {
 			$data['umea'] 	= $this->umea_m->get()->result();
-			$this->template->load('template', 'umea/umea_data', $data);
+			$this->template->load('template', 'master-ops/umea/umea_data', $data);
 		}
 	}
 
@@ -742,7 +845,7 @@ class Master extends CI_Controller {
 			if((!$this->access_m->isDelete('Unit Measure', 1)->row()) && ($this->session->GRP_SESSION !=3)){
 				$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-umea'.$field->UMEA_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a></div>';
 			} else {
-				$row[] = '<form action="'.$url.'master/delumea'.'" method="post"><div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-umea'.$field->UMEA_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i>
+				$row[] = '<form action="'.$url.'master/delumea" method="post"><div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-umea'.$field->UMEA_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i>
 						</a>
 					<input type="hidden" name="UMEA_ID" value="'.$field->UMEA_ID.'">
 					<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button></div></form>';

@@ -1,5 +1,4 @@
 <!-- Page Content -->
-<?php $this->load->model('access_m');?>
 <div class="container-fluid">
 	<!-- Breadcrumbs-->
 	<ol class="breadcrumb">
@@ -18,7 +17,7 @@
 		        </div>
 		      	<div class="card-body">
 		      		<div>
-						<a <?php if((!$this->access_m->isAdd('Courier', 1)->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> href="#" data-toggle="modal" data-target="#add-courier" class="btn btn-success btn-sm"><i class="fa fa-user-plus"></i> Add</a>
+						<a <?php if((!$this->access_m->isAdd('Courier', 1)->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> href="#" data-toggle="modal" data-target="#add-courier" class="btn btn-success btn-sm"><i class="fas fa-plus-circle"></i> Add</a>
 					</div><br>
 					<?php  ?>
 		        	<div class="table-responsive">

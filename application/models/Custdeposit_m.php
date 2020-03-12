@@ -13,7 +13,7 @@ class Custdeposit_m extends CI_Model {
         $this->load->database();
     }
 
-    private function _get_datatables_query($STATUS = null, $CUSTD_DATE = null, $ORDER_ID = null, $CUST_NAME = null)
+    private function _get_datatables_query($STATUS_FILTER = null, $CUSTD_DATE = null, $ORDER_ID = null, $CUST_NAME = null)
     {
         $this->load->model('access_m');
         $modul = "Customer Deposit";
@@ -28,12 +28,12 @@ class Custdeposit_m extends CI_Model {
             }
         }
 
-        if($STATUS != null){
-            if ($STATUS == 1) { // filter refund
+        if($STATUS_FILTER != null){
+            if($STATUS_FILTER == 1) { // filter refund
                 $this->db->where('tb_customer_deposit.CUSTD_DEPOSIT_STATUS', 1);
-            } elseif ($STATUS == 2) { // filter used
+            } elseif($STATUS_FILTER == 2) { // filter used
                 $this->db->where('tb_customer_deposit.CUSTD_DEPOSIT_STATUS', 2);
-            } else { // filter status open
+            } else { // filter STATUS_FILTER open
                 $this->db->where('tb_customer_deposit.CUSTD_DEPOSIT_STATUS', 0);
             }
         }
@@ -80,25 +80,25 @@ class Custdeposit_m extends CI_Model {
         }
     }
 
-    function get_datatables($STATUS = null, $CUSTD_DATE = null, $ORDER_ID = null, $CUST_NAME = null)
+    function get_datatables($STATUS_FILTER = null, $CUSTD_DATE = null, $ORDER_ID = null, $CUST_NAME = null)
     {
-        $this->_get_datatables_query($STATUS, $CUSTD_DATE, $ORDER_ID, $CUST_NAME);
+        $this->_get_datatables_query($STATUS_FILTER, $CUSTD_DATE, $ORDER_ID, $CUST_NAME);
         if($_POST['length'] != -1)
         $this->db->limit($_POST['length'], $_POST['start']);
         $query = $this->db->get();
         return $query->result();
     }
 
-    function count_filtered($STATUS = null, $CUSTD_DATE = null, $ORDER_ID = null, $CUST_NAME = null)
+    function count_filtered($STATUS_FILTER = null, $CUSTD_DATE = null, $ORDER_ID = null, $CUST_NAME = null)
     {
-        $this->_get_datatables_query($STATUS, $CUSTD_DATE, $ORDER_ID, $CUST_NAME);
+        $this->_get_datatables_query($STATUS_FILTER, $CUSTD_DATE, $ORDER_ID, $CUST_NAME);
         $query = $this->db->get();
         return $query->num_rows();
     }
 
-    public function count_all($STATUS = null, $CUSTD_DATE = null, $ORDER_ID = null, $CUST_NAME = null)
+    public function count_all($STATUS_FILTER = null, $CUSTD_DATE = null, $ORDER_ID = null, $CUST_NAME = null)
     {
-        $this->_get_datatables_query($STATUS, $CUSTD_DATE, $ORDER_ID, $CUST_NAME);
+        $this->_get_datatables_query($STATUS_FILTER, $CUSTD_DATE, $ORDER_ID, $CUST_NAME);
         return $this->db->count_all_results();
     }
 

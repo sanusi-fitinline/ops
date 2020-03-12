@@ -72,9 +72,14 @@
     $html= '<br><h3 align="center">QUOTATION</h4>
 	    <table cellpadding="1" style="font-size: 10px">
 	    	<tr>
-	    		<td width="13%">Tanggal</td>
+	    		<td width="13%">Order</td>
 	    		<td width="2%">:</td>
-	    		<td width="85%">'.date('d-m-Y', strtotime($letter->ORDL_DATE)).'</td>
+	    		<td width="85%">'.$this->uri->segment(3).'</td>
+	    	</tr>
+	    	<tr>
+	    		<td>Tanggal</td>
+	    		<td>:</td>
+	    		<td>'.date('d-m-Y', strtotime($letter->ORDL_DATE)).'</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Nomor</td>
@@ -84,7 +89,7 @@
 	    	<tr>
 	    		<td>Pembeli</td>
 	    		<td>:</td>
-	    		<td>'.$row->CUST_NAME.'</td>
+	    		<td>'.stripslashes($row->CUST_NAME).'</td>
 	    	</tr>
 	    	<tr>
 	    		<td>Alamat</td>
@@ -95,11 +100,6 @@
 	    		<td>Telepon</td>
 	    		<td>:</td>
 	    		<td>'.$row->CUST_PHONE.'</td>
-	    	</tr>
-	    	<tr>
-	    		<td>Dokumen</td>
-	    		<td>:</td>
-	    		<td>Order</td>
 	    	</tr>
 	    </table>';
 	$html.= '<br><br><table border="1" cellpadding="5" bgcolor="#666666" style="font-size: 10px">
@@ -119,7 +119,7 @@
 	            <td>'.$field->PRO_NAME.'</td>
 	            <td>'.$field->ORDD_OPTION.'</td>
 	            <td align="right">'.number_format($field->ORDD_PRICE,0,",",".").'</td>
-	            <td align="center">'.$field->ORDD_QUANTITY.'</td>
+	            <td align="center">'.str_replace(".", ",", $field->ORDD_QUANTITY).'</td>
 	            <td align="center">'.$field->UMEA_NAME.'</td>
 	            <td align="right">'.number_format($field->ORDD_PRICE * $field->ORDD_QUANTITY,0,",",".").'</td>
 	        </tr>';

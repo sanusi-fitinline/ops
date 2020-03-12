@@ -20,7 +20,7 @@
 		        </div>
 		      	<div class="card-body">
 		      		<div>
-						<a <?php if((!$this->access_m->isAdd('Product Option', 1)->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> href="#" data-toggle="modal" data-target="#add-option" class="btn btn-success btn-sm"><i class="fa fa-user-plus"></i> Add</a>
+						<a <?php if((!$this->access_m->isAdd('Product Option', 1)->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> href="#" data-toggle="modal" data-target="#add-option" class="btn btn-success btn-sm"><i class="fas fa-plus-circle"></i> Add</a>
 					</div><br>
 		        	<div class="table-responsive">
 		          		<table class="table table-bordered" id="myTablePoption" width="100%" cellspacing="0">

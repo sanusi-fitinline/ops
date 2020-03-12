@@ -35,7 +35,7 @@ class Payment_vendor extends CI_Controller {
 			echo "<script>alert('Anda tidak punya akses ke $modul.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
 		} else {
-			$this->template->load('template', 'payment-vendor/payment_data');
+			$this->template->load('template', 'finance/payment-vendor/payment_data');
 		}
     }
 
@@ -119,7 +119,7 @@ class Payment_vendor extends CI_Controller {
 			$data['detail'] 	 = $this->orderdetail_m->detail_by_vendor($VEND_ID)->result();
 			$data['deposit'] 	 = $this->venddeposit_m->get_deposit($VEND_ID)->row();
 			$data['vendor_bank'] = $this->ordervendor_m->get_bank_vendor($VEND_ID)->result();
-			$this->template->load('template', 'payment-vendor/payment_detail', $data);
+			$this->template->load('template', 'finance/payment-vendor/payment_detail', $data);
 		} else {
 			echo "<script>alert('Data tidak ditemukan.')</script>";
 			echo "<script>window.location='".site_url('payment_vendor')."'</script>";
@@ -133,7 +133,7 @@ class Payment_vendor extends CI_Controller {
 			$data['order'] 	 	 = $this->order_m->get_for_payment($VEND_ID, $PAYTOV_ID)->result();
 			$data['detail']  	 = $this->orderdetail_m->detail_by_vendor($VEND_ID, $PAYTOV_ID)->result();
 			$data['vendor_bank'] = $this->vendorbank_m->get_by_vendor($VEND_ID)->result();
-			$this->template->load('template', 'payment-vendor/payment_view', $data);
+			$this->template->load('template', 'finance/payment-vendor/payment_view', $data);
 		} else {
 			echo "<script>alert('Data tidak ditemukan.')</script>";
 			echo "<script>window.location='".site_url('payment_vendor')."'</script>";
@@ -146,7 +146,7 @@ class Payment_vendor extends CI_Controller {
 			$data['row'] 	 = $query->row();
 			$data['order'] 	 = $this->order_m->get_for_payment($VEND_ID, $PAYTOV_ID)->result();
 			$data['detail']  = $this->orderdetail_m->detail_by_vendor($VEND_ID, $PAYTOV_ID)->result();
-			$this->template->load('template', 'payment-vendor/payment_view', $data);
+			$this->template->load('template', 'finance/payment-vendor/payment_view', $data);
 		} else {
 			echo "<script>alert('Data tidak ditemukan.')</script>";
 			echo "<script>window.location='".site_url('payment_vendor')."'</script>";

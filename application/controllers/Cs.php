@@ -36,7 +36,7 @@ class Cs extends CI_Controller {
 			echo "<script>alert('Anda tidak punya akses ke $modul.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
 		} else {
-			$this->template->load('template', 'sampling/cs/sampling_cs');
+			$this->template->load('template', 'pre-order/sampling/cs/sampling_cs');
 		}
 	}
 
@@ -47,7 +47,7 @@ class Cs extends CI_Controller {
 			echo "<script>alert('Anda tidak punya akses ke $modul.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
 		} else {
-			$this->template->load('template', 'sampling/cs/sampling_cs');
+			$this->template->load('template', 'pre-order/sampling/cs/sampling_cs');
 		}
 	}
 
@@ -58,7 +58,7 @@ class Cs extends CI_Controller {
 			echo "<script>alert('Anda tidak punya akses ke $modul.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
 		} else {
-			$this->template->load('template', 'sampling/cs/sampling_cs');
+			$this->template->load('template', 'pre-order/sampling/cs/sampling_cs');
 		}
 	}
 
@@ -69,7 +69,7 @@ class Cs extends CI_Controller {
 			echo "<script>alert('Anda tidak punya akses ke $modul.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
 		} else {
-			$this->template->load('template', 'sampling/cs/sampling_cs');
+			$this->template->load('template', 'pre-order/sampling/cs/sampling_cs');
 		}
 	}
 
@@ -80,7 +80,7 @@ class Cs extends CI_Controller {
 			echo "<script>alert('Anda tidak punya akses ke $modul.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
 		} else {
-			$this->template->load('template', 'sampling/cs/sampling_cs');
+			$this->template->load('template', 'pre-order/sampling/cs/sampling_cs');
 		}
 	}
 
@@ -135,12 +135,12 @@ class Cs extends CI_Controller {
 				}
 			} else {
 				if(($field->LSAM_DELDATE==null)){
-					$row[] = '<form action="'.$url.'cs/del_sampling'.'" method="post"><div style="vertical-align: middle; text-align: center;"><a href="'.$url.'cs/edit_sampling/'.$field->LSAM_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
+					$row[] = '<form action="'.$url.'cs/del_sampling" method="post"><div style="vertical-align: middle; text-align: center;"><a href="'.$url.'cs/edit_sampling/'.$field->LSAM_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
 						<input type="hidden" name="LSAM_ID" value="'.$field->LSAM_ID.'">
 						<input type="hidden" id="CLOG_ID" name="CLOG_ID" value="'.$field->CLOG_ID.'">
 						<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button></div></form>';
 				} else {
-					$row[] = '<form action="'.$url.'cs/del_sampling'.'" method="post"><div style="vertical-align: middle; text-align: center;"><a href="'.$url.'cs/edit_sampling/'.$field->LSAM_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
+					$row[] = '<form action="'.$url.'cs/del_sampling" method="post"><div style="vertical-align: middle; text-align: center;"><a href="'.$url.'cs/edit_sampling/'.$field->LSAM_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
 						<input type="hidden" name="LSAM_ID" value="'.$field->LSAM_ID.'">
 						<input type="hidden" id="CLOG_ID" name="CLOG_ID" value="'.$field->CLOG_ID.'">
 						<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
@@ -164,7 +164,7 @@ class Cs extends CI_Controller {
 		$data['bank'] 		= $this->bank_m->getBank()->result();
 		$data['channel'] 	= $this->channel_m->getCha()->result();
 		$data['country'] 	= $this->country_m->getCountry()->result();
-		$this->template->load('template', 'sampling/cs/customer_form_add', $data);
+		$this->template->load('template', 'pre-order/sampling/cs/customer_form_add', $data);
 	}
 
 	public function newcustprocess(){
@@ -218,7 +218,7 @@ class Cs extends CI_Controller {
 		    }
 		} else {
 			$lists = "";
-			$chalists = "<option value='' selected disabled>--Select One--</option>";
+			$chalists = "<option value='' selected disabled>-- Select One --</option>";
 		}
 		$callback = array('list_customer'=>$lists,
 		'list_channel'=>$chalists,); 
@@ -229,7 +229,7 @@ class Cs extends CI_Controller {
 	public function list_umea(){
 		$PRO_ID = $this->input->post('PRO_ID');
 		$umea = $this->product_m->get_umea($PRO_ID)->row();
-		$lists = "<option value='' selected disabled>-- Select One --</option>";
+		$lists = "";
 		if($umea->UNIT_ID != null || $umea->UNIT_ID != 0) {
     		$lists .= "<option value='".$umea->UNIT_ID."'>".$umea->UNIT_NAME."</option>";
 		}
@@ -270,6 +270,11 @@ class Cs extends CI_Controller {
 							$etd = $detailCost['rajaongkir']['results'][$i]['costs'][$j]['cost'][0]['etd'];
 							$lists .= "<option value='$tarif,$service'>$service</option>";
 						}
+					}
+					if($key->COURIER_NAME == "JNT"){
+						$service = "COD";
+						$tarif 	 = "0";
+						$lists .= "<option value='$tarif,$service'>$service</option>";
 					}
 				}
 				$callback = array('list_courier'=>$lists);
@@ -320,7 +325,7 @@ class Cs extends CI_Controller {
 
 						$check   = $this->custdeposit_m->check_deposit($CUST_ID);
 						if($check->num_rows() > 0) {
-							$field = $this->custdeposit_m->get_deposit($CUST_ID)->row();
+							$field = $this->custdeposit_m->get_all_deposit($CUST_ID)->row();
 							$deposit .= "
 								<div class='custom-control custom-checkbox'>
 							     	<input type='checkbox' class='custom-control-input' id='pilih-deposit' name='pilih-deposit'>
@@ -330,7 +335,7 @@ class Cs extends CI_Controller {
 									<div class='input-group-prepend'>
 							          	<span class='input-group-text'>Rp.</span>
 							        </div>
-									<input class='form-control' type='text' id='DEPOSIT_VALUE' value='".number_format($field->CUSTD_DEPOSIT,0,',','.')."' readonly>
+									<input class='form-control' type='text' id='DEPOSIT_VALUE' value='".number_format($field->TOTAL_DEPOSIT,0,',','.')."' readonly>
 							    </div>";
 						} else {
 							$deposit .= "
@@ -369,18 +374,34 @@ class Cs extends CI_Controller {
 		$tarif 	 = $this->input->post('tarif');
 		$check   = $this->custdeposit_m->check_deposit($CUST_ID);
 		$lists = "";
+		if($service == "COD") {
+			$lists .= "
+				<div class='row'>
+					<div class='col-md-6'>
+						<label>Cost</label>
+					</div>
+					<div class='col-md-6'>
+						<div class='custom-control custom-checkbox'>
+					     	<input type='checkbox' class='custom-control-input' id='pilih-cod' name='pilih-cod' checked disabled>
+					     	<label class='custom-control-label' for='pilih-cod'>COD</label>
+					    </div>
+					</div>
+				</div>";
+		} else {
+			$lists .= "
+				<div class='row'>
+					<div class='col-md-6'>
+						<label>Cost</label>
+					</div>
+					<div class='col-md-6'>
+						<div class='custom-control custom-checkbox'>
+					     	<input type='checkbox' class='custom-control-input' id='pilih-cod' name='pilih-cod'>
+					     	<label class='custom-control-label' for='pilih-cod'>COD</label>
+					    </div>
+					</div>
+				</div>";
+		}
 		$lists .= "
-			<div class='row'>
-				<div class='col-md-6'>
-					<label>Cost</label>
-				</div>
-				<div class='col-md-6'>
-					<div class='custom-control custom-checkbox'>
-				     	<input type='checkbox' class='custom-control-input' id='pilih-cod' name='pilih-cod'>
-				     	<label class='custom-control-label' for='pilih-cod'>COD</label>
-				    </div>
-				</div>
-			</div>
 			<div class='input-group'>
 				<div class='input-group-prepend'>
 		          	<span class='input-group-text'>Rp.</span>
@@ -390,25 +411,32 @@ class Cs extends CI_Controller {
 		    </div>
 			<input class='form-control' type='hidden' name='COURIER' value='$courier'>
 			<input class='form-control' type='hidden' name='SERVICE' value='$service'>";
-		if($check->num_rows() > 0) {
-			$field = $this->custdeposit_m->get_deposit($CUST_ID)->row();
-			$deposit = "
-				<div class='custom-control custom-checkbox'>
-			     	<input type='checkbox' class='custom-control-input' id='pilih-deposit' name='pilih-deposit'>
-			     	<label class='custom-control-label' for='pilih-deposit'>Deposit</label>
-			    </div>
-				<div class='input-group'>
-					<div class='input-group-prepend'>
-			          	<span class='input-group-text'>Rp.</span>
-			        </div>
-					<input class='form-control' type='text' id='DEPOSIT_VALUE' value='".number_format($field->CUSTD_DEPOSIT,0,',','.')."' readonly>
-			    </div>";
-		} else {
+		
+		if($service == "COD"){
 			$deposit = "
 				<div class='custom-control custom-checkbox'>
 			     	<input type='checkbox' class='custom-control-input' id='pilih-deposit' name='pilih-deposit' disabled>
 			     	<label class='custom-control-label' for='pilih-deposit'>Deposit</label>
-			    </div>
+			    </div>";
+		} else {
+			$deposit = "
+				<div class='custom-control custom-checkbox'>
+			     	<input type='checkbox' class='custom-control-input' id='pilih-deposit' name='pilih-deposit'>
+			     	<label class='custom-control-label' for='pilih-deposit'>Deposit</label>
+			    </div>";
+		}
+		
+		if($check->num_rows() > 0) {
+			$field = $this->custdeposit_m->get_all_deposit($CUST_ID)->row();
+			$deposit .= "
+				<div class='input-group'>
+					<div class='input-group-prepend'>
+			          	<span class='input-group-text'>Rp.</span>
+			        </div>
+					<input class='form-control' type='text' id='DEPOSIT_VALUE' value='".number_format($field->TOTAL_DEPOSIT,0,',','.')."' readonly>
+			    </div>";
+		} else {
+			$deposit .= "
 				<div class='input-group'>
 					<div class='input-group-prepend'>
 			          	<span class='input-group-text'>Rp.</span>
@@ -434,10 +462,10 @@ class Cs extends CI_Controller {
 		$data['bank'] 		= $this->bank_m->getBank()->result();
 		$data['courier'] 	= $this->courier_m->getCourier()->result();
 		if($CUST_ID != null) {
-			$data['row'] 	= $this->customer_m->get($CUST_ID)->row();
-			$this->template->load('template', 'sampling/cs/sampling_cs_add_by_status', $data);
+			$data['row'] 	= $this->customer_m->get_by_followup($CUST_ID)->row();
+			$this->template->load('template', 'pre-order/sampling/cs/sampling_cs_add_by_status', $data);
 		} else {
-			$this->template->load('template', 'sampling/cs/sampling_cs_add', $data);
+			$this->template->load('template', 'pre-order/sampling/cs/sampling_cs_add', $data);
 		}
 	}
 
@@ -471,15 +499,15 @@ class Cs extends CI_Controller {
 	}
 
 	public function edit_sampling($LSAM_ID) {
-		$query 				= $this->sampling_m->get($LSAM_ID);
-		$data['customer'] 	= $this->customer_m->get()->result();
-		$data['channel']	= $this->channel_m->getCha()->result();
-		$data['bank'] 		= $this->bank_m->getBank()->result();
-		$data['courier'] 	= $this->courier_m->getCourier()->result();
-		$data['clog'] 		= $this->clog_m->get($query->row()->CLOG_ID)->row();
+		$query 	= $this->sampling_m->get($LSAM_ID);
 		if ($query->num_rows() > 0) {
-			$data['row'] =	$query->row();
-			$this->template->load('template', 'sampling/cs/sampling_cs_edit', $data);
+			$data['row'] 		= $query->row();
+			$data['customer'] 	= $this->customer_m->get()->result();
+			$data['channel']	= $this->channel_m->getCha()->result();
+			$data['bank'] 		= $this->bank_m->getBank()->result();
+			$data['courier'] 	= $this->courier_m->getCourier()->result();
+			$data['clog'] 		= $this->clog_m->get($query->row()->CLOG_ID)->row();
+			$this->template->load('template', 'pre-order/sampling/cs/sampling_cs_edit', $data);
 		} else {
 			echo "<script>alert('Data tidak ditemukan.')</script>";
 			echo "<script>window.location='".site_url('cs/sampling')."'</script>";
@@ -555,7 +583,7 @@ class Cs extends CI_Controller {
 			echo "<script>alert('Anda tidak punya akses ke $modul.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
 		} else {
-			$this->template->load('template', 'check-stock/cs/stock_cs');
+			$this->template->load('template', 'pre-order/check-stock/cs/stock_cs');
 		}
 	}
 
@@ -566,7 +594,7 @@ class Cs extends CI_Controller {
 			echo "<script>alert('Anda tidak punya akses ke $modul.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
 		} else {
-			$this->template->load('template', 'check-stock/cs/stock_cs');
+			$this->template->load('template', 'pre-order/check-stock/cs/stock_cs');
 		}
 	}
 
@@ -577,7 +605,7 @@ class Cs extends CI_Controller {
 			echo "<script>alert('Anda tidak punya akses ke $modul.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
 		} else {
-			$this->template->load('template', 'check-stock/cs/stock_cs');
+			$this->template->load('template', 'pre-order/check-stock/cs/stock_cs');
 		}
 	}
 
@@ -619,12 +647,12 @@ class Cs extends CI_Controller {
 				}
 			} else {
 				if($field->LSTOCK_STATUS==null) {
-					$row[] = '<form action="'.$url.'cs/del_stock'.'" method="post"><div style="vertical-align: middle; text-align: center;"><a href="'.$url.'cs/edit_check/'.$field->LSTOCK_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
+					$row[] = '<form action="'.$url.'cs/del_stock" method="post"><div style="vertical-align: middle; text-align: center;"><a href="'.$url.'cs/edit_check/'.$field->LSTOCK_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
 						<input type="hidden" name="LSTOCK_ID" value="'.$field->LSTOCK_ID.'">
 						<input type="hidden" name="CLOG_ID" value="'.$field->CLOG_ID.'">
 						<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>';
 				} else {
-					$row[] = '<form action="'.$url.'cs/del_stock'.'" method="post"><div style="vertical-align: middle; text-align: center;"><a href="'.$url.'cs/edit_check/'.$field->LSTOCK_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
+					$row[] = '<form action="'.$url.'cs/del_stock" method="post"><div style="vertical-align: middle; text-align: center;"><a href="'.$url.'cs/edit_check/'.$field->LSTOCK_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
 						<input type="hidden" name="LSTOCK_ID" value="'.$field->LSTOCK_ID.'">
 						<input type="hidden" name="CLOG_ID" value="'.$field->CLOG_ID.'">
 						<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
@@ -688,10 +716,10 @@ class Cs extends CI_Controller {
 		$data['product'] 	= $this->product_m->get()->result();
 		$data['umea'] 		= $this->umea_m->get()->result();
 		if($CUST_ID != null) {
-			$data['row'] 	= $this->customer_m->get($CUST_ID)->row();
-			$this->template->load('template', 'check-stock/cs/stock_cs_add_by_status', $data);
+			$data['row'] 	= $this->customer_m->get_by_followup($CUST_ID)->row();
+			$this->template->load('template', 'pre-order/check-stock/cs/stock_cs_add_by_status', $data);
 		} else {
-			$this->template->load('template', 'check-stock/cs/stock_cs_add', $data);
+			$this->template->load('template', 'pre-order/check-stock/cs/stock_cs_add', $data);
 		}
 	}
 
@@ -703,7 +731,7 @@ class Cs extends CI_Controller {
 		$data['channel'] 	= $this->channel_m->getCha()->result();
 		$data['product'] 	= $this->product_m->get()->result();
 		$data['umea'] 		= $this->umea_m->get()->result();
-		$this->template->load('template', 'check-stock/cs/stock_cs_add_lagi', $data);
+		$this->template->load('template', 'pre-order/check-stock/cs/stock_cs_add_lagi', $data);
 	}
 
 	public function add_check_process() {
@@ -756,7 +784,7 @@ class Cs extends CI_Controller {
 		$data['bank'] 		= $this->bank_m->getBank()->result();
 		$data['channel'] 	= $this->channel_m->getCha()->result();
 		$data['country'] 	= $this->country_m->getCountry()->result();
-		$this->template->load('template', 'check-stock/cs/customer_form_add', $data);
+		$this->template->load('template', 'pre-order/check-stock/cs/customer_form_add', $data);
 	}
 
 	public function newcust_check_process(){
@@ -771,15 +799,15 @@ class Cs extends CI_Controller {
 	}
 
 	public function edit_check($LSTOCK_ID) {
-		$query 				= $this->ckstock_m->get($LSTOCK_ID);
-		$data['customer'] 	= $this->customer_m->get()->result();
-		$data['channel'] 	= $this->channel_m->getCha()->result();
-		$data['product'] 	= $this->product_m->get()->result();
-		$data['umea'] 		= $this->umea_m->get()->result();
-		$data['clog'] 		= $this->clog_m->get($query->row()->CLOG_ID)->row();
+		$query = $this->ckstock_m->get($LSTOCK_ID);
 		if ($query->num_rows() > 0) {
-			$data['row'] =	$query->row();
-			$this->template->load('template', 'check-stock/cs/stock_cs_edit', $data);
+			$data['row'] 		= $query->row();
+			$data['customer'] 	= $this->customer_m->get()->result();
+			$data['channel'] 	= $this->channel_m->getCha()->result();
+			$data['product'] 	= $this->product_m->get()->result();
+			$data['umea'] 		= $this->umea_m->get()->result();
+			$data['clog'] 		= $this->clog_m->get($query->row()->CLOG_ID)->row();
+			$this->template->load('template', 'pre-order/check-stock/cs/stock_cs_edit', $data);
 		} else {
 			echo "<script>alert('Data tidak ditemukan.')</script>";
 			echo "<script>window.location='".site_url('cs/check_stock')."'</script>";
@@ -818,14 +846,14 @@ class Cs extends CI_Controller {
 			echo "<script>alert('Anda tidak punya akses ke $modul.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
 		} else {
-			$query 					 = $this->sampling_m->get_by_log($CLOG_ID);
-			$data['clog'] 			 = $this->clog_m->get($query->row()->CLOG_ID)->row();
-			$data['followup'] 		 = $this->followup_m->get()->result();
-			$data['flws'] 			 = $this->followup_m->get_followup_status()->result();
-			$data['followup_closed'] = $this->followup_m->get_followup_closed()->result();
+			$query = $this->sampling_m->get_by_log($CLOG_ID);
 			if ($query->num_rows() > 0) {
-				$data['row'] =	$query->row();
-				$this->template->load('template', 'follow-up/followup_sampling', $data);
+				$data['row'] 			 = $query->row();
+				$data['clog'] 			 = $this->clog_m->get($query->row()->CLOG_ID)->row();
+				$data['followup'] 		 = $this->followup_m->get()->result();
+				$data['flws'] 			 = $this->followup_m->get_followup_status()->result();
+				$data['followup_closed'] = $this->followup_m->get_followup_closed()->result();
+				$this->template->load('template', 'pre-order/follow-up/followup_sampling', $data);
 			} else {
 				echo "<script>alert('Data tidak ditemukan.')</script>";
 				echo "<script>window.location='".site_url('cs/sampling')."'</script>";
@@ -841,15 +869,15 @@ class Cs extends CI_Controller {
 			echo "<script>alert('Anda tidak punya akses ke $modul.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
 		} else {
-			$query 					 = $this->ckstock_m->get_by_log($CLOG_ID);
-			$data['clog'] 			 = $this->clog_m->get($query->row()->CLOG_ID)->row();
-			$data['followup'] 		 = $this->followup_m->get()->result();
-			$data['flws'] 			 = $this->followup_m->get_followup_status()->result();
-			$data['followup_closed'] = $this->followup_m->get_followup_closed()->result();
-			$data['product'] 		 = $this->ckstock_m->get_product($CLOG_ID)->result();
+			$query = $this->ckstock_m->get_by_log($CLOG_ID);
 			if ($query->num_rows() > 0) {
-				$data['row'] =	$query->row();
-				$this->template->load('template', 'follow-up/followup_ckstock', $data);
+				$data['row'] 			 = $query->row();
+				$data['clog'] 			 = $this->clog_m->get($query->row()->CLOG_ID)->row();
+				$data['followup'] 		 = $this->followup_m->get()->result();
+				$data['flws'] 			 = $this->followup_m->get_followup_status()->result();
+				$data['followup_closed'] = $this->followup_m->get_followup_closed()->result();
+				$data['product'] 		 = $this->ckstock_m->get_product($CLOG_ID)->result();
+				$this->template->load('template', 'pre-order/follow-up/followup_ckstock', $data);
 			} else {
 				echo "<script>alert('Data tidak ditemukan.')</script>";
 				echo "<script>window.location='".site_url('cs/check_stock')."'</script>";

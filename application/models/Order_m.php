@@ -376,6 +376,7 @@ class Order_m extends CI_Model {
 
 	public function update_detail($ORDER_ID) {
 		// update pada tb_order
+		$ORDER_NOTES		= str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$this->input->post('ORDER_NOTES', TRUE));
 		$ORDER_TOTAL		= str_replace(".", "", $this->input->post('ORDER_TOTAL', TRUE));
 		$ORDER_DISCOUNT		= str_replace(".", "", $this->input->post('ORDER_DISCOUNT', TRUE));
 		$ORDER_DEPOSIT		= str_replace(".", "", $this->input->post('ORDER_DEPOSIT', TRUE));
@@ -388,6 +389,8 @@ class Order_m extends CI_Model {
 		$VENDOR 			= $this->input->post('VENDOR', TRUE);
 		$ORDV_ID 			= $this->input->post('ORDV_ID', TRUE);
 		$ORDD_ID 			= $this->input->post('ORDD_ID', TRUE);
+		// $EDIT_ORDD_ID 		= $this->input->post('EDIT_ORDD_ID', TRUE);
+		$ORDD_OPTION 		= $this->input->post('ORDD_OPTION', TRUE);
 		$ORDD_QUANTITY 		= $this->input->post('ORDD_QUANTITY', TRUE);
 		$ORDD_WEIGHT 		= $this->input->post('ORDD_WEIGHT', TRUE);
 		$VENDOR_WEIGHT 		= $this->input->post('VENDOR_WEIGHT', TRUE);
@@ -424,6 +427,7 @@ class Order_m extends CI_Model {
 		$update_order_detail = array();
 		foreach ($ORDD_ID as $key => $value) {
 			$update_order_detail = array(
+				'ORDD_OPTION' 			=> $ORDD_OPTION[$key],
 				'ORDD_QUANTITY' 		=> $ORDD_QUANTITY[$key],
 				'ORDD_WEIGHT' 			=> $ORDD_WEIGHT[$key],
 				'ORDD_QUANTITY_VENDOR' 	=> $ORDD_QUANTITY[$key],
@@ -438,20 +442,17 @@ class Order_m extends CI_Model {
 			// insert tb_customer_deposit
 			if($ORDER_DEPOSIT > $GRAND_TANPA_DEPOSIT) {
 				// update tb_order
-				$query = $this->db->query("UPDATE tb_order SET ORDER_TOTAL = '$ORDER_TOTAL',
-					ORDER_DISCOUNT = '$ORDER_DISCOUNT', ORDER_DEPOSIT = '$GRAND_TANPA_DEPOSIT', ORDER_SHIPCOST = '$ORDER_SHIPCOST', ORDER_TAX = '$ORDER_TAX', ORDER_GRAND_TOTAL = '0'
+				$query = $this->db->query("UPDATE tb_order SET ORDER_NOTES = '$ORDER_NOTES', ORDER_TOTAL = '$ORDER_TOTAL', ORDER_DISCOUNT = '$ORDER_DISCOUNT', ORDER_DEPOSIT = '$GRAND_TANPA_DEPOSIT', ORDER_SHIPCOST = '$ORDER_SHIPCOST', ORDER_TAX = '$ORDER_TAX', ORDER_GRAND_TOTAL = '0'
 	                WHERE ORDER_ID = '$ORDER_ID'");
 			} else {
 				// update tb_order
-				$query = $this->db->query("UPDATE tb_order SET ORDER_TOTAL = '$ORDER_TOTAL',
-					ORDER_DISCOUNT = '$ORDER_DISCOUNT', ORDER_DEPOSIT = '$ORDER_DEPOSIT', ORDER_SHIPCOST = '$ORDER_SHIPCOST', ORDER_TAX = '$ORDER_TAX', ORDER_GRAND_TOTAL = '$ORDER_GRAND_TOTAL'
+				$query = $this->db->query("UPDATE tb_order SET ORDER_NOTES = '$ORDER_NOTES', ORDER_TOTAL = '$ORDER_TOTAL', ORDER_DISCOUNT = '$ORDER_DISCOUNT', ORDER_DEPOSIT = '$ORDER_DEPOSIT', ORDER_SHIPCOST = '$ORDER_SHIPCOST', ORDER_TAX = '$ORDER_TAX', ORDER_GRAND_TOTAL = '$ORDER_GRAND_TOTAL'
 	                WHERE ORDER_ID = '$ORDER_ID'");
 			}
 
 		} else {
 			// update tb_order
-			$query = $this->db->query("UPDATE tb_order SET ORDER_TOTAL = '$ORDER_TOTAL',
-				ORDER_DISCOUNT = '$ORDER_DISCOUNT', ORDER_DEPOSIT = Null, ORDER_SHIPCOST = '$ORDER_SHIPCOST', ORDER_TAX = '$ORDER_TAX', ORDER_GRAND_TOTAL = '$ORDER_GRAND_TOTAL'
+			$query = $this->db->query("UPDATE tb_order SET ORDER_NOTES = '$ORDER_NOTES', ORDER_TOTAL = '$ORDER_TOTAL', ORDER_DISCOUNT = '$ORDER_DISCOUNT', ORDER_DEPOSIT = Null, ORDER_SHIPCOST = '$ORDER_SHIPCOST', ORDER_TAX = '$ORDER_TAX', ORDER_GRAND_TOTAL = '$ORDER_GRAND_TOTAL'
 				WHERE ORDER_ID = '$ORDER_ID'");
 		}
 	}

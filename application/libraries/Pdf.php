@@ -11,15 +11,23 @@ class Pdf extends TCPDF
     }
 
 	public function Header() {
-		$this->SetY(10);
-		$this->SetFont('freescpt', '', 24);
-		$judul='<p align="right">Fitinline.com</p>';
-		$this->writeHTML($judul, true, false, false, false, '');
-		$this->SetFont('helvetica', '', 8);
-		$html='<p align="right">Jl. Pangeran Wirosobo, Gg. Wiropamungkas No. 8 Sorosutan,
-			<br>Kec. Umbulharjo, Kota Yogyakarta 55162, Indonesia.<br>
-			Ph. +62 274 4293090 Email: cs@fitinline.com Website: <a style="text-decoration:none; color: black;" href="https://fitinline.com">https://fitinline.com</a></p><hr>';
-		$this->writeHTML($html, true, false, false, false, '');
+		$uri_segment = explode("/", parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
+		if($uri_segment[2] != "product") {
+			$this->SetY(10);
+			$this->SetFont('freescpt', '', 24);
+			$judul='<p align="right">Fitinline.com</p>';
+			$this->writeHTML($judul, true, false, false, false, '');
+			$this->SetFont('helvetica', '', 8);
+			$html='<p align="right">Jl. Pangeran Wirosobo, Gg. Wiropamungkas No. 8 Sorosutan,
+				<br>Kec. Umbulharjo, Kota Yogyakarta 55162, Indonesia.<br>
+				Ph. +62 274 4293090 Email: cs@fitinline.com Website: <a style="text-decoration:none; color: black;" href="https://fitinline.com">https://fitinline.com</a></p><hr>';
+			$this->writeHTML($html, true, false, false, false, '');
+		} else {
+			$this->SetY(5);
+			$this->SetFont('helvetica', '', 9);
+			$html='<p align="right" style="font-style: italic;">Fitinline.com - Phone. +62 274 5305094 Mobile: + 62 812 25696886 Email: cs@fitinline.com</p>';
+			$this->writeHTML($html, true, false, false, false, '');
+		}
 	}
 
 	public function Footer() {

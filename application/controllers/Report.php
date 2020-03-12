@@ -274,7 +274,7 @@ class Report extends CI_Controller {
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
 		} else {
 			$data['get_cs'] = $this->user_m->get_only_cs()->result();
-			$this->template->load('template', 'income/income_by_cs', $data);
+			$this->template->load('template', 'report/income/income_by_cs', $data);
 		}
 	}
 
@@ -353,7 +353,7 @@ class Report extends CI_Controller {
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
 		} else {
 			$data['product'] = $this->product_m->get()->result();
-			$this->template->load('template', 'income/income_by_product', $data);
+			$this->template->load('template', 'report/income/income_by_product', $data);
 		}
 	}
 
@@ -434,7 +434,7 @@ class Report extends CI_Controller {
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
 		} else {
 			$data['get_vendor'] = $this->vendor_m->get()->result();
-			$this->template->load('template', 'income/income_by_vendor', $data);
+			$this->template->load('template', 'report/income/income_by_vendor', $data);
 		}
 	}
 
@@ -514,7 +514,7 @@ class Report extends CI_Controller {
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
 		} else {
 			$data['get_vendor'] = $this->vendor_m->get()->result();
-			$this->template->load('template', 'income/profit_loss', $data);
+			$this->template->load('template', 'report/income/profit_loss', $data);
 		}
 	}
 

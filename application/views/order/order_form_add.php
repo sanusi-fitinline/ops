@@ -28,7 +28,6 @@
 								<div class="form-group">
 								    <label>Customer</label>
 								    <select class="form-control selectpicker" name="CUST_ID" id="CUST_SELECT" title="-- Select One --" data-live-search="true" required>
-							    		<option value="" disabled>-- Select One --</option>
 								    	<?php foreach($customer as $cust): ?>
 									    	<option value="<?php echo $cust->CUST_ID?>"
 									    		<?php if($cust->CUST_ID == $this->uri->segment(3)) {echo "selected";} ?>>

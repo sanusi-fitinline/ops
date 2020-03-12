@@ -5,9 +5,9 @@ class Incomebycs_m extends CI_Model {
 
     public function get($FROM, $TO, $EXCLUDE_SHIPMENT, $USER_ID = null){
         if($EXCLUDE_SHIPMENT != 0){
-            $this->db->select('tb_order.ORDER_DATE, tb_order.USER_ID, tb_user.USER_NAME, tb_order.ORDER_ID, IF(tb_order.ORDER_GRAND_TOTAL = 0, (tb_order.ORDER_DEPOSIT - tb_order.ORDER_SHIPCOST), (tb_order.ORDER_GRAND_TOTAL - tb_order.ORDER_SHIPCOST)) AS ORDER_G_TOTAL', FALSE);
+            $this->db->select('tb_order.ORDER_DATE, tb_order.USER_ID, tb_user.USER_NAME, tb_order.ORDER_ID, IF(tb_order.ORDER_GRAND_TOTAL != 0, IF(tb_order.ORDER_DEPOSIT != "", ((tb_order.ORDER_GRAND_TOTAL + tb_order.ORDER_DEPOSIT) - tb_order.ORDER_SHIPCOST), (tb_order.ORDER_GRAND_TOTAL - tb_order.ORDER_SHIPCOST)), (tb_order.ORDER_DEPOSIT - tb_order.ORDER_SHIPCOST)) AS ORDER_G_TOTAL', FALSE);
         } else {
-            $this->db->select('tb_order.ORDER_DATE, tb_order.USER_ID, tb_user.USER_NAME, tb_order.ORDER_ID, IF(tb_order.ORDER_GRAND_TOTAL = 0, tb_order.ORDER_DEPOSIT, tb_order.ORDER_GRAND_TOTAL) AS ORDER_G_TOTAL', FALSE);
+            $this->db->select('tb_order.ORDER_DATE, tb_order.USER_ID, tb_user.USER_NAME, tb_order.ORDER_ID, IF(tb_order.ORDER_GRAND_TOTAL != 0, IF(tb_order.ORDER_DEPOSIT != "", (tb_order.ORDER_GRAND_TOTAL + tb_order.ORDER_DEPOSIT), tb_order.ORDER_GRAND_TOTAL), tb_order.ORDER_DEPOSIT) AS ORDER_G_TOTAL', FALSE);
         }
         $this->db->from('tb_order');
         $this->db->join('tb_user', 'tb_user.USER_ID=tb_order.USER_ID', 'left');

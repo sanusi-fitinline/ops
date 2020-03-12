@@ -91,7 +91,7 @@
 										</div>
 										<div class="form-group">
 											<label>Note</label>
-											<textarea class="form-control" cols="100%" rows="5" name="LSAM_NOTES" readonly><?php echo $row->ORDER_NOTES ?></textarea>
+											<textarea class="form-control" cols="100%" rows="5" name="ORDER_NOTES"><?php echo $row->ORDER_NOTES ?></textarea>
 										</div>
 									</div>
 									<div class="col-md-3">
@@ -128,7 +128,7 @@
 									</div>
 								</div>
 								<div>
-									<a href="<?php echo site_url('order/add_detail/'.$row->ORDER_ID) ?>" class="btn btn-success btn-sm" <?php if($row->ORDER_STATUS != null || $row->ORDER_STATUS != 0){echo "hidden";} ?>><i class="fa fa-user-plus"></i> ADD PRODUCT</a>
+									<a href="<?php echo site_url('order/add_detail/'.$row->ORDER_ID) ?>" class="btn btn-success btn-sm" <?php if($row->ORDER_STATUS != null || $row->ORDER_STATUS != 0){echo "hidden";} ?>><i class="fas fa-plus-circle"></i> ADD PRODUCT</a>
 									<a href="<?php echo base_url('order/quotation/'.$row->ORDER_ID)?>" target="_blank" class="btn btn-sm btn-primary" id="QUOTATION"><i class="fa fa-print"></i> QUOTATION</a>
 									<a href="<?php echo base_url('order/invoice/'.$row->ORDER_ID)?>" target="_blank" class="btn btn-sm btn-primary" id="INVOICE"><i class="fa fa-print"></i> INVOICE</a>
 									<a href="<?php echo base_url('order/receipt/'.$row->ORDER_ID)?>" target="_blank" class="btn btn-sm btn-primary" id="RECEIPT"><i class="fa fa-print"></i> RECEIPT</a>
@@ -189,14 +189,21 @@
 							                			<td align="center" style="vertical-align: middle; width: 10px;"><a href="<?php echo site_url('order/delete_item/'.$value->ORDER_ID.'/'.$value->ORDD_ID.'/'.$value->VEND_ID) ?>" class="DELETE-ITEM" style="color: #dc3545;" onclick="return confirm('Delete Item?')"><i class="fa fa-trash"></i></a></td>
 							                			<td align="center" style="vertical-align: middle; width: 10px;"><?php echo $no++ ?></td>
 							                			<td style="vertical-align: middle;"><?php echo $value->PRO_NAME ?></td>
-							                			<td style="vertical-align: middle;"><?php echo $value->ORDD_OPTION ?></td>
+							                			<td style="vertical-align: middle;"><input style="font-size: 14px;" class="form-control" type="text" name="ORDD_OPTION[]" autocomplete="off" value="<?php echo $value->ORDD_OPTION ?>"></td>
 							                			<td align="right" style="vertical-align: middle;"><?php echo number_format($value->ORDD_PRICE,0,',','.') ?></td>
 							                			<td align="center" style="vertical-align: middle;"><input style="text-align: center; font-size: 14px;width: 85px;" class="form-control ORDD_QUANTITY" type="number" min="1" step="0.01" name="" id="ORDD_QUANTITY<?php  echo $value->ORDD_ID?>" value="<?php echo $value->ORDD_QUANTITY ?>"></td>
 							                			<td align="center" style="vertical-align: middle;"><?php echo $value->UMEA_NAME ?></td>
 							                			<td class="CETAK_TOTAL_ORDD_PRICE<?php echo $value->ORDD_ID ?>" style="padding-right: 25px; vertical-align: middle;" align="right"></td>
+
 							                			<input type="hidden" name="" id="PRO_WEIGHT<?php echo $value->ORDD_ID ?>" value="<?php echo $value->PRO_WEIGHT ?>">
 							                			<input type="hidden" name="" id="PRICE<?php echo $value->ORDD_ID ?>" value="<?php echo $value->ORDD_PRICE ?>">
 							                			<input type="hidden" name="" id="PRICE_VENDOR<?php echo $value->ORDD_ID ?>" value="<?php echo $value->ORDD_PRICE_VENDOR ?>">
+
+							                			<input type="hidden" name="ORDD_ID[]" value="<?php echo $value->ORDD_ID ?>">
+							                			<input type="hidden" class="form-control" name="ORDD_QUANTITY[]" id="QTY_DETAIL<?php echo $value->ORDD_ID ?>" value="<?php echo $value->ORDD_QUANTITY ?>">
+							                			<input type="hidden" class="form-control TOTAL_ORDD_WEIGHT<?php echo $value->VEND_ID ?>" name="ORDD_WEIGHT[]" id="ORDD_WEIGHT<?php echo $value->ORDD_ID ?>" value="<?php echo $value->ORDD_WEIGHT ?>">
+							                			<input type="hidden" class="form-control uang DETAIL-PRICE TOTAL_ORDD_PRICE<?php echo $value->VEND_ID ?>" name="" id="TOTAL_ORDD_PRICE<?php echo $value->ORDD_ID ?>" value="">
+											            <input type="hidden" class="form-control uang TOTAL_ORDD_PRICE_VENDOR<?php echo $value->VEND_ID ?>" name="" id="TOTAL_ORDD_PRICE_VENDOR<?php echo $value->ORDD_ID ?>" value="">
 							                		</tr>
 							                	<?php endforeach ?>
 							                </tbody>
@@ -301,13 +308,6 @@
 											                				<?php echo str_replace(".", ",", $field->ORDD_QUANTITY) ?></td>
 											                			<td align="center" style="padding-top: 20px"><?php echo $field->UMEA_NAME ?></td>
 											                			<td class="CETAK_TOTAL_ORDD_PRICE<?php echo $field->ORDD_ID ?>" style="padding-top: 20px; padding-right: 25px;" align="right"></td>
-											                			
-											                			<!-- inputan update data -->
-											                			<input type="hidden" class="form-control" name="ORDD_ID[]" value="<?php echo $field->ORDD_ID ?>">
-											                			<input type="hidden" class="form-control" name="ORDD_QUANTITY[]" id="QTY_DETAIL<?php echo $field->ORDD_ID ?>" value="<?php echo $field->ORDD_QUANTITY ?>">
-											                			<input type="hidden" class="form-control TOTAL_ORDD_WEIGHT<?php echo $field->VEND_ID ?>" name="ORDD_WEIGHT[]" id="ORDD_WEIGHT<?php echo $field->ORDD_ID ?>" value="<?php echo $field->ORDD_WEIGHT ?>">
-											                			<input type="hidden" class="form-control uang DETAIL-PRICE TOTAL_ORDD_PRICE<?php echo $data->VEND_ID ?>" name="" id="TOTAL_ORDD_PRICE<?php echo $field->ORDD_ID ?>" value="">
-											                			<input type="hidden" class="form-control uang TOTAL_ORDD_PRICE_VENDOR<?php echo $data->VEND_ID ?>" name="" id="TOTAL_ORDD_PRICE_VENDOR<?php echo $field->ORDD_ID ?>" value="">
 											                		</tr>
 											                	<?php endif ?>
 										                	<?php endforeach ?>
@@ -411,10 +411,12 @@
 	<?php $this->load->model('orderdetail_m');?>
 	<?php $_detail = $this->orderdetail_m->get($this->uri->segment(3))->result(); ?>
 	$(document).ready(function(){
+		$("#INPUT_BANK").selectpicker('render');
 		<?php foreach ($_detail as $value): ?>
 			$(".detail-per-vendor").each(function(){
 				var vendor = "<?php echo $value->VEND_ID ?>";
 			    $("#TAMPIL-SERVICE"+vendor).hide();
+			    $("#COURIER-ORDER"+vendor).selectpicker('render');
 			    $("#COURIER-ORDER"+vendor).change(function(){ 
 			    	$("#TAMPIL-SERVICE"+vendor).hide();
 			    	$("#SERVICE-ORDER"+vendor).hide();
@@ -424,8 +426,8 @@
 			    	var COURIER_A = COURIER_R[1];
 			    	var COURIER_N = COURIER_R[2];
 				    $.ajax({
-				        type: "POST", 
 				        url: "<?php echo site_url('order/datacal'); ?>", 
+				        type: "POST", 
 				        data: {
 				        	CUST_ID 			: $("#CUST_ID"+vendor).val(),
 				        	VEND_ID 			: $("#VEND_ID"+vendor).val(),
@@ -883,16 +885,18 @@
 	    		var ordd_id = "<?php echo $value->ORDD_ID ?>";
 	    		var vendor_id = "<?php echo $value->VEND_ID ?>";
 	    		// total berat berdasarkan vendor
-				var total_vendor_weight = 0;
-				$(".TOTAL_ORDD_WEIGHT"+vendor_id).each(function(){
-					if($(this).val() != "") {
-			    		var vendor_weight = $(this).val();
-			    	} else {
-			    		var vendor_weight = 0;
-			    	}
-			    	total_vendor_weight += Number(vendor_weight);
-			    	$("#VENDOR_WEIGHT"+vendor_id).val(total_vendor_weight.toFixed(2));
-				});
+	    		if($("#VENDOR_WEIGHT"+vendor_id).val() == "") {
+					var total_vendor_weight = 0;
+					$(".TOTAL_ORDD_WEIGHT"+vendor_id).each(function(){
+						if($(this).val() != "") {
+				    		var vendor_weight = $(this).val();
+				    	} else {
+				    		var vendor_weight = 0;
+				    	}
+				    	total_vendor_weight += Number(vendor_weight);
+				    	$("#VENDOR_WEIGHT"+vendor_id).val(total_vendor_weight.toFixed(2));
+					});
+	    		}
 				$("#ORDD_QUANTITY"+ordd_id).on('keyup mouseup',function(){
 					var jumlah = $("#ORDD_QUANTITY"+ordd_id).val();
 					// total berat setelah quantity diubah
@@ -1441,47 +1445,51 @@
 				});
 	
 				// untuk mengaktifkan print quotation dan invoice
-				if(($('#COURIER-ORDER'+vendor_id).val() == "") || ($('#COURIER-ORDER'+vendor_id).val() == null)) {
-					$("#UPDATE_PAYMENT").attr('disabled','true');
-					$("#UPDATE_PAYMENT").addClass('btn btn-sm btn-secondary');
-					
-					$("#QUOTATION").css({'opacity' : '0.5', 'pointer-events': 'none', 'cursor' : 'default', 'color' : '#ffffff'});
-					$("#QUOTATION").removeAttr('href');
-					$("#QUOTATION").addClass('btn btn-sm btn-secondary');
-					
-					$("#INVOICE").css({'opacity' : '0.5', 'pointer-events': 'none', 'cursor' : 'default', 'color' : '#ffffff'});
-					$("#INVOICE").removeAttr('href');
-					$("#INVOICE").addClass('btn btn-sm btn-secondary');
-		    	} else {
-			    	$("#UPDATE_PAYMENT").removeAttr('disabled','true');
-			    	$("#UPDATE_PAYMENT").addClass('btn btn-sm btn-primary');
-			    	$("#QUOTATION").css({'opacity' : '', 'pointer-events': '', 'cursor' : ''});
-					$("#QUOTATION").attr('href');
-					$("#QUOTATION").addClass('btn btn-sm btn-primary');
+				$(".VENDOR_SHIPCOST").ready(function(){
+					if(($('#COURIER-ORDER'+vendor_id).val() == "") || ($('#COURIER-ORDER'+vendor_id).val() == null)) {
+						$("#UPDATE_PAYMENT").attr('disabled','true');
+						$("#UPDATE_PAYMENT").addClass('btn btn-sm btn-secondary');
+						
+						$("#QUOTATION").css({'opacity' : '0.5', 'pointer-events': 'none', 'cursor' : 'default', 'color' : '#ffffff'});
+						$("#QUOTATION").removeAttr('href');
+						$("#QUOTATION").addClass('btn btn-sm btn-secondary');
+						
+						$("#INVOICE").css({'opacity' : '0.5', 'pointer-events': 'none', 'cursor' : 'default', 'color' : '#ffffff'});
+						$("#INVOICE").removeAttr('href');
+						$("#INVOICE").addClass('btn btn-sm btn-secondary');
+			    	} else {
+				    	$("#UPDATE_PAYMENT").removeAttr('disabled','true');
+				    	$("#UPDATE_PAYMENT").addClass('btn btn-sm btn-primary');
+				    	$("#QUOTATION").css({'opacity' : '', 'pointer-events': '', 'cursor' : ''});
+						$("#QUOTATION").attr('href');
+						$("#QUOTATION").addClass('btn btn-sm btn-primary');
 
-					$("#INVOICE").css({'opacity' : '', 'pointer-events': '', 'cursor' : ''});
-					$("#INVOICE").attr('href');
-					$("#INVOICE").addClass('btn btn-sm btn-primary');
-				}
+						$("#INVOICE").css({'opacity' : '', 'pointer-events': '', 'cursor' : ''});
+						$("#INVOICE").attr('href');
+						$("#INVOICE").addClass('btn btn-sm btn-primary');
+					}
+				});
 			});
 		<?php endforeach ?>
 		
 		// untuk mengaktifkan print receipt
-		if($('#ORDER_STATUS').val() == 'Full Paid' || $('#ORDER_STATUS').val() == 'Half Delivered' || $('#ORDER_STATUS').val() == 'Delivered') {
-			$("#RECEIPT").css({'opacity' : '', 'pointer-events': '', 'cursor' : ''});
-			$("#RECEIPT").attr('href');
-			$("#RECEIPT").addClass('btn btn-sm btn-primary');
-			$(".DELETE-ITEM").css({'opacity' : '0.5', 'pointer-events': 'none', 'cursor' : 'default', 'color' : '#6c757d'});
-			$(".DELETE-ITEM").removeAttr('href');
-			$("#UPDATE_PAYMENT").attr('disabled','true');
-			$("#UPDATE_PAYMENT").addClass('btn btn-sm btn-secondary');
-		} else {
-			$("#RECEIPT").css({'opacity' : '0.5', 'pointer-events': 'none', 'cursor' : 'default', 'color' : '#ffffff'});
-			$("#RECEIPT").removeAttr('href');
-			$("#RECEIPT").addClass('btn btn-sm btn-secondary');
-			$(".DELETE-ITEM").css({'opacity' : '', 'pointer-events': '', 'cursor' : ''});
-			$(".DELETE-ITEM").attr('href');
-		}
+		$(".VENDOR_SHIPCOST").ready(function(){
+			if($('#ORDER_STATUS').val() == 'Full Paid' || $('#ORDER_STATUS').val() == 'Half Delivered' || $('#ORDER_STATUS').val() == 'Delivered') {
+				$("#RECEIPT").css({'opacity' : '', 'pointer-events': '', 'cursor' : ''});
+				$("#RECEIPT").attr('href');
+				$("#RECEIPT").addClass('btn btn-sm btn-primary');
+				$(".DELETE-ITEM").css({'opacity' : '0.5', 'pointer-events': 'none', 'cursor' : 'default', 'color' : '#6c757d'});
+				$(".DELETE-ITEM").removeAttr('href');
+				$("#UPDATE_PAYMENT").attr('disabled','true');
+				$("#UPDATE_PAYMENT").addClass('btn btn-sm btn-secondary');
+			} else {
+				$("#RECEIPT").css({'opacity' : '0.5', 'pointer-events': 'none', 'cursor' : 'default', 'color' : '#ffffff'});
+				$("#RECEIPT").removeAttr('href');
+				$("#RECEIPT").addClass('btn btn-sm btn-secondary');
+				$(".DELETE-ITEM").css({'opacity' : '', 'pointer-events': '', 'cursor' : ''});
+				$(".DELETE-ITEM").attr('href');
+			}
+		});
 
 		$("#UPDATE_PAYMENT").click(function(){
 			$("#INPUT_BANK").attr('required', 'true');

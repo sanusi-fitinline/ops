@@ -43,7 +43,7 @@ class Courier extends CI_Controller {
 						</a>
 						<a href="'.$url.'courier/address/'.$field->COURIER_ID.'" class="btn btn-secondary btn-sm"><i class="fa fa-flag"></i> Address</a>';
 				} else {
-					$row[] = '<form action="'.$url.'courier/del'.'" method="post">
+					$row[] = '<form action="'.$url.'courier/del" method="post">
 							<a href="#" data-toggle="modal" data-target="#edit-courier'.$field->COURIER_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i>
 							</a>
 							<input type="hidden" name="COURIER_ID" value="'.$field->COURIER_ID.'">
@@ -58,7 +58,7 @@ class Courier extends CI_Controller {
 						<a href="'.$url.'courier/address/'.$field->COURIER_ID.'" class="btn btn-secondary btn-sm"><i class="fa fa-flag"></i> Address</a>
 						<a href="'.$url.'courier/tariff/'.$field->COURIER_ID.'" class="btn btn-info btn-sm"><i class="fa fa-calculator"></i> Tariff</a>';
 				} else {
-					$row[] = '<form action="'.$url.'courier/del'.'" method="post">
+					$row[] = '<form action="'.$url.'courier/del" method="post">
 							<a href="#" data-toggle="modal" data-target="#edit-courier'.$field->COURIER_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i>
 							</a>
 							<input type="hidden" name="COURIER_ID" value="'.$field->COURIER_ID.'">
@@ -162,7 +162,7 @@ class Courier extends CI_Controller {
 			if((!$this->access_m->isDelete('Courier', 1)->row()) && ($this->session->GRP_ID !=3)){
 				$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="'.$url.'courier/editaddress/'.$field->COUADD_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a></div>';
 			} else {
-				$row[] = '<form action="'.$url.'courier/deladdress'.'" method="post"><div style="vertical-align: middle; text-align: center;"><a href="'.$url.'courier/editaddress/'.$field->COUADD_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
+				$row[] = '<form action="'.$url.'courier/deladdress" method="post"><div style="vertical-align: middle; text-align: center;"><a href="'.$url.'courier/editaddress/'.$field->COUADD_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
 					<input type="hidden" name="COURIER_ID" value="'.$field->COURIER_ID.'">
 					<input type="hidden" name="COUADD_ID" value="'.$field->COUADD_ID.'">
 					<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button></div></form>';
@@ -194,12 +194,12 @@ class Courier extends CI_Controller {
 
 	public function editAddress($COUADD_ID) {
 		$query 				= $this->couaddress_m->getDetailAddress($COUADD_ID);
-		$data['country'] 	= $this->area_m->getCountry()->result();
-		$data['state'] 		= $this->area_m->getState($query->row('CNTR_ID'))->result();
-		$data['city'] 		= $this->area_m->getCity($query->row('STATE_ID'))->result();
-		$data['subd'] 		= $this->area_m->getSubdistrict($query->row('CITY_ID'))->result();
 		if ($query->num_rows() > 0) {
 			$data['row'] =	$query->row();
+			$data['country'] 	= $this->area_m->getCountry()->result();
+			$data['state'] 		= $this->area_m->getState($query->row('CNTR_ID'))->result();
+			$data['city'] 		= $this->area_m->getCity($query->row('STATE_ID'))->result();
+			$data['subd'] 		= $this->area_m->getSubdistrict($query->row('CITY_ID'))->result();
 			$this->template->load('template', 'courier/courier_address_edit', $data);
 		} else {
 			echo "<script>alert('Data tidak ditemukan.')</script>";
@@ -292,7 +292,7 @@ class Courier extends CI_Controller {
 			if((!$this->access_m->isDelete('Courier', 1)->row()) && ($this->session->GRP_SESSION !=3)){
 				$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="'.$url.'courier/edittariff/'.$field->COUTAR_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a></div>';
 			} else {
-				$row[] = '<form action="'.$url.'courier/deltariff'.'" method="post"><div style="vertical-align: middle; text-align: center;"><a href="'.$url.'courier/edittariff/'.$field->COUTAR_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
+				$row[] = '<form action="'.$url.'courier/deltariff" method="post"><div style="vertical-align: middle; text-align: center;"><a href="'.$url.'courier/edittariff/'.$field->COUTAR_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
 					<input type="hidden" name="COURIER_ID" value="'.$field->COURIER_ID.'">
 					<input type="hidden" name="COUTAR_ID" value="'.$field->COUTAR_ID.'">
 					<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button></div></form>';
@@ -323,16 +323,16 @@ class Courier extends CI_Controller {
 	}
 
 	public function editTariff($COUTAR_ID) {
-		$query 				= $this->coutariff_m->getDetailTariff($COUTAR_ID);
-		$data['country'] 	= $this->area_m->getCountry()->result();
-		$data['ostate'] 	= $this->area_m->getState($query->row('O_CNTR_ID'))->result();
-		$data['ocity'] 		= $this->area_m->getCity($query->row('O_STATE_ID'))->result();
-		$data['osubd'] 		= $this->area_m->getSubdistrict($query->row('O_CITY_ID'))->result();
-		$data['dstate'] 	= $this->area_m->getState($query->row('D_CNTR_ID'))->result();
-		$data['dcity'] 		= $this->area_m->getCity($query->row('D_STATE_ID'))->result();
-		$data['dsubd'] 		= $this->area_m->getSubdistrict($query->row('D_CITY_ID'))->result();
+		$query = $this->coutariff_m->getDetailTariff($COUTAR_ID);
 		if ($query->num_rows() > 0) {
 			$data['row'] =	$query->row();
+			$data['country'] 	= $this->area_m->getCountry()->result();
+			$data['ostate'] 	= $this->area_m->getState($query->row('O_CNTR_ID'))->result();
+			$data['ocity'] 		= $this->area_m->getCity($query->row('O_STATE_ID'))->result();
+			$data['osubd'] 		= $this->area_m->getSubdistrict($query->row('O_CITY_ID'))->result();
+			$data['dstate'] 	= $this->area_m->getState($query->row('D_CNTR_ID'))->result();
+			$data['dcity'] 		= $this->area_m->getCity($query->row('D_STATE_ID'))->result();
+			$data['dsubd'] 		= $this->area_m->getSubdistrict($query->row('D_CITY_ID'))->result();
 			$this->template->load('template', 'courier/courier_tariff_edit', $data);
 		} else {
 			echo "<script>alert('Data tidak ditemukan.')</script>";

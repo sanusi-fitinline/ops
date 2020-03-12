@@ -24,13 +24,12 @@ class Order extends CI_Controller {
 		$this->load->model('custdeposit_m');
 		$this->load->model('clog_m');
 		check_not_login();
-		$this->load->library('Pdf');
+		$this->load->library('pdf');
 		$this->load->library('rajaongkir');
 		$this->load->library('form_validation');
 	}
 
-	public function index()
-	{
+	public function index() {
 		$modl = "Order";
 		$access =  $this->access_m->isAccess($this->session->GRP_SESSION, $modl)->row();
 		if ((!$access) && ($this->session->GRP_SESSION !=3)) {
@@ -84,13 +83,13 @@ class Order extends CI_Controller {
 				}
 			} else {
 				if($field->ORDER_STATUS == 5) {
-					$row[] = '<form action="'.$url.'order/delete_order'.'" method="post"><div style="vertical-align: middle; text-align: center;">
+					$row[] = '<form action="'.$url.'order/delete_order" method="post"><div style="vertical-align: middle; text-align: center;">
 						<a href="'.$url.'order/cancel_detail/'.$field->ORDER_ID.'" class="btn btn-sm btn-primary" title="Detail"><i class="fa fa-search-plus"></i></a>
 						<input type="hidden" name="ORDER_ID" value="'.$field->ORDER_ID.'">
 						<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></button>
 						</div></form>';
 				} else {
-					$row[] = '<form action="'.$url.'order/delete_order'.'" method="post"><div style="vertical-align: middle; text-align: center;">
+					$row[] = '<form action="'.$url.'order/delete_order" method="post"><div style="vertical-align: middle; text-align: center;">
 						<a href="'.$url.'order/detail/'.$field->ORDER_ID.'" class="btn btn-sm btn-primary" title="Detail"><i class="fa fa-search-plus"></i></a>
 						<input type="hidden" name="ORDER_ID" value="'.$field->ORDER_ID.'">
 						<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></button>
@@ -343,7 +342,7 @@ class Order extends CI_Controller {
 				echo "<script>window.location='".site_url('order/cancel_detail/'.$ORDER_ID)."'</script>";
 			} else {
 				echo "<script>alert('Cancel order gagal.')</script>";
-				echo "<script>window.location='".site_url('order/cancel_detail/'.$ORDER_ID)."'</script>";
+				echo "<script>window.location='".site_url('order/detail/'.$ORDER_ID)."'</script>";
 			}
 		} else if(isset($_POST['UPDATE_PAYMENT'])) {
 			$payment['payment'] = $this->order_m->update_payment($ORDER_ID);

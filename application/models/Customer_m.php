@@ -110,6 +110,23 @@ class Customer_m extends CI_Model {
 		return $query;
 	}
 
+	public function get_by_followup($CUST_ID = null) {    
+		$this->db->select('tb_customer.*, tb_country.CNTR_NAME, tb_state.STATE_NAME, tb_city.CITY_NAME, tb_subdistrict.SUBD_NAME, tb_bank.BANK_NAME, tb_channel.CHA_NAME');
+		$this->db->from('tb_customer');
+		$this->db->join('tb_country', 'tb_country.CNTR_ID=tb_customer.CNTR_ID', 'left');
+		$this->db->join('tb_state', 'tb_state.STATE_ID=tb_customer.STATE_ID', 'left');
+		$this->db->join('tb_city', 'tb_city.CITY_ID=tb_customer.CITY_ID', 'left');
+		$this->db->join('tb_subdistrict', 'tb_subdistrict.SUBD_ID=tb_customer.SUBD_ID', 'left');
+		$this->db->join('tb_bank', 'tb_bank.BANK_ID=tb_customer.BANK_ID', 'left');
+		$this->db->join('tb_channel', 'tb_channel.CHA_ID=tb_customer.CHA_ID', 'left');
+		if($CUST_ID != null) {
+			$this->db->where('tb_customer.CUST_ID', $CUST_ID);
+		}
+		$this->db->order_by('tb_customer.CUST_NAME', 'ASC');
+		$query = $this->db->get();
+		return $query;
+	}
+
 	public function insert() {
 		date_default_timezone_set('Asia/Jakarta');
 		$dataInsert = array(

@@ -37,8 +37,7 @@
 							<div class="col-md-3">
 								<div class="form-group">
 								    <label>Status <small>*</small></label>
-								    <select class="form-control selectpicker" name="PRO_STATUS" id="PRO_STATUS" data-live-search="true" required>
-							    		<option value="">-- Select One --</option>
+								    <select class="form-control selectpicker" name="PRO_STATUS" id="PRO_STATUS" title="-- Select One --" data-live-search="true" required>
 							    		<option value="1">Onstock</option>
 							    		<option value="2">Sold</option>
 							    		<option value="3">Sample</option>
@@ -48,16 +47,14 @@
 								</div>
 								<div class="form-group">
 									<label>Available <small>*</small></label>
-									<select class="form-control selectpicker" name="PRO_AVAIL" data-live-search="true" required>
-							    		<option value="">-- Select One --</option>
+									<select class="form-control selectpicker" name="PRO_AVAIL" title="-- Select One --" data-live-search="true" required>
 							    		<option value="0">Ready on Stock</option>
 							    		<option value="1">Purchase Order</option>
 								    </select>
 								</div>
 								<div class="form-group">
 								    <label>Currency <small>*</small></label>
-								    <select class="form-control selectpicker" name="CURR_ID" data-live-search="true" required>
-							    		<option value="">-- Select One --</option>
+								    <select class="form-control selectpicker" name="CURR_ID" title="-- Select One --" data-live-search="true" required>
 							    		<?php foreach($currency as $curr): ?>
 									    	<option value="<?php echo $curr->CURR_ID ?>">
 									    		<?php echo stripslashes($curr->CURR_NAME) ?>
@@ -67,8 +64,7 @@
 								</div>									
 								<div class="form-group">
 								    <label>Vendor</label>
-								    <select class="form-control selectpicker" name="VEND_ID" id="VEND_ID" data-live-search="true">
-							    		<option value="">-- Select One --</option>
+								    <select class="form-control selectpicker" name="VEND_ID" id="VEND_ID" title="-- Select One --" data-live-search="true">
 							    		<?php foreach($vendor as $vend): ?>
 									    	<option value="<?php echo $vend->VEND_ID ?>">
 									    		<?php echo stripslashes($vend->VEND_NAME) ?>
@@ -78,7 +74,7 @@
 								</div>
 								<div class="form-group">
 								    <label>City</label>
-								    <select class="form-control selectpicker" name="CITY_ID" id="CITY_ID" data-live-search="true">
+								    <select class="form-control selectpicker" name="CITY_ID" id="CITY_ID"data-live-search="true">
 							    		<option value="">-- Select One --</option>
 							    		<?php foreach($areacity as $cty): ?>
 									    	<option value="<?php echo $cty->CITY_ID ?>">
@@ -89,13 +85,17 @@
 								</div>
 								<div class="form-group">
 								    <label>Type <small>*</small></label>
-								    <select class="form-control selectpicker" name="TYPE_ID" id="TYPE_ID" data-live-search="true" required>
-							    		<option value="">-- Select One --</option>
+								    <select class="form-control selectpicker" name="TYPE_ID" id="TYPE_ID" title="-- Select One --" data-live-search="true" required>
 							    		<?php foreach($type as $typ): ?>
 									    	<option value="<?php echo $typ->TYPE_ID ?>">
 									    		<?php echo stripslashes($typ->TYPE_NAME) ?>
 									    	</option>
 									    <?php endforeach ?>
+								    </select>
+								</div>
+								<div class="form-group">
+								    <label>Subtype</label>
+								    <select class="form-control selectpicker" name="STYPE_ID" id="STYPE_ID" title="-- Select One --" data-live-search="true">
 								    </select>
 								</div>
 							</div>
@@ -111,8 +111,7 @@
 								</div>
 								<div class="form-group">
 									<label>Unit Measure</label>
-									<select class="form-control selectpicker" name="PRO_UNIT" data-live-search="true">
-							    		<option value="">-- Select One --</option>
+									<select class="form-control selectpicker" name="PRO_UNIT" title="-- Select One --" data-live-search="true">
 							    		<?php foreach($umea as $unit): ?>
 									    	<option value="<?php echo $unit->UMEA_ID ?>">
 									    		<?php echo stripslashes($unit->UMEA_NAME) ?>
@@ -142,8 +141,7 @@
 								</div>
 								<div class="form-group">
 									<label>Volume Unit Measure</label>
-									<select class="form-control selectpicker" name="PRO_VOL_UNIT" data-live-search="true">
-							    		<option value="">-- Select One --</option>
+									<select class="form-control selectpicker" name="PRO_VOL_UNIT" title="-- Select One --" data-live-search="true">
 							    		<?php foreach($umea as $unit): ?>
 									    	<option value="<?php echo $unit->UMEA_ID ?>">
 									    		<?php echo stripslashes($unit->UMEA_NAME) ?>
@@ -157,8 +155,7 @@
 								</div>
 								<div class="form-group">
 									<label>Total Unit Measure</label>
-									<select class="form-control selectpicker" name="PRO_TOTAL_UNIT" data-live-search="true">
-							    		<option value="">-- Select One --</option>
+									<select class="form-control selectpicker" name="PRO_TOTAL_UNIT" title="-- Select One --" data-live-search="true">
 							    		<?php foreach($umea as $unit): ?>
 									    	<option value="<?php echo $unit->UMEA_ID ?>">
 									    		<?php echo stripslashes($unit->UMEA_NAME) ?>

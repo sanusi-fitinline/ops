@@ -315,6 +315,8 @@ class Ordervendor_m extends CI_Model {
         $PAYTOV_ID           = $this->input->post('PAYTOV_ID', TRUE);
         $VEND_ID             = $this->input->post('VEND_ID', TRUE);
         $CUST_ID             = $this->input->post('CUST_ID', TRUE);
+        $ORDD_ID             = $this->input->post('ORDD_ID', TRUE);
+        $ORDD_OPTION         = $this->input->post('ORDD_OPTION', TRUE);
         $ORDV_ID             = $this->input->post('ORDV_ID', TRUE);
         $SHIPCOST            = $this->input->post('ORDV_SHIPCOST', TRUE);
         $SHIPCOST_VENDOR     = str_replace(".", "", $this->input->post('ORDV_SHIPCOST_VENDOR', TRUE));
@@ -324,6 +326,14 @@ class Ordervendor_m extends CI_Model {
         $CHECK_STATUS        = $this->get_shipcost_status($PAYTOV_ID)->row();
         $get_user            = $this->get_user_id($CUST_ID)->row();
         $USER_ID             = $get_user->USER_ID;
+
+        $updateDetail = array();
+        foreach($ORDD_ID as $i => $val){
+            $updateDetail = array(
+                'ORDD_OPTION' => $ORDD_OPTION[$i],
+            );
+            $this->db->where('ORDD_ID', $ORDD_ID[$i])->update('tb_order_detail', $this->db->escape_str($updateDetail));
+        }
 
         if (!empty($this->input->post('ORDV_DELIVERY_DATE', TRUE))) {
             $params['ORDV_DELIVERY_DATE'] = date('Y-m-d', strtotime($this->input->post('ORDV_DELIVERY_DATE', TRUE)));

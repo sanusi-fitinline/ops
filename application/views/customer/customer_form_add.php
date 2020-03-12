@@ -77,8 +77,7 @@
 							<div class="col-md-3">
 								<div class="form-group">
 								    <label>Bank</label>
-								    <select class="form-control selectpicker" name="BANK_ID" data-live-search="true">
-							    		<option value="">-- Select One --</option>
+								    <select class="form-control selectpicker" name="BANK_ID" title="-- Select One --" data-live-search="true">
 								    	<?php foreach($bank as $bank): ?>
 									    	<option value="<?php echo $bank->BANK_ID ?>">
 									    		<?php echo stripslashes($bank->BANK_NAME) ?>
@@ -96,8 +95,7 @@
 								</div>
 								<div class="form-group">
 								    <label>Channel <small>*</small></label>
-								    <select class="form-control selectpicker" name="CHA_ID" required data-live-search="true">
-							    		<option value="">-- Select One --</option>
+								    <select class="form-control selectpicker" name="CHA_ID" title="-- Select One --" data-live-search="true" required>
 								    	<?php foreach($channel as $cha): ?>
 									    	<option value="<?php echo $cha->CHA_ID ?>">
 									    		<?php echo stripslashes($cha->CHA_NAME) ?>

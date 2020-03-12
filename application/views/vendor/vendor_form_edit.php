@@ -1,5 +1,4 @@
 <!-- Page Content -->
-<?php $this->load->model('access_m');?>
 <div class="container-fluid">
 	<!-- Breadcrumbs-->
 	<ol class="breadcrumb">
@@ -106,12 +105,10 @@
 								    </select>
 								</div>
 								<div class="form-group">
-									<label>Status</label>
-								    <select class="form-control selectpicker" name="VEND_STATUS">
-							    		<option value="<?php echo $row->VEND_STATUS?>"><?php echo $row->VEND_STATUS == 1 ? "Aktif": ($row->VEND_STATUS == 2 ? "Nonaktif" : "-");?></option>
-							    		<option value="" disabled="">----</option>
-							    		<option value="1">Aktif</option>
-							    		<option value="2">Nonaktif</option>
+									<label>Status <small>*</small></label>
+								    <select class="form-control selectpicker" name="VEND_STATUS" title="-- Select One --" required>
+							    		<option <?php if($row->VEND_STATUS == 1){echo "selected";}?> value="1">Aktif</option>
+							    		<option <?php if($row->VEND_STATUS == 2){echo "selected";}?> value="2">Nonaktif</option>
 								    </select>
 								</div>	
 								<br><div align="center">

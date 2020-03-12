@@ -21,7 +21,7 @@ class Management extends CI_Controller {
 		$data['accs'] =	$this->access_m->getMod()->result();
 		$data['user'] 	= $this->user_m->get()->result();
 		$data['group'] 	= $this->group_m->get()->result();
-		$this->template->load('template', 'user/user_data', $data);
+		$this->template->load('template', 'user-management/user/user_data', $data);
 	}
 
 	public function userjson() {
@@ -36,7 +36,7 @@ class Management extends CI_Controller {
 			$row[] = $field->USER_NAME;
 			$row[] = $field->USER_LOGIN;
 			$row[] = $field->GRP_NAME;
-			$row[] = '<form action="'.$url.'management/deluser'.'" method="post"><div style="vertical-align: middle; text-align: center;"><a href="'.$url.'management/edituser/'.$field->USER_ID.'" class="btn btn-primary btn-sm">
+			$row[] = '<form action="'.$url.'management/deluser" method="post"><div style="vertical-align: middle; text-align: center;"><a href="'.$url.'management/edituser/'.$field->USER_ID.'" class="btn btn-primary btn-sm">
 				<i class="fa fa-pen"></i></a>
 				<input type="hidden" name="USER_ID" value="'.$field->USER_ID.'">
 				<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button></div></form>';
@@ -71,7 +71,7 @@ class Management extends CI_Controller {
 
 		$this->form_validation->set_error_delimiters('<span class="invalid-feedback" style="font-size: 14px;">', '</span>');
 		if($this->form_validation->run() == FALSE) {
-			$this->template->load('template', 'user/user_form_add', $data);
+			$this->template->load('template', 'user-management/user/user_form_add', $data);
 		} else {
 			$data['row'] = $this->user_m->insert();
 			if ($data) {
@@ -85,11 +85,11 @@ class Management extends CI_Controller {
 	}
 
 	public function edituser($USER_ID='USER_ID'){
-		$data['accs'] =	$this->access_m->getMod()->result();
 		$query 	= $this->user_m->get($USER_ID);
-		$data['group'] 	= $this->group_m->get()->result();
 		if ($query->num_rows() > 0) {
-			$data['row'] =	$query->row();
+			$data['row'] 	= $query->row();
+			$data['accs']   = $this->access_m->getMod()->result();
+			$data['group']  = $this->group_m->get()->result();
 			$this->form_validation->set_rules('USER_LOGIN', 'Userlogin', 'required|min_length[5]|callback_userlogin_check');
 
 			if ($this->input->post('USER_PASSWORD')) {
@@ -107,7 +107,7 @@ class Management extends CI_Controller {
 
 			$this->form_validation->set_error_delimiters('<span class="invalid-feedback" style="font-size: 14px;">', '</span>');
 			if($this->form_validation->run() == FALSE) {
-				$this->template->load('template', 'user/user_form_edit', $data);
+				$this->template->load('template', 'user-management/user/user_form_edit', $data);
 			} else {
 				$this->user_m->update($USER_ID);
 				if($this->db->affected_rows() > 0) {
@@ -152,7 +152,7 @@ class Management extends CI_Controller {
 	public function group(){
 		$data['accs'] =	$this->access_m->getMod()->result();
 		$data['group'] 	= $this->group_m->get()->result();
-		$this->template->load('template', 'group/group_data', $data);
+		$this->template->load('template', 'user-management/group/group_data', $data);
 	}
 
 	public function groupjson() {
@@ -165,7 +165,7 @@ class Management extends CI_Controller {
 			$row = array();
 			$row[] = '<div style="vertical-align: middle; text-align: center;">'.$no.'</div>';
 			$row[] = $field->GRP_NAME;
-			$row[] = '<form action="'.$url.'management/delgroup'.'" method="post"><div style="vertical-align: middle; text-align: center;">
+			$row[] = '<form action="'.$url.'management/delgroup" method="post"><div style="vertical-align: middle; text-align: center;">
 					<a href="#" data-toggle="modal" data-target="#edit-grp'.$field->GRP_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
 					<input type="hidden" name="GRP_ID" value="'.$field->GRP_ID.'">
 					<button onclick="'."return confirm('Hapus data? User dan Access dengan group ".$field->GRP_NAME." akan ikut terhapus.')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
@@ -222,7 +222,7 @@ class Management extends CI_Controller {
 	public function module(){
 		$data['accs'] =	$this->access_m->getMod()->result();
 		$data['module'] 	= $this->module_m->get()->result();
-		$this->template->load('template', 'module/module_data', $data);
+		$this->template->load('template', 'user-management/module/module_data', $data);
 	}
 
 	public function modulejson() {
@@ -235,7 +235,7 @@ class Management extends CI_Controller {
 			$row = array();
 			$row[] = '<div style="vertical-align: middle; text-align: center;">'.$no.'</div>';
 			$row[] = $field->MOD_NAME;
-			$row[] = '<form action="'.$url.'management/delmodule'.'" method="post"><div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-mod'.$field->MOD_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i>
+			$row[] = '<form action="'.$url.'management/delmodule" method="post"><div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-mod'.$field->MOD_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i>
 					</a>
 				<input type="hidden" name="MOD_ID" value="'.$field->MOD_ID.'">
 				<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button></div></form>';
@@ -293,7 +293,7 @@ class Management extends CI_Controller {
 		$data['group_acc'] 	= $this->groupacc_m->getAc($GRP_ID)->result();
 		$data['group'] 		= $this->group_m->get($GRP_ID)->row();
 		$data['module'] 	= $this->module_m->get()->result();
-		$this->template->load('template', 'group-access/group_access_data', $data);
+		$this->template->load('template', 'user-management/group-access/group_access_data', $data);
 	}
 
 	public function accessjson() {
@@ -324,7 +324,7 @@ class Management extends CI_Controller {
 			$row[] = '<div style="vertical-align: middle; text-align: center;">'.$GACC_EDIT.'</div>';
 			$row[] = '<div style="vertical-align: middle; text-align: center;">'.$GACC_DELETE.'</div>';
 			$row[] = '<div style="vertical-align: middle; text-align: center;">'.$GACC_VIEWALL.'</div>';
-			$row[] = '<form action="'.$url.'management/delgroupaccess'.'" method="post"><div style="vertical-align: middle; text-align: center;">
+			$row[] = '<form action="'.$url.'management/delgroupaccess" method="post"><div style="vertical-align: middle; text-align: center;">
 				<a href="#" data-toggle="modal" data-target="#edit-grp-acc'.$field->GACC_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
 				<input class="form-control" type="hidden" name="GRP_ID" value="'.$field->GRP_ID.'" autocomplete="off" required>
 				<input type="hidden" name="GACC_ID" value="'.$field->GACC_ID.'">

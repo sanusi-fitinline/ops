@@ -1,5 +1,4 @@
 <!-- Page Content -->
-<?php $this->load->model('access_m');?>
 <div class="container-fluid">
 	<!-- Breadcrumbs-->
 	<ol class="breadcrumb">
@@ -18,7 +17,7 @@
 			<div class="row">
 	      		<div class="col-md-6">
 					<a <?php if((!$this->access_m->isAdd('Order', 1)->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> href="<?php echo site_url('order/add') ?>" class="btn btn-success btn-sm">
-						<i class="fa fa-user-plus"></i> Add</a>
+						<i class="fas fa-plus-circle"></i> Add</a>
 				</div>
 				<div class="col-md-3">			
 					<div class="form-group" align="right">
