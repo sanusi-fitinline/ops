@@ -73,6 +73,7 @@ class Vendor_m extends CI_Model {
         $this->db->from($this->table);
         return $this->db->count_all_results();
     }
+
 	public function get($VEND_ID = null) {
 		$this->db->select('tb_vendor.*, tb_country.CNTR_NAME, tb_state.STATE_NAME, tb_city.RO_CITY_ID, tb_city.CITY_NAME, tb_subdistrict.SUBD_NAME');
 		$this->db->from('tb_vendor');
@@ -88,36 +89,78 @@ class Vendor_m extends CI_Model {
 		return $query;
 	}
 
+	public function get_vend_courier($VEND_ID) {
+		$this->db->select('VEND_COURIER_ID, VEND_COURIER_ADD_UNIT, VEND_COURIER_ADD_VOL, VEND_ADDCOST');
+		$this->db->from('tb_vendor');
+		$this->db->where('VEND_ID', $VEND_ID);
+		$query = $this->db->get();
+		return $query;
+	}
+
 	public function insert(){
-		$dataInsert = array(
-			'VEND_NAME'			=> $this->input->post('VEND_NAME', TRUE),
-			'VEND_CPERSON'		=> $this->input->post('VEND_CPERSON', TRUE),
-			'VEND_PHONE'		=> $this->input->post('VEND_PHONE', TRUE),
-			'VEND_EMAIL'		=> $this->input->post('VEND_EMAIL', TRUE),
-			'VEND_ADDRESS'		=> str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$this->input->post('VEND_ADDRESS', TRUE)),
-			'CNTR_ID'			=> $this->input->post('CNTR_ID', TRUE),
-			'STATE_ID'			=> $this->input->post('STATE_ID', TRUE),
-			'CITY_ID'			=> $this->input->post('CITY_ID', TRUE),
-			'SUBD_ID'			=> $this->input->post('SUBD_ID', TRUE),
-			'VEND_STATUS'		=> $this->input->post('VEND_STATUS', TRUE),
-		);
-		$this->db->insert('tb_vendor', $this->db->escape_str($dataInsert));
+		$ADDRESS 				= $this->input->post('VEND_ADDRESS', TRUE);
+		$VEND_COURIER_ADD_UNIT 	= $this->input->post('VEND_COURIER_ADD_UNIT', TRUE);
+		$VEND_COURIER_ADD_VOL 	= $this->input->post('VEND_COURIER_ADD_VOL', TRUE);
+		$VEND_ADDCOST 			= $this->input->post('VEND_ADDCOST', TRUE);
+
+		$params['VEND_NAME'] 	= $this->input->post('VEND_NAME', TRUE);
+		$params['VEND_CPERSON'] = $this->input->post('VEND_CPERSON', TRUE);
+		$params['VEND_PHONE'] 	= $this->input->post('VEND_PHONE', TRUE);
+		$params['VEND_EMAIL'] 	= $this->input->post('VEND_EMAIL', TRUE);
+		$params['VEND_ADDRESS'] = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$ADDRESS);
+		$params['CNTR_ID'] 		= $this->input->post('CNTR_ID', TRUE);
+		$params['STATE_ID'] 	= $this->input->post('STATE_ID', TRUE);
+		$params['CITY_ID'] 		= $this->input->post('CITY_ID', TRUE);
+		$params['SUBD_ID'] 		= $this->input->post('SUBD_ID', TRUE);
+		$params['VEND_STATUS'] 	= $this->input->post('VEND_STATUS', TRUE);
+
+		if(!empty($this->input->post('VEND_COURIER_ID', TRUE))) {
+			$params['VEND_COURIER_ID'] = $this->input->post('VEND_COURIER_ID', TRUE);
+		}
+		if(!empty($VEND_COURIER_ADD_UNIT)) {
+			$params['VEND_COURIER_ADD_UNIT'] = str_replace(".", "", $VEND_COURIER_ADD_UNIT);
+		}
+		if(!empty($VEND_COURIER_ADD_VOL)) {
+			$params['VEND_COURIER_ADD_VOL'] = str_replace(".", "", $VEND_COURIER_ADD_VOL);
+		}
+		if(!empty($VEND_ADDCOST)) {
+			$params['VEND_ADDCOST'] = str_replace(".", "", $VEND_ADDCOST);
+		}
+
+		$this->db->insert('tb_vendor', $this->db->escape_str($params));
 	}
 
 	public function update($VEND_ID){
-		$dataUpdate = array(
-			'VEND_NAME'			=> $this->input->post('VEND_NAME', TRUE),
-			'VEND_CPERSON'		=> $this->input->post('VEND_CPERSON', TRUE),
-			'VEND_PHONE'		=> $this->input->post('VEND_PHONE', TRUE),
-			'VEND_EMAIL'		=> $this->input->post('VEND_EMAIL', TRUE),
-			'VEND_ADDRESS'		=> str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$this->input->post('VEND_ADDRESS', TRUE)),
-			'CNTR_ID'			=> $this->input->post('CNTR_ID', TRUE),
-			'STATE_ID'			=> $this->input->post('STATE_ID', TRUE),
-			'CITY_ID'			=> $this->input->post('CITY_ID', TRUE),
-			'SUBD_ID'			=> $this->input->post('SUBD_ID', TRUE),
-			'VEND_STATUS'		=> $this->input->post('VEND_STATUS', TRUE),
-		);
-		$this->db->where('VEND_ID', $VEND_ID)->update('tb_vendor', $this->db->escape_str($dataUpdate));
+		$ADDRESS 				= $this->input->post('VEND_ADDRESS', TRUE);
+		$VEND_COURIER_ADD_UNIT 	= $this->input->post('VEND_COURIER_ADD_UNIT', TRUE);
+		$VEND_COURIER_ADD_VOL 	= $this->input->post('VEND_COURIER_ADD_VOL', TRUE);
+		$VEND_ADDCOST 			= $this->input->post('VEND_ADDCOST', TRUE);
+
+		$params['VEND_NAME'] 	= $this->input->post('VEND_NAME', TRUE);
+		$params['VEND_CPERSON'] = $this->input->post('VEND_CPERSON', TRUE);
+		$params['VEND_PHONE'] 	= $this->input->post('VEND_PHONE', TRUE);
+		$params['VEND_EMAIL'] 	= $this->input->post('VEND_EMAIL', TRUE);
+		$params['VEND_ADDRESS'] = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$ADDRESS);
+		$params['CNTR_ID'] 		= $this->input->post('CNTR_ID', TRUE);
+		$params['STATE_ID'] 	= $this->input->post('STATE_ID', TRUE);
+		$params['CITY_ID'] 		= $this->input->post('CITY_ID', TRUE);
+		$params['SUBD_ID'] 		= $this->input->post('SUBD_ID', TRUE);
+		$params['VEND_STATUS'] 	= $this->input->post('VEND_STATUS', TRUE);
+
+		if(!empty($this->input->post('VEND_COURIER_ID', TRUE))) {
+			$params['VEND_COURIER_ID'] = $this->input->post('VEND_COURIER_ID', TRUE);
+		}
+		if(!empty($VEND_COURIER_ADD_UNIT)) {
+			$params['VEND_COURIER_ADD_UNIT'] = str_replace(".", "", $VEND_COURIER_ADD_UNIT);
+		}
+		if(!empty($VEND_COURIER_ADD_VOL)) {
+			$params['VEND_COURIER_ADD_VOL'] = str_replace(".", "", $VEND_COURIER_ADD_VOL);
+		}
+		if(!empty($VEND_ADDCOST)) {
+			$params['VEND_ADDCOST'] = str_replace(".", "", $VEND_ADDCOST);
+		}
+
+		$this->db->where('VEND_ID', $VEND_ID)->update('tb_vendor', $this->db->escape_str($params));
 	}
 
 	public function delete($VEND_ID){

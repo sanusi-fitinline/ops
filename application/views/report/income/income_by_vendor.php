@@ -27,8 +27,7 @@
 				</div>
 				<div class="col-md-3">			
 					<div class="form-group">
-						<select class="form-control form-control-sm selectpicker" title="--- Select Vendor ---" name="VEND_ID" id="VENDOR_INCOME">
-				    		<option value="" selected disabled>--- Select Vendor ---</option>
+						<select class="form-control form-control-sm selectpicker" data-live-search="true" title="-- Select Vendor --" name="VEND_ID" id="VENDOR_INCOME">
 				    		<?php foreach($get_vendor as $data): ?>
 				    			<option class="form-control-sm" value="<?php echo $data->VEND_ID ?>"><?php echo $data->VEND_NAME ?></option>
 				    		<?php endforeach ?>

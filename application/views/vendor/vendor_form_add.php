@@ -15,7 +15,7 @@
         </div>
       	<div class="card-body">
       		<div class="row">
-				<div class="col-md-12 offset-md-1">
+				<div class="col-md-12">
 					<h3>Input Vendor</h3>
 					<form action="<?php echo site_url('vendor/addprocess')?>" method="POST" enctype="multipart/form-data">
 						<div class="row">
@@ -85,8 +85,45 @@
 							    		<option value="1">Aktif</option>
 							    		<option value="2">Nonaktif</option>
 								    </select>
-								</div>	
-								<br><div align="center">
+								</div>
+								<div class="form-group">
+									<label>Vendor Courier</label>
+									<select class="form-control selectpicker" name="VEND_COURIER_ID" data-live-search="true" title="-- Select One --">
+								    	<?php foreach($vendor as $field): ?>
+								    		<option value="<?php echo $field->VEND_ID ?>"><?php echo $field->VEND_NAME ?></option>
+								    	<?php endforeach ?>
+								    </select>
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label>Vendor Add Unit</label>
+									<div class="input-group">
+										<div class="input-group-prepend">
+								          	<span class="input-group-text">Rp.</span>
+								        </div>
+										<input class="form-control uang" type="text" name="VEND_COURIER_ADD_UNIT" autocomplete="off">
+								    </div>
+								</div>
+								<div class="form-group">
+									<label>Vendor Add Volume</label>
+									<div class="input-group">
+										<div class="input-group-prepend">
+								          	<span class="input-group-text">Rp.</span>
+								        </div>
+										<input class="form-control uang" type="text" name="VEND_COURIER_ADD_VOL" autocomplete="off">
+								    </div>
+								</div>
+								<div class="form-group">
+									<label>Vendor Add Cost</label>
+									<div class="input-group">
+										<div class="input-group-prepend">
+								          	<span class="input-group-text">Rp.</span>
+								        </div>
+										<input class="form-control uang" type="text" name="VEND_ADDCOST" autocomplete="off">
+								    </div>
+								</div>
+								<div align="center">
 									<button type="submit" class="btn btn-primary" name="simpan"><i class="fa fa-save"></i> Save</button>
 									<a href="<?php echo site_url('vendor') ?>" class="btn btn-danger" name="batal"><i class="fa fa-times"></i> Cancel</a>
 								</div>

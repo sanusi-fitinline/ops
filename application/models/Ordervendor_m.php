@@ -183,9 +183,50 @@ class Ordervendor_m extends CI_Model {
         return $query;
     }
 
+    public function change_vendor($ORDER_ID) {
+        $VEND_ID    = $this->input->post('VEND_ID', TRUE);
+        $COURIER_ID = $this->input->post('COURIER_ID', TRUE);
+        $query = $this->db->get_where('tb_order_vendor',['ORDER_ID' => $ORDER_ID, 'COURIER_ID' => $COURIER_ID]);
+        foreach ($query->result() as $field) {
+            $this->db->insert('tb_order_vendor_old', $field);
+        }
+
+        $this->db->where('ORDER_ID', $ORDER_ID);
+        $this->db->where('COURIER_ID', $COURIER_ID);
+        $this->db->delete('tb_order_vendor');
+
+        $row = $this->db->get_where('tb_order_vendor_old',['ORDER_ID' => $ORDER_ID, 'VEND_ID' => $VEND_ID])->row();
+
+        $this->db->select('SUM(ORDV_WEIGHT) AS T_ORDV_WEIGHT, SUM(ORDV_SHIPCOST) AS T_ORDV_SHIPCOST, SUM(ORDV_TOTAL) AS T_ORDV_TOTAL, SUM(ORDV_TOTAL_VENDOR) AS T_ORDV_TOTAL_VENDOR');
+        $this->db->from('tb_order_vendor_old');
+        $this->db->where('ORDER_ID', $ORDER_ID);
+        $this->db->where('COURIER_ID', $COURIER_ID);
+        $new = $this->db->get()->row();
+
+        $insert_new_ordv = array(
+            'ORDER_ID'          => $ORDER_ID,
+            'VEND_ID'           => $VEND_ID,
+            'ORDV_WEIGHT'       => $new->T_ORDV_WEIGHT,
+            'ORDV_SHIPCOST'     => $new->T_ORDV_SHIPCOST,
+            'ORDV_TOTAL'        => $new->T_ORDV_TOTAL,
+            'ORDV_TOTAL_VENDOR' => $new->T_ORDV_TOTAL_VENDOR,
+            'COURIER_ID'        => $row->COURIER_ID,
+            'ORDV_SERVICE_TYPE' => $row->ORDV_SERVICE_TYPE,
+            'ORDV_ETD'          => $row->ORDV_ETD,
+        );
+        $this->db->insert('tb_order_vendor', $this->db->escape_str($insert_new_ordv));
+
+        $update_detail = array(
+            'VEND_ID' => $VEND_ID,
+        );
+        $this->db->where('ORDER_ID', $ORDER_ID);
+        $this->db->update('tb_order_detail', $this->db->escape_str($update_detail));
+    }
+
     public function update_payment_vendor($VEND_ID) {
-        if (!empty($this->input->post('PAYTOV_DATE')) && !empty($this->input->post('VBA_ID'))) {
+        if (!empty($this->input->post('PAYTOV_DATE')) && !empty($this->input->post('VBA_ID'))){
             $ORDD_ID              = $this->input->post('ORDD_ID', TRUE);
+            $DETAIL_ORDER_ID      = $this->input->post('DETAIL_ORDER_ID', TRUE);
             $NEW_PRICE_VENDOR     = str_replace(".", "", $this->input->post('NEW_PRICE_VENDOR', TRUE));
             $ORDER_ID             = $this->input->post('ORDER_ID', TRUE);
             $ORDV_SHIPCOST_PAY    = str_replace(".", "", $this->input->post('ORDV_SHIPCOST_PAY', TRUE));
@@ -201,6 +242,7 @@ class Ordervendor_m extends CI_Model {
             
             $PRO_ID    = $this->input->post('PRO_ID', TRUE);
             $UMEA_ID   = $this->input->post('UMEA_ID', TRUE);
+            $UMEA_NAME = $this->input->post('UMEA_NAME', TRUE);
             $VENP_QTY  = $this->input->post('VENP_QTY', TRUE);
             $OLD_PRICE = str_replace(".", "", $this->input->post('OLD_PRICE', TRUE));
 
@@ -248,13 +290,19 @@ class Ordervendor_m extends CI_Model {
                     $HASIL_QUANTITY[$i] = $ORDD_QUANTITY[$i] - $ORDD_QUANTITY_VENDOR[$i];
                     $DEPOSIT[$i]        = $HASIL_QUANTITY[$i] * $ORDD_PRICE[$i];
 
+                    if ($HASIL_QUANTITY[$i] > 0) {
+                        $NOTES[$i] = "Kelebihan pembayaran sebesar ".abs($HASIL_QUANTITY[$i])." ".$UMEA_NAME[$i];
+                    } else {
+                        $NOTES[$i] = "Kekurangan pembayaran sebesar ".abs($HASIL_QUANTITY[$i])." ".$UMEA_NAME[$i];
+                    }
+
                     $deposit['CUSTD_DATE']           = date('Y-m-d H:i:s');
-                    $deposit['ORDER_ID']             = $ORDER_ID[$i];
+                    $deposit['ORDER_ID']             = $DETAIL_ORDER_ID[$i];
                     $deposit['CUSTD_DEPOSIT']        = $DEPOSIT[$i];
                     $deposit['CUSTD_DEPOSIT_STATUS'] = 0;
                     $deposit['CUST_ID']              = $CUST_ID[$i];
                     $deposit['USER_ID']              = $USER_ID[$i];
-                    $deposit['CUSTD_NOTES']          = $ORDER_ID[$i]." (".$ORDD_QUANTITY_VENDOR[$i].")";
+                    $deposit['CUSTD_NOTES']          = $NOTES[$i];
                     $this->db->insert('tb_customer_deposit', $this->db->escape_str($deposit));
                 }
             }
@@ -305,6 +353,7 @@ class Ordervendor_m extends CI_Model {
                     $deposit_baru['VENDD_DEPOSIT']        = $SISA_DEPOSIT;
                     $deposit_baru['VENDD_DEPOSIT_STATUS'] = 0;
                     $deposit_baru['VEND_ID']              = $VEND_ID;
+                    $deposit_baru['VENDD_NOTES']          = "Kelebihan/sisa pemakaian total deposit";
                     $this->db->insert('tb_vendor_deposit', $this->db->escape_str($deposit_baru));
                 }
             }
@@ -320,9 +369,15 @@ class Ordervendor_m extends CI_Model {
         $ORDV_ID             = $this->input->post('ORDV_ID', TRUE);
         $SHIPCOST            = $this->input->post('ORDV_SHIPCOST', TRUE);
         $SHIPCOST_VENDOR     = str_replace(".", "", $this->input->post('ORDV_SHIPCOST_VENDOR', TRUE));
+        $SHIPCOST_PAY        = $this->input->post('ORDV_SHIPCOST_PAY', TRUE);
         $check_cust_deposit  = $this->check_customer_deposit($ORDER_ID, $ORDV_ID);
         $check_vend_deposit  = $this->check_vendor_deposit($ORDER_ID, $ORDV_ID, $VEND_ID);
         $DEPOSIT             = $SHIPCOST - $SHIPCOST_VENDOR;
+        if($DEPOSIT > 0) {
+            $NOTES = "Kelebihan ongkir order";
+        } else {
+            $NOTES = "Kekurangan ongkir order";
+        }
         $CHECK_STATUS        = $this->get_shipcost_status($PAYTOV_ID)->row();
         $get_user            = $this->get_user_id($CUST_ID)->row();
         $USER_ID             = $get_user->USER_ID;
@@ -338,193 +393,110 @@ class Ordervendor_m extends CI_Model {
         if (!empty($this->input->post('ORDV_DELIVERY_DATE', TRUE))) {
             $params['ORDV_DELIVERY_DATE'] = date('Y-m-d', strtotime($this->input->post('ORDV_DELIVERY_DATE', TRUE)));
         }
-        $params['ORDV_SHIPCOST_VENDOR'] = str_replace(".", "", $this->input->post('ORDV_SHIPCOST_VENDOR', TRUE));
-        $params['ORDV_WEIGHT_VENDOR'] = $this->input->post('ORDV_WEIGHT_VENDOR', TRUE);
-        $params['ORDV_RECEIPT_NO']    = $this->input->post('ORDV_RECEIPT_NO', TRUE);
+        $params['ORDV_SHIPCOST_VENDOR'] = $SHIPCOST_VENDOR;
+        $params['ORDV_WEIGHT_VENDOR']   = $this->input->post('ORDV_WEIGHT_VENDOR', TRUE);
+        $params['ORDV_RECEIPT_NO']      = $this->input->post('ORDV_RECEIPT_NO', TRUE);
         $this->db->where('ORDER_ID', $ORDER_ID);
         $this->db->where('VEND_ID', $VEND_ID);
         $delivery = $this->db->update('tb_order_vendor', $this->db->escape_str($params));
 
-        if (!empty($this->input->post('PAYTOV_ID', TRUE))) {
+        if(!empty($PAYTOV_ID)) {
             // status in advance jika terjadi selisih dengan actual cost maka meng-update customer dan vendor deposit
-            if ($CHECK_STATUS->PAYTOV_SHIPCOST_STATUS == 1) { 
-                if($SHIPCOST != $SHIPCOST_VENDOR) {            
-                    if($check_cust_deposit->num_rows() > 0) {
-                        $update_customer_deposit = array(
-                            'CUSTD_DEPOSIT'         => $DEPOSIT,
-                        );
-                        $this->db->where('ORDER_ID', $ORDER_ID);
-                        $this->db->where('ORDV_ID', $ORDV_ID);
-                        $this->db->update('tb_customer_deposit', $this->db->escape_str($update_customer_deposit));
+            if ($CHECK_STATUS->PAYTOV_SHIPCOST_STATUS == 1) {
+                if(!empty($SHIPCOST_PAY)) {
+                    if($SHIPCOST_VENDOR != $SHIPCOST_PAY) {
+                        $VENDOR_DEPOSIT = $SHIPCOST_VENDOR - $SHIPCOST_PAY;
+                        if ($VENDOR_DEPOSIT > 0) {
+                            $VENDD_NOTES = "Kekurangan Ongkir";
+                        } else {
+                            $VENDD_NOTES = "Kelebihan Ongkir";
+                        }
+                        if($check_vend_deposit->num_rows() > 0) {
+                            $update_vendor_deposit = array(
+                                'VENDD_DEPOSIT' => $VENDOR_DEPOSIT,
+                                'VENDD_NOTES'   => $VENDD_NOTES,
+                            );
+                            $this->db->where('ORDER_ID', $ORDER_ID);
+                            $this->db->where('ORDV_ID', $ORDV_ID);
+                            $this->db->where('VEND_ID', $VEND_ID);
+                            $this->db->update('tb_vendor_deposit', $this->db->escape_str($update_vendor_deposit));
+                        } else {
+                            $insert_vendor_deposit = array(
+                                'VENDD_DATE'            => date('Y-m-d H:i:s'),
+                                'ORDER_ID'              => $ORDER_ID,
+                                'ORDV_ID'               => $ORDV_ID,
+                                'VENDD_DEPOSIT'         => $VENDOR_DEPOSIT,
+                                'VENDD_DEPOSIT_STATUS'  => 0,
+                                'VEND_ID'               => $VEND_ID,
+                                'VENDD_NOTES'           => $VENDD_NOTES,
+                            );
+                            $this->db->insert('tb_vendor_deposit', $this->db->escape_str($insert_vendor_deposit));
+                        }
                     } else {
-                        $insert_customer_deposit = array(
-                            'CUSTD_DATE'            => date('Y-m-d H:i:s'),
-                            'ORDER_ID'              => $ORDER_ID,
-                            'ORDV_ID'               => $ORDV_ID,
-                            'CUSTD_DEPOSIT'         => $DEPOSIT,
-                            'CUSTD_DEPOSIT_STATUS'  => 0,
-                            'CUST_ID'               => $CUST_ID,
-                            'USER_ID'               => $USER_ID,
-                        );
-                        $this->db->insert('tb_customer_deposit', $this->db->escape_str($insert_customer_deposit));
-                    }
-
-                    $VENDOR_DEPOSIT = $SHIPCOST_VENDOR - $SHIPCOST;
-
-                    if($check_vend_deposit->num_rows() > 0) {
-                        $update_vendor_deposit = array(
-                            'VENDD_DEPOSIT'         => $VENDOR_DEPOSIT,
-                        );
-                        $this->db->where('ORDER_ID', $ORDER_ID);
-                        $this->db->where('ORDV_ID', $ORDV_ID);
-                        $this->db->where('VEND_ID', $VEND_ID);
-                        $this->db->update('tb_vendor_deposit', $this->db->escape_str($update_vendor_deposit));
-                    } else {
-                        $insert_vendor_deposit = array(
-                            'VENDD_DATE'            => date('Y-m-d H:i:s'),
-                            'ORDER_ID'              => $ORDER_ID,
-                            'ORDV_ID'               => $ORDV_ID,
-                            'VENDD_DEPOSIT'         => $VENDOR_DEPOSIT,
-                            'VENDD_DEPOSIT_STATUS'  => 0,
-                            'VEND_ID'               => $VEND_ID,
-                        );
-                        $this->db->insert('tb_vendor_deposit', $this->db->escape_str($insert_vendor_deposit));
-                    }
-                } else {
-                    if($check_cust_deposit->num_rows() > 0) {
-                        $this->db->where('ORDER_ID', $ORDER_ID);
-                        $this->db->where('ORDV_ID', $ORDV_ID);
-                        $this->db->delete('tb_customer_deposit');
-                    }
-
-                    if($check_vend_deposit->num_rows() > 0) {
-                        $this->db->where('ORDER_ID', $ORDER_ID);
-                        $this->db->where('ORDV_ID', $ORDV_ID);
-                        $this->db->where('VEND_ID', $VEND_ID);
-                        $this->db->delete('tb_vendor_deposit');
+                        if($check_vend_deposit->num_rows() > 0) {
+                            $this->db->where('ORDER_ID', $ORDER_ID);
+                            $this->db->where('ORDV_ID', $ORDV_ID);
+                            $this->db->where('VEND_ID', $VEND_ID);
+                            $this->db->delete('tb_vendor_deposit');
+                        }
                     }
                 }
             }
             // status pay later jika terjadi selisih maka meng-update customer deposit. Sistem akan mencatat kekurangan pembayaran ongkir ke vendor sebagai deposit minus (-) dengan notes (VENDD_NOTES)
-            else if ($CHECK_STATUS->PAYTOV_SHIPCOST_STATUS == 2) { 
-                if($SHIPCOST != $SHIPCOST_VENDOR) {            
-                    if($check_cust_deposit->num_rows() > 0) {
-                        $update_customer_deposit = array(
-                            'CUSTD_DEPOSIT'         => $DEPOSIT,
-                        );
-                        $this->db->where('ORDER_ID', $ORDER_ID);
-                        $this->db->where('ORDV_ID', $ORDV_ID);
-                        $this->db->update('tb_customer_deposit', $this->db->escape_str($update_customer_deposit));
-                    } else {
-                        $insert_customer_deposit = array(
-                            'CUSTD_DATE'            => date('Y-m-d H:i:s'),
-                            'ORDER_ID'              => $ORDER_ID,
-                            'ORDV_ID'               => $ORDV_ID,
-                            'CUSTD_DEPOSIT'         => $DEPOSIT,
-                            'CUSTD_DEPOSIT_STATUS'  => 0,
-                            'CUST_ID'               => $CUST_ID,
-                            'USER_ID'               => $USER_ID,
-                        );
-                        $this->db->insert('tb_customer_deposit', $this->db->escape_str($insert_customer_deposit));
-                    }
-
-                    if($check_vend_deposit->num_rows() > 0) {
-                        $update_vendor_deposit = array(
-                            'VENDD_DEPOSIT'         => $SHIPCOST_VENDOR,
-                        );
-                        $this->db->where('ORDER_ID', $ORDER_ID);
-                        $this->db->where('ORDV_ID', $ORDV_ID);
-                        $this->db->where('VEND_ID', $VEND_ID);
-                        $this->db->update('tb_vendor_deposit', $this->db->escape_str($update_vendor_deposit));
-                    } else {
-                        $insert_vendor_deposit = array(
-                            'VENDD_DATE'            => date('Y-m-d H:i:s'),
-                            'ORDER_ID'              => $ORDER_ID,
-                            'ORDV_ID'               => $ORDV_ID,
-                            'VENDD_DEPOSIT'         => $SHIPCOST_VENDOR,
-                            'VENDD_DEPOSIT_STATUS'  => 0,
-                            'VEND_ID'               => $VEND_ID,
-                            'VENDD_NOTES'           => "Order ".$ORDER_ID,
-                        );
-                        $this->db->insert('tb_vendor_deposit', $this->db->escape_str($insert_vendor_deposit));
-                    }
-
+            else if($CHECK_STATUS->PAYTOV_SHIPCOST_STATUS == 2) {
+                if($check_vend_deposit->num_rows() > 0) {
+                    $update_vendor_deposit = array(
+                        'VENDD_DEPOSIT' => $SHIPCOST_VENDOR,
+                        'VENDD_NOTES'   => "Kekurangan ongkir",
+                    );
+                    $this->db->where('ORDER_ID', $ORDER_ID);
+                    $this->db->where('ORDV_ID', $ORDV_ID);
+                    $this->db->where('VEND_ID', $VEND_ID);
+                    $this->db->update('tb_vendor_deposit', $this->db->escape_str($update_vendor_deposit));
                 } else {
-                    if($check_cust_deposit->num_rows() > 0) {
-                        $this->db->where('ORDER_ID', $ORDER_ID);
-                        $this->db->where('ORDV_ID', $ORDV_ID);
-                        $this->db->delete('tb_customer_deposit');
-                    }
-
-                    if($check_vend_deposit->num_rows() > 0) {
-                        $this->db->where('ORDER_ID', $ORDER_ID);
-                        $this->db->where('ORDV_ID', $ORDV_ID);
-                        $this->db->where('VEND_ID', $VEND_ID);
-                        $this->db->delete('tb_vendor_deposit');
-                    }
-                }
-            }
-            // status 3 (not include) jika terjadi selisih, hanya meng-update customer deposit
-            else {
-                if($SHIPCOST != $SHIPCOST_VENDOR) {            
-                    if($check_cust_deposit->num_rows() > 0) {
-                        $update_customer_deposit = array(
-                            'CUSTD_DEPOSIT'         => $DEPOSIT,
-                        );
-                        $this->db->where('ORDER_ID', $ORDER_ID);
-                        $this->db->where('ORDV_ID', $ORDV_ID);
-                        $this->db->update('tb_customer_deposit', $this->db->escape_str($update_customer_deposit));
-                    } else {
-                        $insert_customer_deposit = array(
-                            'CUSTD_DATE'            => date('Y-m-d H:i:s'),
-                            'ORDER_ID'              => $ORDER_ID,
-                            'ORDV_ID'               => $ORDV_ID,
-                            'CUSTD_DEPOSIT'         => $DEPOSIT,
-                            'CUSTD_DEPOSIT_STATUS'  => 0,
-                            'CUST_ID'               => $CUST_ID,
-                            'USER_ID'               => $USER_ID,
-                        );
-                        $this->db->insert('tb_customer_deposit', $this->db->escape_str($insert_customer_deposit));
-                    }
-                } else {
-                    if($check_cust_deposit->num_rows() > 0) {
-                        $this->db->where('ORDER_ID', $ORDER_ID);
-                        $this->db->where('ORDV_ID', $ORDV_ID);
-                        $this->db->delete('tb_customer_deposit');
-                    }
+                    $insert_vendor_deposit = array(
+                        'VENDD_DATE'            => date('Y-m-d H:i:s'),
+                        'ORDER_ID'              => $ORDER_ID,
+                        'ORDV_ID'               => $ORDV_ID,
+                        'VENDD_DEPOSIT'         => $SHIPCOST_VENDOR,
+                        'VENDD_DEPOSIT_STATUS'  => 0,
+                        'VEND_ID'               => $VEND_ID,
+                        'VENDD_NOTES'           => "Kekurangan ongkir",
+                    );
+                    $this->db->insert('tb_vendor_deposit', $this->db->escape_str($insert_vendor_deposit));
                 }
             }
         }
-        // Null (belum ada pembayaran ke vendor), jika terjadi selisih, hanya meng-update customer deposit
-        else {
-            if($SHIPCOST != $SHIPCOST_VENDOR) {            
-                if($check_cust_deposit->num_rows() > 0) {
-                    $update_customer_deposit = array(
-                        'CUSTD_DEPOSIT'         => $DEPOSIT,
-                    );
-                    $this->db->where('ORDER_ID', $ORDER_ID);
-                    $this->db->where('ORDV_ID', $ORDV_ID);
-                    $this->db->update('tb_customer_deposit', $this->db->escape_str($update_customer_deposit));
-                } else {
-                    $insert_customer_deposit = array(
-                        'CUSTD_DATE'            => date('Y-m-d H:i:s'),
-                        'ORDER_ID'              => $ORDER_ID,
-                        'ORDV_ID'               => $ORDV_ID,
-                        'CUSTD_DEPOSIT'         => $DEPOSIT,
-                        'CUSTD_DEPOSIT_STATUS'  => 0,
-                        'CUST_ID'               => $CUST_ID,
-                        'USER_ID'               => $USER_ID,
-                    );
-                    $this->db->insert('tb_customer_deposit', $this->db->escape_str($insert_customer_deposit));
-                }
-            } else {
-                if($check_cust_deposit->num_rows() > 0) {
-                    $this->db->where('ORDER_ID', $ORDER_ID);
-                    $this->db->where('ORDV_ID', $ORDV_ID);
-                    $this->db->delete('tb_customer_deposit');
-                }
-            }
 
+        // mencatat customer deposit jika ada selisih shipcost dengan actual shipcost
+        if($SHIPCOST != $SHIPCOST_VENDOR) {        
+            if($check_cust_deposit->num_rows() > 0) {
+                $update_customer_deposit = array(
+                    'CUSTD_DEPOSIT' => $DEPOSIT,
+                    'CUSTD_NOTES'   => $NOTES,
+                );
+                $this->db->where('ORDER_ID', $ORDER_ID);
+                $this->db->where('ORDV_ID', $ORDV_ID);
+                $this->db->update('tb_customer_deposit', $this->db->escape_str($update_customer_deposit));
+            } else {
+                $insert_customer_deposit = array(
+                    'CUSTD_DATE'            => date('Y-m-d H:i:s'),
+                    'ORDER_ID'              => $ORDER_ID,
+                    'ORDV_ID'               => $ORDV_ID,
+                    'CUSTD_DEPOSIT'         => $DEPOSIT,
+                    'CUSTD_DEPOSIT_STATUS'  => 0,
+                    'CUST_ID'               => $CUST_ID,
+                    'USER_ID'               => $USER_ID,
+                    'CUSTD_NOTES'           => $NOTES,
+                );
+                $this->db->insert('tb_customer_deposit', $this->db->escape_str($insert_customer_deposit));
+            }
+        } else {
+            if($check_cust_deposit->num_rows() > 0) {
+                $this->db->where('ORDER_ID', $ORDER_ID);
+                $this->db->where('ORDV_ID', $ORDV_ID);
+                $this->db->delete('tb_customer_deposit');
+            }
         }
 
         if($delivery) {

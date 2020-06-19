@@ -95,16 +95,20 @@ class Size_group_m extends CI_Model {
 	}
 
 	public function delete($SIZG_ID){
+        // delete tb_size_group
 		$this->db->where('SIZG_ID', $SIZG_ID);
 		$this->db->delete('tb_size_group');
 
-        // $this->db->where('SIZG_ID', $SIZG_ID);
-        // $this->db->delete('tb_size_product');
+        // delete tb_size
+        $check_size  = $this->db->get_where('tb_size',['SIZG_ID'=>$SIZG_ID]);
+        if($check_size->num_rows() > 0){
+           $this->db->delete('tb_size',['SIZG_ID'=>$SIZG_ID]);
+        }
 
-        // $this->db->where('SIZG_ID', $SIZG_ID);
-        // $this->db->delete('tb_size');
-
-        // $this->db->where('SIZG_ID', $SIZG_ID);
-        // $this->db->delete('tb_size_value');
+        // delete tb_size_value
+        $check_size_value  = $this->db->get_where('tb_size_value',['SIZG_ID'=>$SIZG_ID]);
+        if($check_size_value->num_rows() > 0){
+           $this->db->delete('tb_size_value',['SIZG_ID'=>$SIZG_ID]);
+        }
 	}
 }

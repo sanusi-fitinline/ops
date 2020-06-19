@@ -25,7 +25,6 @@
 					<form action="<?php echo site_url('project/add_process')?>" method="POST" enctype="multipart/form-data">
 						<div class="row">
 							<div class="col-md-3">
-								<input class="form-control" type="hidden" name="PRJ_STATUS" value="-1">
 								<div class="form-group">
 								    <label>Customer <small>*</small></label>
 								    <select class="form-control selectpicker" name="CUST_ID" id="CUST_SELECT" title="-- Select One --" data-live-search="true" required>
@@ -71,24 +70,14 @@
 								<div class="form-group">
 									<label>Duration <small>(Expected) *</small></label>
 									<div class="input-group">
-										<input class="form-control" type="number" name="PRJ_DURATION_EXP" autocomplete="off" required>
+										<input class="form-control" type="number" min="1" name="PRJ_DURATION_EXP" autocomplete="off" required>
 										<div class="input-group-prepend">
 								          	<span class="input-group-text">Days</span>
 								        </div>
 								    </div>
 								</div>
-								<!-- <div class="form-group">
-									<label>Producer</label>
-									<select class="form-control selectpicker" name="PRDU_ID" title="-- Select One --" data-live-search="true">
-										<?php foreach($producer as $prdu): ?>
-								    		<option value="<?php echo $prdu->PRDU_ID?>">
-									    		<?php echo stripslashes($prdu->PRDU_NAME) ?>
-									    	</option>
-									    <?php endforeach ?>
-								    </select>
-								</div> -->
 								<div class="form-group">
-									<label>Project Type</label>
+									<label>Project Type <small>*</small></label>
 									<select class="form-control selectpicker" name="PRJT_ID" title="-- Select One --" required>
 										<?php foreach($type as $typ): ?>
 								    		<option value="<?php echo $typ->PRJT_ID?>">
@@ -99,7 +88,7 @@
 								</div>
 								<br>
 								<div align="center">
-									<button type="submit" class="btn btn-info" name="simpan"><i class="fa fa-arrow-circle-right"></i> Next</button>
+									<button type="submit" class="btn btn-primary" name="simpan"><i class="fa fa-arrow-circle-right"></i> Next</button>
 									<a href="<?php echo site_url('project') ?>" class="btn btn-danger" name="batal"><i class="fa fa-times"></i> Cancel</a>
 								</div>
 							</div>

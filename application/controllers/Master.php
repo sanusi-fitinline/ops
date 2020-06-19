@@ -5,6 +5,9 @@ class Master extends CI_Controller {
 
 	function __construct() {
 		parent::__construct();
+		check_not_login();
+		// check_master();
+		// check_management_access();
 		$this->load->library('datatables');
 		$this->load->model('access_m');
 		$this->load->model('customer_m');
@@ -28,15 +31,12 @@ class Master extends CI_Controller {
 		$this->load->model('size_product_m');
 		$this->load->model('size_m');
 		$this->load->model('size_value_m');
-		check_not_login();
-		// check_master();
-		// check_management_access();
 		$this->load->library('form_validation');
 	}
 
 	public function bank() {
 		$modl 	= "Bank";    
-		$access =  $this->access_m->isAccess($this->session->GRP_SESSION, $modl)->row();
+		$access = $this->access_m->isAccess($this->session->GRP_SESSION, $modl)->row();
 		if ((!$access) && ($this->session->GRP_SESSION !=3)) {
 			echo "<script>alert('Anda tidak punya akses ke $modl.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
@@ -47,15 +47,15 @@ class Master extends CI_Controller {
 	}
 
 	public function bankjson() {
-		$url = $this->config->base_url();
+		$url  = $this->config->base_url();
 		$list = $this->bank_m->get_datatables();
 		$data = array();
-		$no = $_POST['start'];
+		$no   = $_POST['start'];
 		foreach ($list as $field) {
 			$no++;
-			$row = array();
+			$row   = array();
 			$row[] = '<div style="vertical-align: middle; text-align: center;">'.$no.'</div>';
-			$row[] = $field->BANK_NAME;
+			$row[] = stripslashes($field->BANK_NAME);
 			$row[] = '<div style="vertical-align: middle; text-align: center;"><img width="50px" class="img-responsive" src="'.$url.'assets/images/bank/'.$field->BANK_LOGO.'"</div>';
 			if((!$this->access_m->isDelete('Bank', 1)->row()) && ($this->session->GRP_SESSION !=3)){
 				$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-bank'.$field->BANK_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a></div>';
@@ -96,13 +96,13 @@ class Master extends CI_Controller {
 			echo "<script>alert('Data berhasil diubah.')</script>";
 			echo "<script>window.location='".site_url('master/bank')."'</script>";
 		} else {
-			echo "<script>alert('Data gagal diubah.')</script>";
+			echo "<script>alert('Tidak ada perubahan data.')</script>";
 			echo "<script>window.location='".site_url('master/bank')."'</script>";
 		}
 	}
 
 	public function delbank() {
-		$BANK_ID = $this->input->post('BANK_ID');
+		$BANK_ID = $this->input->post('BANK_ID', TRUE);
 		$this->bank_m->del($BANK_ID);
 
 		if($this->db->affected_rows() > 0) {
@@ -116,7 +116,7 @@ class Master extends CI_Controller {
 
 	public function currency() {
 		$modl 	= "Currency";    
-		$access =  $this->access_m->isAccess($this->session->GRP_SESSION, $modl)->row();
+		$access = $this->access_m->isAccess($this->session->GRP_SESSION, $modl)->row();
 		if ((!$access) && ($this->session->GRP_SESSION !=3)) {
 			echo "<script>alert('Anda tidak punya akses ke $modl.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
@@ -127,13 +127,13 @@ class Master extends CI_Controller {
 	}
 
 	public function currencyjson() {
-		$url = $this->config->base_url();
+		$url  = $this->config->base_url();
 		$list = $this->currency_m->get_datatables();
 		$data = array();
-		$no = $_POST['start'];
+		$no   = $_POST['start'];
 		foreach ($list as $field) {
 			$no++;
-			$row = array();
+			$row   = array();
 			$row[] = '<div style="vertical-align: middle; text-align: center;">'.$no.'</div>';
 			$row[] = $field->CURR_NAME;
 			if((!$this->access_m->isDelete('Currency', 1)->row()) && ($this->session->GRP_SESSION !=3)){
@@ -175,13 +175,13 @@ class Master extends CI_Controller {
 			echo "<script>alert('Data berhasil diubah.')</script>";
 			echo "<script>window.location='".site_url('master/currency')."'</script>";
 		} else {
-			echo "<script>alert('Data gagal diubah.')</script>";
+			echo "<script>alert('Tidak ada perubahan data.')</script>";
 			echo "<script>window.location='".site_url('master/currency')."'</script>";
 		}
 	}
 
 	public function delcurrency() {
-		$CURR_ID = $this->input->post('CURR_ID');
+		$CURR_ID = $this->input->post('CURR_ID', TRUE);
 		$this->currency_m->delete($CURR_ID);
 
 		if($this->db->affected_rows() > 0) {
@@ -195,7 +195,7 @@ class Master extends CI_Controller {
 
 	public function country(){
 		$modl 	= "Country";
-		$access =  $this->access_m->isAccess($this->session->GRP_SESSION, $modl)->row();
+		$access = $this->access_m->isAccess($this->session->GRP_SESSION, $modl)->row();
 		if ((!$access) && ($this->session->GRP_SESSION !=3)) {
 			echo "<script>alert('Anda tidak punya akses ke $modl.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
@@ -205,13 +205,13 @@ class Master extends CI_Controller {
 	}
 
 	public function countryjson() {
-		$url = $this->config->base_url();
+		$url  = $this->config->base_url();
 		$list = $this->country_m->get_datatables();
 		$data = array();
-		$no = $_POST['start'];
+		$no   = $_POST['start'];
 		foreach ($list as $field) {
 			$no++;
-			$row = array();
+			$row   = array();
 			$row[] = '<div style="vertical-align: middle; text-align: center;">'.$no.'</div>';
 			$row[] = $field->CNTR_NAME;
 			if((!$this->access_m->isDelete('Country', 1)->row()) && ($this->session->GRP_SESSION !=3)){
@@ -259,19 +259,19 @@ class Master extends CI_Controller {
 		}
 	}
 
-	public function editcountryprocess($CNTR_ID='CNTR_ID') {
+	public function editcountryprocess($CNTR_ID) {
 		$this->country_m->updateCountry($CNTR_ID);
 		if($this->db->affected_rows() > 0) {
 			echo "<script>alert('Data berhasil diubah.')</script>";
 			echo "<script>window.location='".site_url('master/country/')."'</script>";
 		} else {
-			echo "<script>alert('Data gagal diubah.')</script>";
+			echo "<script>alert('Tidak ada perubahan data.')</script>";
 			echo "<script>window.location='".site_url('master/country/')."'</script>";
 		}
 	}
 
 	public function delcountry(){
-		$CNTR_ID = $this->input->post('CNTR_ID');
+		$CNTR_ID = $this->input->post('CNTR_ID', TRUE);
 		$this->country_m->deleteCountry($CNTR_ID);
 
 		if($this->db->affected_rows() > 0) {
@@ -285,7 +285,7 @@ class Master extends CI_Controller {
 
 	public function state(){
 		$modl 	= "State";
-		$access =  $this->access_m->isAccess($this->session->GRP_SESSION, $modl)->row();
+		$access = $this->access_m->isAccess($this->session->GRP_SESSION, $modl)->row();
 		if ((!$access) && ($this->session->GRP_SESSION !=3)) {
 			echo "<script>alert('Anda tidak punya akses ke $modl.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
@@ -295,13 +295,13 @@ class Master extends CI_Controller {
 	}
 
 	public function statejson() {
-		$url = $this->config->base_url();
+		$url  = $this->config->base_url();
 		$list = $this->state_m->get_datatables();
 		$data = array();
-		$no = $_POST['start'];
+		$no   = $_POST['start'];
 		foreach ($list as $field) {
 			$no++;
-			$row = array();
+			$row   = array();
 			$row[] = '<div style="vertical-align: middle; text-align: center;">'.$no.'</div>';
 			$row[] = [$field->STATE_NAME,' '.$field->CNTR_NAME];
 			if((!$this->access_m->isDelete('State', 1)->row()) && ($this->session->GRP_SESSION !=3)){
@@ -352,19 +352,19 @@ class Master extends CI_Controller {
 		}
 	}
 
-	public function editstateprocess($STATE_ID='STATE_ID') {
+	public function editstateprocess($STATE_ID) {
 		$this->state_m->updateState($STATE_ID);
 		if($this->db->affected_rows() > 0) {
 			echo "<script>alert('Data berhasil diubah.')</script>";
 			echo "<script>window.location='".site_url('master/state/')."'</script>";
 		} else {
-			echo "<script>alert('Data gagal diubah.')</script>";
+			echo "<script>alert('Tidak ada perubahan data.')</script>";
 			echo "<script>window.location='".site_url('master/state/')."'</script>";
 		}
 	}
 
 	public function delstate(){
-		$STATE_ID = $this->input->post('STATE_ID');
+		$STATE_ID = $this->input->post('STATE_ID', TRUE);
 		$this->state_m->deleteState($STATE_ID);
 
 		if($this->db->affected_rows() > 0) {
@@ -378,7 +378,7 @@ class Master extends CI_Controller {
 
 	public function city(){
 		$modl 	= "City";
-		$access =  $this->access_m->isAccess($this->session->GRP_SESSION, $modl)->row();
+		$access = $this->access_m->isAccess($this->session->GRP_SESSION, $modl)->row();
 		if ((!$access) && ($this->session->GRP_SESSION !=3)) {
 			echo "<script>alert('Anda tidak punya akses ke $modl.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
@@ -388,13 +388,13 @@ class Master extends CI_Controller {
 	}
 
 	public function cityjson() {
-		$url = $this->config->base_url();
+		$url  = $this->config->base_url();
 		$list = $this->city_m->get_datatables();
 		$data = array();
-		$no = $_POST['start'];
+		$no   = $_POST['start'];
 		foreach ($list as $field) {
 			$no++;
-			$row = array();
+			$row   = array();
 			$row[] = '<div style="vertical-align: middle; text-align: center;">'.$no.'</div>';
 			$row[] = [$field->CITY_NAME, ' '.$field->STATE_NAME,' '.$field->CNTR_NAME];
 			if((!$this->access_m->isDelete('City', 1)->row()) && ($this->session->GRP_SESSION !=3)){
@@ -446,19 +446,19 @@ class Master extends CI_Controller {
 		}
 	}
 
-	public function editcityprocess($CITY_ID='CITY_ID') {
+	public function editcityprocess($CITY_ID) {
 		$this->city_m->updateCity($CITY_ID);
 		if($this->db->affected_rows() > 0) {
 			echo "<script>alert('Data berhasil diubah.')</script>";
 			echo "<script>window.location='".site_url('master/city/')."'</script>";
 		} else {
-			echo "<script>alert('Data gagal diubah.')</script>";
+			echo "<script>alert('Tidak ada perubahan data.')</script>";
 			echo "<script>window.location='".site_url('master/city/')."'</script>";
 		}
 	}
 
 	public function delcity(){
-		$CITY_ID = $this->input->post('CITY_ID');
+		$CITY_ID = $this->input->post('CITY_ID', TRUE);
 		$this->city_m->deleteCity($CITY_ID);
 
 		if($this->db->affected_rows() > 0) {
@@ -472,7 +472,7 @@ class Master extends CI_Controller {
 
 	public function subdistrict(){
 		$modl 	= "Subdistrict";
-		$access =  $this->access_m->isAccess($this->session->GRP_SESSION, $modl)->row();
+		$access = $this->access_m->isAccess($this->session->GRP_SESSION, $modl)->row();
 		if ((!$access) && ($this->session->GRP_SESSION !=3)) {
 			echo "<script>alert('Anda tidak punya akses ke $modl.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
@@ -482,13 +482,13 @@ class Master extends CI_Controller {
 	}
 
 	public function subdjson() {
-		$url = $this->config->base_url();
+		$url  = $this->config->base_url();
 		$list = $this->subd_m->get_datatables();
 		$data = array();
-		$no = $_POST['start'];
+		$no   = $_POST['start'];
 		foreach ($list as $field) {
 			$no++;
-			$row = array();
+			$row   = array();
 			$row[] = '<div style="vertical-align: middle; text-align: center;">'.$no.'</div>';
 			$row[] = [$field->SUBD_NAME, ' '.$field->CITY_NAME, ' '.$field->STATE_NAME,' '.$field->CNTR_NAME];
 			if((!$this->access_m->isDelete('Subdistrict', 1)->row()) && ($this->session->GRP_SESSION !=3)){
@@ -513,9 +513,9 @@ class Master extends CI_Controller {
 	}
 
 	public function addsubd() {
-		$data['country'] 	= $this->country_m->getCountry()->result();
-		$data['state'] 		= $this->state_m->getState()->result();
-		$data['city'] 		= $this->city_m->getCity()->result();
+		$data['country'] = $this->country_m->getCountry()->result();
+		$data['state'] 	 = $this->state_m->getState()->result();
+		$data['city'] 	 = $this->city_m->getCity()->result();
 		$this->template->load('template', 'master-ops/area/subd_form_add', $data);
 	}
 
@@ -543,19 +543,19 @@ class Master extends CI_Controller {
 		}
 	}
 
-	public function editsubdprocess($SUBD_ID='SUBD_ID') {
+	public function editsubdprocess($SUBD_ID) {
 		$this->subd_m->updateSubd($SUBD_ID);
 		if($this->db->affected_rows() > 0) {
 			echo "<script>alert('Data berhasil diubah.')</script>";
 			echo "<script>window.location='".site_url('master/subdistrict/')."'</script>";
 		} else {
-			echo "<script>alert('Data gagal diubah.')</script>";
+			echo "<script>alert('Tidak ada perubahan data.')</script>";
 			echo "<script>window.location='".site_url('master/subdistrict/')."'</script>";
 		}
 	}
 
 	public function delsubd(){
-		$SUBD_ID = $this->input->post('SUBD_ID');
+		$SUBD_ID = $this->input->post('SUBD_ID', TRUE);
 		$this->subd_m->deleteSubd($SUBD_ID);
 
 		if($this->db->affected_rows() > 0) {
@@ -569,7 +569,7 @@ class Master extends CI_Controller {
 
 	public function channel(){
 		$modl 	= "Channel";
-		$access =  $this->access_m->isAccess($this->session->GRP_SESSION, $modl)->row();
+		$access = $this->access_m->isAccess($this->session->GRP_SESSION, $modl)->row();
 		if ((!$access) && ($this->session->GRP_SESSION !=3)) {
 			echo "<script>alert('Anda tidak punya akses ke $modl.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
@@ -580,13 +580,13 @@ class Master extends CI_Controller {
 	}
 
 	public function channeljson() {
-		$url = $this->config->base_url();
+		$url  = $this->config->base_url();
 		$list = $this->channel_m->get_datatables();
 		$data = array();
-		$no = $_POST['start'];
+		$no   = $_POST['start'];
 		foreach ($list as $field) {
 			$no++;
-			$row = array();
+			$row   = array();
 			$row[] = '<div style="vertical-align: middle; text-align: center;">'.$no.'</div>';
 			$row[] = $field->CHA_NAME;
 			if((!$this->access_m->isDelete('Channel', 1)->row()) && ($this->session->GRP_SESSION !=3)){
@@ -628,13 +628,13 @@ class Master extends CI_Controller {
 			echo "<script>alert('Data berhasil diubah.')</script>";
 			echo "<script>window.location='".site_url('master/channel')."'</script>";
 		} else {
-			echo "<script>alert('Data gagal diubah.')</script>";
+			echo "<script>alert('Tidak ada perubahan data.')</script>";
 			echo "<script>window.location='".site_url('master/channel')."'</script>";
 		}
 	}
 
 	public function delcha(){
-		$CHA_ID = $this->input->post('CHA_ID');
+		$CHA_ID = $this->input->post('CHA_ID', TRUE);
 		$this->channel_m->delete($CHA_ID);
 
 		if($this->db->affected_rows() > 0) {
@@ -648,7 +648,7 @@ class Master extends CI_Controller {
 
 	public function type() {
 		$modl 	= "Product Type";    
-		$access =  $this->access_m->isAccess($this->session->GRP_SESSION, $modl)->row();
+		$access = $this->access_m->isAccess($this->session->GRP_SESSION, $modl)->row();
 		if ((!$access) && ($this->session->GRP_SESSION !=3)) {
 			echo "<script>alert('Anda tidak punya akses ke $modl.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
@@ -659,15 +659,15 @@ class Master extends CI_Controller {
 	}
 
 	public function typejson() {
-		$url = $this->config->base_url();
+		$url  = $this->config->base_url();
 		$list = $this->type_m->get_datatables();
 		$data = array();
-		$no = $_POST['start'];
+		$no   = $_POST['start'];
 		foreach ($list as $field) {
 			$no++;
-			$row = array();
+			$row   = array();
 			$row[] = '<div style="vertical-align: middle; text-align: center;">'.$no.'</div>';
-			$row[] = $field->TYPE_NAME;
+			$row[] = stripslashes($field->TYPE_NAME);
 			if((!$this->access_m->isDelete('Product Type', 1)->row()) && ($this->session->GRP_SESSION !=3)){
 				$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-type'.$field->TYPE_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
 					<a  href="'.$url.'master/subtype/'.$field->TYPE_ID.'" class="btn btn-info btn-sm"><i class="fa fa-plus-square"></i> Subtype</a></div>';
@@ -710,13 +710,13 @@ class Master extends CI_Controller {
 			echo "<script>alert('Data berhasil diubah.')</script>";
 			echo "<script>window.location='".site_url('master/type')."'</script>";
 		} else {
-			echo "<script>alert('Data gagal diubah.')</script>";
+			echo "<script>alert('Tidak ada perubahan data.')</script>";
 			echo "<script>window.location='".site_url('master/type')."'</script>";
 		}
 	}
 
 	public function deltype() {
-		$TYPE_ID = $this->input->post('TYPE_ID');
+		$TYPE_ID = $this->input->post('TYPE_ID', TRUE);
 		$this->type_m->delete($TYPE_ID);
 
 		if($this->db->affected_rows() > 0) {
@@ -730,7 +730,7 @@ class Master extends CI_Controller {
 
 	public function subtype($TYPE_ID) {
 		$modl 	= "Product Type";    
-		$access =  $this->access_m->isAccess($this->session->GRP_SESSION, $modl)->row();
+		$access = $this->access_m->isAccess($this->session->GRP_SESSION, $modl)->row();
 		if ((!$access) && ($this->session->GRP_SESSION !=3)) {
 			echo "<script>alert('Anda tidak punya akses ke $modl.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
@@ -755,10 +755,10 @@ class Master extends CI_Controller {
 		$no 	 = $_POST['start'];
 		foreach ($list as $field) {
 			$no++;
-			$row = array();
+			$row   = array();
 			$row[] = '<div style="vertical-align: middle; text-align: center;">'.$no.'</div>';
-			$row[] = $field->TYPE_NAME;
-			$row[] = $field->STYPE_NAME;
+			$row[] = stripslashes($field->TYPE_NAME);
+			$row[] = stripslashes($field->STYPE_NAME);
 			if((!$this->access_m->isDelete('Product Type', 1)->row()) && ($this->session->GRP_SESSION !=3)){
 				$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-subtype'.$field->STYPE_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a></div>';
 			} else {
@@ -783,7 +783,7 @@ class Master extends CI_Controller {
 	}
 
 	public function addsubtype() {
-		$TYPE_ID = $this->input->post('TYPE_ID', true);
+		$TYPE_ID = $this->input->post('TYPE_ID', TRUE);
 		$data['row'] = $this->subtype_m->insert();
 		if ($data) {
 			echo "<script>alert('Data berhasil ditambah.')</script>";
@@ -795,20 +795,20 @@ class Master extends CI_Controller {
 	}
 
 	public function editsubtype($STYPE_ID) {
-		$TYPE_ID = $this->input->post('TYPE_ID', true);
+		$TYPE_ID = $this->input->post('TYPE_ID', TRUE);
 		$this->subtype_m->update($STYPE_ID);
 		if($this->db->affected_rows() > 0) {
 			echo "<script>alert('Data berhasil diubah.')</script>";
 			echo "<script>window.location='".site_url('master/subtype/'.$TYPE_ID)."'</script>";
 		} else {
-			echo "<script>alert('Data gagal diubah.')</script>";
+			echo "<script>alert('Tidak ada perubahan data.')</script>";
 			echo "<script>window.location='".site_url('master/subtype/'.$TYPE_ID)."'</script>";
 		}
 	}
 
 	public function delsubtype() {
-		$TYPE_ID = $this->input->post('TYPE_ID', true);
-		$STYPE_ID = $this->input->post('STYPE_ID');
+		$TYPE_ID = $this->input->post('TYPE_ID', TRUE);
+		$STYPE_ID = $this->input->post('STYPE_ID', TRUE);
 		$this->subtype_m->delete($STYPE_ID);
 
 		if($this->db->affected_rows() > 0) {
@@ -822,7 +822,7 @@ class Master extends CI_Controller {
 
 	public function umea(){
 		$modl 	= "Unit Measure";
-		$access =  $this->access_m->isAccess($this->session->GRP_SESSION, $modl)->row();
+		$access = $this->access_m->isAccess($this->session->GRP_SESSION, $modl)->row();
 		if ((!$access) && ($this->session->GRP_SESSION !=3)) {
 			echo "<script>alert('Anda tidak punya akses ke $modl.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
@@ -833,13 +833,13 @@ class Master extends CI_Controller {
 	}
 
 	public function umeajson() {
-		$url = $this->config->base_url();
+		$url  = $this->config->base_url();
 		$list = $this->umea_m->get_datatables();
 		$data = array();
-		$no = $_POST['start'];
+		$no   = $_POST['start'];
 		foreach ($list as $field) {
 			$no++;
-			$row = array();
+			$row   = array();
 			$row[] = '<div style="vertical-align: middle; text-align: center;">'.$no.'</div>';
 			$row[] = $field->UMEA_NAME;
 			if((!$this->access_m->isDelete('Unit Measure', 1)->row()) && ($this->session->GRP_SESSION !=3)){
@@ -881,13 +881,13 @@ class Master extends CI_Controller {
 			echo "<script>alert('Data berhasil diubah.')</script>";
 			echo "<script>window.location='".site_url('master/umea')."'</script>";
 		} else {
-			echo "<script>alert('Data gagal diubah.')</script>";
+			echo "<script>alert('Tidak ada perubahan data.')</script>";
 			echo "<script>window.location='".site_url('master/umea')."'</script>";
 		}
 	}
 
 	public function delumea(){
-		$UMEA_ID = $this->input->post('UMEA_ID');
+		$UMEA_ID = $this->input->post('UMEA_ID', TRUE);
 		$this->umea_m->delete($UMEA_ID);
 
 		if($this->db->affected_rows() > 0) {

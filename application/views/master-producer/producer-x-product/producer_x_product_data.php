@@ -52,14 +52,14 @@
 		    <!-- Modal body -->
 			    <div class="modal-body">
 			        <div class="row">
-						<div class="col-md-6">
+						<div class="col-md-12">
 							<div class="form-group">
 								<label>Producer</label>
 								<input class="form-control" type="hidden" name="PRDU_ID" autocomplete="off" value="<?php echo $row->PRDU_ID ?>" required>
 								<input class="form-control" type="text" name="PRDU_NAME" autocomplete="off" value="<?php echo $row->PRDU_NAME ?>" readonly required>
 							</div>
 						</div>
-						<div class="col-md-6">
+						<div class="col-md-12">
 							<div class="form-group">
 								<label>Product Name</label>
 								<select class="form-control selectpicker" data-live-search="true" name="PRDUP_ID" title="-- Select One --" required>
@@ -97,14 +97,14 @@
 		    <!-- Modal body -->
 			    <div class="modal-body">
 			        <div class="row">
-						<div class="col-md-6">
+						<div class="col-md-12">
 							<div class="form-group">
 								<label>Producer</label>
 								<input class="form-control" type="hidden" name="PRDU_ID" autocomplete="off" value="<?php echo $row->PRDU_ID ?>" required>
 								<input class="form-control" type="text" name="PRDU_NAME" autocomplete="off" value="<?php echo $row->PRDU_NAME ?>" readonly required>
 							</div>
 						</div>
-						<div class="col-md-6">
+						<div class="col-md-12">
 							<div class="form-group">
 							    <label>Product Name</label>
 								<select class="form-control selectpicker" data-live-search="true" name="PRDUP_ID" title="-- Select One --" required>

@@ -4,7 +4,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Project_activity_m extends CI_Model {
 	var $table = 'tb_project_activity'; //nama tabel dari database
     var $column_search = array('PRJA_NAME'); //field yang diizin untuk pencarian 
-    var $order = array('PRJA_NAME' => 'ASC'); // default order 
 
     public function __construct()
     {
@@ -13,8 +12,11 @@ class Project_activity_m extends CI_Model {
     }
 
     private function _get_datatables_query() {
-        $this->db->select('*');
+        $this->db->select('tb_project_activity.*, tb_project_type.PRJT_NAME');
 		$this->db->from($this->table);
+        $this->db->join('tb_project_type', 'tb_project_type.PRJT_ID=tb_project_activity.PRJT_ID', 'left');
+        $this->db->order_by('tb_project_type.PRJT_NAME', 'ASC');
+        $this->db->order_by('tb_project_activity.PRJA_ORDER', 'ASC');
 
         $i = 0;
     
@@ -37,12 +39,6 @@ class Project_activity_m extends CI_Model {
                     $this->db->group_end(); //close bracket
             }
             $i++;
-        }
-        
-       	if(isset($this->order))
-        {
-            $order = $this->order;
-            $this->db->order_by(key($order), $order[key($order)]);
         }
     }
 
@@ -68,27 +64,36 @@ class Project_activity_m extends CI_Model {
         return $this->db->count_all_results();
     }
 
-	public function get($PRJA_ID = null) {
-		$this->db->select('*');
+	public function get($PRJA_ID = null, $PRJT_ID = null) {
+		$this->db->select('tb_project_activity.*, tb_project_type.PRJT_NAME');
 		$this->db->from('tb_project_activity');
+        $this->db->join('tb_project_type', 'tb_project_type.PRJT_ID=tb_project_activity.PRJT_ID', 'left');
 		if($PRJA_ID != null) {
-			$this->db->where('PRJA_ID', $PRJA_ID);
+			$this->db->where('tb_project_activity.PRJA_ID', $PRJA_ID);
 		}
-		$this->db->order_by('PRJA_NAME', 'ASC');
+        if($PRJT_ID != null) {
+            $this->db->where('tb_project_activity.PRJT_ID', $PRJT_ID);
+        }
+		$this->db->order_by('tb_project_type.PRJT_NAME', 'ASC');
+        $this->db->order_by('tb_project_activity.PRJA_ORDER', 'ASC');
 		$query = $this->db->get();
 		return $query;
 	}
 
 	public function insert() {
 		$dataInsert = array(
-			'PRJA_NAME' => $this->input->post('PRJA_NAME', TRUE),
+			'PRJA_NAME'     => $this->input->post('PRJA_NAME', TRUE),
+            'PRJA_ORDER'    => $this->input->post('PRJA_ORDER', TRUE),
+            'PRJT_ID'       => $this->input->post('PRJT_ID', TRUE),
 		);
 		$this->db->insert('tb_project_activity', $this->db->escape_str($dataInsert));
 	}
 
 	public function update($PRJA_ID) {
 		$dataUpdate = array(
-			'PRJA_NAME' => $this->input->post('PRJA_NAME', TRUE),
+			'PRJA_NAME'     => $this->input->post('PRJA_NAME', TRUE),
+            'PRJA_ORDER'    => $this->input->post('PRJA_ORDER', TRUE),
+            'PRJT_ID'       => $this->input->post('PRJT_ID', TRUE),
 		);
 		$this->db->where('PRJA_ID', $PRJA_ID)->update('tb_project_activity', $this->db->escape_str($dataUpdate));
 	}

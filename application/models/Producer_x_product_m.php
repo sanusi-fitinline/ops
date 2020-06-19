@@ -86,6 +86,15 @@ class Producer_x_product_m extends CI_Model {
 		return $query;
 	}
 
+    public function get_by_product($PRDUP_ID) {
+        $this->db->select('tb_producer_x_product.*, tb_producer.PRDU_NAME');
+        $this->db->from('tb_producer_x_product');
+        $this->db->join('tb_producer', 'tb_producer.PRDU_ID=tb_producer_x_product.PRDU_ID', 'inner');
+        $this->db->where('tb_producer_x_product.PRDUP_ID', $PRDUP_ID);
+        $query = $this->db->get();
+        return $query;
+    }
+
 	public function check($PRDU_ID, $PRDUP_ID) {
 		$this->db->where('PRDU_ID', $PRDU_ID);
 		$this->db->where('PRDUP_ID', $PRDUP_ID);

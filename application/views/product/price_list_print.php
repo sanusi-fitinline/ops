@@ -62,7 +62,7 @@
     $pdf->SetDisplayMode('real', 'default');
     $pdf->AddPage('P', 'A4');
     $i=0;	
-	$html= '<h4>DAFTAR HARGA KAIN - '.$bulan_indo.' '.date('Y').'</h4>
+	$html= '<h4>DAFTAR HARGA - '.$bulan_indo.' '.date('Y').'</h4>
 	<br><br><table border="0.5" cellpadding="3" bgcolor="#666666" style="font-size: 9px">
 	        <tr bgcolor="#ffffff" style="font-weight: bold;">
 	            <th width="35%" align="center" style="vertical-align: middle;">NAMA</th>

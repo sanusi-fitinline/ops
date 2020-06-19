@@ -45,7 +45,8 @@
 													$ORDER_STATUS = "Cancel";
 												}
 											?>
-											<input class="form-control" type="text" id="ORDER_STATUS" name="ORDER_STATUS" value="<?php echo $ORDER_STATUS ?>" readonly>
+											<input class="form-control" type="hidden" id="ORDER_STATUS" value="<?php echo $row->ORDER_STATUS ?>" readonly>
+											<input class="form-control" type="text" value="<?php echo $ORDER_STATUS ?>" readonly>
 										</div>
 										<div class="form-group">
 											<label>Order Date</label>
@@ -105,7 +106,6 @@
 														$ID_BANK = $row->BANK_ID;
 													}
 												?>
-												<option value="" disabled>-- Select One --</option>
 												<?php foreach($bank as $b): ?>
 										    		<option value="<?php echo $b->BANK_ID?>" <?php if($b->BANK_ID == $ID_BANK){echo "selected";} ?>>
 											    		<?php echo $b->BANK_NAME ?>
@@ -355,16 +355,16 @@
 													    <?php endforeach ?>
 												    </select>
 												</div>
-												<div id="spinner2<?php echo $data->VEND_ID ?>" style="display:none;" align="center">
+												<div id="spinner<?php echo $data->VEND_ID ?>" style="display:none;" align="center">
 													<img width="70px" src="<?php echo base_url('assets/images/loading.gif') ?>">
 												</div>
 												<div id="STATUS<?php echo $data->VEND_ID ?>">
 												</div>
-												<div class="form-group" id="TAMPIL-SERVICE<?php echo $data->VEND_ID ?>" class="form-group">
+												<div class="form-group" id="NEW-SERVICE<?php echo $data->VEND_ID ?>">
 													<select id="SERVICE-ORDER<?php echo $data->VEND_ID ?>" class="form-control selectpicker" name="service" title="-- Select Service --">
 													</select>
 												</div>
-												<div class="form-group">
+												<div class="form-group" id="ACTUAL-SERVICE<?php echo $data->VEND_ID ?>">
 													<input class="form-control" type="text" id="SERVICE-TYPE<?php echo $data->VEND_ID ?>" name="ORDV_SERVICE_TYPE[]" autocomplete="off" value="<?php echo $data->ORDV_SERVICE_TYPE!=null ? $data->ORDV_SERVICE_TYPE : ""  ?>">
 												</div>
 												<div class="form-group">
@@ -395,7 +395,8 @@
 						        	<?php if((!$this->access_m->isEdit('Order', 1)->row()) && ($this->session->GRP_SESSION !=3)) : ?>
 						        		<a href="<?php echo site_url('order') ?>" class="btn btn-warning" name="batal"><i class="fa fa-arrow-left"></i> Back</a>
 							        <?php else: ?>
-							        	<button type="submit" name="UPDATE_DATA" id="UPDATE_DATA" <?php if(($row->ORDER_STATUS != null) || ($row->ORDER_STATUS != 0)) {echo 'class="btn btn-secondary" disabled';} else{ echo 'class="btn btn-primary"';} ?>><i class="fa fa-save"></i> UPDATE</button>
+							        	<!-- <button type="submit" name="UPDATE_DATA" id="UPDATE_DATA" <?php if(($row->ORDER_STATUS != null) || ($row->ORDER_STATUS != 0)) {echo 'class="btn btn-secondary" disabled';} else{ echo 'class="btn btn-primary"';} ?>><i class="fa fa-save"></i> UPDATE</button> -->
+							        	<button type="submit" class="btn btn-primary" name="UPDATE_DATA" id="UPDATE_DATA"><i class="fa fa-save"></i> UPDATE</button>
 							        <?php endif ?>
 						        </div>
 							</form>
@@ -408,17 +409,15 @@
 </div>
 <script src="<?php echo base_url()?>assets/vendor/jquery/jquery.min.js"></script>
 <script type="text/javascript">
-	<?php $this->load->model('orderdetail_m');?>
-	<?php $_detail = $this->orderdetail_m->get($this->uri->segment(3))->result(); ?>
 	$(document).ready(function(){
 		$("#INPUT_BANK").selectpicker('render');
-		<?php foreach ($_detail as $value): ?>
+		<?php foreach ($detail as $value): ?>
 			$(".detail-per-vendor").each(function(){
 				var vendor = "<?php echo $value->VEND_ID ?>";
-			    $("#TAMPIL-SERVICE"+vendor).hide();
+			    $("#NEW-SERVICE"+vendor).hide();
 			    $("#COURIER-ORDER"+vendor).selectpicker('render');
 			    $("#COURIER-ORDER"+vendor).change(function(){ 
-			    	$("#TAMPIL-SERVICE"+vendor).hide();
+			    	$("#NEW-SERVICE"+vendor).hide();
 			    	$("#SERVICE-ORDER"+vendor).hide();
 			    	var COURIER   = $("#COURIER-ORDER"+vendor).val();
 			    	var COURIER_R = COURIER.split(",");
@@ -439,11 +438,11 @@
 				        timeout: 3000,
 				        beforeSend: function(e) {
 				        	if(COURIER_A==1){
-								$("#spinner2"+vendor).css("display","block");
-								$("#spinner3"+vendor).css("display","none");
+								$("#spinner"+vendor).css("display","block");
+								// $("#ACTUAL-SERVICE"+vendor).hide();
+								$("#STATUS"+vendor).hide();
 				        	} else {
-				        		$("#spinner2"+vendor).css("display","none");
-				        		$("#spinner3"+vendor).css("display","block");
+				        		$("#spinner"+vendor).css("display","none");
 				        	}
 				        	if(e && e.overrideMimeType) {
 				            	e.overrideMimeType("application/json;charset=UTF-8");
@@ -451,17 +450,16 @@
 				        },
 				        success: function(response){
 				        	if(COURIER_A==1){
-								$("#spinner2"+vendor).css("display","none");
-								$("#spinner3"+vendor).css("display","none");
+								$("#spinner"+vendor).css("display","none");
 								$("#STATUS"+vendor).html(response.list_status).hide();
-								$("#TAMPIL-SERVICE"+vendor).show('slow');
+								$("#NEW-SERVICE"+vendor).show();
 								$("#SERVICE-ORDER"+vendor).html(response.list_courier).show('slow');
 								$("#SERVICE-ORDER"+vendor).selectpicker('refresh');
 				        	} else {
-				        		$("#spinner2"+vendor).css("display","none");
-								$("#spinner3"+vendor).css("display","none");
-				        		$("#TAMPIL-SERVICE"+vendor).hide();
-				        		$("#SERVICE-TYPE"+vendor).val('')
+				        		$("#spinner"+vendor).css("display","none");
+				        		$("#NEW-SERVICE"+vendor).hide();
+				        		// $("#ACTUAL-SERVICE"+vendor).show();
+				        		$("#SERVICE-TYPE"+vendor).val('');
 				        		$("#ESTIMASI"+vendor).val(response.list_estimasi);
 				        		$("#TAMPIL-TARIF"+vendor).val(response.list_courier);
 				        		$("#STATUS"+vendor).html(response.list_status).show('slow');
@@ -581,8 +579,7 @@
 				        	}
 				        },
 				        error: function (xhr, status, ajaxOptions, thrownError) {
-				        	$("#spinner2"+vendor).css("display","none"); 
-				        	$("#spinner3"+vendor).css("display","none"); 
+				        	$("#spinner"+vendor).css("display","none"); 
 				          	if(status === 'timeout'){   
 					            alert('Respon terlalu lama, coba lagi.');
 					        } else {
@@ -727,7 +724,7 @@
 				$("#VENDOR_WEIGHT"+vendor).on('keyup mouseup',function(){
 			    	$("#COURIER-ORDER"+vendor).selectpicker('val','refresh');
 			    	$("#SERVICE-ORDER"+vendor).selectpicker('val','refresh');
-			    	$("#TAMPIL-SERVICE"+vendor).hide();
+			    	$("#NEW-SERVICE"+vendor).hide();
 			    	$("#SERVICE-TYPE"+vendor).val('');
 	        		$("#ESTIMASI"+vendor).val('');
 	        		$("#TAMPIL-TARIF"+vendor).val(0);
@@ -849,7 +846,7 @@
 	    <?php endforeach ?>
 
 	    // menghitung total berat dan total harga order detail setelah quantity diubah
-	    <?php foreach ($_detail as $value): ?>
+	    <?php foreach ($detail as $value): ?>
 	    	// total detail harga setelah halaman diload
 	    	var detail_id = "<?php echo $value->ORDD_ID ?>";
 	    	var vend_id = "<?php echo $value->VEND_ID ?>";
@@ -1029,7 +1026,7 @@
 				    $("#SERVICE-TYPE"+vendor_id).val('');
 				    $("#ESTIMASI"+vendor_id).val('');
 				    $("#COURIER-ORDER"+vendor_id).selectpicker('val','refresh');
-				    $("#TAMPIL-SERVICE"+vendor_id).hide();
+				    $("#NEW-SERVICE"+vendor_id).hide();
 				    $("#SERVICE-ORDER"+vendor_id).selectpicker('val','refresh');
 
 				    // menghilangkan format rupiah pada diskon
@@ -1311,7 +1308,7 @@
 		});
 
 		// menjumlah subtotal pada detail vendor saat input shipcost
-		<?php foreach ($_detail as $key): ?>
+		<?php foreach ($detail as $key): ?>
 			$(".VENDOR_SHIPCOST").each(function(){
 				var vendor_id = "<?php echo $key->VEND_ID ?>";
 				var total_ordv = 0;
@@ -1446,48 +1443,34 @@
 	
 				// untuk mengaktifkan print quotation dan invoice
 				$(".VENDOR_SHIPCOST").ready(function(){
-					if(($('#COURIER-ORDER'+vendor_id).val() == "") || ($('#COURIER-ORDER'+vendor_id).val() == null)) {
-						$("#UPDATE_PAYMENT").attr('disabled','true');
-						$("#UPDATE_PAYMENT").addClass('btn btn-sm btn-secondary');
+					if(($('#COURIER-ORDER'+vendor_id).val() == "")) {
+						$("#UPDATE_PAYMENT").removeClass('btn-primary');
+						$("#UPDATE_PAYMENT").addClass('btn-secondary');
+						$("#UPDATE_PAYMENT").css({'opacity' : '0.5', 'pointer-events': 'none'});
 						
-						$("#QUOTATION").css({'opacity' : '0.5', 'pointer-events': 'none', 'cursor' : 'default', 'color' : '#ffffff'});
-						$("#QUOTATION").removeAttr('href');
-						$("#QUOTATION").addClass('btn btn-sm btn-secondary');
+						$("#QUOTATION").removeClass('btn-primary');
+						$("#QUOTATION").addClass('btn-secondary');
+						$("#QUOTATION").css({'opacity' : '0.5', 'pointer-events': 'none', 'color' : '#ffffff'});
 						
-						$("#INVOICE").css({'opacity' : '0.5', 'pointer-events': 'none', 'cursor' : 'default', 'color' : '#ffffff'});
-						$("#INVOICE").removeAttr('href');
-						$("#INVOICE").addClass('btn btn-sm btn-secondary');
-			    	} else {
-				    	$("#UPDATE_PAYMENT").removeAttr('disabled','true');
-				    	$("#UPDATE_PAYMENT").addClass('btn btn-sm btn-primary');
-				    	$("#QUOTATION").css({'opacity' : '', 'pointer-events': '', 'cursor' : ''});
-						$("#QUOTATION").attr('href');
-						$("#QUOTATION").addClass('btn btn-sm btn-primary');
-
-						$("#INVOICE").css({'opacity' : '', 'pointer-events': '', 'cursor' : ''});
-						$("#INVOICE").attr('href');
-						$("#INVOICE").addClass('btn btn-sm btn-primary');
-					}
+						$("#INVOICE").removeClass('btn-primary');
+						$("#INVOICE").addClass('btn-secondary');
+						$("#INVOICE").css({'opacity' : '0.5', 'pointer-events': 'none', 'color' : '#ffffff'});
+			    	}
 				});
 			});
 		<?php endforeach ?>
 		
 		// untuk mengaktifkan print receipt
 		$(".VENDOR_SHIPCOST").ready(function(){
-			if($('#ORDER_STATUS').val() == 'Full Paid' || $('#ORDER_STATUS').val() == 'Half Delivered' || $('#ORDER_STATUS').val() == 'Delivered') {
-				$("#RECEIPT").css({'opacity' : '', 'pointer-events': '', 'cursor' : ''});
-				$("#RECEIPT").attr('href');
-				$("#RECEIPT").addClass('btn btn-sm btn-primary');
-				$(".DELETE-ITEM").css({'opacity' : '0.5', 'pointer-events': 'none', 'cursor' : 'default', 'color' : '#6c757d'});
-				$(".DELETE-ITEM").removeAttr('href');
-				$("#UPDATE_PAYMENT").attr('disabled','true');
-				$("#UPDATE_PAYMENT").addClass('btn btn-sm btn-secondary');
+			if($('#ORDER_STATUS').val() >= 2 && $('#ORDER_STATUS').val() <= 4) {
+				$(".DELETE-ITEM").css({'opacity' : '0.5', 'pointer-events': 'none', 'color' : '#6c757d'});
+				$("#UPDATE_PAYMENT").removeClass('btn-primary');
+				$("#UPDATE_PAYMENT").addClass('btn-secondary');
+				$("#UPDATE_PAYMENT").css({'opacity' : '0.5', 'pointer-events': 'none'});
 			} else {
-				$("#RECEIPT").css({'opacity' : '0.5', 'pointer-events': 'none', 'cursor' : 'default', 'color' : '#ffffff'});
-				$("#RECEIPT").removeAttr('href');
-				$("#RECEIPT").addClass('btn btn-sm btn-secondary');
-				$(".DELETE-ITEM").css({'opacity' : '', 'pointer-events': '', 'cursor' : ''});
-				$(".DELETE-ITEM").attr('href');
+				$("#RECEIPT").removeClass('btn-primary');
+				$("#RECEIPT").addClass('btn-secondary');
+				$("#RECEIPT").css({'opacity' : '0.5', 'pointer-events': 'none', 'color' : '#ffffff'});
 			}
 		});
 

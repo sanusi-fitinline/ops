@@ -5,6 +5,7 @@ class Pm extends CI_Controller {
 
 	function __construct() {
 		parent::__construct();
+		check_not_login();
 		$this->load->model('access_m');
 		$this->load->model('customer_m');
 		$this->load->model('sampling_m');
@@ -20,15 +21,14 @@ class Pm extends CI_Controller {
 		$this->load->model('bank_m');
 		$this->load->model('channel_m');
 		$this->load->model('clog_m');
-		check_not_login();
-		$this->load->library('form_validation');
-		$this->load->library('rajaongkir');
 		$this->load->library('pdf');
+		$this->load->library('rajaongkir');
+		$this->load->library('form_validation');
 	}
 
 	public function index() {
-		$modul = "Product Sampling PM";
-		$access =  $this->access_m->isAccess($this->session->GRP_SESSION, $modul)->row();
+		$modul  = "Product Sampling PM";
+		$access = $this->access_m->isAccess($this->session->GRP_SESSION, $modul)->row();
 		if ((!$access) && ($this->session->GRP_SESSION !=3)) {
 			echo "<script>alert('Anda tidak punya akses ke $modul.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
@@ -38,8 +38,8 @@ class Pm extends CI_Controller {
 	}
 
 	public function sampling() {
-		$modul = "Product Sampling PM";
-		$access =  $this->access_m->isAccess($this->session->GRP_SESSION, $modul)->row();
+		$modul  = "Product Sampling PM";
+		$access = $this->access_m->isAccess($this->session->GRP_SESSION, $modul)->row();
 		if ((!$access) && ($this->session->GRP_SESSION !=3)) {
 			echo "<script>alert('Anda tidak punya akses ke $modul.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
@@ -49,18 +49,18 @@ class Pm extends CI_Controller {
 	}
 
 	public function samplingjson() {
-		$url = $this->config->base_url();
+		$url  = $this->config->base_url();
 		$list = $this->sampling_m->get_datatables();
 		$data = array();
-		$no = $_POST['start'];
+		$no   = $_POST['start'];
 		foreach ($list as $field) {
 			if ($field->LSAM_DELDATE!=null) {
-				$STATUS = "<div class='btn btn-info btn-sm' style='font-size: 12px; border-radius: 6px; padding: 2px 5px 5px 3px; width:80px;'><i class='fa fa-check-circle'></i><span><b> Delivered</b></span></div>";
+				$STATUS = "<div class='btn btn-default btn-sm' style='font-size: 12px; color: #fff; background-color:#17a2b8; border-color:#17a2b8; border-radius: 6px; padding: 2px 5px 5px 3px; width:80px;'><i class='fa fa-check-circle'></i><span><b> Delivered</b></span></div>";
 			} else {
 				if ($field->LSAM_PAYDATE!=null || ($field->LSAM_COST==0 && $field->LSAM_DEPOSIT == null)) {
-				 	$STATUS = "<div class='btn btn-warning btn-sm' style='font-size: 12px; color: #fff; background-color:#20c997; border-color:#20c997; border-radius: 6px; padding: 2px 5px 5px 3px; width:80px;'><i class='fa fa-minus-circle'></i><span><b> Paid</b></span></div>";
+				 	$STATUS = "<div class='btn btn-default btn-sm' style='font-size: 12px; color: #fff; background-color:#20c997; border-color:#20c997; border-radius: 6px; padding: 2px 5px 5px 3px; width:80px;'><i class='fa fa-minus-circle'></i><span><b> Paid</b></span></div>";
 				} else {
-					$STATUS = "<div class='btn btn-default btn-sm' style='font-size: 12px; color: #fff; background-color:#8e9397; border-color:#8e9397; border-radius: 6px; padding: 2px 5px 5px 3px; width:80px;'><b>Requested</b></div>";
+					$STATUS = "<div class='btn btn-default btn-sm' style='font-size: 12px; color: #fff; background-color:#6c757d; border-color:#6c757d; border-radius: 6px; padding: 2px 5px 5px 3px; width:80px;'><b>Requested</b></div>";
 				}
 			}
 			if ($field->LSAM_DELDATE!=null) {
@@ -84,14 +84,16 @@ class Pm extends CI_Controller {
 			$row[] = "<div align='center'>".$field->COURIER_NAME." ".$field->LSAM_SERVICE_TYPE."</div>";
 			$row[] = "<div align='center'>$DELDATE</div>";
 			$row[] = $RCPNO;
-			if((!$this->access_m->isDelete('Product Sampling PM', 1)->row()) && ($this->session->GRP_SESSION !=3)){
-				$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="'.$url.'pm/edit_sampling/'.$field->LSAM_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a></div>';
-			} else {
-				$row[] = '<form action="'.$url.'pm/del_sampling" method="post"><div style="vertical-align: middle; text-align: center;"><a href="'.$url.'pm/edit_sampling/'.$field->LSAM_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
-					<input type="hidden" name="LSAM_ID" value="'.$field->LSAM_ID.'">
-					<input type="hidden" name="CLOG_ID" value="'.$field->CLOG_ID.'">
-					<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button></div></form>';
-			}
+
+			// cek akses delete
+			if((!$this->access_m->isDelete('Product Sampling PM', 1)->row()) && ($this->session->GRP_SESSION !=3)) {
+				$DELETE = "hidden";
+			} else {$DELETE = "";}
+
+			$row[] = '<form action="'.$url.'pm/del_sampling" method="post"><div style="vertical-align: middle; text-align: center;"><a href="'.$url.'pm/edit_sampling/'.$field->LSAM_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
+				<input type="hidden" name="LSAM_ID" value="'.$field->LSAM_ID.'">
+				<input type="hidden" name="CLOG_ID" value="'.$field->CLOG_ID.'">
+				<button '.$DELETE.' onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button></div></form>';
 			$data[] = $row;
 		}
 
@@ -121,11 +123,7 @@ class Pm extends CI_Controller {
 		}
 	}
 
-	public function edit_sampling_process($LSAM_ID) {
-		// $NO_WA   = $this->input->post('NO_WA');
-		// $KURIR 	 = $this->input->post('KURIR');
-		// $NO_RESI = $this->input->post('LSAM_RCPNO');
-		
+	public function edit_sampling_process($LSAM_ID) {		
 		$this->sampling_m->pm_update($LSAM_ID);
 		if($this->db->affected_rows() > 0) {
 			echo "<script>alert('Data berhasil diubah.')</script>";
@@ -147,11 +145,9 @@ class Pm extends CI_Controller {
 				$data['user'] 	 = $this->input->post('USER_ID');
 				$pusher->trigger('channel-cs', 'event-cs', $data);
 			}
-			// $text = rawurlencode("Sample telah diteruskan ke kurir ".$KURIR.".\nNo. Resi : ".$NO_RESI.".\nterima kasih, Fitinline.");
-			// echo "<script>window.open('https://wa.me/".$NO_WA."?text=".$text."', '_blank')</script>";
 			echo "<script>window.location='".site_url('pm/sampling')."'</script>";
 		} else {
-			echo "<script>alert('Data gagal diubah.')</script>";
+			echo "<script>alert('Tidak ada perubahan data.')</script>";
 			echo "<script>window.location='".site_url('pm/sampling')."'</script>";
 		}
 	}
@@ -168,8 +164,8 @@ class Pm extends CI_Controller {
 	}
 
 	public function del_sampling() {
-		$LSAM_ID = $this->input->post('LSAM_ID');
-		$CLOG_ID = $this->input->post('CLOG_ID');
+		$LSAM_ID = $this->input->post('LSAM_ID', TRUE);
+		$CLOG_ID = $this->input->post('CLOG_ID', TRUE);
 		$this->sampling_m->delete($CLOG_ID);
 
 		if($this->db->affected_rows() > 0) {
@@ -182,8 +178,8 @@ class Pm extends CI_Controller {
 	}
 
 	public function check_stock() {
-		$modul = "Check Stock PM";
-		$access =  $this->access_m->isAccess($this->session->GRP_SESSION, $modul)->row();
+		$modul  = "Check Stock PM";
+		$access = $this->access_m->isAccess($this->session->GRP_SESSION, $modul)->row();
 		if ((!$access)  && ($this->session->GRP_SESSION !=3)) {
 			echo "<script>alert('Anda tidak punya akses ke $modul.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
@@ -196,33 +192,35 @@ class Pm extends CI_Controller {
 		$url  = $this->config->base_url();
 		$list = $this->ckstock_m->get_datatables();
 		$data = array();
-		$no = $_POST['start'];
+		$no   = $_POST['start'];
 		foreach ($list as $field) {
 			if ($field->LSTOCK_STATUS!=null) {
 				if ($field->LSTOCK_STATUS!=0) {
-					$LSTOCK_STATUS = "<div class='btn btn-info btn-sm' style='font-size: 12px; border-radius: 6px; padding: 2px 5px 5px 3px; width:80px;'><i class='fa fa-check-circle'></i><span><b> Available</b></span></div>";
+					$LSTOCK_STATUS = "<div class='btn btn-default btn-sm' style='font-size: 12px; color: #fff; background-color:#17a2b8; border-color:#17a2b8; border-radius: 6px; padding: 2px 5px 5px 3px; width:80px;'><i class='fa fa-check-circle'></i><span><b> Available</b></span></div>";
 				} else {
-					$LSTOCK_STATUS = "<div class='btn btn-warning btn-sm' style='font-size: 12px; color: #fff; background-color:orange; border-color:orange; border-radius: 6px; padding: 2px 5px 5px 3px; width:80px;'><i class='fa fa-ban'></i><span><b> Not Available</b></span></div>";
+					$LSTOCK_STATUS = "<div class='btn btn-default btn-sm' style='font-size: 12px; color: #fff; background-color:orange; border-color:orange; border-radius: 6px; padding: 2px 5px 5px 3px; width:80px;'><i class='fa fa-ban'></i><span><b> Not Available</b></span></div>";
 				}
 			} else {
-				$LSTOCK_STATUS = "<div class='btn btn-default btn-sm' style='font-size: 12px; color: #fff; background-color:#8e9397; border-color:#8e9397; border-radius: 6px; padding: 2px 5px 5px 3px; width:80px;'><b>Unchecked</b></div>";
+				$LSTOCK_STATUS = "<div class='btn btn-default btn-sm' style='font-size: 12px; color: #fff; background-color:#6c757d; border-color:#6c757d; border-radius: 6px; padding: 2px 5px 5px 3px; width:80px;'><b>Unchecked</b></div>";
 			}
 
-			$row = array();
+			$row   = array();
 			$row[] = "<div align='center'>$LSTOCK_STATUS</div>";
 			$row[] = date('d-m-Y / H:i:s', strtotime($field->LSTOCK_DATE));
-			$row[] = $field->PRO_NAME;
+			$row[] = stripslashes($field->PRO_NAME);
 			$row[] = "<div align='center'>$field->LSTOCK_COLOR</div>";
 			$row[] = "<div align='center'>".str_replace(".", ",", $field->LSTOCK_AMOUNT)."</div>";
 			$row[] = "<div align='center'>$field->UMEA_NAME</div>";
+			
+			// cek akses delete
 			if((!$this->access_m->isDelete('Check Stock PM', 1)->row()) && ($this->session->GRP_SESSION !=3)){
-				$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="'.$url.'pm/edit_check/'.$field->LSTOCK_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a></div>';
-			} else {
-				$row[] = '<form action="'.$url.'pm/del_stock" method="post"><div style="vertical-align: middle; text-align: center;"><a href="'.$url.'pm/edit_check/'.$field->LSTOCK_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
-					<input type="hidden" name="LSTOCK_ID" value="'.$field->LSTOCK_ID.'">
-					<input type="hidden" name="CLOG_ID" value="'.$field->CLOG_ID.'">
-					<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button></div></form>';
-			}
+				$DELETE = "hidden";
+			} else {$DELETE = "";}
+
+			$row[] = '<form action="'.$url.'pm/del_stock" method="post"><div style="vertical-align: middle; text-align: center;"><a href="'.$url.'pm/edit_check/'.$field->LSTOCK_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
+				<input type="hidden" name="LSTOCK_ID" value="'.$field->LSTOCK_ID.'">
+				<input type="hidden" name="CLOG_ID" value="'.$field->CLOG_ID.'">
+				<button '.$DELETE.' onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button></div></form>';
 			$data[] = $row;
 		}
 
@@ -253,23 +251,6 @@ class Pm extends CI_Controller {
 	}
 
 	public function edit_check_process($LSTOCK_ID) {
-		// $NO_WA   	= $this->input->post('NO_WA');
-		// $PRO_NAME   = $this->input->post('PRO_NAME');
-		// $COLOR   	= $this->input->post('LSTOCK_COLOR');
-		// $AMOUNT 	= $this->input->post('LSTOCK_AMOUNT');
-		// $UMEA 		= $this->input->post('UMEA_NAME');
-		// $CUST_NOTES = $this->input->post('LSTOCK_CNOTES');
-		// if($this->input->post('LSTOCK_STATUS') == 0) {
-		// 	$STATUS = "tidak tersedia.";
-		// } else {
-		// 	$STATUS = "tersedia.";
-		// }
-		// if(!empty($this->input->post('LSTOCK_VNOTES'))) {
-		// 	$VEND_NOTES = "\n*catatan: ".$this->input->post('LSTOCK_VNOTES');
-		// } else {
-		// 	$VEND_NOTES = "";
-		// }
-
 		$this->ckstock_m->pm_update($LSTOCK_ID);
 		if($this->db->affected_rows() > 0) {
 			echo "<script>alert('Data berhasil diubah.')</script>";
@@ -291,18 +272,16 @@ class Pm extends CI_Controller {
 				$data['user'] 	 = $this->input->post('USER_ID');
 				$pusher->trigger('channel-cs', 'event-cs', $data);
 			}
-			// $text = rawurlencode("".$PRO_NAME." / ".$COLOR." / ".$AMOUNT." ".$UMEA." ".$STATUS.$VEND_NOTES."");
-			// echo "<script>window.open('https://wa.me/".$NO_WA."?text=".$text."', '_blank')</script>";
 			echo "<script>window.location='".site_url('pm/check_stock')."'</script>";
 		} else {
-			echo "<script>alert('Data gagal diubah.')</script>";
+			echo "<script>alert('Tidak ada perubahan data.')</script>";
 			echo "<script>window.location='".site_url('pm/check_stock')."'</script>";
 		}
 	}
 
 	public function del_stock() {
-		$LSTOCK_ID = $this->input->post('LSTOCK_ID');
-		$CLOG_ID = $this->input->post('CLOG_ID');
+		$LSTOCK_ID = $this->input->post('LSTOCK_ID', TRUE);
+		$CLOG_ID   = $this->input->post('CLOG_ID', TRUE);
 		$this->ckstock_m->delete($CLOG_ID);
 
 		if($this->db->affected_rows() > 0) {

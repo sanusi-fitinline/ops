@@ -3,7 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Ckstock_m extends CI_Model {
 	var $table = 'tb_log_stock'; //nama tabel dari database
-    var $column_search = array('LSTOCK_DATE', 'PRO_NAME', 'LSTOCK_COLOR', 'LSTOCK_AMOUNT', 'UMEA_NAME'); //field yang diizin untuk pencarian 
+    var $column_search = array('PRO_NAME', 'LSTOCK_COLOR'); //field yang diizin untuk pencarian 
     var $order = array('LSTOCK_DATE' => 'DESC'); // default order 
 
     public function __construct()
@@ -37,11 +37,14 @@ class Ckstock_m extends CI_Model {
 		if ($CUST_NAME != null) { // filter by customer name
 			$this->db->like('tb_customer.CUST_NAME', $CUST_NAME);
 		}
-		if ($FROM != null && $TO != null) {	// filter by date			
+		if ($FROM != null && $TO != null) {	// filter by date
+			$this->db->group_start();			
 			$this->db->where('tb_log_stock.LSTOCK_DATE >=', date('Y-m-d', strtotime($FROM)));
 			$this->db->where('tb_log_stock.LSTOCK_DATE <=', date('Y-m-d', strtotime('+1 days', strtotime($TO))));
+			$this->db->group_end();
 		}
 		if ($STATUS_FILTER != null) { // filter by status
+			$this->db->group_start();
 			if ($STATUS_FILTER == 1) { // filter status unchecked
 				$this->db->where('tb_log_stock.LSTOCK_STATUS', null);
 			} elseif ($STATUS_FILTER == 2) { // filter status not available
@@ -49,13 +52,16 @@ class Ckstock_m extends CI_Model {
 			} else { // filter status available
 				$this->db->where('tb_log_stock.LSTOCK_STATUS', 1);
 			}
+			$this->db->group_end();
 		}
 		if ($SEGMENT != null) {
 			if ($SEGMENT == "unchecked_stock") {
 				$this->db->where('tb_log_stock.LSTOCK_STATUS', null);
 			} else if ($SEGMENT == "check_need_followup") {
+				$this->db->group_start();
 				$this->db->where('tb_log_stock.LSTOCK_STATUS is NOT NULL', null, false);
 				$this->db->where('tb_customer_log.FLWS_ID', null);
+				$this->db->group_end();
 			}
 		}
 		

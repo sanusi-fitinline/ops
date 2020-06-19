@@ -8,11 +8,15 @@ class Project_model_m extends CI_Model {
         return $this->db->get('tb_project_detail_model');
 	}
 
-	public function get($PRJDM_ID = null) {
-		$this->db->select('tb_project_detail_model.*, tb_producer_product_property.PRDPP_NAME');
+	public function get($PRJD_ID = null, $PRJDM_ID = null) {
+		$this->db->select('tb_project_detail_model.*, tb_project_detail.PRDUP_ID, tb_producer_product_property.PRDPP_NAME');
 		$this->db->from('tb_project_detail_model');
+		$this->db->join('tb_project_detail', 'tb_project_detail.PRJD_ID=tb_project_detail_model.PRJD_ID', 'left');
 		$this->db->join('tb_producer_product_property', 'tb_producer_product_property.PRDPP_ID=tb_project_detail_model.PRDPP_ID', 'left');
-		if($PRJDM_ID != null) {
+		if($PRJD_ID != null) {
+            $this->db->where('tb_project_detail_model.PRJD_ID', $PRJD_ID);
+        }
+        if($PRJDM_ID != null) {
             $this->db->where('tb_project_detail_model.PRJDM_ID', $PRJDM_ID);
         }
         $this->db->order_by('tb_project_detail_model.PRJDM_ID', 'ASC');

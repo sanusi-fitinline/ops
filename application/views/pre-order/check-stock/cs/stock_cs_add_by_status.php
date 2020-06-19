@@ -27,14 +27,6 @@
 									<div class="col-md-3">
 										<div class="form-group">
 										    <label>Customer</label>
-										    <!-- <select class="form-control selectpicker" name="CUST_ID" id="" title="-- Select One --" data-live-search="true" required>
-										    	<?php foreach($customer as $cust): ?>
-											    	<option value="<?php echo $cust->CUST_ID?>"
-											    		<?php if($cust->CUST_ID == $this->uri->segment(3)) {echo "selected";} ?>>
-											    		<?php echo stripslashes($cust->CUST_NAME) ?>
-											    	</option>
-											    <?php endforeach ?>
-										    </select> -->
 										    <input class="form-control" type="hidden" name="CUST_ID" id="CUST_ID" value="<?php echo $row->CUST_ID ?>" readonly>
 										    <input class="form-control" type="text" value="<?php echo $row->CUST_NAME ?>" readonly>
 										</div>

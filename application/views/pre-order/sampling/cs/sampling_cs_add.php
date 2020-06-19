@@ -59,12 +59,7 @@
 										<div class="form-group">
 											<label>Channel</label>
 											<select class="form-control selectpicker" name="CHA_ID" id="cha-result" title="-- Select One --" required>
-												<option value="" selected disabled>-- Select One --</option>
-												<?php foreach($channel as $cha): ?>
-										    		<option value="<?php echo $cha->CHA_ID?>">
-											    		<?php echo stripslashes($cha->CHA_NAME) ?>
-											    	</option>
-											    <?php endforeach ?>
+												<option value="" selected disabled></option>
 										    </select>
 										</div>
 										<div class="form-group">
@@ -95,7 +90,7 @@
 										</div>
 										<div id="serv" class="form-group">
 											<label>Service</label>
-											<select id="service" class="form-control selectpicker" name="service"></select>
+											<select id="service" class="form-control selectpicker" name="service" title="-- Select One --"></select>
 										</div>
 										<div class="spinner3" style="display:none;" align="center">
 											<img width="70px" src="<?php echo base_url('assets/images/loading.gif') ?>">

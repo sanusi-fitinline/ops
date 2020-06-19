@@ -21,7 +21,6 @@
 									<label>Courier</label>
 									<select class="form-control selectpicker" title="Select Courier" data-live-search="true" name="COURIER_ID" id="COURIER_ID" required>
 										<option value="" selected>ALL</option>
-										<option value="" disabled>----------</option>
 										<?php foreach($courier as $data): ?>
 								    		<option value="<?php echo $data->COURIER_ID.','.$data->COURIER_NAME?>">
 									    		<?php echo stripslashes($data->COURIER_NAME) ?>

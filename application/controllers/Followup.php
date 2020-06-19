@@ -5,6 +5,7 @@ class Followup extends CI_Controller {
 
 	function __construct() {
 		parent::__construct();
+		check_not_login();
 		$this->load->model('access_m');
 		$this->load->model('customer_m');
 		$this->load->model('sampling_m');
@@ -23,14 +24,13 @@ class Followup extends CI_Controller {
 		$this->load->model('cactivity_m');
 		$this->load->model('followup_m');
 		$this->load->model('user_m');
-		check_not_login();
-		$this->load->library('form_validation');
 		$this->load->library('rajaongkir');
+		$this->load->library('form_validation');
 	}
 
 	public function index() {
-		$modl = "Follow Up";
-		$access =  $this->access_m->isAccess($this->session->GRP_SESSION, $modl)->row();
+		$modl 	= "Follow Up";
+		$access = $this->access_m->isAccess($this->session->GRP_SESSION, $modl)->row();
 		if ((!$access) && ($this->session->GRP_SESSION !=3)) {
 			echo "<script>alert('Anda tidak punya akses ke $modl.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
@@ -41,8 +41,8 @@ class Followup extends CI_Controller {
 	}
 
 	public function open() {
-		$modl = "Follow Up";
-		$access =  $this->access_m->isAccess($this->session->GRP_SESSION, $modl)->row();
+		$modl 	= "Follow Up";
+		$access = $this->access_m->isAccess($this->session->GRP_SESSION, $modl)->row();
 		if ((!$access) && ($this->session->GRP_SESSION !=3)) {
 			echo "<script>alert('Anda tidak punya akses ke $modl.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
@@ -53,8 +53,8 @@ class Followup extends CI_Controller {
 	}
 
 	public function in_progress() {
-		$modl = "Follow Up";
-		$access =  $this->access_m->isAccess($this->session->GRP_SESSION, $modl)->row();
+		$modl 	= "Follow Up";
+		$access = $this->access_m->isAccess($this->session->GRP_SESSION, $modl)->row();
 		if ((!$access) && ($this->session->GRP_SESSION !=3)) {
 			echo "<script>alert('Anda tidak punya akses ke $modl.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
@@ -65,12 +65,12 @@ class Followup extends CI_Controller {
 	}
 
 	public function followup_json() {
-		$url  = $this->config->base_url();
+		$url 	 = $this->config->base_url();
 		$SEGMENT = $this->input->post('segment');
 		$CLOG_ID = $this->input->post('clog');
-		$list = $this->followup_m->get_datatables($CLOG_ID);
-		$data = array();
-		$no = $_POST['start'];
+		$list 	 = $this->followup_m->get_datatables($CLOG_ID);
+		$data 	 = array();
+		$no 	 = $_POST['start'];
 		foreach ($list as $field) {
 			if($field->FLWC_ID != null && $field->FLWC_ID != 0) {
 				$REASON = "<div align='center'>$field->FLWC_NAME</div>";
@@ -83,53 +83,29 @@ class Followup extends CI_Controller {
 			$row[] = "<div align='center'>$field->CACT_NAME</div>";
 			$row[] = "<div align='center'>$field->FLWS_NAME</div>";
 			$row[] = $REASON;
-			if((!$this->access_m->isDelete('Follow Up', 1)->row()) && ($this->session->GRP_SESSION !=3)){
-				if ($SEGMENT == "sampling_followup"){
-					$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="'.$url.'followup/sampling_followup_edit/'.$field->FLWP_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a></div>';
-				}
-				elseif ($SEGMENT == "check_stock_followup"){
-					$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="'.$url.'followup/check_stock_followup_edit/'.$field->FLWP_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a></div>';
-				}
-				elseif ($SEGMENT == "assign_followup"){
-					$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="'.$url.'followup/assign_followup_edit/'.$field->FLWP_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a></div>';
-				}
-				else {
-					$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-followup'.$field->FLWP_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>';
-				}
-			} else {
-				if ($SEGMENT == "sampling_followup"){
-					$row[] = '<form action="'.$url.'cs/del_followup" method="post"><div style="vertical-align: middle; text-align: center;">
-							<a href="'.$url.'followup/sampling_followup_edit/'.$field->FLWP_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
-							<input type="hidden" name="FLWP_ID" value="'.$field->FLWP_ID.'">
-							<input type="hidden" name="CLOG_ID" value="'.$field->CLOG_ID.'">
-							<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
-						</div></form>';
-				}
-				elseif ($SEGMENT == "check_stock_followup"){
-					$row[] = '<form action="'.$url.'cs/del_followup_ck" method="post"><div style="vertical-align: middle; text-align: center;">
-							<a href="'.$url.'followup/check_stock_followup_edit/'.$field->FLWP_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
-							<input type="hidden" name="FLWP_ID" value="'.$field->FLWP_ID.'">
-							<input type="hidden" name="CLOG_ID" value="'.$field->CLOG_ID.'">
-							<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
-						</div></form>';
-				}
-				elseif ($SEGMENT == "assign_followup"){
-					$row[] = '<form action="'.$url.'cs/del_followup_assign" method="post"><div style="vertical-align: middle; text-align: center;">
-							<a href="'.$url.'followup/assign_followup_edit/'.$field->FLWP_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
-							<input type="hidden" name="FLWP_ID" value="'.$field->FLWP_ID.'">
-							<input type="hidden" name="CLOG_ID" value="'.$field->CLOG_ID.'">
-							<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
-						</div></form>';
-				}
-				else {
-					$row[] = '<form action="'.$url.'followup/del_followup" method="post"><div style="vertical-align: middle; text-align: center;">
-							<a href="#" data-toggle="modal" data-target="#edit-followup'.$field->FLWP_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
-							<input type="hidden" name="FLWP_ID" value="'.$field->FLWP_ID.'">
-							<input type="hidden" name="CLOG_ID" value="'.$field->CLOG_ID.'">
-							<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
-						</div></form>';
-				}
+			
+			// cek akses delete
+			if((!$this->access_m->isDelete('Follow Up', 1)->row()) && ($this->session->GRP_SESSION !=3)) {
+				$DELETE = "hidden";
+			} else {$DELETE = "hidden";}
+
+			// cek link
+			if ($SEGMENT == "sampling_followup"){
+				$link_detail = $url.'followup/sampling_followup_edit/'.$field->FLWP_ID;
 			}
+			elseif ($SEGMENT == "check_stock_followup"){
+				$link_detail = $url.'followup/check_stock_followup_edit/'.$field->FLWP_ID;
+			}
+			else {
+				$link_detail = $url.'followup/assign_followup_edit/'.$field->FLWP_ID;
+			}
+
+			$row[] = '<form action="'.$url.'followup/del_followup" method="post"><div style="vertical-align: middle; text-align: center;">
+					<a href="'.$link_detail.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
+					<input type="hidden" name="FLWP_ID" value="'.$field->FLWP_ID.'">
+					<input type="hidden" name="CLOG_ID" value="'.$field->CLOG_ID.'">
+					<button '.$DELETE.' onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
+				</div></form>';
 			$data[] = $row;
 		}
 
@@ -164,7 +140,7 @@ class Followup extends CI_Controller {
 			echo "<script>alert('Data berhasil diubah.')</script>";
 			echo "<script>window.location='".site_url('followup')."'</script>";
 		} else {
-			echo "<script>alert('Data gagal diubah.')</script>";
+			echo "<script>alert('Tidak ada perubahan data.')</script>";
 			echo "<script>window.location='".site_url('followup')."'</script>";
 		}
 	}
@@ -183,15 +159,15 @@ class Followup extends CI_Controller {
 	}
 
 	public function clog_json() {
-		$SEGMENT = $this->input->post('segment', TRUE);	
-		$CUST_NAME = $this->input->post('CUST_NAME', TRUE);	
-		$FROM      = $this->input->post('FROM', TRUE);
-		$TO 	   = $this->input->post('TO', TRUE);
-		$STATUS_FILTER = $this->input->post('STATUS_FILTER', TRUE);
-		$url  = $this->config->base_url();
-		$list = $this->clog_m->get_datatables($CUST_NAME, $FROM, $TO, $STATUS_FILTER, $SEGMENT);
-		$data = array();
-		$no = $_POST['start'];
+		$SEGMENT   		= $this->input->post('segment', TRUE);	
+		$CUST_NAME 		= $this->input->post('CUST_NAME', TRUE);	
+		$FROM      		= $this->input->post('FROM', TRUE);
+		$TO 	   		= $this->input->post('TO', TRUE);
+		$STATUS_FILTER  = $this->input->post('STATUS_FILTER', TRUE);
+		$url  			= $this->config->base_url();
+		$list 			= $this->clog_m->get_datatables($CUST_NAME, $FROM, $TO, $STATUS_FILTER, $SEGMENT);
+		$data 			= array();
+		$no 			= $_POST['start'];
 		foreach ($list as $field) {
 			if ($field->FLWS_NAME != null) {
 				$STATUS = $field->FLWS_NAME;
@@ -264,8 +240,8 @@ class Followup extends CI_Controller {
 	}
 
 	public function sampling_followup($CLOG_ID) {
-		$modl = "Follow Up";
-		$access =  $this->access_m->isAccess($this->session->GRP_SESSION, $modl)->row();
+		$modl 	= "Follow Up";
+		$access = $this->access_m->isAccess($this->session->GRP_SESSION, $modl)->row();
 		if ((!$access) && ($this->session->GRP_SESSION !=3)) {
 			echo "<script>alert('Anda tidak punya akses ke $modl.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
@@ -301,8 +277,8 @@ class Followup extends CI_Controller {
 	}
 
 	public function check_stock_followup($CLOG_ID) {
-		$modl = "Follow Up";
-		$access =  $this->access_m->isAccess($this->session->GRP_SESSION, $modl)->row();
+		$modl 	= "Follow Up";
+		$access = $this->access_m->isAccess($this->session->GRP_SESSION, $modl)->row();
 		if ((!$access) && ($this->session->GRP_SESSION !=3)) {
 			echo "<script>alert('Anda tidak punya akses ke $modl.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
@@ -341,8 +317,8 @@ class Followup extends CI_Controller {
 	}
 
 	public function assign_followup($CLOG_ID) {
-		$modl = "Follow Up";
-		$access =  $this->access_m->isAccess($this->session->GRP_SESSION, $modl)->row();
+		$modl 	= "Follow Up";
+		$access = $this->access_m->isAccess($this->session->GRP_SESSION, $modl)->row();
 		if ((!$access) && ($this->session->GRP_SESSION !=3)) {
 			echo "<script>alert('Anda tidak punya akses ke $modl.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
@@ -364,8 +340,8 @@ class Followup extends CI_Controller {
 	}
 
 	public function add_assign() {
-		$modl = "Follow Up";
-		$access =  $this->access_m->isAccess($this->session->GRP_SESSION, $modl)->row();
+		$modl 	= "Follow Up";
+		$access = $this->access_m->isAccess($this->session->GRP_SESSION, $modl)->row();
 		if ((!$access) && ($this->session->GRP_SESSION !=3)) {
 			echo "<script>alert('Anda tidak punya akses ke $modl.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
@@ -391,9 +367,9 @@ class Followup extends CI_Controller {
 	}
 
 	public function newcust() {
-		$data['bank'] 		= $this->bank_m->getBank()->result();
-		$data['channel'] 	= $this->channel_m->getCha()->result();
-		$data['country'] 	= $this->country_m->getCountry()->result();
+		$data['bank'] 	 = $this->bank_m->getBank()->result();
+		$data['channel'] = $this->channel_m->getCha()->result();
+		$data['country'] = $this->country_m->getCountry()->result();
 		$this->template->load('template', 'pre-order/follow-up/customer_form_add', $data);
 	}
 

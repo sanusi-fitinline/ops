@@ -103,7 +103,7 @@
 										</div>
 										<div id="serv" class="form-group">
 											<label>Service</label>
-											<select id="service" class="form-control selectpicker" name="service"></select>
+											<select id="service" class="form-control selectpicker" name="service" title="-- Select One --"></select>
 										</div>
 										<div id="cetak-service" class="form-group">
 											<label>Service</label>

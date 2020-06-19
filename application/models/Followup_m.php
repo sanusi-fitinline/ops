@@ -463,7 +463,7 @@ class Followup_m extends CI_Model {
                 $insert_detail_order = array();
                 foreach($PRO_ID as $i => $val){
                     $product[$i]   = $this->product_m->get($PRO_ID[$i])->row();
-                    if($product[$i]->PRO_TOTAL_UNIT == $UMEA_ID[$i]) {
+                    if(($UMEA_ID[$i] == $product[$i]->PRO_TOTAL_UNIT) && ($UMEA_ID[$i] != $product[$i]->PRO_UNIT)) {
                         $UNIT[$i]          = $product[$i]->PRO_VOL_UNIT;
                         $QTY[$i]           = $product[$i]->PRO_TOTAL_COUNT * $ORDD_QUANTITY[$i];
                         $WEIGHT[$i]        = $product[$i]->PRO_TOTAL_WEIGHT;
@@ -561,7 +561,7 @@ class Followup_m extends CI_Model {
                 $insert_detail_order = array();
                 foreach($PRO_ID as $i => $val){
                     $product[$i]   = $this->product_m->get($PRO_ID[$i])->row();
-                    if($product[$i]->PRO_TOTAL_UNIT == $UMEA_ID[$i]) {
+                    if(($UMEA_ID[$i] == $product[$i]->PRO_TOTAL_UNIT) && ($UMEA_ID[$i] != $product[$i]->PRO_UNIT)) {
                         $UNIT[$i]          = $product[$i]->PRO_VOL_UNIT;
                         $QTY[$i]           = $product[$i]->PRO_TOTAL_COUNT * $ORDD_QUANTITY[$i];
                         $WEIGHT[$i]        = $product[$i]->PRO_TOTAL_WEIGHT;

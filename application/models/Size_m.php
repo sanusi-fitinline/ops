@@ -82,12 +82,10 @@ class Size_m extends CI_Model {
 		return $query;
 	}
 
-    public function get_by_group($SIZG_ID = null) {
+    public function get_by_group($SIZG_ID) {
         $this->db->select('*');
         $this->db->from('tb_size');
-        if($SIZG_ID != null) {
-            $this->db->where('SIZG_ID', $SIZG_ID);
-        }
+        $this->db->where('SIZG_ID', $SIZG_ID);
         $this->db->order_by('SIZE_NAME', 'ASC');
         $query = $this->db->get();
         return $query;
@@ -110,10 +108,14 @@ class Size_m extends CI_Model {
 	}
 
 	public function delete($SIZE_ID){
+        // delete tb_size
 		$this->db->where('SIZE_ID', $SIZE_ID);
 		$this->db->delete('tb_size');
 
-        // $this->db->where('SIZE_ID', $SIZE_ID);
-        // $this->db->delete('tb_size_value');
+        // delete tb_size_value
+        $check_size_value  = $this->db->get_where('tb_size_value',['SIZE_ID'=>$SIZE_ID]);
+        if($check_size_value->num_rows() > 0){
+           $this->db->delete('tb_size_value',['SIZE_ID'=>$SIZE_ID]);
+        }
 	}
 }

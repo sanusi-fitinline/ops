@@ -15,7 +15,7 @@
         </div>
       	<div class="card-body">
       		<div class="row">
-				<div class="col-md-12 offset-md-1">
+				<div class="col-md-12">
 					<h3>Edit Vendor</h3>
 					<form action="<?php echo site_url('vendor/editprocess/'.$row->VEND_ID)?>" method="POST" enctype="multipart/form-data">
 						<div class="row">
@@ -110,8 +110,45 @@
 							    		<option <?php if($row->VEND_STATUS == 1){echo "selected";}?> value="1">Aktif</option>
 							    		<option <?php if($row->VEND_STATUS == 2){echo "selected";}?> value="2">Nonaktif</option>
 								    </select>
-								</div>	
-								<br><div align="center">
+								</div>
+								<div class="form-group">
+									<label>Vendor Courier</label>
+									<select class="form-control selectpicker" name="VEND_COURIER_ID" data-live-search="true" title="-- Select One --">
+								    	<?php foreach($vendor as $field): ?>
+								    		<option value="<?php echo $field->VEND_ID ?>" <?php echo $row->VEND_COURIER_ID == $field->VEND_ID ? "selected" : "" ?>><?php echo $field->VEND_NAME ?></option>
+								    	<?php endforeach ?>
+								    </select>
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label>Vendor Add Unit</label>
+									<div class="input-group">
+										<div class="input-group-prepend">
+								          	<span class="input-group-text">Rp.</span>
+								        </div>
+										<input class="form-control uang" type="text" name="VEND_COURIER_ADD_UNIT" autocomplete="off" value="<?php echo $row->VEND_COURIER_ADD_UNIT ?>">
+								    </div>
+								</div>
+								<div class="form-group">
+									<label>Vendor Add Volume</label>
+									<div class="input-group">
+										<div class="input-group-prepend">
+								          	<span class="input-group-text">Rp.</span>
+								        </div>
+										<input class="form-control uang" type="text" name="VEND_COURIER_ADD_VOL" autocomplete="off" value="<?php echo $row->VEND_COURIER_ADD_VOL ?>">
+								    </div>
+								</div>
+								<div class="form-group">
+									<label>Vendor Add Cost</label>
+									<div class="input-group">
+										<div class="input-group-prepend">
+								          	<span class="input-group-text">Rp.</span>
+								        </div>
+										<input class="form-control uang" type="text" name="VEND_ADDCOST" autocomplete="off" value="<?php echo $row->VEND_ADDCOST ?>">
+								    </div>
+								</div>
+								<div align="center">
 									<?php if((!$this->access_m->isEdit('Vendor', 1)->row()) && ($this->session->GRP_SESSION !=3)) : ?>
 										<a href="<?php echo site_url('vendor') ?>" class="btn btn-warning" name="batal"><i class="fa fa-arrow-left"></i> Back</a>
 									<?php else: ?>

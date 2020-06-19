@@ -18,16 +18,12 @@ class Clog_m extends CI_Model {
         $modl = "Follow Up";
         $view = 1;    
         $viewall =  $this->access_m->isViewAll($modl, $view)->row();
-        $this->db->select('tb_customer_log.*, tb_customer_activity.CACT_NAME, tb_customer.CUST_NAME, tb_user.USER_NAME, tb_channel.CHA_NAME, tb_followup_status.FLWS_NAME, tb_log_sample.LSAM_DELDATE, tb_log_stock.LSTOCK_STATUS');
+        $this->db->select('tb_customer_log.*, tb_customer_activity.CACT_NAME, tb_customer.CUST_NAME, tb_followup_status.FLWS_NAME');
 		$this->db->from($this->table);
         $this->db->join('tb_followup', 'tb_followup.CLOG_ID=tb_customer_log.CLOG_ID', 'inner');
 		$this->db->join('tb_customer_activity', 'tb_customer_activity.CACT_ID=tb_customer_log.CACT_ID', 'left');
 		$this->db->join('tb_customer', 'tb_customer.CUST_ID=tb_customer_log.CUST_ID', 'left');
-		$this->db->join('tb_user', 'tb_user.USER_ID=tb_customer_log.USER_ID', 'left');
-		$this->db->join('tb_channel', 'tb_channel.CHA_ID=tb_customer_log.CHA_ID', 'left');
         $this->db->join('tb_followup_status', 'tb_followup_status.FLWS_ID=tb_customer_log.FLWS_ID', 'left');
-        $this->db->join('tb_log_sample', 'tb_log_sample.CLOG_ID=tb_customer_log.CLOG_ID', 'left');
-        $this->db->join('tb_log_stock', 'tb_log_stock.CLOG_ID=tb_customer_log.CLOG_ID', 'left');
         if ($this->session->GRP_SESSION !=3) {
             if (!$viewall) {
                 $this->db->where('tb_customer_log.USER_ID', $this->session->USER_SESSION);

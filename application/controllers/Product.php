@@ -24,8 +24,8 @@ class Product extends CI_Controller {
 
 	public function index()
 	{
-		$modl = "Product";
-		$access =  $this->access_m->isAccess($this->session->GRP_SESSION, $modl)->row();
+		$modl 	= "Product";
+		$access = $this->access_m->isAccess($this->session->GRP_SESSION, $modl)->row();
 		if ((!$access) && ($this->session->GRP_SESSION !=3)) {
 			echo "<script>alert('Anda tidak punya akses ke $modl.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
@@ -37,10 +37,10 @@ class Product extends CI_Controller {
 	}
 
 	public function productjson() {
-		$url = $this->config->base_url();
+		$url  = $this->config->base_url();
 		$list = $this->product_m->get_datatables();
 		$data = array();
-		$no = $_POST['start'];
+		$no   = $_POST['start'];
 		foreach ($list as $field) {
 			if($field->PRO_PRICE != 0){
 				$PRO_PRICE 	= "<div align='right'>".number_format($field->PRO_PRICE,0,',','.')."</div>";
@@ -62,9 +62,9 @@ class Product extends CI_Controller {
 				$PRO_TOTAL_COUNT = "-";
 			}
 			$no++;
-			$row = array();
+			$row   = array();
 			$row[] = '<div style="vertical-align: middle; text-align: center;">'.$no.'</div>';
-			$row[] = $field->PRO_NAME;
+			$row[] = stripslashes($field->PRO_NAME);
 			$row[] = $PRO_PRICE;
 			$row[] = "<div align='center'>$PRO_UMEA</div>";
 			$row[] = $PRO_VOL_PRICE;
@@ -92,7 +92,7 @@ class Product extends CI_Controller {
 	}
 
 	public function listCity(){
-		$VEND_ID = $this->input->post('VEND_ID');
+		$VEND_ID = $this->input->post('VEND_ID', TRUE);
 	    $vend  	 = $this->vendor_m->get($VEND_ID)->row();
 	    $city2 	 = $this->city_m->getAreaCity($vend->CITY_ID)->row();
 	    $city3 	 = $this->city_m->getAreaCity()->result();
@@ -106,11 +106,11 @@ class Product extends CI_Controller {
 	}
 
 	public function list_subtype(){
-		$PRO_ID  = $this->input->post('PRO_ID');
-		$TYPE_ID = $this->input->post('TYPE_ID');
+		$PRO_ID  = $this->input->post('PRO_ID', TRUE);
+		$TYPE_ID = $this->input->post('TYPE_ID', TRUE);
 		$pro 	 = $this->product_m->get_by_subtype($PRO_ID)->row();
 		$subtype = $this->subtype_m->get_by_type($TYPE_ID)->result();
-		$lists = "";
+		$lists   = "";
 		foreach($subtype as $field) {
 			if($pro->STYPE_ID == $field->STYPE_ID){
     			$lists .= "<option value='".$field->STYPE_ID."' selected>".$field->STYPE_NAME."</option>";
@@ -123,7 +123,7 @@ class Product extends CI_Controller {
 	}
 
 	public function list_subtype_print(){
-		$TYPE_ID = $this->input->post('TYPE_ID');
+		$TYPE_ID = $this->input->post('TYPE_ID', TRUE);
 		$subtype = $this->subtype_m->get_by_type($TYPE_ID)->result();
 		$lists = "";
 		foreach($subtype as $field) {
@@ -185,13 +185,13 @@ class Product extends CI_Controller {
 			echo "<script>alert('Data berhasil diubah.')</script>";
 			echo "<script>window.location='".site_url('product/edit/'.$PRO_ID)."'</script>";
 		} else {
-			echo "<script>alert('Data gagal diubah.')</script>";
+			echo "<script>alert('Tidak ada perubahan data.')</script>";
 			echo "<script>window.location='".site_url('product/edit/'.$PRO_ID)."'</script>";
 		}
 	}
 
 	public function del() {
-		$PRO_ID = $this->input->post('PRO_ID');
+		$PRO_ID = $this->input->post('PRO_ID', TRUE);
 		$delete['delete'] = $this->product_m->delete($PRO_ID);
 
 		if($delete) {
@@ -204,7 +204,7 @@ class Product extends CI_Controller {
 	}
 
 	public function option($PRO_ID) {
-		$modl = "Product";
+		$modl   = "Product";
 		$access =  $this->access_m->isAccess($this->session->GRP_SESSION, $modl)->row();
 		if ((!$access) && ($this->session->GRP_SESSION !=3)) {
 			echo "<script>alert('Anda tidak punya akses ke $modl.')</script>";
@@ -216,17 +216,17 @@ class Product extends CI_Controller {
 	}
 
 	public function poptionjson() {
-		$url = $this->config->base_url();
-		$PRO_ID = $this->input->post('id');
-		$list = $this->poption_m->get_datatables($PRO_ID);
-		$data = array();
-		$no = $_POST['start'];
+		$url 	= $this->config->base_url();
+		$PRO_ID = $this->input->post('id', TRUE);
+		$list 	= $this->poption_m->get_datatables($PRO_ID);
+		$data 	= array();
+		$no 	= $_POST['start'];
 		foreach ($list as $field) {
 			$no++;
-			$row = array();
+			$row   = array();
 			$row[] = '<div style="vertical-align: middle; text-align: center;">'.$no.'</div>';
-			$row[] = $field->PRO_NAME;
-			$row[] = $field->POPT_NAME;
+			$row[] = stripslashes($field->PRO_NAME);
+			$row[] = stripslashes($field->POPT_NAME);
 			$row[] = '<div style="vertical-align: middle; text-align: center;"><img class="box-content" style="width: 65px;height: 90px;" src="'.$url.'/assets/images/product/option/'.$field->POPT_PICTURE.'"></div>';
 			if((!$this->access_m->isDelete('Product Option', 1)->row()) && ($this->session->GRP_SESSION !=3)){
 				$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="'.$url.'product/editoption/'.$field->POPT_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a></div>';
@@ -250,7 +250,7 @@ class Product extends CI_Controller {
 	}
 
 	public function addOption() {
-		$PRO_ID 	 = $this->input->post('PRO_ID');
+		$PRO_ID 	 = $this->input->post('PRO_ID', TRUE);
 		$data['row'] =	$this->poption_m->insertOption();
 		if ($data) {
 			echo "<script>alert('Data berhasil ditambah.')</script>";
@@ -273,21 +273,21 @@ class Product extends CI_Controller {
 	}
 
 	public function editOptionProcess($POPT_ID) {
-		$POPT_ID = $this->input->post('POPT_ID');
-		$PRO_ID  = $this->input->post('PRO_ID');
+		$POPT_ID = $this->input->post('POPT_ID', TRUE);
+		$PRO_ID  = $this->input->post('PRO_ID', TRUE);
 		$this->poption_m->updateOption($POPT_ID);
 		if($this->db->affected_rows() > 0) {
 			echo "<script>alert('Data berhasil diubah.')</script>";
 			echo "<script>window.location='".site_url('product/option/'.$PRO_ID)."'</script>";
 		} else {
-			echo "<script>alert('Data gagal diubah.')</script>";
+			echo "<script>alert('Tidak ada perubahan data.')</script>";
 			echo "<script>window.location='".site_url('product/option/'.$PRO_ID)."'</script>";
 		}
 	}
 
 	public function delOption() {
-		$PRO_ID  = $this->input->post('PRO_ID');
-		$POPT_ID = $this->input->post('POPT_ID');
+		$PRO_ID  = $this->input->post('PRO_ID', TRUE);
+		$POPT_ID = $this->input->post('POPT_ID', TRUE);
 		$this->poption_m->deleteOption($POPT_ID);
 
 		if($this->db->affected_rows() > 0) {

@@ -5,6 +5,7 @@ class Payment_vendor extends CI_Controller {
 
 	function __construct() {
 		parent::__construct();
+		check_not_login();
 		$this->load->model('access_m');
 		$this->load->model('order_m');
 		$this->load->model('orderdetail_m');
@@ -22,15 +23,14 @@ class Payment_vendor extends CI_Controller {
 		$this->load->model('courier_m');
 		$this->load->model('coutariff_m');
 		$this->load->model('venddeposit_m');
-		check_not_login();
-		$this->load->library('Pdf');
+		$this->load->library('pdf');
 		$this->load->library('rajaongkir');
 		$this->load->library('form_validation');
 	}
 
 	public function index() {
-    	$modul = "Payment To Vendor";
-		$access =  $this->access_m->isAccess($this->session->GRP_SESSION, $modul)->row();
+    	$modul  = "Payment To Vendor";
+		$access = $this->access_m->isAccess($this->session->GRP_SESSION, $modul)->row();
 		if ((!$access) && ($this->session->GRP_SESSION !=3)) {
 			echo "<script>alert('Anda tidak punya akses ke $modul.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
@@ -40,11 +40,11 @@ class Payment_vendor extends CI_Controller {
     }
 
     public function paymentjson() {
-    	$STATUS_FILTER = $this->input->post('STATUS_FILTER', TRUE);
-		$url 	= $this->config->base_url();
-		$list   = $this->ordervendor_m->get_datatables($STATUS_FILTER);
-		$data = array();
-		$no = $_POST['start'];
+    	$STATUS_FILTER  = $this->input->post('STATUS_FILTER', TRUE);
+		$url 			= $this->config->base_url();
+		$list   		= $this->ordervendor_m->get_datatables($STATUS_FILTER);
+		$data 			= array();
+		$no 			= $_POST['start'];
 		foreach ($list as $field) {
 			if ($field->PAYTOV_ID != null) {
 				if($field->ORDER_STATUS !=5) {
@@ -75,7 +75,7 @@ class Payment_vendor extends CI_Controller {
 			$row   = array();
 			$row[] = "<div align='center'>$STATUS</div>";
 			$row[] = "<div align='center'>$field->ORDER_ID</div>";
-			$row[] = $field->VEND_NAME;
+			$row[] = stripslashes($field->VEND_NAME);
 			$row[] = "<div align='center'>".date('d-m-Y / H:i:s', strtotime($field->ORDER_DATE))."</div>";
 			$row[] = "<div align='right'>".number_format($TOTAL,0,',','.')."</div>";
 			$row[] = "<div align='center'>$PAYMENT_DATE</div>";
@@ -156,8 +156,8 @@ class Payment_vendor extends CI_Controller {
 	public function vendor_bank() {
 		$VBA_ID 	 = $this->input->post('VBA_ID');
 		$VENDOR_BANK = $this->vendorbank_m->get($VBA_ID)->row();
-		$lists 		 = "$VENDOR_BANK->BANK_NAME\na/n $VENDOR_BANK->VBA_ACCNAME\n$VENDOR_BANK->VBA_ACCNO";
-		$callback = array('list_vendor_bank'=>$lists); 
+		$lists 		 = $VENDOR_BANK->BANK_NAME."\na/n ".stripslashes($VENDOR_BANK->VBA_ACCNAME)."\n".$VENDOR_BANK->VBA_ACCNO;
+		$callback = array('list_vendor_bank'=>$lists);
 	    echo json_encode($callback);
 	}
 
@@ -169,7 +169,6 @@ class Payment_vendor extends CI_Controller {
 		} else {
 			echo "<script>alert('Data berhasil diubah.')</script>";
 			echo "<script>window.location='".site_url('payment_vendor')."'</script>";
-			// echo "<script>window.location='".site_url('payment_vendor/detail/'.$VEND_ID)."'</script>";
 		}
 	}
 }

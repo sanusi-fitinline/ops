@@ -27,14 +27,6 @@
 									<div class="col-md-3">
 										<div class="form-group">
 										    <label>Customer</label>
-										    <!-- <select class="form-control selectpicker" name="CUST_ID" id="CUST_ID" title="-- Select One --" data-live-search="true" required>
-										    	<?php foreach($customer as $cust): ?>
-											    	<option value="<?php echo $cust->CUST_ID?>"
-											    		<?php if($cust->CUST_ID == $this->uri->segment(3)) {echo "selected";} ?>>
-											    		<?php echo stripslashes($cust->CUST_NAME) ?>
-											    	</option>
-											    <?php endforeach ?>
-										    </select> -->
 										    <input class="form-control" type="hidden" name="CUST_ID" id="CUST_ID" value="<?php echo $row->CUST_ID ?>" readonly>
 										    <input class="form-control" type="text" value="<?php echo $row->CUST_NAME ?>" readonly>
 										</div>
@@ -74,10 +66,8 @@
 										<div class="form-group">
 											<label>Channel</label>
 											<select class="form-control selectpicker" name="CHA_ID" id="cha-result" title="-- Select One --" required>
-												<option value="<?php echo $row->CHA_ID ?>" selected><?php echo $row->CHA_NAME ?></option>
-												<option value="" disabled>---------</option>
 												<?php foreach($channel as $cha): ?>
-										    		<option value="<?php echo $cha->CHA_ID?>">
+										    		<option value="<?php echo $cha->CHA_ID?>" <?php echo $row->CHA_ID == $cha->CHA_ID ? "selected" : "" ?>>
 											    		<?php echo stripslashes($cha->CHA_NAME) ?>
 											    	</option>
 											    <?php endforeach ?>
@@ -111,7 +101,7 @@
 										</div>
 										<div id="serv" class="form-group">
 											<label>Service</label>
-											<select id="service" class="form-control selectpicker" name="service"></select>
+											<select id="service" class="form-control selectpicker" name="service" title="-- Select One --"></select>
 										</div>
 										<div class="spinner3" style="display:none;" align="center">
 											<img width="70px" src="<?php echo base_url('assets/images/loading.gif') ?>">

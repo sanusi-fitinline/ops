@@ -5,16 +5,16 @@ class Vendor_deposit extends CI_Controller {
 
 	function __construct() {
 		parent::__construct();
+		check_not_login();
 		$this->load->model('access_m');
 		$this->load->model('venddeposit_m');
 		$this->load->model('vendorbank_m');
-		check_not_login();
 		$this->load->library('form_validation');
 	}
 
 	public function index() {
-    	$modul = "Vendor Deposit";
-		$access =  $this->access_m->isAccess($this->session->GRP_SESSION, $modul)->row();
+    	$modul  = "Vendor Deposit";
+		$access = $this->access_m->isAccess($this->session->GRP_SESSION, $modul)->row();
 		if ((!$access) && ($this->session->GRP_SESSION !=3)) {
 			echo "<script>alert('Anda tidak punya akses ke $modul.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
@@ -30,8 +30,8 @@ class Vendor_deposit extends CI_Controller {
 		$VEND_NAME   	= $this->input->post('VEND_NAME', TRUE);
 		$url 			= $this->config->base_url();
 		$list   		= $this->venddeposit_m->get_datatables($STATUS_FILTER, $VENDD_DATE, $ORDER_ID, $VEND_NAME);
-		$data = array();
-		$no = $_POST['start'];
+		$data 			= array();
+		$no 			= $_POST['start'];
 		foreach ($list as $field) {
 			if($field->VENDD_CLOSE_DATE != null){
 				$CLOSE_DATE = date('d-m-Y / H:i:s', strtotime($field->VENDD_CLOSE_DATE));
@@ -54,7 +54,7 @@ class Vendor_deposit extends CI_Controller {
 			}
 
 			if ($field->BANK_ID != null) {
-				$BANK = "<div align='center'>$field->BANK_NAME</div>";
+				$BANK = "<div align='center'>".stripslashes($field->BANK_NAME)."</div>";
 			} else {
 				$BANK = "<div align='center'>-</div>";
 			}
@@ -63,7 +63,7 @@ class Vendor_deposit extends CI_Controller {
 			$row[] = "<div align='center'>$STATUS</div>";
 			$row[] = date('d-m-Y / H:i:s', strtotime($field->VENDD_DATE));
 			$row[] = "<div align='center'>$field->ORDER_ID</div>";
-			$row[] = $field->VEND_NAME;
+			$row[] = stripslashes($field->VEND_NAME);
 			$row[] = "<div align='right'>".number_format($field->VENDD_DEPOSIT,0,',','.')."</div>";
 			$row[] = $NOTES;
 			$row[] = $BANK;
@@ -102,7 +102,7 @@ class Vendor_deposit extends CI_Controller {
 	}
 
 	public function vendor_bank() {
-		$VBA_ID 	 = $this->input->post('VBA_ID');
+		$VBA_ID 	 = $this->input->post('VBA_ID', TRUE);
 		$VENDOR_BANK = $this->vendorbank_m->get($VBA_ID)->row();
 		$lists 		 = "$VENDOR_BANK->BANK_NAME\na/n $VENDOR_BANK->VBA_ACCNAME\n$VENDOR_BANK->VBA_ACCNO";
 		$bank_id 	 = "$VENDOR_BANK->BANK_ID";
@@ -116,7 +116,7 @@ class Vendor_deposit extends CI_Controller {
 			echo "<script>alert('Data berhasil diubah.')</script>";
 			echo "<script>window.location='".site_url('vendor_deposit')."'</script>";
 		} else {
-			echo "<script>alert('Data gagal diubah.')</script>";
+			echo "<script>alert('Tidak ada perubahan data.')</script>";
 			echo "<script>window.location='".site_url('vendor_deposit')."'</script>";
 		}
 	}

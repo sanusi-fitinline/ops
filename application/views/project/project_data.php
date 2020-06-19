@@ -28,12 +28,16 @@
 				<div class="col-md-3">			
 					<div class="form-group">
 						<select class="form-control form-control-sm selectpicker" title="-- Select Status --" name="status" id="STATUS">
-				    		<option class="form-control-sm" value="-1">Pre-Order</option>
-				    		<option class="form-control-sm" value="0">Confirm</option>
-				    		<option class="form-control-sm" value="1">Half Paid</option>
-				    		<option class="form-control-sm" value="2">Full Paid</option>
-				    		<option class="form-control-sm" value="3">Delivered</option>
-				    		<option class="form-control-sm" value="4">Cancel</option>
+				    		<option class="form-control-sm" value="0">Pre-Order</option>
+				    		<option class="form-control-sm" value="1">Offered</option>
+				    		<option class="form-control-sm" value="2">Invoiced</option>
+				    		<option class="form-control-sm" value="3">Confirmed</option>
+				    		<option class="form-control-sm" value="4">In Progress</option>
+				    		<option class="form-control-sm" value="5">Half Paid</option>
+				    		<option class="form-control-sm" value="6">Paid</option>
+				    		<option class="form-control-sm" value="7">Half Delivered</option>
+				    		<option class="form-control-sm" value="8">Delivered</option>
+				    		<option class="form-control-sm" value="9">Cancel</option>
 					    </select>
 					</div>
 				</div>
@@ -42,12 +46,11 @@
           		<table class="table table-bordered" id="myTableProject" width="100%" cellspacing="0">
             		<thead style="font-size: 14px">
 	                	<tr>
-							<th style="vertical-align: middle; text-align: center; width: 80px;">STATUS</th>
+							<th style="vertical-align: middle; text-align: center; width: 100px;">STATUS</th>
 	                    	<th style="vertical-align: middle; text-align: center; width: 50px;">PROJECT ID</th>
-	                    	<th style="vertical-align: middle; text-align: center; width: 80px;">PROJECT DATE</th>
-	                    	<th style="vertical-align: middle; text-align: center;">PRODUCT</th>
-	                    	<th style="vertical-align: middle; text-align: center;">CUSTOMER</th>
-							<th style="vertical-align: middle; text-align: center; width: 200px;">NOTES</th>
+	                    	<th style="vertical-align: middle; text-align: center; width: 80px;">DATE</th>
+	                    	<th style="vertical-align: middle; text-align: center; width: 180px;">CUSTOMER</th>
+							<th style="vertical-align: middle; text-align: center;">NOTES</th>
 							<th style="vertical-align: middle; text-align: center; width: 100px;">CS</th>
 							<th style="vertical-align: middle; text-align: center; width: 110px;">ACTION</th>
 	                  	</tr>

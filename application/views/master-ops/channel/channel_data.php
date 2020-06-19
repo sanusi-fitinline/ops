@@ -72,40 +72,40 @@
 
 <!-- The Modal Edit Channel -->
 <?php foreach($channel as $data): ?>
-<div class="modal fade" id="edit-cha<?php echo $data->CHA_ID ?>">
-	<div class="modal-dialog">
-    	<div class="modal-content">
-		    <!-- Modal Header -->
-		    <div class="modal-header">
-		        <h4 class="modal-title">Edit Data Channel</h4>
-		        <button type="button" class="close" data-dismiss="modal">&times;</button>
-		    </div>
-			<form action="<?php echo site_url('master/editcha/'.$data->CHA_ID)?>" method="POST" enctype="multipart/form-data">
-		    <!-- Modal body -->
-			    <div class="modal-body">
-			        <div class="row">
-						<div class="col-md-12">
-							<div class="form-group">
-								<input class="form-control" type="hidden" name="CHA_ID" value="<?php echo $data->CHA_ID ?>" required>
-								<label>Channel Name <small>*</small></label>
-								<input class="form-control" type="text" name="CHA_NAME" value="<?php echo stripslashes($data->CHA_NAME) ?>" autocomplete="off" required>
+	<div class="modal fade" id="edit-cha<?php echo $data->CHA_ID ?>">
+		<div class="modal-dialog">
+	    	<div class="modal-content">
+			    <!-- Modal Header -->
+			    <div class="modal-header">
+			        <h4 class="modal-title">Edit Data Channel</h4>
+			        <button type="button" class="close" data-dismiss="modal">&times;</button>
+			    </div>
+				<form action="<?php echo site_url('master/editcha/'.$data->CHA_ID)?>" method="POST" enctype="multipart/form-data">
+			    <!-- Modal body -->
+				    <div class="modal-body">
+				        <div class="row">
+							<div class="col-md-12">
+								<div class="form-group">
+									<input class="form-control" type="hidden" name="CHA_ID" value="<?php echo $data->CHA_ID ?>" required>
+									<label>Channel Name <small>*</small></label>
+									<input class="form-control" type="text" name="CHA_NAME" value="<?php echo stripslashes($data->CHA_NAME) ?>" autocomplete="off" required>
+								</div>
 							</div>
 						</div>
-					</div>
-			    </div>
-	      		<!-- Modal footer -->
-		      	<div class="modal-footer">
-		      		<?php if((!$this->access_m->isEdit('Channel', 1)->row()) && ($this->session->GRP_SESSION !=3)) : ?>
-						<button type="button" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-times"></i>&nbsp;&nbsp;Close</button>
-					<?php else: ?>
-						<button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;&nbsp;Save</button>
-                		<button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i>&nbsp;&nbsp;Cancel</button>
-					<?php endif ?>
-		      	</div>
-			</form>
-    	</div>
-  	</div>
-</div>
+				    </div>
+		      		<!-- Modal footer -->
+			      	<div class="modal-footer">
+			      		<?php if((!$this->access_m->isEdit('Channel', 1)->row()) && ($this->session->GRP_SESSION !=3)) : ?>
+							<button type="button" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-times"></i>&nbsp;&nbsp;Close</button>
+						<?php else: ?>
+							<button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;&nbsp;Save</button>
+	                		<button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i>&nbsp;&nbsp;Cancel</button>
+						<?php endif ?>
+			      	</div>
+				</form>
+	    	</div>
+	  	</div>
+	</div>
 <?php endforeach ?>
 
 	

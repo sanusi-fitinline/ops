@@ -5,15 +5,15 @@ class Customer_deposit extends CI_Controller {
 
 	function __construct() {
 		parent::__construct();
+		check_not_login();
 		$this->load->model('access_m');
 		$this->load->model('custdeposit_m');
-		check_not_login();
 		$this->load->library('form_validation');
 	}
 
 	public function index() {
-    	$modul = "Customer Deposit";
-		$access =  $this->access_m->isAccess($this->session->GRP_SESSION, $modul)->row();
+    	$modul  = "Customer Deposit";
+		$access = $this->access_m->isAccess($this->session->GRP_SESSION, $modul)->row();
 		if ((!$access) && ($this->session->GRP_SESSION !=3)) {
 			echo "<script>alert('Anda tidak punya akses ke $modul.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
@@ -23,14 +23,14 @@ class Customer_deposit extends CI_Controller {
     }
 
     public function depositjson() {
-    	$STATUS_FILTER  = $this->input->post('STATUS_FILTER', TRUE);	
-    	$CUSTD_DATE 	= $this->input->post('CUSTD_DATE', TRUE);	
+    	$STATUS_FILTER  = $this->input->post('STATUS_FILTER', TRUE);
+    	$CUSTD_DATE 	= $this->input->post('CUSTD_DATE', TRUE);
 		$ORDER_ID   	= $this->input->post('ORDER_ID', TRUE);
-		$CUST_NAME  	= $this->input->post('CUST_NAME', TRUE);	
+		$CUST_NAME  	= $this->input->post('CUST_NAME', TRUE);
 		$url 			= $this->config->base_url();
 		$list   		= $this->custdeposit_m->get_datatables($STATUS_FILTER, $CUSTD_DATE, $ORDER_ID, $CUST_NAME);
-		$data = array();
-		$no = $_POST['start'];
+		$data 			= array();
+		$no 			= $_POST['start'];
 		foreach ($list as $field) {
 			if($field->CUSTD_PAY_DATE != null){
 				$PAYMENT_DATE = date('d-m-Y / H:i:s', strtotime($field->CUSTD_PAY_DATE));
@@ -56,7 +56,7 @@ class Customer_deposit extends CI_Controller {
 			$row[] = "<div align='center'>$STATUS</div>";
 			$row[] = date('d-m-Y / H:i:s', strtotime($field->CUSTD_DATE));
 			$row[] = "<div align='center'>$field->ORDER_ID</div>";
-			$row[] = $field->CUST_NAME;
+			$row[] = stripslashes($field->CUST_NAME);
 			$row[] = "<div align='right'>".number_format($field->CUSTD_DEPOSIT,0,',','.')."</div>";
 			$row[] = $NOTES;
 			$row[] = $PAYMENT_DATE;
@@ -97,7 +97,7 @@ class Customer_deposit extends CI_Controller {
 			echo "<script>alert('Data berhasil diubah.')</script>";
 			echo "<script>window.location='".site_url('customer_deposit')."'</script>";
 		} else {
-			echo "<script>alert('Data gagal diubah.')</script>";
+			echo "<script>alert('Tidak ada perubahan data.')</script>";
 			echo "<script>window.location='".site_url('customer_deposit')."'</script>";
 		}
 	}

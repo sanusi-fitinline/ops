@@ -116,48 +116,71 @@
 								<hr>
 								<h4>Detail</h4>
 								<?php $nomor = 1; ?>
-								<?php foreach($get_by_vendor as $data): ?>
-									<p ><?php echo $nomor++.". Dikirim Dari: ".$data->CITY_NAME ?></p>
+								<?php foreach($get_by_vendor as $key => $data): ?>
+									<p ><?php echo $nomor++.". Dikirim Dari: ".$data['CITY_NAME'] ?></p>
+									<?php if(((@$get_by_vendor[$key+1]['COURIER_ID'] == $data['COURIER_ID']) && (@$get_by_vendor[$key+1]['ORDV_SERVICE_TYPE'] == $data['ORDV_SERVICE_TYPE'])) || ((@$get_by_vendor[$key-1]['COURIER_ID'] == $data['COURIER_ID']) && (@$get_by_vendor[$key-1]['ORDV_SERVICE_TYPE'] == $data['ORDV_SERVICE_TYPE']))): ?>
+										<form action="<?php echo site_url('order_support/change_vendor/'.$row->ORDER_ID)?>" method="POST" enctype="multipart/form-data">
+											<div class="row">
+												<div class="col-md-3">
+													<div class="form-group">
+														<input class="form-control form-control-sm" type="hidden" name="COURIER_ID" value="<?php echo $data['COURIER_ID'] ?>">
+														<select class="form-control form-control-sm selectpicker" name="VEND_ID" id="CHANGE_VENDOR<?php echo $data['VEND_ID'] ?>" title="-- Change Vendor --">
+															<?php foreach($get_by_vendor as $i => $ven): ?>
+													    		<option value="<?php echo $ven['VEND_ID']?>" <?php echo $ven['VEND_ID'] == $data['VEND_ID'] ? "hidden" : "" ?>>
+														    		<?php echo $ven['VEND_NAME'] ?>
+														    	</option>
+														    <?php endforeach ?>
+													    </select>
+													</div>
+												</div>
+												<div class="col-md-3">
+													<div class="form-group">
+														<button class="btn btn-warning btn-sm" id="BTN_CHANGE<?php echo $data['VEND_ID'] ?>" style="display: none;">Change</button>
+													</div>
+												</div>
+											</div>
+										</form>
+									<?php endif ?>
 									<div class="row">
 										<div class="col-md-3">
 											<div class="form-group">
 											    <label>Vendor</label>
-											    <input type="hidden" name="VENDOR_ID" value="<?php echo $data->VEND_ID ?>">
-												<input class="form-control" type="text" name="VEND_NAME" value="<?php echo $data->VEND_NAME ?>" readonly>
+											    <input type="hidden" name="VENDOR_ID" value="<?php echo $data['VEND_ID'] ?>">
+												<input class="form-control" type="text" name="VEND_NAME" value="<?php echo $data['VEND_NAME'] ?>" readonly>
 											</div>
 											<div class="form-group">
 											    <label>Contact Person</label>
-												<input class="form-control" type="text" name="VEND_CPERSON" value="<?php echo $data->VEND_CPERSON ?>" readonly>
+												<input class="form-control" type="text" name="VEND_CPERSON" value="<?php echo $data['VEND_CPERSON'] ?>" readonly>
 											</div>
 										</div>
-										<div class="col-md-3">											
+										<div class="col-md-3">
 											<div class="form-group">
 											    <label>Phone</label>
-												<input class="form-control" type="text" name="VEND_PHONE" value="<?php echo $data->VEND_PHONE ?>" readonly>
+												<input class="form-control" type="text" name="VEND_PHONE" value="<?php echo $data['VEND_PHONE'] ?>" readonly>
 											</div>
 											<div class="form-group">
 											    <label>Email</label>
-												<input class="form-control" type="text" name="VEND_EMAIL" value="<?php echo $data->VEND_EMAIL ?>" readonly>
+												<input class="form-control" type="text" name="VEND_EMAIL" value="<?php echo $data['VEND_EMAIL'] ?>" readonly>
 											</div>
 										</div>
 										<div class="col-md-3">
 											<div class="form-group">
 												<label>Address</label>
 												<?php 
-													if($data->VEND_ADDRESS !=null){
-														$VEND_ADDRESS = $data->VEND_ADDRESS.', ';
+													if($data['VEND_ADDRESS'] !=null){
+														$VEND_ADDRESS = $data['VEND_ADDRESS'].', ';
 													} else {$VEND_ADDRESS ='';}
-													if($data->SUBD_NAME !=null){
-														$VEND_SUBD = $data->SUBD_NAME.', ';
+													if($data['SUBD_NAME'] !=null){
+														$VEND_SUBD = $data['SUBD_NAME'].', ';
 													} else {$VEND_SUBD = '';}
-													if($data->CITY_NAME !=null){
-														$VEND_CITY = $data->CITY_NAME.', ';
+													if($data['CITY_NAME'] !=null){
+														$VEND_CITY = $data['CITY_NAME'].', ';
 													} else {$VEND_CITY ='';}
-													if($data->STATE_NAME !=null){
-														$VEND_STATE = $data->STATE_NAME.', ';
+													if($data['STATE_NAME'] !=null){
+														$VEND_STATE = $data['STATE_NAME'].', ';
 													} else {$VEND_STATE = '';}
-													if($data->CNTR_NAME !=null){
-														$VEND_CNTR = $data->CNTR_NAME.'.';
+													if($data['CNTR_NAME'] !=null){
+														$VEND_CNTR = $data['CNTR_NAME'].'.';
 													} else {$VEND_CNTR = '';}
 												?>
 												<textarea class="form-control" cols="100%" rows="5" name="VEND_ADDRESS" readonly><?php echo $VEND_ADDRESS.$VEND_SUBD.$VEND_CITY.$VEND_STATE.$VEND_CNTR ?></textarea>
@@ -167,7 +190,7 @@
 											<div class="form-group">
 											    <label>Payment Status</label>
 											    <?php 
-													if($data->PAYTOV_DATE != null){
+													if($data['PAYTOV_DATE'] != null){
 														echo "<input style='color: green;' class='form-control' type='text' name='PAYTOV_STATUS' value='Sudah Dibayar' readonly>";
 													} else {
 														echo "<input style='color: red;' class='form-control' type='text' name='PAYTOV_STATUS' value='Belum Dibayar' readonly>";
@@ -176,15 +199,15 @@
 											</div>
 											<div class="form-group">
 												<div class="custom-control custom-checkbox">
-											     	<input type="checkbox" class="custom-control-input" id="hide-customer-phone<?php echo $data->VEND_ID ?>" name="customer_phone">
-											     	<label class="custom-control-label" for="hide-customer-phone<?php echo $data->VEND_ID ?>">Hide Customer Phone</label>
+											     	<input type="checkbox" class="custom-control-input" id="hide-customer-phone<?php echo $data['VEND_ID'] ?>" name="customer_phone">
+											     	<label class="custom-control-label" for="hide-customer-phone<?php echo $data['VEND_ID'] ?>">Hide Customer Phone</label>
 											    </div>
 												<div class="custom-control custom-checkbox">
-											     	<input type="checkbox" class="custom-control-input" id="add-sender<?php echo $data->VEND_ID ?>" name="add_sender">
-											     	<label class="custom-control-label" for="add-sender<?php echo $data->VEND_ID ?>">Add Sender</label>
+											     	<input type="checkbox" class="custom-control-input" id="add-sender<?php echo $data['VEND_ID'] ?>" name="add_sender">
+											     	<label class="custom-control-label" for="add-sender<?php echo $data['VEND_ID'] ?>">Add Sender</label>
 											    </div>
 											</div>
-											<div class="form-group" id="foo<?php echo $data->VEND_ID ?>" hidden>
+											<div class="form-group" id="foo<?php echo $data['VEND_ID'] ?>" hidden>
 												<?php
 													if($row->SUBD_ID !=0){
 														$SUBD_NAME = $row->SUBD_NAME.', ';
@@ -202,24 +225,24 @@
 													
 													$ALAMAT = $CUST_ADDRESS.$SUBD_NAME.$CITY_NAME.$STATE_NAME;
 												?>
-												<p id="order<?php echo $data->VEND_ID ?>">ORDER <?php echo$row->ORDER_ID ?>:</p>
+												<p id="order<?php echo $data['VEND_ID'] ?>">ORDER <?php echo $row->ORDER_ID ?>:</p>
 												<?php foreach ($detail as $key):?>
-													<?php if($data->VEND_ID == $key->VEND_ID): ?>
+													<?php if($data['VEND_ID'] == $key->VEND_ID): ?>
 														<?php 
 															if($key->ORDD_OPTION != null){
 																$PRODUCT = $key->PRO_NAME."/".$key->ORDD_OPTION;
 															} else { $PRODUCT = $key->PRO_NAME;}
 														?>
-														<p class="produk produk<?php echo $data->VEND_ID ?>"><?php echo $PRODUCT."/".$key->ORDD_QUANTITY." ".$key->UMEA_NAME."\n"; ?></p>
+														<p class="produk produk<?php echo $data['VEND_ID'] ?>"><?php echo $PRODUCT."/".$key->ORDD_QUANTITY." ".$key->UMEA_NAME."\n"; ?></p>
 													<?php endif ?>
 												<?php endforeach ?>
-												<p id="kurir<?php echo $data->VEND_ID ?>" style="text-transform: uppercase;">KURIR : <?php echo $data->COURIER_NAME." ".$data->ORDV_SERVICE_TYPE; ?></p>
-												<p id="penerima-asli<?php echo $data->VEND_ID ?>" style="text-transform: uppercase;">PENERIMA : <?php echo stripslashes($row->CUST_NAME).", ".$ALAMAT.", ".$row->CUST_PHONE; ?></p>
-												<p id="penerima<?php echo $data->VEND_ID ?>" style="text-transform: uppercase;">PENERIMA : <?php echo stripslashes($row->CUST_NAME).", ".$ALAMAT.", 0812-2569-6886"; ?></p>
-												<p id="pengirim<?php echo $data->VEND_ID ?>" style="display: none;" id="sender<?php echo $data->VEND_ID ?>">PENGIRIM : FITINLINE, KOTA YOGYAKARTA, 0274-4293090.</p>
+												<p id="kurir<?php echo $data['VEND_ID'] ?>" style="text-transform: uppercase;">KURIR : <?php echo $data['COURIER_NAME']." ".$data['ORDV_SERVICE_TYPE']; ?></p>
+												<p id="penerima-asli<?php echo $data['VEND_ID'] ?>" style="text-transform: uppercase;">PENERIMA : <?php echo stripslashes($row->CUST_NAME).", ".$ALAMAT.", ".$row->CUST_PHONE; ?></p>
+												<p id="penerima<?php echo $data['VEND_ID'] ?>" style="text-transform: uppercase;">PENERIMA : <?php echo stripslashes($row->CUST_NAME).", ".$ALAMAT.", 0812-2569-6886"; ?></p>
+												<p id="pengirim<?php echo $data['VEND_ID'] ?>" style="display: none;" id="sender<?php echo $data['VEND_ID'] ?>">PENGIRIM : FITINLINE, KOTA YOGYAKARTA, 0274-4293090.</p>
 											</div>
 											<div class="form-group grp_copy" align="right">
-										     	<a style="color: #ffffff" class="btn btn-sm btn-info btn_copy<?php echo $data->VEND_ID ?>" id="INSTRUCTION<?php echo $data->VEND_ID ?>" data-clipboard-action="copy" data-clipboard-target="#foo<?php echo $data->VEND_ID ?>"><i class="fa fa-paste"></i> Order Instruction</a>
+										     	<a style="color: #ffffff" class="btn btn-sm btn-info btn_copy<?php echo $data['VEND_ID'] ?>" id="INSTRUCTION<?php echo $data['VEND_ID'] ?>" data-clipboard-action="copy" data-clipboard-target="#foo<?php echo $data['VEND_ID'] ?>"><i class="fa fa-paste"></i> Order Instruction</a>
 											</div>
 										</div>
 									</div>
@@ -240,7 +263,7 @@
 										                <tbody style="font-size: 14px;">
 										                	<?php $i = 1;?>
 										                	<?php foreach($detail as $field): ?>
-											                	<?php if($data->VEND_ID == $field->VEND_ID): ?>
+											                	<?php if($data['VEND_ID'] == $field->VEND_ID): ?>
 											                		<tr>
 											                			<td style="vertical-align: middle;" align="center"><?php echo $i++ ?></td>
 											                			<td style="vertical-align: middle;"><?php echo $field->PRO_NAME ?></td>
@@ -262,19 +285,20 @@
 												<div class="row">
 													<div class="col-md-6">
 														<input type="hidden" name="USER_ID" value="<?php echo $row->USER_ID ?>" readonly>
-														<input type="hidden" name="VEND_ID" value="<?php echo $data->VEND_ID ?>">
-														<input type="hidden" name="CUST_ID" value="<?php echo $data->CUST_ID ?>">
-														<input type="hidden" name="ORDV_ID" value="<?php echo $data->ORDV_ID ?>">
-														<input type="hidden" name="ORDV_SHIPCOST" value="<?php echo $data->ORDV_SHIPCOST ?>">
-														<input type="hidden" name="PAYTOV_ID" value="<?php echo $data->PAYTOV_ID ?>">
+														<input type="hidden" name="VEND_ID" value="<?php echo $data['VEND_ID'] ?>">
+														<input type="hidden" name="CUST_ID" value="<?php echo $data['CUST_ID'] ?>">
+														<input type="hidden" name="ORDV_ID" value="<?php echo $data['ORDV_ID'] ?>">
+														<input type="hidden" name="ORDV_SHIPCOST" value="<?php echo $data['ORDV_SHIPCOST'] ?>">
+														<input type="hidden" name="ORDV_SHIPCOST_PAY" value="<?php echo $data['ORDV_SHIPCOST_PAY'] ?>">
+														<input type="hidden" name="PAYTOV_ID" value="<?php echo $data['PAYTOV_ID'] ?>">
 														<div class="form-group">
 															<label>Courier Service</label>
-															<input class="form-control" type="text" value="<?php echo $data->COURIER_NAME." ".$data->ORDV_SERVICE_TYPE?>" readonly>
+															<input class="form-control" type="text" value="<?php echo $data['COURIER_NAME']." ".$data['ORDV_SERVICE_TYPE']?>" readonly>
 														</div>
 														<div class="form-group">
 															<label>Weight</label>
 															<div class="input-group">
-																<input class="form-control" type="text" value="<?php echo str_replace(".", ",", $data->ORDV_WEIGHT)?>" autocomplete="off" readonly required>
+																<input class="form-control" type="text" value="<?php echo str_replace(".", ",", $data['ORDV_WEIGHT'])?>" autocomplete="off" readonly required>
 																<div class="input-group-prepend">
 														          	<span class="input-group-text">Kg</span>
 														        </div>
@@ -283,7 +307,7 @@
 														<div class="form-group">
 															<label>Actual Weight</label>
 															<div class="input-group">
-																<input class="form-control" type="number" step="0.01" name="ORDV_WEIGHT_VENDOR" value="<?php echo $data->ORDV_WEIGHT_VENDOR ?>" autocomplete="off">
+																<input class="form-control" type="number" step="0.01" name="ORDV_WEIGHT_VENDOR" value="<?php echo $data['ORDV_WEIGHT_VENDOR'] ?>" autocomplete="off">
 																<div class="input-group-prepend">
 														          	<span class="input-group-text">Kg</span>
 														        </div>
@@ -297,25 +321,25 @@
 																<div class="input-group-prepend">
 														          	<span class="input-group-text"><i class="fa fa-calendar"></i></span>
 														        </div>
-																<input class="form-control datepicker ORDV_DELIVERY_DATE" type="text" name="ORDV_DELIVERY_DATE" id="ORDV_DELIVERY_DATE<?php echo $data->VEND_ID ?>" value="<?php echo $data->ORDV_DELIVERY_DATE!=0000-00-00 ? date('d-m-Y', strtotime($data->ORDV_DELIVERY_DATE)) : "" ?>" autocomplete="off" required>
+																<input class="form-control datepicker ORDV_DELIVERY_DATE" type="text" name="ORDV_DELIVERY_DATE" id="ORDV_DELIVERY_DATE<?php echo $data['VEND_ID'] ?>" value="<?php echo $data['ORDV_DELIVERY_DATE'] != 0000-00-00 ? date('d-m-Y', strtotime($data['ORDV_DELIVERY_DATE'])) : "" ?>" autocomplete="off" required>
 														    </div>
 														</div>
 														<div class="form-group">
 															<label>Receipt No</label>
-															<input class="form-control" type="text" name="ORDV_RECEIPT_NO" autocomplete="off" value="<?php echo $data->ORDV_RECEIPT_NO ?>" required>
+															<input class="form-control" type="text" name="ORDV_RECEIPT_NO" autocomplete="off" value="<?php echo $data['ORDV_RECEIPT_NO'] ?>" required>
 														</div>
 														<div class="form-group">
 															<label>Actual Shipcost</label>
-															<input class="form-control uang" type="text" name="ORDV_SHIPCOST_VENDOR" autocomplete="off" value="<?php echo $data->ORDV_SHIPCOST_VENDOR ?>" required>
+															<input class="form-control uang" type="text" name="ORDV_SHIPCOST_VENDOR" autocomplete="off" value="<?php echo $data['ORDV_SHIPCOST_VENDOR'] ?>" required>
 														</div>
 													</div>
 												</div>													
 												<div align="left">
 													<div class="custom-control custom-checkbox">
-												     	<input type="checkbox" class="custom-control-input" id="cetak_total<?php echo $data->VEND_ID ?>" name="cetak_total">
-												     	<label class="custom-control-label" for="cetak_total<?php echo $data->VEND_ID ?>">Cetak Total</label>
+												     	<input type="checkbox" class="custom-control-input" id="cetak_total<?php echo $data['VEND_ID'] ?>" name="cetak_total">
+												     	<label class="custom-control-label" for="cetak_total<?php echo $data['VEND_ID'] ?>">Cetak Total</label>
 												    </div>
-													<a style="color: #FFFF" class="btn btn-sm btn-info CETAK_LABEL" id="CETAK_LABEL<?php echo $data->VEND_ID ?>"><i class="fa fa-print"></i> LABEL</a>
+													<a style="color: #FFFF" class="btn btn-sm btn-info CETAK_LABEL" id="CETAK_LABEL<?php echo $data['VEND_ID'] ?>"><i class="fa fa-print"></i> LABEL</a>
 													<?php if((!$this->access_m->isEdit('Order SS', 1)->row()) && ($this->session->GRP_SESSION !=3)) : ?>
 										        		<button class="btn btn-sm btn-secondary" type="submit" name="UPDATE_SHIPMENT" disabled><i class="fa fa-shipping-fast"></i> UPDATE SHIPMENT</button>
 											        <?php else: ?>
@@ -338,11 +362,8 @@
 <script src="<?php echo base_url()?>assets/vendor/clipboardjs/clipboard.min.js"></script>
 <script src="<?php echo base_url()?>assets/vendor/jquery/jquery.min.js"></script>
 <script type="text/javascript">
-	<?php $this->load->model('orderdetail_m');?>
-	<?php $_detail = $this->orderdetail_m->get($this->uri->segment(3))->result(); ?>
-	<?php $by_vendor = $this->ordervendor_m->get_by_vendor($this->uri->segment(3))->result(); ?>
 	$(document).ready(function(){
-		<?php foreach ($_detail as $value): ?>
+		<?php foreach ($detail as $value): ?>
 			$(".grp_copy").each(function(){
 				$(".produk").each(function(){
 					var vendor = "<?php echo $value->VEND_ID ?>";
@@ -396,10 +417,10 @@
 
 		<?php endforeach ?>
 
-		<?php foreach ($by_vendor as $field): ?>
+		<?php foreach ($get_by_vendor as $i => $field): ?>
 			$(this).each(function(){
 				var order_id = "<?php echo $row->ORDER_ID ?>";
-				var vendor_id = "<?php echo $field->VEND_ID ?>";
+				var vendor_id = "<?php echo $field['VEND_ID'] ?>";
 				$("#CETAK_LABEL"+vendor_id).click(function(){
 					if ($("#cetak_total"+vendor_id).is(":checked")){
 						var cetak_total = 1;
@@ -418,6 +439,10 @@
 				          	alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError); 
 				        }
 				    });
+				});
+
+				$("#CHANGE_VENDOR"+vendor_id).change(function(){
+					$("#BTN_CHANGE"+vendor_id).slideToggle('slow');
 				});
 			});
 		<?php endforeach ?>

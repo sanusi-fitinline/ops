@@ -23,13 +23,14 @@ class Master_producer extends CI_Controller {
 		$this->load->model('project_type_m');
 		$this->load->model('project_activity_m');
 		$this->load->model('project_criteria_m');
+		$this->load->model('project_detail_m');
 		$this->load->model('project_model_m');
 		$this->load->library('datatables');
 		$this->load->library('form_validation');
 	}
 
 	public function producer_category() {
-		$modul = "Producer Category";
+		$modul  = "Producer Category";
 		$access =  $this->access_m->isAccess($this->session->GRP_SESSION, $modul)->row();
 		if ((!$access) && ($this->session->GRP_SESSION !=3)) {
 			echo "<script>alert('Anda tidak punya akses ke $modul.')</script>";
@@ -42,15 +43,15 @@ class Master_producer extends CI_Controller {
 
 
 	public function producer_category_json() {
-		$url = $this->config->base_url();
+		$url  = $this->config->base_url();
 		$list = $this->producer_category_m->get_datatables();
 		$data = array();
-		$no = $_POST['start'];
+		$no   = $_POST['start'];
 		foreach ($list as $field) {
 			$no++;
-			$row = array();
+			$row   = array();
 			$row[] = '<div style="vertical-align: middle; text-align: center;">'.$no.'</div>';
-			$row[] = $field->PRDUC_NAME;
+			$row[] = stripslashes($field->PRDUC_NAME);
 			if((!$this->access_m->isDelete('Producer Category', 1)->row()) && ($this->session->GRP_SESSION !=3)){
 				$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-category'.$field->PRDUC_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a></div>';
 			} else {
@@ -90,13 +91,13 @@ class Master_producer extends CI_Controller {
 			echo "<script>alert('Data berhasil diubah.')</script>";
 			echo "<script>window.location='".site_url('master_producer/producer_category')."'</script>";
 		} else {
-			echo "<script>alert('Data gagal diubah.')</script>";
+			echo "<script>alert('Tidak ada perubahan data.')</script>";
 			echo "<script>window.location='".site_url('master_producer/producer_category')."'</script>";
 		}
 	}
 
 	public function del_producer_category(){
-		$PRDUC_ID = $this->input->post('PRDUC_ID');
+		$PRDUC_ID = $this->input->post('PRDUC_ID', TRUE);
 		$this->producer_category_m->delete($PRDUC_ID);
 
 		if($this->db->affected_rows() > 0) {
@@ -109,7 +110,7 @@ class Master_producer extends CI_Controller {
 	}
 
 	public function producer_type() {
-		$modul = "Producer Type";
+		$modul  = "Producer Type";
 		$access =  $this->access_m->isAccess($this->session->GRP_SESSION, $modul)->row();
 		if ((!$access) && ($this->session->GRP_SESSION !=3)) {
 			echo "<script>alert('Anda tidak punya akses ke $modul.')</script>";
@@ -121,15 +122,15 @@ class Master_producer extends CI_Controller {
 	}
 
 	public function producer_type_json() {
-		$url = $this->config->base_url();
+		$url  = $this->config->base_url();
 		$list = $this->producer_type_m->get_datatables();
 		$data = array();
-		$no = $_POST['start'];
+		$no   = $_POST['start'];
 		foreach ($list as $field) {
 			$no++;
-			$row = array();
+			$row   = array();
 			$row[] = '<div style="vertical-align: middle; text-align: center;">'.$no.'</div>';
-			$row[] = $field->PRDUT_NAME;
+			$row[] = stripslashes($field->PRDUT_NAME);
 			if((!$this->access_m->isDelete('Producer Type', 1)->row()) && ($this->session->GRP_SESSION !=3)){
 				$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-type'.$field->PRDUT_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a></div>';
 			} else {
@@ -169,7 +170,7 @@ class Master_producer extends CI_Controller {
 			echo "<script>alert('Data berhasil diubah.')</script>";
 			echo "<script>window.location='".site_url('master_producer/producer_type')."'</script>";
 		} else {
-			echo "<script>alert('Data gagal diubah.')</script>";
+			echo "<script>alert('Tidak ada perubahan data.')</script>";
 			echo "<script>window.location='".site_url('master_producer/producer_type')."'</script>";
 		}
 	}
@@ -188,7 +189,7 @@ class Master_producer extends CI_Controller {
 	}
 
 	public function producer_product() {
-		$modul = "Producer Product";
+		$modul  = "Producer Product";
 		$access =  $this->access_m->isAccess($this->session->GRP_SESSION, $modul)->row();
 		if ((!$access) && ($this->session->GRP_SESSION !=3)) {
 			echo "<script>alert('Anda tidak punya akses ke $modul.')</script>";
@@ -201,16 +202,16 @@ class Master_producer extends CI_Controller {
 	}
 
 	public function producer_product_json() {
-		$url 	 = $this->config->base_url();
-		$list 	 = $this->producer_product_m->get_datatables();
-		$data 	 = array();
-		$no 	 = $_POST['start'];
+		$url  = $this->config->base_url();
+		$list = $this->producer_product_m->get_datatables();
+		$data = array();
+		$no   = $_POST['start'];
 		foreach ($list as $field) {
 			$no++;
-			$row = array();
+			$row   = array();
 			$row[] = '<div style="vertical-align: middle; text-align: center;">'.$no.'</div>';
-			$row[] = $field->PRDUP_NAME;
-			$row[] = $field->PRDUC_NAME;
+			$row[] = stripslashes($field->PRDUP_NAME);
+			$row[] = stripslashes($field->PRDUC_NAME);
 			if((!$this->access_m->isDelete('Producer Product', 1)->row()) && ($this->session->GRP_SESSION !=3)){
 				$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-producer-product'.$field->PRDUP_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
 					<a  href="'.$url.'master_producer/product_property/'.$field->PRDUP_ID.'" class="btn btn-default btn-sm" style="color: #fff; background-color:#4269c1; border-color:#4269c1;"><i class="fa fa-plus-square"></i> Property</a>
@@ -254,13 +255,13 @@ class Master_producer extends CI_Controller {
 			echo "<script>alert('Data berhasil diubah.')</script>";
 			echo "<script>window.location='".site_url('master_producer/producer_product')."'</script>";
 		} else {
-			echo "<script>alert('Data gagal diubah.')</script>";
+			echo "<script>alert('Tidak ada perubahan data.')</script>";
 			echo "<script>window.location='".site_url('master_producer/producer_product')."'</script>";
 		}
 	}
 
 	public function del_producer_product(){
-		$PRDUP_ID = $this->input->post('PRDUP_ID');
+		$PRDUP_ID = $this->input->post('PRDUP_ID', TRUE);
 		$data['delete'] = $this->producer_product_m->delete($PRDUP_ID);
 		if($data) {
 			echo "<script>alert('Data berhasil dihapus.')</script>";
@@ -272,7 +273,7 @@ class Master_producer extends CI_Controller {
 	}
 
 	public function product_property($PRDUP_ID) {
-		$modul = "Producer Product";
+		$modul  = "Producer Product";
 		$access =  $this->access_m->isAccess($this->session->GRP_SESSION, $modul)->row();
 		if ((!$access) && ($this->session->GRP_SESSION !=3)) {
 			echo "<script>alert('Anda tidak punya akses ke $modul.')</script>";
@@ -293,18 +294,18 @@ class Master_producer extends CI_Controller {
 	public function list_product_property(){
 		$PRJDM_ID 		= $this->input->post('PRJDM_ID');
 		$PRDUP_ID 		= $this->input->post('PRDUP_ID');
-		$row 			= $this->project_model_m->get($PRJDM_ID)->row();
+		$row 			= $this->project_model_m->get(null, $PRJDM_ID)->row();
 		$list_property 	= $this->producer_product_property_m->get_by_product($PRDUP_ID)->result();
-		$lists = "";
+		$lists 			= "";
 		foreach($list_property as $field) {
 			if(!empty($PRJDM_ID)) {
 				if($row->PRDPP_ID == $field->PRDPP_ID) {
-		    		$lists .= "<option value='".$field->PRDPP_ID."' selected>".$field->PRDPP_NAME."</option>";
+		    		$lists .= "<option value='".$field->PRDPP_ID."' selected>".stripslashes($field->PRDPP_NAME)."</option>";
 				} else {
-		    		$lists .= "<option value='".$field->PRDPP_ID."'>".$field->PRDPP_NAME."</option>";
+		    		$lists .= "<option value='".$field->PRDPP_ID."'>".stripslashes($field->PRDPP_NAME)."</option>";
 				}
 			} else {
-		    	$lists .= "<option value='".$field->PRDPP_ID."'>".$field->PRDPP_NAME."</option>";
+		    	$lists .= "<option value='".$field->PRDPP_ID."'>".stripslashes($field->PRDPP_NAME)."</option>";
 			}
 		}
 	    $callback = array('list_product_property'=>$lists);
@@ -312,17 +313,17 @@ class Master_producer extends CI_Controller {
 	}
 
 	public function product_property_json() {
-		$url 	 = $this->config->base_url();
+		$url 	  = $this->config->base_url();
 		$PRDUP_ID = $this->input->post('prdup_id');
-		$list 	 = $this->producer_product_property_m->get_datatables($PRDUP_ID);
-		$data 	 = array();
-		$no 	 = $_POST['start'];
+		$list 	  = $this->producer_product_property_m->get_datatables($PRDUP_ID);
+		$data 	  = array();
+		$no 	  = $_POST['start'];
 		foreach ($list as $field) {
 			$no++;
-			$row = array();
+			$row   = array();
 			$row[] = '<div style="vertical-align: middle; text-align: center;">'.$no.'</div>';
-			$row[] = $field->PRDUP_NAME;
-			$row[] = $field->PRDPP_NAME;
+			$row[] = stripslashes($field->PRDUP_NAME);
+			$row[] = stripslashes($field->PRDPP_NAME);
 			if((!$this->access_m->isDelete('Producer Product', 1)->row()) && ($this->session->GRP_SESSION !=3)){
 				$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-product-property'.$field->PRDPP_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a></div>';
 			} else {
@@ -359,20 +360,20 @@ class Master_producer extends CI_Controller {
 	}
 
 	public function edit_product_property($PRDPP_ID) {
-		$PRDUP_ID 	 = $this->input->post('PRDUP_ID');
+		$PRDUP_ID = $this->input->post('PRDUP_ID', TRUE);
 		$this->producer_product_property_m->update($PRDPP_ID);
 		if($this->db->affected_rows() > 0) {
 			echo "<script>alert('Data berhasil diubah.')</script>";
 			echo "<script>window.location='".site_url('master_producer/product_property/'.$PRDUP_ID)."'</script>";
 		} else {
-			echo "<script>alert('Data gagal diubah.')</script>";
+			echo "<script>alert('Tidak ada perubahan data.')</script>";
 			echo "<script>window.location='".site_url('master_producer/product_property/'.$PRDUP_ID)."'</script>";
 		}
 	}
 
 	public function del_product_property(){
-		$PRDPP_ID = $this->input->post('PRDPP_ID');
-		$PRDUP_ID = $this->input->post('PRDUP_ID');
+		$PRDPP_ID = $this->input->post('PRDPP_ID', TRUE);
+		$PRDUP_ID = $this->input->post('PRDUP_ID', TRUE);
 		$this->producer_product_property_m->delete($PRDPP_ID);
 		if($this->db->affected_rows() > 0) {
 			echo "<script>alert('Data berhasil dihapus.')</script>";
@@ -385,7 +386,7 @@ class Master_producer extends CI_Controller {
 
 	public function size_group() {
 		$modul 	= "Size";
-		$access =  $this->access_m->isAccess($this->session->GRP_SESSION, $modul)->row();
+		$access = $this->access_m->isAccess($this->session->GRP_SESSION, $modul)->row();
 		if ((!$access) && ($this->session->GRP_SESSION !=3)) {
 			echo "<script>alert('Anda tidak punya akses ke $modul.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
@@ -396,15 +397,15 @@ class Master_producer extends CI_Controller {
 	}
 
 	public function size_group_json() {
-		$url 	 = $this->config->base_url();
-		$list 	 = $this->size_group_m->get_datatables();
-		$data 	 = array();
-		$no 	 = $_POST['start'];
+		$url  = $this->config->base_url();
+		$list = $this->size_group_m->get_datatables();
+		$data = array();
+		$no   = $_POST['start'];
 		foreach ($list as $field) {
 			$no++;
-			$row = array();
+			$row   = array();
 			$row[] = '<div style="vertical-align: middle; text-align: center;">'.$no.'</div>';
-			$row[] = $field->SIZG_NAME;
+			$row[] = stripslashes($field->SIZG_NAME);
 			if((!$this->access_m->isDelete('Size', 1)->row()) && ($this->session->GRP_SESSION !=3)){
 				$row[] = '<div style="vertical-align: middle; text-align: center;">
 						<a href="#" data-toggle="modal" data-target="#edit-size-group'.$field->SIZG_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></div>';
@@ -445,13 +446,13 @@ class Master_producer extends CI_Controller {
 			echo "<script>alert('Data berhasil diubah.')</script>";
 			echo "<script>window.location='".site_url('master_producer/size_group')."'</script>";
 		} else{
-			echo "<script>alert('Data gagal diubah.')</script>";
+			echo "<script>alert('Tidak ada perubahan data.')</script>";
 			echo "<script>window.location='".site_url('master_producer/size_group')."'</script>";
 		}
 	}
 
 	public function del_size_group() {
-		$SIZG_ID = $this->input->post('SIZG_ID');
+		$SIZG_ID = $this->input->post('SIZG_ID', TRUE);
 		$this->size_group_m->delete($SIZG_ID);
 		if($this->db->affected_rows() > 0) {
 			echo "<script>alert('Data berhasil dihapus.')</script>";
@@ -464,7 +465,7 @@ class Master_producer extends CI_Controller {
 
 	public function size() {
 		$modul 	= "Size";
-		$access =  $this->access_m->isAccess($this->session->GRP_SESSION, $modul)->row();
+		$access = $this->access_m->isAccess($this->session->GRP_SESSION, $modul)->row();
 		if ((!$access) && ($this->session->GRP_SESSION !=3)) {
 			echo "<script>alert('Anda tidak punya akses ke $modul.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
@@ -476,16 +477,16 @@ class Master_producer extends CI_Controller {
 	}
 
 	public function size_json() {
-		$url 	 = $this->config->base_url();
-		$list 	 = $this->size_m->get_datatables();
-		$data 	 = array();
-		$no 	 = $_POST['start'];
+		$url  = $this->config->base_url();
+		$list = $this->size_m->get_datatables();
+		$data = array();
+		$no   = $_POST['start'];
 		foreach ($list as $field) {
 			$no++;
-			$row = array();
+			$row   = array();
 			$row[] = '<div style="vertical-align: middle; text-align: center;">'.$no.'</div>';
-			$row[] = $field->SIZG_NAME;
-			$row[] = $field->SIZE_NAME;
+			$row[] = stripslashes($field->SIZG_NAME);
+			$row[] = stripslashes($field->SIZE_NAME);
 			if((!$this->access_m->isDelete('Size', 1)->row()) && ($this->session->GRP_SESSION !=3)){
 				$row[] = '<div style="vertical-align: middle; text-align: center;">
 						<a href="#" data-toggle="modal" data-target="#edit-size'.$field->SIZE_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a></div>';
@@ -509,6 +510,38 @@ class Master_producer extends CI_Controller {
 		echo json_encode($output);
 	}
 
+	public function list_size(){
+		$PRDUP_ID 	= $this->input->post('PRDUP_ID', TRUE);
+		$SIZV_ID 	= $this->input->post('SIZV_ID', TRUE);
+		$SIZG_ID 	= $this->input->post('SIZG_ID', TRUE);
+		$size 	 	= $this->size_value_m->get($SIZV_ID)->row();
+		$list_size 	= $this->size_m->get_by_group($SIZG_ID)->result();
+		$lists = "";
+		foreach($list_size as $field) {
+			if($size->SIZE_ID == $field->SIZE_ID){
+    			$lists .= "<option value='".$field->SIZE_ID."' selected>".stripslashes($field->SIZE_NAME)."</option>";
+	    	} else {
+	    		$lists .= "<option value='".$field->SIZE_ID."'>".stripslashes($field->SIZE_NAME)."</option>";
+	    	}
+		}
+	    $callback = array('list_size'=>$lists);
+	    echo json_encode($callback);
+	}
+
+	public function size_by_product(){
+		$PRJD_ID 	= $this->input->post('PRJD_ID', TRUE);
+		$group 	 	= $this->project_detail_m->get_sizg($PRJD_ID)->row();
+		$list_size 	= $this->size_m->get_by_group($group->SIZG_ID)->result();
+		$SIZG_ID 	= $group->SIZG_ID;
+		$SIZG_NAME 	= $group->SIZG_NAME;
+		$lists = "";
+		foreach($list_size as $field) {
+	    	$lists .= "<option value='".$field->SIZE_ID."'>".stripslashes($field->SIZE_NAME)."</option>";
+		}
+	    $callback = array('sizg_id'=>$SIZG_ID, 'sizg_name'=>$SIZG_NAME, 'list_size'=>$lists);
+	    echo json_encode($callback);
+	}
+
 	public function add_size() {
 		$data['row'] =	$this->size_m->insert();
 		if ($data) {
@@ -526,13 +559,13 @@ class Master_producer extends CI_Controller {
 			echo "<script>alert('Data berhasil diubah.')</script>";
 			echo "<script>window.location='".site_url('master_producer/size')."'</script>";
 		} else{
-			echo "<script>alert('Data gagal diubah.')</script>";
+			echo "<script>alert('Tidak ada perubahan data.')</script>";
 			echo "<script>window.location='".site_url('master_producer/size')."'</script>";
 		}
 	}
 
 	public function del_size() {
-		$SIZE_ID = $this->input->post('SIZE_ID');
+		$SIZE_ID = $this->input->post('SIZE_ID', TRUE);
 		$this->size_m->delete($SIZE_ID);
 		if($this->db->affected_rows() > 0) {
 			echo "<script>alert('Data berhasil dihapus.')</script>";
@@ -543,25 +576,9 @@ class Master_producer extends CI_Controller {
 		}
 	}
 
-	public function list_size(){
-		$SIZG_ID 	= $this->input->post('SIZG_ID');
-		$size 	 	= $this->size_value_m->get_by_group($SIZG_ID)->row();
-		$list_size 	= $this->size_m->get_by_group($SIZG_ID)->result();
-		$lists = "";
-		foreach($list_size as $field) {
-			if($size->SIZE_ID == $field->SIZE_ID){
-    			$lists .= "<option value='".$field->SIZE_ID."' selected>".$field->SIZE_NAME."</option>";
-	    	} else {
-	    		$lists .= "<option value='".$field->SIZE_ID."'>".$field->SIZE_NAME."</option>";
-	    	}
-		}
-	    $callback = array('list_size'=>$lists);
-	    echo json_encode($callback);
-	}
-
 	public function size_product() {
 		$modul 	= "Size";
-		$access =  $this->access_m->isAccess($this->session->GRP_SESSION, $modul)->row();
+		$access = $this->access_m->isAccess($this->session->GRP_SESSION, $modul)->row();
 		if ((!$access) && ($this->session->GRP_SESSION !=3)) {
 			echo "<script>alert('Anda tidak punya akses ke $modul.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
@@ -573,16 +590,16 @@ class Master_producer extends CI_Controller {
 	}
 
 	public function size_product_json() {
-		$url 	 = $this->config->base_url();
-		$list 	 = $this->size_product_m->get_datatables();
-		$data 	 = array();
-		$no 	 = $_POST['start'];
+		$url  = $this->config->base_url();
+		$list = $this->size_product_m->get_datatables();
+		$data = array();
+		$no   = $_POST['start'];
 		foreach ($list as $field) {
 			$no++;
-			$row = array();
+			$row   = array();
 			$row[] = '<div style="vertical-align: middle; text-align: center;">'.$no.'</div>';
-			$row[] = $field->PRDUP_NAME;
-			$row[] = $field->SIZP_NAME;
+			$row[] = stripslashes($field->PRDUP_NAME);
+			$row[] = stripslashes($field->SIZP_NAME);
 			if((!$this->access_m->isDelete('Size', 1)->row()) && ($this->session->GRP_SESSION !=3)){
 				$row[] = '<div style="vertical-align: middle; text-align: center;">
 						<a href="#" data-toggle="modal" data-target="#edit-size-product'.$field->SIZP_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a></div>';
@@ -606,6 +623,23 @@ class Master_producer extends CI_Controller {
 		echo json_encode($output);
 	}
 
+	public function list_size_product(){
+		$SIZV_ID 			= $this->input->post('SIZV_ID', TRUE);
+		$PRDUP_ID 			= $this->input->post('PRDUP_ID', TRUE);
+		$size_product 		= $this->size_value_m->get($SIZV_ID)->row();
+		$list_size_product  = $this->size_product_m->get_by_product($PRDUP_ID)->result();
+		$lists = "";
+		foreach($list_size_product as $field) {
+			if($size_product->SIZP_ID == $field->SIZP_ID){
+    			$lists .= "<option value='".$field->SIZP_ID."' selected>".stripslashes($field->SIZP_NAME)."</option>";
+	    	} else {
+	    		$lists .= "<option value='".$field->SIZP_ID."'>".stripslashes($field->SIZP_NAME)."</option>";
+	    	}
+		}
+	    $callback = array('list_size_product'=>$lists);
+	    echo json_encode($callback);
+	}
+
 	public function add_size_product() {
 		$data['row'] =	$this->size_product_m->insert();
 		if ($data) {
@@ -623,13 +657,13 @@ class Master_producer extends CI_Controller {
 			echo "<script>alert('Data berhasil diubah.')</script>";
 			echo "<script>window.location='".site_url('master_producer/size_product')."'</script>";
 		} else{
-			echo "<script>alert('Data gagal diubah.')</script>";
+			echo "<script>alert('Tidak ada perubahan data.')</script>";
 			echo "<script>window.location='".site_url('master_producer/size_product')."'</script>";
 		}
 	}
 
 	public function del_size_product() {
-		$SIZP_ID = $this->input->post('SIZP_ID');
+		$SIZP_ID = $this->input->post('SIZP_ID', TRUE);
 		$this->size_product_m->delete($SIZP_ID);
 		if($this->db->affected_rows() > 0) {
 			echo "<script>alert('Data berhasil dihapus.')</script>";
@@ -642,31 +676,33 @@ class Master_producer extends CI_Controller {
 
 	public function size_value() {
 		$modul 	= "Size";
-		$access =  $this->access_m->isAccess($this->session->GRP_SESSION, $modul)->row();
+		$access = $this->access_m->isAccess($this->session->GRP_SESSION, $modul)->row();
 		if ((!$access) && ($this->session->GRP_SESSION !=3)) {
 			echo "<script>alert('Anda tidak punya akses ke $modul.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
 		} else {
-			$data['detail']  = $this->size_value_m->get()->result();
-			$data['group'] 	 = $this->size_group_m->get()->result();
-			$data['product'] = $this->size_product_m->get()->result();
-			$data['size'] 	 = $this->size_m->get()->result();
+			$data['detail'] 			= $this->size_value_m->get()->result();
+			$data['group'] 	  			= $this->size_group_m->get()->result();
+			$data['producer_product']  	= $this->producer_product_m->get()->result();
+			$data['size_property'] 		= $this->size_product_m->get()->result();
+			$data['size'] 	  			= $this->size_m->get()->result();
 			$this->template->load('template', 'master-producer/size-data/size-value/size_value_data', $data);
 		}
 	}
 
 	public function size_value_json() {
-		$url 	 = $this->config->base_url();
-		$list 	 = $this->size_value_m->get_datatables();
-		$data 	 = array();
-		$no 	 = $_POST['start'];
+		$url  = $this->config->base_url();
+		$list = $this->size_value_m->get_datatables();
+		$data = array();
+		$no   = $_POST['start'];
 		foreach ($list as $field) {
 			$no++;
-			$row = array();
+			$row   = array();
 			$row[] = '<div style="vertical-align: middle; text-align: center;">'.$no.'</div>';
-			$row[] = $field->SIZG_NAME;
-			$row[] = $field->SIZP_NAME;
-			$row[] = '<div align="center">'.$field->SIZE_NAME.'</div>';
+			$row[] = stripslashes($field->SIZG_NAME);
+			$row[] = stripslashes($field->PRDUP_NAME);
+			$row[] = stripslashes($field->SIZP_NAME);
+			$row[] = '<div align="center">'.stripslashes($field->SIZE_NAME).'</div>';
 			$row[] = '<div align="center">'.$field->SIZV_VALUE.'</div>';
 			if((!$this->access_m->isDelete('Size', 1)->row()) && ($this->session->GRP_SESSION !=3)){
 				$row[] = '<div style="vertical-align: middle; text-align: center;">
@@ -708,13 +744,13 @@ class Master_producer extends CI_Controller {
 			echo "<script>alert('Data berhasil diubah.')</script>";
 			echo "<script>window.location='".site_url('master_producer/size_value')."'</script>";
 		} else{
-			echo "<script>alert('Data gagal diubah.')</script>";
+			echo "<script>alert('Tidak ada perubahan data.')</script>";
 			echo "<script>window.location='".site_url('master_producer/size_value')."'</script>";
 		}
 	}
 
 	public function del_size_value() {
-		$SIZV_ID = $this->input->post('SIZV_ID');
+		$SIZV_ID = $this->input->post('SIZV_ID', TRUE);
 		$this->size_value_m->delete($SIZV_ID);
 		if($this->db->affected_rows() > 0) {
 			echo "<script>alert('Data berhasil dihapus.')</script>";
@@ -727,7 +763,7 @@ class Master_producer extends CI_Controller {
 
 	public function project_type() {
 		$modul 	= "Project Type";
-		$access =  $this->access_m->isAccess($this->session->GRP_SESSION, $modul)->row();
+		$access = $this->access_m->isAccess($this->session->GRP_SESSION, $modul)->row();
 		if ((!$access) && ($this->session->GRP_SESSION !=3)) {
 			echo "<script>alert('Anda tidak punya akses ke $modul.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
@@ -738,15 +774,15 @@ class Master_producer extends CI_Controller {
 	}
 
 	public function project_type_json() {
-		$url 	 = $this->config->base_url();
-		$list 	 = $this->project_type_m->get_datatables();
-		$data 	 = array();
-		$no 	 = $_POST['start'];
+		$url  = $this->config->base_url();
+		$list = $this->project_type_m->get_datatables();
+		$data = array();
+		$no   = $_POST['start'];
 		foreach ($list as $field) {
 			$no++;
-			$row = array();
+			$row   = array();
 			$row[] = '<div style="vertical-align: middle; text-align: center;">'.$no.'</div>';
-			$row[] = $field->PRJT_NAME;
+			$row[] = stripslashes($field->PRJT_NAME);
 			if((!$this->access_m->isDelete('Project Type', 1)->row()) && ($this->session->GRP_SESSION !=3)){
 				$row[] = '<div style="vertical-align: middle; text-align: center;">
 						<a href="#" data-toggle="modal" data-target="#edit-project-type'.$field->PRJT_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a></div>';
@@ -787,13 +823,13 @@ class Master_producer extends CI_Controller {
 			echo "<script>alert('Data berhasil diubah.')</script>";
 			echo "<script>window.location='".site_url('master_producer/project_type')."'</script>";
 		} else{
-			echo "<script>alert('Data gagal diubah.')</script>";
+			echo "<script>alert('Tidak ada perubahan data.')</script>";
 			echo "<script>window.location='".site_url('master_producer/project_type')."'</script>";
 		}
 	}
 
 	public function del_project_type() {
-		$PRJT_ID = $this->input->post('PRJT_ID');
+		$PRJT_ID = $this->input->post('PRJT_ID', TRUE);
 		$this->project_type_m->delete($PRJT_ID);
 		if($this->db->affected_rows() > 0) {
 			echo "<script>alert('Data berhasil dihapus.')</script>";
@@ -806,26 +842,28 @@ class Master_producer extends CI_Controller {
 
 	public function project_activity() {
 		$modul 	= "Project Activity";
-		$access =  $this->access_m->isAccess($this->session->GRP_SESSION, $modul)->row();
+		$access = $this->access_m->isAccess($this->session->GRP_SESSION, $modul)->row();
 		if ((!$access) && ($this->session->GRP_SESSION !=3)) {
 			echo "<script>alert('Anda tidak punya akses ke $modul.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
 		} else {
-			$data['detail']  = $this->project_activity_m->get()->result();
+			$data['detail'] = $this->project_activity_m->get()->result();
+			$data['type'] 	= $this->project_type_m->get()->result();
 			$this->template->load('template', 'master-producer/project-activity/project_activity_data', $data);
 		}
 	}
 
 	public function project_activity_json() {
-		$url 	 = $this->config->base_url();
-		$list 	 = $this->project_activity_m->get_datatables();
-		$data 	 = array();
-		$no 	 = $_POST['start'];
+		$url  = $this->config->base_url();
+		$list = $this->project_activity_m->get_datatables();
+		$data = array();
+		$no   = $_POST['start'];
 		foreach ($list as $field) {
 			$no++;
-			$row = array();
+			$row   = array();
 			$row[] = '<div style="vertical-align: middle; text-align: center;">'.$no.'</div>';
-			$row[] = $field->PRJA_NAME;
+			$row[] = stripslashes($field->PRJT_NAME);
+			$row[] = "(".$field->PRJA_ORDER.") ".stripslashes($field->PRJA_NAME);
 			if((!$this->access_m->isDelete('Project Activity', 1)->row()) && ($this->session->GRP_SESSION !=3)){
 				$row[] = '<div style="vertical-align: middle; text-align: center;">
 						<a href="#" data-toggle="modal" data-target="#edit-project-activity'.$field->PRJA_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a></div>';
@@ -866,13 +904,13 @@ class Master_producer extends CI_Controller {
 			echo "<script>alert('Data berhasil diubah.')</script>";
 			echo "<script>window.location='".site_url('master_producer/project_activity')."'</script>";
 		} else{
-			echo "<script>alert('Data gagal diubah.')</script>";
+			echo "<script>alert('Tidak ada perubahan data.')</script>";
 			echo "<script>window.location='".site_url('master_producer/project_activity')."'</script>";
 		}
 	}
 
 	public function del_project_activity() {
-		$PRJA_ID = $this->input->post('PRJA_ID');
+		$PRJA_ID = $this->input->post('PRJA_ID', TRUE);
 		$this->project_activity_m->delete($PRJA_ID);
 		if($this->db->affected_rows() > 0) {
 			echo "<script>alert('Data berhasil dihapus.')</script>";
@@ -885,7 +923,7 @@ class Master_producer extends CI_Controller {
 
 	public function project_criteria() {
 		$modul 	= "Project Criteria";
-		$access =  $this->access_m->isAccess($this->session->GRP_SESSION, $modul)->row();
+		$access = $this->access_m->isAccess($this->session->GRP_SESSION, $modul)->row();
 		if ((!$access) && ($this->session->GRP_SESSION !=3)) {
 			echo "<script>alert('Anda tidak punya akses ke $modul.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
@@ -896,15 +934,15 @@ class Master_producer extends CI_Controller {
 	}
 
 	public function project_criteria_json() {
-		$url 	 = $this->config->base_url();
-		$list 	 = $this->project_criteria_m->get_datatables();
-		$data 	 = array();
-		$no 	 = $_POST['start'];
+		$url  = $this->config->base_url();
+		$list = $this->project_criteria_m->get_datatables();
+		$data = array();
+		$no   = $_POST['start'];
 		foreach ($list as $field) {
 			$no++;
-			$row = array();
+			$row   = array();
 			$row[] = '<div style="vertical-align: middle; text-align: center;">'.$no.'</div>';
-			$row[] = $field->PRJC_NAME;
+			$row[] = stripslashes($field->PRJC_NAME);
 			if((!$this->access_m->isDelete('Project Criteria', 1)->row()) && ($this->session->GRP_SESSION !=3)){
 				$row[] = '<div style="vertical-align: middle; text-align: center;">
 						<a href="#" data-toggle="modal" data-target="#edit-project-criteria'.$field->PRJC_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a></div>';
@@ -945,13 +983,13 @@ class Master_producer extends CI_Controller {
 			echo "<script>alert('Data berhasil diubah.')</script>";
 			echo "<script>window.location='".site_url('master_producer/project_criteria')."'</script>";
 		} else{
-			echo "<script>alert('Data gagal diubah.')</script>";
+			echo "<script>alert('Tidak ada perubahan data.')</script>";
 			echo "<script>window.location='".site_url('master_producer/project_criteria')."'</script>";
 		}
 	}
 
 	public function del_project_criteria() {
-		$PRJC_ID = $this->input->post('PRJC_ID');
+		$PRJC_ID = $this->input->post('PRJC_ID', TRUE);
 		$this->project_criteria_m->delete($PRJC_ID);
 		if($this->db->affected_rows() > 0) {
 			echo "<script>alert('Data berhasil dihapus.')</script>";

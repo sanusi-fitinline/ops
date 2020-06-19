@@ -109,7 +109,7 @@
 											<div class="input-group-prepend">
 									          	<span class="input-group-text"><i class="fa fa-calendar"></i></span>
 									        </div>
-											<input class="form-control datepicker" type="text" name="ORDER_PAYMENT_DATE" id="INPUT_PAYMENT" value="<?php echo $row->ORDER_PAYMENT_DATE!=0000-00-00 ? date('d-m-Y', strtotime($row->ORDER_PAYMENT_DATE)) : "" ?>" autocomplete="off" readonly>
+											<input class="form-control" type="text" name="ORDER_PAYMENT_DATE" id="INPUT_PAYMENT" value="<?php echo $row->ORDER_PAYMENT_DATE!=0000-00-00 ? date('d-m-Y', strtotime($row->ORDER_PAYMENT_DATE)) : "" ?>" autocomplete="off" readonly>
 									    </div>
 									</div>
 								</div>
@@ -229,7 +229,7 @@
 									                </tbody>
 													<tfoot style="font-size: 14px;">
 								                		<tr>
-								                			<td colspan="6" align="right" style="font-weight: bold; padding-top: 20px;">SHIPMENT COST</td>
+								                			<td colspan="6" align="right" style="font-weight: bold;">SHIPMENT COST</td>
 								                			<td align="right"><?php echo $data->ORDV_SHIPCOST!=null ? number_format($data->ORDV_SHIPCOST,0,',','.') : "0"  ?></td>
 								                		</tr>
 								                		<tr>

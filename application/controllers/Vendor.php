@@ -5,6 +5,8 @@ class Vendor extends CI_Controller {
 
 	function __construct() {
 		parent::__construct();
+		check_not_login();
+		// check_master();
 		$this->load->model('access_m');
 		$this->load->model('country_m');
 		$this->load->model('state_m');
@@ -13,14 +15,12 @@ class Vendor extends CI_Controller {
 		$this->load->model('vendor_m');
 		$this->load->model('vendorbank_m');
 		$this->load->model('bank_m');
-		check_not_login();
-		// check_master();
 		$this->load->library('form_validation');
 	}
 
 	public function index(){
-		$modl = "Vendor";
-		$access =  $this->access_m->isAccess($this->session->GRP_SESSION, $modl)->row();
+		$modl 	= "Vendor";
+		$access = $this->access_m->isAccess($this->session->GRP_SESSION, $modl)->row();
 		if ((!$access) && ($this->session->GRP_SESSION !=3)) {
 			echo "<script>alert('Anda tidak punya akses ke $modl.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
@@ -31,10 +31,10 @@ class Vendor extends CI_Controller {
 	}
 
 	public function vendorjson() {
-		$url = $this->config->base_url();
+		$url  = $this->config->base_url();
 		$list = $this->vendor_m->get_datatables();
 		$data = array();
-		$no = $_POST['start'];
+		$no   = $_POST['start'];
 		foreach ($list as $field) {
 			// $no++;
 			if($field->VEND_ADDRESS !=null){
@@ -61,7 +61,7 @@ class Vendor extends CI_Controller {
 			} else{
 				$STATUS = "-";
 			}
-			$row = array();
+			$row   = array();
 			$row[] = stripslashes($field->VEND_NAME);
 			$row[] = stripslashes($field->VEND_CPERSON);
 			$row[] = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$ADDRESS).$SUBD.$CITY.$STATE.$CNTR;
@@ -103,7 +103,8 @@ class Vendor extends CI_Controller {
 	}
 
 	public function add(){
-		$data['country'] 	= $this->country_m->getCountry()->result();
+		$data['vendor']  = $this->vendor_m->get()->result();
+		$data['country'] = $this->country_m->getCountry()->result();
 		$this->template->load('template', 'vendor/vendor_form_add', $data);
 	}
 
@@ -121,11 +122,12 @@ class Vendor extends CI_Controller {
 	public function edit($VEND_ID) {
 		$query = $this->vendor_m->get($VEND_ID);
 		if ($query->num_rows() > 0) {
-			$data['row'] 		= $query->row();
-			$data['country'] 	= $this->country_m->getCountry()->result();
-			$data['state'] 		= $this->state_m->getState($query->row('CNTR_ID'))->result();
-			$data['city'] 		= $this->city_m->getCity($query->row('STATE_ID'))->result();
-			$data['subd'] 		= $this->subd_m->getSubdistrict($query->row('CITY_ID'))->result();
+			$data['row'] 	 = $query->row();
+			$data['vendor']  = $this->vendor_m->get()->result();
+			$data['country'] = $this->country_m->getCountry()->result();
+			$data['state'] 	 = $this->state_m->getState($query->row('CNTR_ID'))->result();
+			$data['city'] 	 = $this->city_m->getCity($query->row('STATE_ID'))->result();
+			$data['subd'] 	 = $this->subd_m->getSubdistrict($query->row('CITY_ID'))->result();
 			$this->template->load('template', 'vendor/vendor_form_edit', $data);
 		} else {
 			echo "<script>alert('Data tidak ditemukan.')</script>";
@@ -139,13 +141,13 @@ class Vendor extends CI_Controller {
 			echo "<script>alert('Data berhasil diubah.')</script>";
 			echo "<script>window.location='".site_url('vendor')."'</script>";
 		} else {
-			echo "<script>alert('Data gagal diubah.')</script>";
+			echo "<script>alert('Tidak ada perubahan data.')</script>";
 			echo "<script>window.location='".site_url('vendor')."'</script>";
 		}
 	}
 
 	public function del(){
-		$VEND_ID = $this->input->post('VEND_ID');
+		$VEND_ID = $this->input->post('VEND_ID', TRUE);
 		$this->vendor_m->delete($VEND_ID);
 
 		if($this->db->affected_rows() > 0) {
@@ -158,8 +160,8 @@ class Vendor extends CI_Controller {
 	}
 
 	public function bank($VEND_ID) {
-		$modul = "Vendor Bank";
-		$access =  $this->access_m->isAccess($this->session->GRP_SESSION, $modul)->row();
+		$modul  = "Vendor Bank";
+		$access = $this->access_m->isAccess($this->session->GRP_SESSION, $modul)->row();
 		if ((!$access) && ($this->session->GRP_SESSION !=3)) {
 			echo "<script>alert('Anda tidak punya akses ke $modul.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
@@ -172,11 +174,11 @@ class Vendor extends CI_Controller {
 	}
 
 	public function bankjson() {
-		$url = $this->config->base_url();
-		$VEND_ID = $this->input->post('vend_id');
-		$list = $this->vendorbank_m->get_datatables($VEND_ID);
-		$data = array();
-		$no = $_POST['start'];
+		$url 	 = $this->config->base_url();
+		$VEND_ID = $this->input->post('vend_id', TRUE);
+		$list 	 = $this->vendorbank_m->get_datatables($VEND_ID);
+		$data 	 = array();
+		$no 	 = $_POST['start'];
 		foreach ($list as $field) {
 			if($field->VBA_PRIMARY != 1) {
 				$PRIMARY = "No";
@@ -184,7 +186,7 @@ class Vendor extends CI_Controller {
 				$PRIMARY = "Yes";
 			}
 			$no++;
-			$row = array();
+			$row   = array();
 			$row[] = '<div style="vertical-align: middle; text-align: center;">'.$no.'</div>';
 			$row[] = stripslashes($field->VEND_NAME);
 			$row[] = stripslashes($field->VBA_ACCNAME);
@@ -213,7 +215,7 @@ class Vendor extends CI_Controller {
 	}
 
 	public function add_bank() {
-		$VEND_ID 	 = $this->input->post('VEND_ID');
+		$VEND_ID 	 = $this->input->post('VEND_ID', TRUE);
 		$data['row'] =	$this->vendorbank_m->insert();
 		if ($data) {
 			echo "<script>alert('Data berhasil ditambah.')</script>";
@@ -225,26 +227,26 @@ class Vendor extends CI_Controller {
 	}
 
 	public function edit_bank($VBA_ID) {
-		$VEND_ID 	 = $this->input->post('VEND_ID');
+		$VEND_ID = $this->input->post('VEND_ID', TRUE);
 		$this->vendorbank_m->update($VBA_ID);
 		if($this->db->affected_rows() > 0) {
 			echo "<script>alert('Data berhasil diubah.')</script>";
 			echo "<script>window.location='".site_url('vendor/bank/'.$VEND_ID)."'</script>";
 		} else {
-			echo "<script>alert('Data gagal diubah.')</script>";
+			echo "<script>alert('Tidak ada perubahan data.')</script>";
 			echo "<script>window.location='".site_url('vendor/bank/'.$VEND_ID)."'</script>";
 		}
 	}
 
 	public function delete_bank() {
-		$VBA_ID  = $this->input->post('VBA_ID');
-		$VEND_ID = $this->input->post('VEND_ID');
+		$VBA_ID  = $this->input->post('VBA_ID', TRUE);
+		$VEND_ID = $this->input->post('VEND_ID', TRUE);
 		$this->vendorbank_m->delete($VBA_ID);
 		if($this->db->affected_rows() > 0) {
 			echo "<script>alert('Data berhasil diubah.')</script>";
 			echo "<script>window.location='".site_url('vendor/bank/'.$VEND_ID)."'</script>";
 		} else {
-			echo "<script>alert('Data gagal diubah.')</script>";
+			echo "<script>alert('Tidak ada perubahan data.')</script>";
 			echo "<script>window.location='".site_url('vendor/bank/'.$VEND_ID)."'</script>";
 		}
 	}

@@ -27,8 +27,7 @@
 				</div>
 				<div class="col-md-3">			
 					<div class="form-group">
-						<select class="form-control form-control-sm selectpicker" title="--- Select Product ---" name="PRO_ID" id="PRODUCT_INCOME">
-				    		<option value="" selected disabled>--- Select Product ---</option>
+						<select class="form-control form-control-sm selectpicker" data-live-search="true" title="-- Select Product --" name="PRO_ID" id="PRODUCT_INCOME" >
 				    		<?php foreach($product as $field): ?>
 				    			<option class="form-control-sm" value="<?php echo $field->PRO_ID ?>"><?php echo $field->PRO_NAME ?></option>
 				    		<?php endforeach ?>

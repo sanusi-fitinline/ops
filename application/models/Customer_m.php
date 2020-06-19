@@ -127,6 +127,13 @@ class Customer_m extends CI_Model {
 		return $query;
 	}
 
+	public function get_cust_phone() {
+    	$this->db->select('CUST_ID, CUST_PHONE');
+		$this->db->from('tb_customer');
+		$query = $this->db->get();
+		return $query;
+    }
+
 	public function insert() {
 		date_default_timezone_set('Asia/Jakarta');
 		$dataInsert = array(
@@ -149,21 +156,24 @@ class Customer_m extends CI_Model {
 	}
 
 	public function update($CUST_ID) {
-		$dataUpdate = array(
-			'CUST_NAME'			=> $this->input->post('CUST_NAME', TRUE),
-			'CUST_EMAIL'		=> $this->input->post('CUST_EMAIL', TRUE),
-			'CUST_ADDRESS'		=> str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$this->input->post('CUST_ADDRESS', TRUE)),
-			'CUST_PHONE'		=> $this->input->post('CUST_PHONE', TRUE),
-			'CNTR_ID'			=> $this->input->post('CNTR_ID', TRUE),
-			'STATE_ID'			=> $this->input->post('STATE_ID', TRUE),
-			'CITY_ID'			=> $this->input->post('CITY_ID', TRUE),
-			'SUBD_ID'			=> $this->input->post('SUBD_ID', TRUE),
-			'BANK_ID'			=> $this->input->post('BANK_ID', TRUE),
-			'CUST_ACCOUNTNO'	=> $this->input->post('CUST_ACCOUNTNO', TRUE),
-			'CUST_ACCOUNTNAME'	=> $this->input->post('CUST_ACCOUNTNAME', TRUE),
-			'CHA_ID'			=> $this->input->post('CHA_ID', TRUE),
-		);
-		$this->db->where('CUST_ID', $CUST_ID)->update('tb_customer', $this->db->escape_str($dataUpdate));
+		$params['CUST_NAME'] 		= $this->input->post('CUST_NAME', TRUE);
+		$params['CUST_EMAIL'] 		= $this->input->post('CUST_EMAIL', TRUE);
+		$params['CUST_ADDRESS'] 	= str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$this->input->post('CUST_ADDRESS', TRUE));
+		$params['CUST_PHONE'] 		= $this->input->post('CUST_PHONE', TRUE);
+		$params['CNTR_ID'] 			= $this->input->post('CNTR_ID', TRUE);
+		$params['STATE_ID'] 		= $this->input->post('STATE_ID', TRUE);
+		$params['CITY_ID'] 			= $this->input->post('CITY_ID', TRUE);
+		$params['SUBD_ID'] 			= $this->input->post('SUBD_ID', TRUE);
+		$params['BANK_ID'] 			= $this->input->post('BANK_ID', TRUE);
+		$params['CUST_ACCOUNTNO'] 	= $this->input->post('CUST_ACCOUNTNO', TRUE);
+		$params['CUST_ACCOUNTNAME'] = $this->input->post('CUST_ACCOUNTNAME', TRUE);
+		$params['USER_ID'] 		= $this->session->USER_SESSION;
+		$this->db->where('CUST_ID', $CUST_ID)->update('tb_customer', $this->db->escape_str($params));
+	}
+
+	public function update_user($CUST_ID) {
+		$params['USER_ID'] 		= $this->session->USER_SESSION;
+		$this->db->where('CUST_ID', $CUST_ID)->update('tb_customer', $this->db->escape_str($params));
 	}
 
 	public function delete($CUST_ID) {

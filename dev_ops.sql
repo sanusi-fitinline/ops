@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 16 Okt 2019 pada 10.12
+-- Waktu pembuatan: 27 Mar 2020 pada 07.38
 -- Versi server: 10.4.8-MariaDB
 -- Versi PHP: 7.3.10
 
@@ -42,7 +42,8 @@ INSERT INTO `tb_bank` (`BANK_ID`, `BANK_NAME`, `BANK_LOGO`) VALUES
 (1, 'BRI', 'bri.png'),
 (2, 'MANDIRI', 'mandiri.png'),
 (3, 'BCA', 'bca.png'),
-(4, 'BNI', 'bni.png');
+(4, 'BNI', ''),
+(34, 'Deposit', '');
 
 -- --------------------------------------------------------
 
@@ -822,7 +823,10 @@ INSERT INTO `tb_courier` (`COURIER_ID`, `COURIER_NAME`, `COURIER_API`) VALUES
 (15, 'BANDUNG EXPRESS', 0),
 (19, 'JNE', 1),
 (23, 'KALOG', 0),
-(29, 'SAJIRA', 0);
+(29, 'SAJIRA', 0),
+(34, 'HERONA', 0),
+(35, 'POS', 1),
+(36, 'WAHANA', 1);
 
 -- --------------------------------------------------------
 
@@ -893,7 +897,8 @@ INSERT INTO `tb_courier_tariff` (`COUTAR_ID`, `O_CNTR_ID`, `O_STATE_ID`, `O_CITY
 (20, 1, 14, 269, 0, 103, 1699, 0, 0, 1, '10', '0', '100000', '0', '3', '', 15),
 (21, 1, 14, 269, 0, 1, 17, 0, 0, 1, '10', '0', '25000', '0', '3', '', 15),
 (22, 1, 14, 269, 0, 154, 0, 0, 0, 1, '1', '0', '150000', '0', '4', '', 15),
-(24, 1, 12, 177, 0, 1, 15, 264, 0, 2, '5', '0', '45000', '1500', '3-4 hari', '-', 15);
+(24, 1, 12, 177, 0, 1, 15, 264, 0, 2, '5', '0', '45000', '1500', '3-4 hari', '-', 15),
+(25, 1, 12, 177, 0, 1, 14, 0, 0, 2, '10', '0', '70000', '3500', '1-2 hari', '-', 34);
 
 -- --------------------------------------------------------
 
@@ -943,22 +948,28 @@ CREATE TABLE `tb_customer` (
 --
 
 INSERT INTO `tb_customer` (`CUST_ID`, `CUST_NAME`, `CUST_EMAIL`, `CUST_ADDRESS`, `CUST_PHONE`, `CNTR_ID`, `STATE_ID`, `CITY_ID`, `SUBD_ID`, `BANK_ID`, `CUST_ACCOUNTNO`, `CUST_ACCOUNTNAME`, `CHA_ID`, `USER_ID`, `CUST_CREATEDON`) VALUES
-(15261, 'Ilham jaya', 'ilham@gmail.com', 'Bareng RT 02/05', '08177779091', 1, 15, 243, 4347, 1, '1234565412', 'Ilham Jaya', 2, 2, '2019-05-19 16:52:51'),
+(15261, 'Ilham jaya', 'ilham@gmail.com', 'Bareng RT 02/05', '+62 817 1717 9091', 1, 15, 243, 4347, 1, '1234565412', 'Ilham Jaya', 2, 2, '2019-05-19 16:52:51'),
 (15262, 'Munawar', 'coba@gmail.com', 'Jl. Baru', '089123456879', 1, 13, 215, 5866, 2, '123456789', 'Munawar', 7, 2, '2019-05-20 03:53:58'),
-(15264, 'Haris Putra', 'coba@gmail.com', 'Banaran', '089123456879', 1, 13, 215, 5876, 1, '123456789', 'Haris Putra', 1, 4, '2019-05-21 09:03:06'),
-(15265, 'Sigit', 'coba@gmail.com', '', '089123456879', 1, 1, 15, 4250, 2, '666444332123', 'Sigit', 6, 4, '2019-05-21 09:25:41'),
+(15264, 'Haris Putra', 'coba@gmail.com', 'Banaran', '089123456879', 1, 13, 215, 5876, 1, '123456789', 'Haris Putra', 1, 6, '2019-05-21 09:03:06'),
+(15265, 'Sigit', 'coba@gmail.com', '', '089123456123', 1, 1, 15, 4250, 2, '666444332123', 'Sigit', 6, 6, '2019-05-21 09:25:41'),
 (15269, 'supardi', 'a@mail.com', 'Jl. Kepatihan Raya no.110', '081212348765', 1, 14, 269, 6983, 0, '', '', 9, 9, '2019-05-24 07:36:32'),
 (15270, 'coba', 'coba@gmail.com', 'Jl Mawar No. 27', '08274379459', 1, 15, 240, 0, 3, '', '', 5, 6, '2019-05-27 06:46:00'),
-(15271, 'Irianto', 'iriasnto@rocketmail.com', '', '8292921', 1, 13, 198, 1458, 3, '', '', 7, 6, '2019-07-11 08:42:43'),
-(15275, 'Roni', 'roni@yahoo.com', '', '8089808', 1, 17, 270, 259, 3, '868768678', 'Roni', 7, 6, '2019-07-16 06:25:53'),
+(15271, 'Irianto', 'iriasnto@rocketmail.com', '', '085282929211', 1, 13, 198, 1458, 3, '', '', 7, 6, '2019-07-11 08:42:43'),
+(15275, 'Roni', 'roni@yahoo.com', '', '085808980456', 1, 17, 270, 259, 3, '868768678', 'Roni', 7, 6, '2019-07-16 06:25:53'),
 (15276, 'Yuga Adi Kusuma', '', 'Jalan Sukodami 2 No. 17, Kelurahan Mojo, Kecamatan Gubeng, Kota Surabaya 60285', '087855796998', 1, 15, 264, 6138, 3, '', '', 7, 6, '2019-07-16 08:18:16'),
-(15277, 'AYUB WIRASUKMA', '', 'Jl Kepodang 3 RT 10 RW 12', '081332265693', 1, 14, 269, 6984, 0, '', '', 3, 6, '2019-07-16 08:33:04'),
+(15277, 'AYUB WIRASUKMA', '', 'Jl Kepodang 3 RT 10 RW 12, Gondomanan, Kota Yogyakarta, Daerah Istimewa Yogyakarta, Indonesia.', '081332265693', 1, 14, 269, 6984, 0, '', '', 3, 65, '2019-07-16 08:33:04'),
 (15278, 'Andi Santoso', '', '', '08978574363', 1, 15, 243, 4347, 0, '', '', 7, 6, '2019-08-05 06:05:15'),
 (15279, 'Steffi', '', 'jl ciliwung raya no 10A, mlatiharjo, semarang timur, kota semarang, Jawa Tengah', '085640691046', 1, 13, 224, 5510, 0, '', '', 7, 6, '2019-08-05 06:09:47'),
 (15280, 'Romadhoni', '', 'Jl. Veteran 1007, Warungboto, UH IV', '08976262819', 1, 14, 269, 6993, 4, '0220212121', 'Romadhoni', 4, 65, '2019-08-07 08:03:51'),
 (15281, 'Kurniawan', '', 'Jln Jembatan Besi Raya RT03 RW03 NO 39, Kec:Tambora JAKARTA BARAT', '082307111854', 1, 11, 187, 2094, 0, '', '', 1, 64, '2019-08-09 07:18:55'),
 (15282, 'Rojali', '', '', '08796754345', 1, 11, 188, 2098, 0, '', '', 6, 9, '2019-08-28 04:59:38'),
-(15283, 'NURUL HIDAYATI ', '', 'UD. BARUNA RAYA, Jl tumenggung suryo no.40 kav.B kel. Bunulrejo, kec. Blimbing, Kota Malang, Jawa Timur 65126', '081313848517', 1, 15, 260, 3634, 0, '', '', 7, 6, '2019-09-27 03:22:13');
+(15283, 'NURUL HIDAYATI ', '', 'UD. BARUNA RAYA, Jl tumenggung suryo no.40 kav.B kel. Bunulrejo, kec. Blimbing, Kota Malang, Jawa Timur 65126', '081313848517', 1, 15, 260, 3634, 0, '', '', 7, 6, '2019-09-27 03:22:13'),
+(15284, 'test-customer1', '', '123', '089198372284', 1, 15, 260, 3634, 0, '', '', 7, 6, '2019-11-01 02:31:04'),
+(15285, 'Sanusi Mulyo', '', 'Dsn. Bareng RT 02/05, Ds. Sriwedari', '08562933101', 1, 15, 243, 4347, 1, '1234567890', 'Sanusi Mulyo', 1, 6, '2019-12-17 02:41:30'),
+(15286, 'customer1', '', 'Jl. Widuri no 49 Kasihan Bantul', '081211110000', 1, 14, 265, 543, 0, '', '', 7, 6, '2019-12-27 02:25:13'),
+(15287, 'customer2', '', '', '0812-2222-0000', 1, 15, 240, 3615, 0, '', '', 4, 6, '2019-12-27 03:07:32'),
+(15288, 'Fendi Budi', '', '', '086573839012', 1, 15, 259, 3509, 2, '4524234', 'Fendi Budi', 1, 6, '2020-01-21 02:59:46'),
+(15289, 'nana meliana', 'nana@gmail.com', 'jl sawit No.31', '081233973762', 1, 14, 269, 6993, 3, '12343526536', 'nana meliana', 7, 9, '2020-03-02 06:14:00');
 
 -- --------------------------------------------------------
 
@@ -991,19 +1002,22 @@ CREATE TABLE `tb_customer_deposit` (
   `CUSTD_ID` int(11) NOT NULL,
   `CUSTD_DATE` timestamp NULL DEFAULT NULL,
   `ORDER_ID` int(11) DEFAULT NULL,
+  `ORDV_ID` int(11) DEFAULT NULL,
   `CUSTD_DEPOSIT` decimal(10,0) DEFAULT NULL,
   `CUSTD_DEPOSIT_STATUS` tinyint(4) DEFAULT NULL,
   `CUSTD_ORDER_ID` int(11) DEFAULT NULL,
   `CUST_ID` int(11) DEFAULT NULL,
-  `CUSTD_PAY_DATE` timestamp NULL DEFAULT NULL
+  `USER_ID` int(11) DEFAULT NULL,
+  `CUSTD_PAY_DATE` timestamp NULL DEFAULT NULL,
+  `CUSTD_NOTES` varchar(500) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data untuk tabel `tb_customer_deposit`
 --
 
-INSERT INTO `tb_customer_deposit` (`CUSTD_ID`, `CUSTD_DATE`, `ORDER_ID`, `CUSTD_DEPOSIT`, `CUSTD_DEPOSIT_STATUS`, `CUSTD_ORDER_ID`, `CUST_ID`, `CUSTD_PAY_DATE`) VALUES
-(15, '2019-10-15 07:57:59', 91, '57000', 0, NULL, 15264, NULL);
+INSERT INTO `tb_customer_deposit` (`CUSTD_ID`, `CUSTD_DATE`, `ORDER_ID`, `ORDV_ID`, `CUSTD_DEPOSIT`, `CUSTD_DEPOSIT_STATUS`, `CUSTD_ORDER_ID`, `CUST_ID`, `USER_ID`, `CUSTD_PAY_DATE`, `CUSTD_NOTES`) VALUES
+(145, '2020-03-18 08:10:58', 4261, NULL, '196000', 0, NULL, 15261, 2, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -1026,30 +1040,37 @@ CREATE TABLE `tb_customer_log` (
 --
 
 INSERT INTO `tb_customer_log` (`CLOG_ID`, `CLOG_DATE`, `CACT_ID`, `CUST_ID`, `USER_ID`, `CHA_ID`, `FLWS_ID`) VALUES
-(15301, '2019-08-09 06:49:12', 1, 15278, 9, 7, 4),
-(15302, '2019-08-09 06:50:21', 1, 15277, 2, 3, 4),
-(15303, '2019-08-09 06:50:49', 1, 15264, 2, 1, 4),
-(15304, '2019-08-09 06:54:40', 2, 15275, 9, 7, 3),
-(15305, '2019-08-09 06:55:04', 2, 15280, 2, 4, 4),
-(15306, '2019-08-09 07:19:27', 1, 15281, 64, 1, 4),
-(15307, '2019-08-09 07:20:08', 1, 15281, 64, 1, 2),
-(15309, '2019-08-12 03:09:55', 1, 15269, 9, 9, NULL),
-(15310, '2019-08-12 06:34:01', 2, 15269, 9, 9, 2),
-(15311, '2019-08-12 07:05:13', 1, 15269, 9, 9, NULL),
-(15312, '2019-08-13 03:09:51', 1, 15280, 65, 4, NULL),
-(15313, '2019-08-13 03:28:42', 2, 15280, 65, 4, NULL),
-(15314, '2019-08-14 01:56:14', 4, 15281, 9, 1, 1),
-(15315, '2019-08-14 02:33:18', 4, 15277, 9, 3, 0),
-(15316, '2019-08-13 02:33:45', 4, 15270, 9, 5, 4),
-(15318, '2019-08-15 04:14:12', 4, 15264, 64, 7, 3),
-(15319, '2019-08-15 04:25:14', 1, 15281, 64, 9, NULL),
-(15320, '2019-08-15 04:25:39', 2, 15281, 64, 7, NULL),
-(15321, '2019-07-15 06:39:14', 1, 15269, 9, 9, NULL),
-(15340, '2019-08-26 01:50:03', 1, 15275, 6, 16, 2),
-(15343, '2019-08-26 01:56:43', 2, 15277, 6, 3, NULL),
-(15346, '2019-09-18 06:54:23', 1, 15265, 6, 6, NULL),
-(15347, '2019-09-20 06:14:51', 1, 15278, 6, 16, NULL),
-(15348, '2019-09-25 02:26:20', 1, 15277, 6, 3, 4);
+(15386, '2019-10-25 03:15:58', 4, 15279, 9, 7, 0),
+(15439, '2020-01-08 08:54:06', 2, 15283, 6, 7, 4),
+(15440, '2020-01-08 08:54:43', 2, 15281, 6, 1, NULL),
+(15441, '2020-01-08 08:55:07', 2, 15287, 6, 4, NULL),
+(15442, '2020-01-17 03:26:04', 1, 15280, 6, 4, 4),
+(15443, '2020-01-17 06:34:20', 1, 15279, 6, 7, 3),
+(15444, '2020-01-20 07:29:00', 4, 15285, 65, 1, 4),
+(15445, '2020-01-20 08:14:20', 1, 15279, 6, 7, NULL),
+(15446, '2020-01-21 08:16:45', 4, 15287, 9, 4, 0),
+(15447, '2020-01-28 06:24:36', 2, 15283, 6, 7, 4),
+(15448, '2020-01-28 09:04:15', 1, 15285, 6, 1, NULL),
+(15449, '2020-02-04 09:07:43', 2, 15277, 6, 3, NULL),
+(15450, '2020-02-04 09:09:05', 2, 15277, 6, 3, 4),
+(15452, '2020-03-02 09:15:43', 2, 15289, 9, 7, NULL),
+(15453, '2020-03-02 09:19:16', 2, 15282, 9, 6, 1),
+(15454, '2020-03-02 09:19:16', 2, 15282, 9, 6, NULL),
+(15455, '2020-03-02 09:23:18', 4, 15277, 9, 3, 2),
+(15456, '2020-03-02 09:28:36', 4, 15265, 2, 6, 2),
+(15457, '2020-03-02 09:44:17', 2, 15265, 2, 6, NULL),
+(15458, '2020-03-02 09:53:45', 4, 15283, 9, 7, 2),
+(15459, '2020-03-02 09:55:39', 2, 15283, 9, 7, NULL),
+(15460, '2020-03-16 01:27:59', 1, 15288, 6, 1, NULL),
+(15461, '2020-03-18 06:45:31', 4, 15261, 65, 2, 4),
+(15462, '2020-03-18 06:49:08', 4, 15289, 65, 7, 4),
+(15463, '2020-03-18 06:49:51', 2, 15289, 6, 7, NULL),
+(15464, '2020-03-18 06:53:47', 2, 15285, 65, 1, NULL),
+(15465, '2020-03-18 06:59:38', 4, 15261, 65, 2, 2),
+(15467, '2020-03-18 07:54:35', 4, 15261, 65, 2, 2),
+(15468, '2020-03-18 08:04:11', 2, 15261, 65, 2, 4),
+(15469, '2020-03-18 08:24:57', 4, 15261, 65, 2, 2),
+(15470, '2020-03-18 08:26:31', 2, 15261, 65, 2, 4);
 
 -- --------------------------------------------------------
 
@@ -1087,26 +1108,37 @@ CREATE TABLE `tb_followup` (
 --
 
 INSERT INTO `tb_followup` (`FLWP_ID`, `FLWP_DATE`, `FLWP_NOTES`, `FLWS_ID`, `FLWC_ID`, `CLOG_ID`) VALUES
-(81, '2019-08-08 17:00:00', '', 4, NULL, 15301),
-(82, '2019-08-08 17:00:00', '', 4, 0, 15302),
-(83, '2019-08-08 17:00:00', '', 1, 0, 15304),
-(84, '2019-08-08 17:00:00', 'Masih menunggu konfirmasi', 1, NULL, 15305),
-(85, '2019-08-08 17:00:00', 'Jadi order', 4, NULL, 15305),
-(86, '2019-08-08 17:00:00', 'jadi order berdasarkan sample', 4, 0, 15306),
-(87, '2019-08-08 17:00:00', '', 4, NULL, 15303),
-(88, '2019-08-13 17:00:00', 'coba', 0, 0, 15314),
-(89, '2019-08-13 17:00:00', 'coba', 0, NULL, 15315),
-(90, '2019-08-12 17:00:00', 'coba lagi', 0, NULL, 15316),
-(91, '2019-08-12 17:00:00', 'jadi', 4, NULL, 15316),
-(92, '2019-08-13 17:00:00', 'menunggu konfirmasi', 1, NULL, 15314),
-(93, '2019-08-14 17:00:00', 'parasut ripstop 100y hijau tni', 0, NULL, 15318),
-(94, '2019-08-14 17:00:00', 'sudah ditawarkan untuk cek stock, customer masih mau lihat dulu', 1, NULL, 15318),
-(103, '2019-08-21 17:00:00', '', 2, 0, 15310),
-(105, '2019-08-21 17:00:00', '', 3, NULL, 15318),
-(106, '2019-08-25 17:00:00', 'mau check stock', 2, NULL, 15307),
-(107, '2019-08-25 17:00:00', 'mau sample produk', 3, NULL, 15304),
-(109, '2019-08-25 17:00:00', 'cek stock', 2, NULL, 15340),
-(110, '2019-09-24 17:00:00', '', 4, 0, 15348);
+(136, '2020-01-08 07:58:52', '', 4, 0, 15439),
+(137, '2020-01-19 17:00:00', 'tes', 0, NULL, 15444),
+(138, '2020-01-21 07:43:11', '', 1, 0, 15442),
+(139, '2020-01-21 07:43:30', '', 4, NULL, 15442),
+(140, '2020-01-21 07:55:32', '', 1, NULL, 15443),
+(141, '2020-01-21 07:56:40', '', 3, NULL, 15443),
+(142, '2020-01-20 17:00:00', 'tes', 0, NULL, 15446),
+(144, '2020-01-28 08:12:18', '', 4, 0, 15447),
+(145, '2020-02-06 06:40:35', '', 4, 0, 15450),
+(146, '2020-03-02 09:21:38', 'follow up via WA hasilnya masih menunggu', 1, NULL, 15453),
+(147, '2020-03-01 17:00:00', 'cek stock honeycon 5m', 0, NULL, 15455),
+(148, '2020-03-02 09:24:18', '', 2, NULL, 15455),
+(149, '2020-03-01 17:00:00', 'tes', 0, NULL, 15456),
+(150, '2020-03-02 09:50:41', 'tes check stock', 0, 0, 15456),
+(151, '2020-03-02 09:50:56', '', 0, 0, 15456),
+(152, '2020-03-02 09:51:04', '', 2, NULL, 15456),
+(153, '2020-03-01 17:00:00', 'cek stock honeycon kuning 10m', 0, NULL, 15458),
+(154, '2020-03-02 09:54:54', '', 2, NULL, 15458),
+(155, '2020-03-17 17:00:00', 'parasut honey', 0, NULL, 15461),
+(156, '2020-03-18 06:47:46', '', 4, 0, 15461),
+(157, '2020-03-17 17:00:00', 'tes', 0, NULL, 15462),
+(158, '2020-03-18 06:51:59', '', 4, 0, 15462),
+(159, '2020-03-18 06:54:46', 'tes', 4, 0, 15444),
+(160, '2020-03-17 17:00:00', 'tes', 0, NULL, 15465),
+(161, '2020-03-18 07:02:32', 'parasut honey', 2, 0, 15465),
+(162, '2020-03-18 07:57:15', 'parasut honeycon 1 roll', 0, 0, 15467),
+(163, '2020-03-18 08:03:53', '', 2, NULL, 15467),
+(164, '2020-03-18 08:11:48', '', 4, 0, 15468),
+(165, '2020-03-17 17:00:00', 'parasut', 0, NULL, 15469),
+(166, '2020-03-18 08:25:56', 'parasut', 2, NULL, 15469),
+(167, '2020-03-18 08:27:35', '', 4, NULL, 15470);
 
 -- --------------------------------------------------------
 
@@ -1173,7 +1205,8 @@ INSERT INTO `tb_group` (`GRP_ID`, `GRP_NAME`) VALUES
 (1, 'Customer Service'),
 (14, 'Supervisor'),
 (3, 'Superuser'),
-(2, 'Product Management');
+(2, 'Product Management'),
+(15, 'Custom Management');
 
 -- --------------------------------------------------------
 
@@ -1196,21 +1229,19 @@ CREATE TABLE `tb_group_access` (
 --
 
 INSERT INTO `tb_group_access` (`GACC_ID`, `GRP_ID`, `MOD_ID`, `GACC_ADD`, `GACC_EDIT`, `GACC_DELETE`, `GACC_VIEWALL`) VALUES
-(52, 1, 10, 1, 0, 0, 1),
+(52, 1, 10, 0, 0, 0, 1),
 (95, 1, 29, 1, 1, 0, 0),
 (87, 2, 27, 1, 1, 0, 1),
 (44, 1, 1, 1, 0, 0, 0),
 (88, 2, 28, 1, 1, 0, 1),
-(60, 1, 15, 1, 1, 0, 1),
+(60, 1, 15, 0, 0, 0, 1),
 (12, 1, 0, 0, 1, 0, 1),
-(50, 1, 2, 1, 0, 0, 0),
-(63, 1, 8, 1, 0, 0, 0),
+(50, 1, 2, 1, 1, 0, 0),
 (19, 3, 9, 1, 1, 1, 1),
-(55, 1, 16, 1, 0, 0, 1),
 (40, 8, 1, 1, 1, 1, 1),
-(53, 1, 12, 1, 0, 0, 0),
+(53, 1, 12, 0, 0, 0, 1),
 (94, 14, 29, 0, 0, 0, 1),
-(56, 1, 11, 1, 0, 0, 1),
+(56, 1, 11, 0, 0, 0, 1),
 (89, 14, 26, 1, 1, 1, 1),
 (83, 1, 26, 1, 1, 1, 0),
 (62, 1, 14, 1, 0, 0, 0),
@@ -1218,10 +1249,24 @@ INSERT INTO `tb_group_access` (`GACC_ID`, `GRP_ID`, `MOD_ID`, `GACC_ADD`, `GACC_
 (92, 14, 27, 1, 1, 1, 1),
 (91, 14, 25, 1, 1, 1, 1),
 (81, 1, 25, 1, 1, 1, 0),
-(75, 1, 19, 1, 0, 0, 1),
-(78, 1, 20, 1, 0, 0, 1),
-(77, 1, 13, 1, 0, 0, 1),
-(80, 1, 24, 1, 1, 1, 1);
+(78, 1, 20, 0, 0, 0, 1),
+(77, 1, 13, 0, 0, 0, 1),
+(80, 1, 24, 1, 1, 1, 1),
+(96, 1, 34, 1, 1, 1, 0),
+(97, 2, 31, 0, 1, 0, 1),
+(98, 2, 34, 0, 1, 0, 1),
+(99, 2, 33, 0, 1, 0, 1),
+(100, 1, 36, 0, 0, 0, 0),
+(101, 1, 37, 0, 0, 0, 0),
+(102, 1, 38, 0, 0, 0, 0),
+(103, 15, 40, 1, 1, 1, 1),
+(104, 15, 41, 1, 1, 1, 1),
+(105, 15, 42, 1, 1, 1, 1),
+(106, 15, 43, 1, 1, 1, 1),
+(107, 15, 45, 1, 1, 1, 1),
+(108, 15, 46, 1, 1, 1, 1),
+(109, 15, 44, 1, 1, 1, 1),
+(110, 15, 39, 1, 1, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -1234,6 +1279,7 @@ CREATE TABLE `tb_log_sample` (
   `LSAM_DATE` timestamp NULL DEFAULT NULL,
   `LSAM_NOTES` varchar(500) DEFAULT NULL,
   `LSAM_COST` decimal(10,0) DEFAULT NULL,
+  `LSAM_DEPOSIT` decimal(10,0) DEFAULT NULL,
   `LSAM_COST_ACTUAL` decimal(10,0) DEFAULT NULL,
   `LSAM_PAYDATE` timestamp NULL DEFAULT NULL,
   `LSAM_DELDATE` timestamp NULL DEFAULT NULL,
@@ -1251,21 +1297,12 @@ CREATE TABLE `tb_log_sample` (
 -- Dumping data untuk tabel `tb_log_sample`
 --
 
-INSERT INTO `tb_log_sample` (`LSAM_ID`, `LSAM_DATE`, `LSAM_NOTES`, `LSAM_COST`, `LSAM_COST_ACTUAL`, `LSAM_PAYDATE`, `LSAM_DELDATE`, `LSAM_RCPNO`, `COURIER_ID`, `LSAM_SERVICE_TYPE`, `CITY_ID`, `CUST_ID`, `BANK_ID`, `USER_ID`, `CLOG_ID`) VALUES
-(36, '2019-08-09 06:49:12', 'Drifit sulkul stabilo | courier : JNE REG', '24000', '19000', '2019-08-08 17:00:00', '2019-08-08 17:00:00', '1234567890', 19, '', 0, 15278, 3, 9, 15301),
-(37, '2019-08-09 06:50:22', 'cover oxford cambray | courier : JNE REG', '6000', '6000', '2019-08-08 17:00:00', '2019-08-08 17:00:00', '12136547890', 19, '', 0, 15277, 3, 2, 15302),
-(38, '2019-08-09 06:50:49', 'cover oxford cambray | courier : JNE REG', '19000', '16000', '2019-08-08 17:00:00', '2019-08-08 17:00:00', '464575672123', 19, '', 0, 15264, 3, 2, 15303),
-(39, '2019-08-09 07:19:27', 'abc | courier : JNE REG', '16000', '16000', '2019-08-08 17:00:00', '2019-08-08 17:00:00', '123', 19, 'REG', 269, 15281, 3, 64, 15306),
-(40, '2019-08-09 07:20:08', 'CDE | courier : JNT EZ', '19000', '19000', '2019-08-08 17:00:00', '2019-08-08 17:00:00', '12345675435', 30, 'EZ', 269, 15281, 3, 64, 15307),
-(41, '2019-08-12 03:09:55', 'Drifit sulkul merah maroon | courier : JNE REG', '6000', NULL, NULL, NULL, '', 19, '', 0, 15269, 0, 9, 15309),
-(42, '2019-08-12 07:05:13', 'Denim Cobra | courier : JNE REG', '6000', NULL, '2019-08-11 17:00:00', NULL, '', 19, '', 0, 15269, 3, 9, 15311),
-(43, '2019-08-13 03:09:51', 'coba | courier : JNE REG', '6000', NULL, '2019-08-12 17:00:00', NULL, '', 19, '', 0, 15280, 3, 65, 15312),
-(44, '2019-08-15 04:25:14', 'parasut milky, bening | courier : JNE OKE', '13000', NULL, NULL, NULL, '', 19, '', 0, 15281, 0, 64, 15319),
-(45, '2019-07-15 06:39:14', 'coba coba | courier : JNE REG', '6000', NULL, '2019-07-14 17:00:00', NULL, '', 19, '', 0, 15269, 3, 9, 15321),
-(46, '2019-08-26 01:50:03', 'taslan milky, taslan bening | courier : JNE REG', '28000', '10000', '2019-08-23 17:00:00', '2019-08-25 17:00:00', '123', 19, 'REG', 269, 15275, 3, 6, 15340),
-(49, '2019-09-18 06:54:23', 'taslan milky, taslan bening', '84000', NULL, '2019-09-17 17:00:00', NULL, '', 30, 'EZ', 269, 15265, 2, 6, 15346),
-(50, '2019-09-20 06:14:51', '', '24000', NULL, '2019-09-19 17:00:00', NULL, '', 19, 'REG', 0, 15278, 4, 6, 15347),
-(51, '2019-09-25 02:26:20', '', '35000', '35000', '2019-09-24 17:00:00', '2019-09-24 17:00:00', '1234567890', 15, '', 177, 15277, 4, 6, 15348);
+INSERT INTO `tb_log_sample` (`LSAM_ID`, `LSAM_DATE`, `LSAM_NOTES`, `LSAM_COST`, `LSAM_DEPOSIT`, `LSAM_COST_ACTUAL`, `LSAM_PAYDATE`, `LSAM_DELDATE`, `LSAM_RCPNO`, `COURIER_ID`, `LSAM_SERVICE_TYPE`, `CITY_ID`, `CUST_ID`, `BANK_ID`, `USER_ID`, `CLOG_ID`) VALUES
+(87, '2020-01-17 03:26:04', 'Taslan Bening Taslan Milky Parasut DIAMOND Parasut Bening Parasut Metalik Parasut Milky Parasut Oxford Parasut Silver Parasut Super Parasut Tipis Parasut Loreng Bening / Biway Taslan GN', '6000', NULL, '6000', '2020-01-16 17:00:00', '2020-01-19 17:00:00', '765776567', 19, 'CTC', 269, 15280, 2, 6, 15442),
+(88, '2020-01-17 06:34:20', 'Kain Drifit Hijau Stabill', '11000', NULL, '11000', '2020-01-16 17:00:00', '2020-01-19 17:00:00', '44534534534534', 19, 'REG', 269, 15279, 2, 6, 15443),
+(89, '2020-01-20 08:14:20', 'tes', '11000', NULL, NULL, '2020-01-19 17:00:00', NULL, '', 19, 'REG', 269, 15279, 2, 6, 15445),
+(90, '2020-01-28 09:04:15', 'tes', '0', NULL, NULL, '2020-01-27 17:00:00', NULL, '', 30, 'COD', 269, 15285, 2, 6, 15448),
+(91, '2020-03-16 01:27:59', 'tes', '16000', NULL, NULL, NULL, NULL, '', 19, 'REG', 269, 15288, 0, 6, 15460);
 
 -- --------------------------------------------------------
 
@@ -1276,8 +1313,8 @@ INSERT INTO `tb_log_sample` (`LSAM_ID`, `LSAM_DATE`, `LSAM_NOTES`, `LSAM_COST`, 
 CREATE TABLE `tb_log_stock` (
   `LSTOCK_ID` int(11) NOT NULL,
   `LSTOCK_DATE` timestamp NULL DEFAULT NULL,
-  `LSTOCK_COLOR` varchar(20) DEFAULT NULL,
-  `LSTOCK_AMOUNT` int(11) DEFAULT NULL,
+  `LSTOCK_COLOR` varchar(50) DEFAULT NULL,
+  `LSTOCK_AMOUNT` float DEFAULT NULL,
   `LSTOCK_CNOTES` varchar(500) DEFAULT NULL,
   `LSTOCK_VNOTES` varchar(500) DEFAULT NULL,
   `LSTOCK_STATUS` tinyint(4) DEFAULT NULL,
@@ -1293,14 +1330,21 @@ CREATE TABLE `tb_log_stock` (
 --
 
 INSERT INTO `tb_log_stock` (`LSTOCK_ID`, `LSTOCK_DATE`, `LSTOCK_COLOR`, `LSTOCK_AMOUNT`, `LSTOCK_CNOTES`, `LSTOCK_VNOTES`, `LSTOCK_STATUS`, `PRO_ID`, `UMEA_ID`, `CUST_ID`, `USER_ID`, `CLOG_ID`) VALUES
-(41, '2019-08-09 06:54:40', 'Hijau Stabilo', 10, '', '', 1, 17, 5, 15275, 9, 15304),
-(42, '2019-08-09 06:55:04', 'merah', 10, '', '', 1, 16, 5, 15280, 2, 15305),
-(43, '2019-08-09 06:55:23', 'Biru Dongker', 10, '', '', 0, 16, 5, 15280, 2, 15305),
-(45, '2019-08-12 06:34:01', 'Hijau Stabilo', 10, '', '', 1, 17, 5, 15269, 9, 15310),
-(46, '2019-08-13 03:28:42', 'Merah Maroon', 5, '', NULL, NULL, 17, 5, 15280, 65, 15313),
-(49, '2019-08-15 04:25:39', 'putih', 10, '', NULL, NULL, 17, 2, 15281, 64, 15320),
-(50, '2019-08-15 04:25:57', 'biru', 10, '', NULL, NULL, 16, 5, 15281, 64, 15320),
-(72, '2019-08-26 01:56:43', 'kuning', 1, '', NULL, NULL, 23, 2, 15277, 6, 15343);
+(136, '2020-01-08 08:54:06', 'biru', 1.5, '', '', 1, 24, 9, 15283, 6, 15439),
+(137, '2020-01-08 08:54:43', 'merah', 1, '', '', 0, 16, 9, 15281, 6, 15440),
+(138, '2020-01-08 08:55:07', 'kuning', 1, '', NULL, NULL, 35, 9, 15287, 6, 15441),
+(139, '2020-01-28 06:24:36', 'hitam', 10, '', '', 1, 35, 8, 15283, 6, 15447),
+(140, '2020-02-04 09:07:43', 'putih', 10, 'ditulis', 'adanya warna hitam', 0, 38, 8, 15277, 6, 15449),
+(141, '2020-02-04 09:09:05', 'merah', 10, 'cek warna hitam', '', 1, 38, 8, 15277, 6, 15450),
+(143, '2020-03-02 09:15:43', 'merah', 5, '', 'adanya warna kuning dan hitam', 0, 22, 5, 15289, 9, 15452),
+(144, '2020-03-02 09:19:16', 'kuning', 5, '', '', 1, 17, 2, 15282, 9, 15453),
+(145, '2020-03-02 09:19:16', 'kuning', 5, '', NULL, NULL, 17, 2, 15282, 9, 15454),
+(146, '2020-03-02 09:44:17', 'biru', 2, '', NULL, NULL, 35, 9, 15265, 2, 15457),
+(147, '2020-03-02 09:55:39', 'kuning', 10, '', NULL, NULL, 38, 8, 15283, 9, 15459),
+(148, '2020-03-18 06:49:51', 'hitam', 1, '', NULL, NULL, 35, 9, 15289, 6, 15463),
+(149, '2020-03-18 06:53:47', 'biru', 1, '', NULL, NULL, 38, 9, 15285, 65, 15464),
+(151, '2020-03-18 08:04:11', 'biru', 1, '', '', 1, 35, 9, 15261, 65, 15468),
+(152, '2020-03-18 08:26:31', 'biru', 1, '', '', 1, 22, 9, 15261, 65, 15470);
 
 -- --------------------------------------------------------
 
@@ -1343,7 +1387,18 @@ INSERT INTO `tb_module` (`MOD_ID`, `MOD_NAME`) VALUES
 (32, 'Vendor Bank'),
 (33, 'Payment To Vendor'),
 (34, 'Customer Deposit'),
-(35, 'Vendor Deposit');
+(35, 'Vendor Deposit'),
+(36, 'Sample to Order'),
+(37, 'Check Stock to Order'),
+(38, 'Income by CS'),
+(39, 'Producer'),
+(40, 'Producer Category'),
+(41, 'Producer Type'),
+(42, 'Producer Product'),
+(43, 'Size'),
+(44, 'Project Type'),
+(45, 'Project Activity'),
+(46, 'Project Criteria');
 
 -- --------------------------------------------------------
 
@@ -1364,6 +1419,7 @@ CREATE TABLE `tb_order` (
   `ORDER_GRAND_TOTAL` decimal(10,0) DEFAULT NULL,
   `ORDER_DP` decimal(10,0) DEFAULT NULL,
   `ORDER_STATUS` smallint(6) DEFAULT NULL,
+  `ORDER_STATUS_CANCEL` smallint(6) DEFAULT NULL,
   `BANK_ID` int(11) DEFAULT NULL,
   `ORDER_PAYMENT_DATE` date DEFAULT '0000-00-00',
   `USER_ID` int(20) DEFAULT NULL,
@@ -1374,13 +1430,20 @@ CREATE TABLE `tb_order` (
 -- Dumping data untuk tabel `tb_order`
 --
 
-INSERT INTO `tb_order` (`ORDER_ID`, `CUST_ID`, `ORDER_DATE`, `ORDER_NOTES`, `ORDER_TOTAL`, `ORDER_DISCOUNT`, `ORDER_DEPOSIT`, `ORDER_SHIPCOST`, `ORDER_TAX`, `ORDER_GRAND_TOTAL`, `ORDER_DP`, `ORDER_STATUS`, `BANK_ID`, `ORDER_PAYMENT_DATE`, `USER_ID`, `CHA_ID`) VALUES
-(91, 15264, '2019-10-15 07:56:51', '', '35000', '0', NULL, '22000', '0', '57000', NULL, 5, 2, '2019-10-15', 6, 1),
-(92, 15278, '2019-10-15 08:11:52', '', '60000', '0', NULL, '24000', '0', '84000', NULL, 4, 2, '2019-10-15', 6, 7),
-(93, 15271, '2019-10-15 08:37:17', '', '70000', '0', NULL, '13000', '0', '83000', NULL, 2, 2, '2019-10-15', 6, 7),
-(95, 15283, '2019-10-16 06:48:03', '', '5010000', NULL, NULL, NULL, NULL, NULL, NULL, 5, NULL, '0000-00-00', 6, 7),
-(96, 15276, '2019-10-16 06:57:14', '', '5548000', '0', NULL, '116000', '0', '5664000', NULL, NULL, NULL, '0000-00-00', 6, 7),
-(97, 15282, '2019-10-16 07:04:10', '', '0', '0', NULL, '0', '0', '0', NULL, 5, NULL, '0000-00-00', 6, 6);
+INSERT INTO `tb_order` (`ORDER_ID`, `CUST_ID`, `ORDER_DATE`, `ORDER_NOTES`, `ORDER_TOTAL`, `ORDER_DISCOUNT`, `ORDER_DEPOSIT`, `ORDER_SHIPCOST`, `ORDER_TAX`, `ORDER_GRAND_TOTAL`, `ORDER_DP`, `ORDER_STATUS`, `ORDER_STATUS_CANCEL`, `BANK_ID`, `ORDER_PAYMENT_DATE`, `USER_ID`, `CHA_ID`) VALUES
+(4255, 15277, '2020-03-17 07:26:47', '', '161000', '0', NULL, '14000', '0', '175000', NULL, 2, NULL, 2, '2020-03-17', 6, 3),
+(4256, 15287, '2020-03-17 07:30:28', '', '140000', '0', NULL, '24000', '0', '164000', NULL, 2, NULL, 2, '2020-03-17', 6, 4),
+(4257, 15281, '2020-03-17 07:53:49', '', '161000', '0', NULL, '32000', '0', '193000', NULL, 2, NULL, 2, '2020-03-17', 6, 1),
+(4259, 15283, '2020-01-08 07:58:52', NULL, '3750000', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0000-00-00', 6, 7),
+(4261, 15261, '2020-03-18 08:10:05', '', '120000', '0', NULL, '76000', '0', '196000', NULL, 5, 3, 2, '2020-03-18', 6, 2),
+(4262, 15261, '2020-03-18 08:11:48', NULL, '2100000', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0000-00-00', 65, 2),
+(4263, 15261, '2020-03-18 08:27:35', NULL, '2100000', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0000-00-00', 65, 2),
+(4265, 15277, '2020-03-20 04:20:45', '', '510000', '0', NULL, '48000', '0', '558000', NULL, 2, NULL, 3, '2020-03-20', 6, 3),
+(4266, 15283, '2020-03-20 04:44:42', '', '372500', '0', NULL, '59000', '0', '431500', NULL, 2, NULL, 2, '2020-03-20', 6, 7),
+(4267, 15282, '2020-03-20 06:18:06', '', '161000', '0', NULL, '54000', '0', '215000', NULL, 2, NULL, 2, '2020-03-20', 6, 6),
+(4269, 15265, '2020-03-24 09:43:19', '', '288000', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0000-00-00', 6, 6),
+(4270, 15283, '2020-03-26 03:30:52', '', '2290000', NULL, NULL, NULL, NULL, NULL, NULL, 5, NULL, NULL, '0000-00-00', 6, 7),
+(4271, 15283, '2020-03-26 03:43:21', '', '2495000', '0', NULL, '58500', '0', '2553500', NULL, 2, NULL, 3, '2020-03-26', 6, 7);
 
 -- --------------------------------------------------------
 
@@ -1394,29 +1457,43 @@ CREATE TABLE `tb_order_detail` (
   `PRO_ID` int(11) DEFAULT NULL,
   `VEND_ID` int(11) DEFAULT NULL,
   `UMEA_ID` int(11) NOT NULL,
-  `ORDD_QUANTITY` int(11) DEFAULT NULL,
-  `ORDV_WEIGHT` float DEFAULT NULL,
-  `PRO_WEIGHT` decimal(10,2) NOT NULL,
-  `PRICE` decimal(10,0) DEFAULT NULL,
-  `PRICE_VENDOR` decimal(10,0) DEFAULT NULL,
+  `ORDD_QUANTITY` float DEFAULT NULL,
+  `ORDD_WEIGHT` float DEFAULT NULL,
   `ORDD_OPTION` varchar(50) DEFAULT NULL,
   `ORDD_PRICE` decimal(10,0) DEFAULT NULL,
-  `ORDD_PRICE_VENDOR` decimal(10,0) DEFAULT NULL
+  `ORDD_PRICE_VENDOR` decimal(10,0) DEFAULT NULL,
+  `ORDD_QUANTITY_VENDOR` float DEFAULT NULL,
+  `ORDD_OPTION_VENDOR` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data untuk tabel `tb_order_detail`
 --
 
-INSERT INTO `tb_order_detail` (`ORDD_ID`, `ORDER_ID`, `PRO_ID`, `VEND_ID`, `UMEA_ID`, `ORDD_QUANTITY`, `ORDV_WEIGHT`, `PRO_WEIGHT`, `PRICE`, `PRICE_VENDOR`, `ORDD_OPTION`, `ORDD_PRICE`, `ORDD_PRICE_VENDOR`) VALUES
-(155, 91, 24, 872, 5, 1, 0.2, '0.20', '35000', '30000', '', '35000', '30000'),
-(156, 92, 22, 879, 5, 1, 0.6, '0.60', '60000', '60000', '', '60000', '60000'),
-(157, 93, 24, 872, 5, 2, 0.4, '0.20', '35000', '30000', '', '70000', '60000'),
-(159, 95, 34, 880, 5, 10, 8, '0.80', '81000', '72000', 'Merah', '810000', '720000'),
-(160, 95, 35, 881, 9, 2, 30, '15.00', '2100000', '1800000', 'Putih', '4200000', '3600000'),
-(161, 96, 34, 880, 9, 1, 42, '42.00', '4108000', '3692000', 'Merah', '4108000', '3692000'),
-(162, 96, 35, 881, 8, 60, 9, '0.15', '24000', '20000', 'Putih', '1440000', '1200000'),
-(163, 97, 35, 881, 8, 2, 0.3, '0.15', '24000', '20000', '', '48000', '40000');
+INSERT INTO `tb_order_detail` (`ORDD_ID`, `ORDER_ID`, `PRO_ID`, `VEND_ID`, `UMEA_ID`, `ORDD_QUANTITY`, `ORDD_WEIGHT`, `ORDD_OPTION`, `ORDD_PRICE`, `ORDD_PRICE_VENDOR`, `ORDD_QUANTITY_VENDOR`, `ORDD_OPTION_VENDOR`) VALUES
+(419, 4255, 17, 880, 2, 1, 1, 'merah', '80000', '70000', 1, NULL),
+(420, 4255, 34, 880, 5, 1, 0.8, 'hijau', '81000', '72000', 1, 'hijau'),
+(421, 4256, 17, 874, 2, 1, 1, 'kuning', '80000', '70000', 1, NULL),
+(422, 4256, 23, 874, 5, 1, 0.2, 'hijau', '60000', '55000', 1, NULL),
+(423, 4257, 17, 874, 2, 1, 1, 'tes', '80000', '70000', 1, NULL),
+(424, 4257, 34, 874, 5, 1, 0.8, 'tes', '81000', '72000', 1, NULL),
+(426, 4259, 24, 872, 8, 150, 20, 'biru', '25000', '20000', NULL, NULL),
+(428, 4261, 17, 874, 2, 1.5, 1.5, '', '80000', '70000', 1.5, NULL),
+(429, 4262, 35, 881, 8, 100, 15, 'biru', '21000', '18000', NULL, NULL),
+(430, 4263, 22, 881, 8, 120, 22, 'biru', '17500', '15000', NULL, NULL),
+(432, 4265, 39, 882, 5, 10, 2, 'merah', '27500', '23000', 10, NULL),
+(433, 4265, 40, 882, 5, 5, 1, 'hitam', '47000', '41000', 5, NULL),
+(434, 4266, 39, 882, 5, 5, 1, 'kuning', '27500', '23000', 5, NULL),
+(435, 4266, 40, 883, 5, 5, 1, 'hitam', '47000', '41000', 5, NULL),
+(436, 4267, 17, 874, 2, 1, 1, 'hijau', '80000', '70000', 1, NULL),
+(437, 4267, 34, 880, 5, 1, 0.8, 'kuning', '81000', '72000', 1, NULL),
+(439, 4269, 34, 881, 5, 3, 2.4, 'biru', '96000', '87000', 3, NULL),
+(440, 4270, 39, 882, 5, 10, 2, 'hitam', '27500', '23000', 10, NULL),
+(441, 4270, 40, 882, 5, 5, 1, 'hijau', '48000', '42000', 5, NULL),
+(442, 4270, 40, 882, 8, 50, 10, 'hijau', '35500', '30500', 50, NULL),
+(443, 4271, 39, 882, 5, 10, 2, 'hitam', '27500', '23000', 10, NULL),
+(444, 4271, 40, 882, 5, 10, 2, 'putih', '47000', '42000', 10, NULL),
+(445, 4271, 40, 882, 8, 50, 10, 'merah', '35000', '30500', 50, NULL);
 
 -- --------------------------------------------------------
 
@@ -1431,16 +1508,9 @@ CREATE TABLE `tb_order_letter` (
   `ORDL_TYPE` tinyint(4) DEFAULT NULL,
   `ORDL_NO` int(11) DEFAULT NULL,
   `ORDL_LNO` varchar(20) DEFAULT NULL,
-  `ORDL_NOTES` varchar(1000) DEFAULT NULL
+  `ORDL_NOTES` varchar(1000) DEFAULT NULL,
+  `ORDL_DOC` tinyint(4) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data untuk tabel `tb_order_letter`
---
-
-INSERT INTO `tb_order_letter` (`ORDL_ID`, `ORDL_DATE`, `ORDER_ID`, `ORDL_TYPE`, `ORDL_NO`, `ORDL_LNO`, `ORDL_NOTES`) VALUES
-(88, '2019-10-14 17:00:00', 92, 3, 1, '001/FIT/RCP/X/2019', '1. Proses order max 2 hari setelah pembayaran dilakukan.\\r\\n2. Info Pengiriman :\\r\\n-     Pengiriman dari Kota Yogyakarta, menggunakan JNE REG estimasi 7-8 hari.\\r\\n3. Transaksi tanpa Pajak. Pembayaran dalam dapat ditransfer melalui Bank BCA: 8020169363 atau Bank Mandiri: 1240004177276 atas nama Istofani Api Diany.'),
-(89, '2019-10-14 17:00:00', 92, 2, 2, '002/FIT/INV/X/2019', '1. Proses order max 2 hari setelah pembayaran dilakukan.\\r\\n2. Info Pengiriman :\\r\\n-     Pengiriman dari Kota Yogyakarta, menggunakan JNE REG estimasi 7-8 hari.\\r\\n3. Transaksi tanpa Pajak. Pembayaran dalam dapat ditransfer melalui Bank BCA: 8020169363 atau Bank Mandiri: 1240004177276 atas nama Istofani Api Diany.');
 
 -- --------------------------------------------------------
 
@@ -1456,32 +1526,107 @@ CREATE TABLE `tb_order_vendor` (
   `ORDV_WEIGHT_VENDOR` float DEFAULT NULL,
   `ORDV_SHIPCOST` decimal(10,0) DEFAULT NULL,
   `ORDV_SHIPCOST_VENDOR` decimal(10,0) DEFAULT NULL,
+  `ORDV_SHIPCOST_PAY` decimal(10,0) DEFAULT NULL,
   `ORDV_ADDCOST_VENDOR` decimal(10,0) DEFAULT NULL,
+  `ORDV_DISCOUNT_VENDOR` decimal(10,0) DEFAULT NULL,
   `ORDV_TOTAL` decimal(10,0) DEFAULT NULL,
   `ORDV_TOTAL_VENDOR` decimal(10,0) DEFAULT NULL,
-  `ORDV_PAYTOV_DATE` timestamp NULL DEFAULT NULL,
   `ORDV_DELIVERY_DATE` date DEFAULT '0000-00-00',
   `ORDV_RECEIPT_NO` varchar(30) DEFAULT NULL,
-  `ORDV_DEPOSIT` decimal(10,0) DEFAULT NULL,
   `COURIER_ID` int(11) DEFAULT NULL,
-  `VBA_ID` int(11) DEFAULT NULL,
   `ORDV_SERVICE_TYPE` varchar(20) DEFAULT NULL,
-  `ORDV_ETD` varchar(20) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `ORDV_ETD` varchar(20) DEFAULT NULL,
+  `PAYTOV_ID` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data untuk tabel `tb_order_vendor`
 --
 
-INSERT INTO `tb_order_vendor` (`ORDV_ID`, `ORDER_ID`, `VEND_ID`, `ORDV_WEIGHT`, `ORDV_WEIGHT_VENDOR`, `ORDV_SHIPCOST`, `ORDV_SHIPCOST_VENDOR`, `ORDV_ADDCOST_VENDOR`, `ORDV_TOTAL`, `ORDV_TOTAL_VENDOR`, `ORDV_PAYTOV_DATE`, `ORDV_DELIVERY_DATE`, `ORDV_RECEIPT_NO`, `ORDV_DEPOSIT`, `COURIER_ID`, `VBA_ID`, `ORDV_SERVICE_TYPE`, `ORDV_ETD`) VALUES
-(146, 91, 872, 0.2, NULL, '22000', NULL, NULL, '57000', '52000', '2019-10-15 07:57:38', '0000-00-00', NULL, '5000', 19, 2, 'REG', '3-6'),
-(147, 92, 879, 0.6, NULL, '24000', '24000', NULL, '84000', '84000', NULL, '2019-10-15', 'iuiu87798', '0', 19, NULL, 'REG', '7-8'),
-(148, 93, 872, 0.4, NULL, '13000', NULL, '0', '83000', '73000', NULL, '0000-00-00', NULL, '10000', 30, NULL, 'EZ', ''),
-(150, 95, 880, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0000-00-00', NULL, NULL, NULL, NULL, NULL, NULL),
-(151, 95, 881, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0000-00-00', NULL, NULL, NULL, NULL, NULL, NULL),
-(152, 96, 880, 42, NULL, '65000', NULL, NULL, '4173000', '3757000', NULL, '0000-00-00', NULL, '416000', 19, NULL, 'TRUCKING', '5-6 hari'),
-(153, 96, 881, 9, NULL, '51000', NULL, NULL, '1491000', '1251000', NULL, '0000-00-00', NULL, '240000', 15, NULL, '', '3-4 hari'),
-(154, 97, 881, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0000-00-00', NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `tb_order_vendor` (`ORDV_ID`, `ORDER_ID`, `VEND_ID`, `ORDV_WEIGHT`, `ORDV_WEIGHT_VENDOR`, `ORDV_SHIPCOST`, `ORDV_SHIPCOST_VENDOR`, `ORDV_SHIPCOST_PAY`, `ORDV_ADDCOST_VENDOR`, `ORDV_DISCOUNT_VENDOR`, `ORDV_TOTAL`, `ORDV_TOTAL_VENDOR`, `ORDV_DELIVERY_DATE`, `ORDV_RECEIPT_NO`, `COURIER_ID`, `ORDV_SERVICE_TYPE`, `ORDV_ETD`, `PAYTOV_ID`) VALUES
+(359, 4256, 874, 1.2, NULL, '24000', NULL, NULL, NULL, NULL, '164000', '149000', '0000-00-00', NULL, 19, 'REG', '7-8 Hari', NULL),
+(360, 4255, 880, 1.8, NULL, '14000', NULL, NULL, NULL, NULL, '175000', '156000', '0000-00-00', NULL, 30, 'EZ', ' Hari', NULL),
+(363, 4257, 874, 1.8, NULL, '32000', NULL, NULL, NULL, NULL, '193000', '174000', '0000-00-00', NULL, 19, 'REG', '2-3 Hari', NULL),
+(365, 4259, 872, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0000-00-00', NULL, NULL, NULL, NULL, NULL),
+(367, 4261, 874, 1.5, NULL, '76000', NULL, NULL, NULL, NULL, '196000', '181000', '0000-00-00', NULL, 30, 'EZ', ' Hari', NULL),
+(368, 4262, 881, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0000-00-00', NULL, NULL, NULL, NULL, NULL),
+(369, 4263, 881, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0000-00-00', NULL, NULL, NULL, NULL, NULL),
+(373, 4265, 882, 3, NULL, '48000', NULL, NULL, NULL, NULL, '558000', '483000', '0000-00-00', NULL, 19, 'REG', '1-2 Hari', NULL),
+(374, 4266, 882, 1, NULL, '18000', NULL, NULL, NULL, NULL, '155500', '133000', '0000-00-00', NULL, 19, 'OKE', '2-3 Hari', NULL),
+(375, 4266, 883, 1, NULL, '41000', NULL, NULL, NULL, NULL, '276000', '246000', '0000-00-00', NULL, 19, 'YES', '1-1 Hari', NULL),
+(376, 4267, 874, 1, NULL, '16000', NULL, NULL, NULL, NULL, '96000', '86000', '0000-00-00', NULL, 19, 'REG', '2-3 Hari', NULL),
+(377, 4267, 880, 0.8, NULL, '38000', NULL, NULL, NULL, NULL, '119000', '110000', '0000-00-00', NULL, 19, 'YES', '1-1 Hari', NULL),
+(379, 4269, 881, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0000-00-00', NULL, NULL, NULL, NULL, NULL),
+(380, 4270, 882, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0000-00-00', NULL, NULL, NULL, NULL, NULL),
+(381, 4271, 882, 14, NULL, '58500', NULL, NULL, NULL, NULL, '2553500', '2233500', '0000-00-00', NULL, 15, '', '3', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `tb_order_vendor_old`
+--
+
+CREATE TABLE `tb_order_vendor_old` (
+  `ORDV_ID` int(11) NOT NULL,
+  `ORDER_ID` int(11) DEFAULT NULL,
+  `VEND_ID` int(11) DEFAULT NULL,
+  `ORDV_WEIGHT` float DEFAULT NULL,
+  `ORDV_WEIGHT_VENDOR` float DEFAULT NULL,
+  `ORDV_SHIPCOST` decimal(10,0) DEFAULT NULL,
+  `ORDV_SHIPCOST_VENDOR` decimal(10,0) DEFAULT NULL,
+  `ORDV_SHIPCOST_PAY` decimal(10,0) DEFAULT NULL,
+  `ORDV_ADDCOST_VENDOR` decimal(10,0) DEFAULT NULL,
+  `ORDV_DISCOUNT_VENDOR` decimal(10,0) DEFAULT NULL,
+  `ORDV_TOTAL` decimal(10,0) DEFAULT NULL,
+  `ORDV_TOTAL_VENDOR` decimal(10,0) DEFAULT NULL,
+  `ORDV_DELIVERY_DATE` date DEFAULT '0000-00-00',
+  `ORDV_RECEIPT_NO` varchar(30) DEFAULT NULL,
+  `COURIER_ID` int(11) DEFAULT NULL,
+  `ORDV_SERVICE_TYPE` varchar(20) DEFAULT NULL,
+  `ORDV_ETD` varchar(20) DEFAULT NULL,
+  `PAYTOV_ID` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data untuk tabel `tb_order_vendor_old`
+--
+
+INSERT INTO `tb_order_vendor_old` (`ORDV_ID`, `ORDER_ID`, `VEND_ID`, `ORDV_WEIGHT`, `ORDV_WEIGHT_VENDOR`, `ORDV_SHIPCOST`, `ORDV_SHIPCOST_VENDOR`, `ORDV_SHIPCOST_PAY`, `ORDV_ADDCOST_VENDOR`, `ORDV_DISCOUNT_VENDOR`, `ORDV_TOTAL`, `ORDV_TOTAL_VENDOR`, `ORDV_DELIVERY_DATE`, `ORDV_RECEIPT_NO`, `COURIER_ID`, `ORDV_SERVICE_TYPE`, `ORDV_ETD`, `PAYTOV_ID`) VALUES
+(344, 4250, 872, 0.2, NULL, '27000', NULL, NULL, NULL, NULL, '62000', '57000', '0000-00-00', NULL, 19, 'REG', '3-6 Hari', NULL),
+(345, 4250, 874, 1, NULL, '24000', NULL, NULL, NULL, NULL, '104000', '94000', '0000-00-00', NULL, 19, 'REG', '7-8 Hari', NULL),
+(348, 4251, 872, 0.2, NULL, '29000', NULL, NULL, NULL, NULL, '64000', '59000', '0000-00-00', NULL, 19, 'REG', '3-6 Hari', NULL),
+(349, 4251, 874, 1, NULL, '24000', NULL, NULL, NULL, NULL, '104000', '94000', '0000-00-00', NULL, 19, 'REG', '7-8 Hari', NULL),
+(351, 4252, 872, 0.2, NULL, '32000', NULL, NULL, NULL, NULL, '67000', '62000', '0000-00-00', NULL, 30, 'EZ', ' Hari', NULL),
+(352, 4252, 874, 1, NULL, '49000', NULL, NULL, NULL, NULL, '129000', '119000', '0000-00-00', NULL, 30, 'EZ', ' Hari', NULL),
+(357, 4255, 874, 1, NULL, '7000', NULL, NULL, NULL, NULL, '87000', '77000', '0000-00-00', NULL, 30, 'EZ', ' Hari', NULL),
+(358, 4255, 880, 0.8, NULL, '7000', NULL, '7000', '0', '0', '88000', '79000', '0000-00-00', NULL, 30, 'EZ', ' Hari', 213),
+(361, 4257, 874, 1, NULL, '16000', NULL, NULL, NULL, NULL, '96000', '86000', '0000-00-00', NULL, 19, 'REG', '2-3 Hari', NULL),
+(362, 4257, 880, 0.8, NULL, '16000', NULL, NULL, NULL, NULL, '97000', '88000', '0000-00-00', NULL, 19, 'REG', '2-3 Hari', NULL),
+(371, 4265, 882, 2, NULL, '32000', NULL, NULL, NULL, NULL, '307000', '262000', '0000-00-00', NULL, 19, 'REG', '1-2 Hari', NULL),
+(372, 4265, 883, 1, NULL, '16000', NULL, NULL, NULL, NULL, '251000', '221000', '0000-00-00', NULL, 19, 'REG', '1-2 Hari', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `tb_payment_to_vendor`
+--
+
+CREATE TABLE `tb_payment_to_vendor` (
+  `PAYTOV_ID` int(11) NOT NULL,
+  `PAYTOV_DATE` timestamp NULL DEFAULT NULL,
+  `VBA_ID` int(11) DEFAULT NULL,
+  `PAYTOV_SHIPCOST_STATUS` tinyint(4) DEFAULT NULL,
+  `PAYTOV_DEPOSIT` decimal(10,0) DEFAULT NULL,
+  `PAYTOV_TOTAL` decimal(10,0) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data untuk tabel `tb_payment_to_vendor`
+--
+
+INSERT INTO `tb_payment_to_vendor` (`PAYTOV_ID`, `PAYTOV_DATE`, `VBA_ID`, `PAYTOV_SHIPCOST_STATUS`, `PAYTOV_DEPOSIT`, `PAYTOV_TOTAL`) VALUES
+(212, '2020-03-13 04:02:06', 2, 1, '0', '326000'),
+(213, '2020-03-17 07:39:38', 5, 1, '0', '79000');
 
 -- --------------------------------------------------------
 
@@ -1503,6 +1648,293 @@ CREATE TABLE `tb_poption` (
 INSERT INTO `tb_poption` (`POPT_ID`, `POPT_NAME`, `POPT_PICTURE`, `PRO_ID`) VALUES
 (19, 'Cover Oxford Cambray 321', '', 24),
 (18, 'Cover Oxford Cambray 123', '', 24);
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `tb_producer`
+--
+
+CREATE TABLE `tb_producer` (
+  `PRDU_ID` int(11) NOT NULL,
+  `PRDU_NAME` varchar(100) NOT NULL,
+  `PRDU_CPERSON` varchar(100) DEFAULT NULL,
+  `PRDU_ADDRESS` varchar(500) DEFAULT NULL,
+  `CNTR_ID` int(11) NOT NULL,
+  `STATE_ID` int(11) NOT NULL,
+  `CITY_ID` int(11) NOT NULL,
+  `SUBD_ID` int(11) NOT NULL,
+  `PRDU_PHONE` varchar(20) DEFAULT NULL,
+  `PRDU_EMAIL` varchar(100) DEFAULT NULL,
+  `PRDU_STATUS` smallint(6) DEFAULT NULL,
+  `PRDUC_ID` smallint(6) NOT NULL,
+  `PRDUT_ID` smallint(6) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data untuk tabel `tb_producer`
+--
+
+INSERT INTO `tb_producer` (`PRDU_ID`, `PRDU_NAME`, `PRDU_CPERSON`, `PRDU_ADDRESS`, `CNTR_ID`, `STATE_ID`, `CITY_ID`, `SUBD_ID`, `PRDU_PHONE`, `PRDU_EMAIL`, `PRDU_STATUS`, `PRDUC_ID`, `PRDUT_ID`) VALUES
+(1, 'Producer 1', 'Anto', '', 1, 12, 177, 0, '087398476786', 'pro1@gmail.com', 1, 1, 2),
+(3, 'Producer 2', 'Roy', '', 1, 15, 260, 3636, '087986456763', '', 1, 1, 3),
+(4, 'Penjahit Inna Pertiwi', 'Inna Pertiwi', 'Jl. Pajajaran 1 no 10', 1, 14, 268, 5790, '08122223344', '', 1, 1, 5),
+(6, 'Art Fashion', 'Abi', 'Jl. Imogiri Barat No.2, Bakung, Bangunharjo, Kec. Sewon, Bantul, Daerah Istimewa Yogyakarta 55188', 1, 14, 265, 539, '0821-3602-9466', '', 1, 1, 3),
+(7, 'Arto Konveksi', 'Arto Konveksi', 'Jl Kerajinan no. 5 RT 08 Pemukiman Industri Kecil (PIK) Gunung Sempu, Kasih, Tamantirto, Kec. Kasihan, Bantul, Daerah Istimewa Yogyakarta 55183', 1, 14, 265, 543, '0856-3330-071', '', 1, 1, 3),
+(8, 'Luciffer', 'Luciffer', 'Jl. Damai, mudal RT 01/RW 19, SARIHARJO, NGAGLIK, SLEMAN, Wonorejo, Sariharjo, Kec. Ngaglik, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55581', 1, 14, 268, 5788, '0856-4110-4278', '', 1, 1, 3),
+(9, 'Inpitro Konveksi', 'Inpitro Konveksi', 'RT 07 No 52, Sampangan, Wirokerten, Kec. Banguntapan, Bantul, Daerah Istimewa Yogyakarta 55194', 1, 14, 265, 538, '0812-1597-6840', '', 1, 1, 3),
+(10, 'Gidas Apparel', 'Gidas Apparel', 'Sorogenen I, Sorogenan I, Purwomartani, Kec. Kalasan, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55571', 1, 14, 268, 5784, '0821-3724-0629', '', 1, 1, 3),
+(11, 'Manual Art ', 'Manual Art ', 'Malangrejo RT6 RW 35 Wedomartani, Ngemplak, Sleman, Yogyakarta', 1, 14, 268, 5789, '0856-4338-0051', '', 1, 1, 3),
+(12, 'Mulia Collection', 'Mulia Collection', 'Ngablak, Sitimulyo, Piyungan, Bantul', 1, 14, 265, 547, '0812-2714-9957 ', '', 1, 1, 3),
+(13, 'Titik Terang T-shirt', 'Titik Terang T-shirt', 'Tempel, Selomartani, Kalasan, Sleman, Yogyakarta', 1, 14, 268, 5784, '0857 2942 5270', '', 1, 1, 3),
+(14, 'Rendra Konveksi', 'Rendra Konveksi', 'Jalan Delima No. 2 Condongcatur, Depok, Sleman', 1, 14, 268, 5781, '0856-4303-8160', '', 1, 1, 3),
+(15, 'Mukena Distro', 'Mukena Distro', 'Jatigrit, Srimartani, Kec. Piyungan, Bantul, Daerah Istimewa Yogyakarta 55792', 1, 14, 265, 547, '0815-7804-5670', '', 1, 1, 3),
+(16, 'Rafa Modiste', 'Rafa Modiste', 'Jl. Garuda No.254, Pelem Mulong, Banguntapan, Kec. Banguntapan, Kotagede, Daerah Istimewa Yogyakarta 55198', 1, 14, 265, 538, '0878-3985-8227', '', 1, 1, 5),
+(17, 'Kingkin Konfeksi Gamis Kaos ', 'Ibu Darsih ', 'Wojo RT 04 No 121B Sewon, Bantul', 1, 14, 265, 539, '0858-7867-5156', '', 1, 1, 3),
+(18, 'Tas Seminar Jogja', 'Tas Seminar Jogja', 'perum sidorejo gg bima A1, Ngestiharjo, kasihan, Sonopakis Kidul, Ngestiharjo, Kasihan, Bantul Regency, Special Region of Yogyakarta 55182', 1, 14, 265, 543, '0878-3122-3999', '', 1, 1, 3),
+(19, 'Zano Production', 'Zano Production', 'Jl. Godean KM4 kenteng Nusa indah, Gg.Arumdalu no.171 nogotirto gamping sleman Yogyakarta', 1, 14, 268, 5782, '0817279503', '', 1, 1, 3),
+(20, 'Jogja Konveksi', 'Jogja Konveksi', 'Jl. Godean KM 6,5, Gg. Merpati No. 32, RT 02/10 Nglarang Lor Sidoarum, Godean, Sleman ', 1, 14, 268, 5783, '0811-2773-433', '', 1, 1, 3),
+(22, 'Cello Cloth', 'Cello Cloth', 'Jalan Paleman RT. 4, Rukeman, Kasihan, Geblagan, Tamantirto, Kasihan, Bantul ', 1, 14, 265, 543, '0852-6228-8482', '', 1, 1, 3),
+(23, 'Somah Collection', 'Somah Collection', 'Gedongkiwo MJ l No.720 RT 42 RW 0 Gedongkiwo, Mantrijeron, Yogyakarta', 1, 14, 269, 6988, '0856-0158-7956', '', 1, 1, 3),
+(24, 'Konveksi Gemilang 354', 'Konveksi Gemilang 354', 'Jl. kalangan, RT.7/RW.4, Panasan, Wanglu, Kec. Trucuk, Kabupaten Klaten, Jawa Tengah 57467', 1, 13, 205, 2744, '0813-2849-1277', '', 1, 1, 3),
+(25, 'Just Konveksi', 'Just Konveksi', 'Jl. Sembung, Minggiran, Sendangtirto, Kec. Berbah, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55573', 1, 14, 268, 5779, '0838-6948-1965', '', 1, 1, 3),
+(26, 'Jangkrik Production', 'Jangkrik Production', 'Jl. Jomegatan No.314, Tegal Kenanga, Ngestiharjo, Kec. Kasihan, Bantul, Daerah Istimewa Yogyakarta 55184', 1, 14, 265, 543, '0877-0536-3463', '', 1, 1, 3),
+(27, 'Ozza Konveksi', 'Ozza Konveksi', 'jalan depokan II, peleman RT 32, RW.10, Rejowinangun, Kec. Kotagede, Kota Yogyakarta, Daerah Istimewa Yogyakarta 55171', 1, 14, 269, 6986, '0896-1577-2461', '', 1, 1, 3),
+(29, 'Indo Konveksi ', 'Indo Konveksi ', 'Jl. Jati Pratama, Kutu Dukuh, Sinduadi, Kec. Mlati, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55284', 1, 14, 268, 5786, '0858-8121-1266', '', 1, 1, 3);
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `tb_producer_category`
+--
+
+CREATE TABLE `tb_producer_category` (
+  `PRDUC_ID` smallint(6) NOT NULL,
+  `PRDUC_NAME` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data untuk tabel `tb_producer_category`
+--
+
+INSERT INTO `tb_producer_category` (`PRDUC_ID`, `PRDUC_NAME`) VALUES
+(1, 'Fashion'),
+(2, 'Furniture');
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `tb_producer_product`
+--
+
+CREATE TABLE `tb_producer_product` (
+  `PRDUP_ID` smallint(6) NOT NULL,
+  `PRDUP_NAME` varchar(100) NOT NULL,
+  `PRDUC_ID` smallint(6) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data untuk tabel `tb_producer_product`
+--
+
+INSERT INTO `tb_producer_product` (`PRDUP_ID`, `PRDUP_NAME`, `PRDUC_ID`) VALUES
+(1, 'Kemeja/Shirt', 1),
+(2, 'Kaos/T-shirt', 1),
+(20, 'Blus/Blouse', 1),
+(21, 'Jaket/Jacket', 1),
+(22, 'Rok/Skirt', 1),
+(23, 'Gaun/Dress', 1),
+(24, 'Outer', 1),
+(25, 'Jas', 1),
+(26, 'Celana/Pants', 1),
+(27, 'Celana Terusan/Jumpsuit', 1),
+(28, 'Rompi/Vest', 1),
+(29, 'Mukena', 1),
+(30, 'Piyama', 1),
+(31, 'Khimar', 1),
+(32, 'Kebaya', 1),
+(33, 'Gamis Pria', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `tb_producer_product_property`
+--
+
+CREATE TABLE `tb_producer_product_property` (
+  `PRDPP_ID` smallint(6) NOT NULL,
+  `PRDPP_NAME` varchar(100) NOT NULL,
+  `PRDUP_ID` smallint(6) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data untuk tabel `tb_producer_product_property`
+--
+
+INSERT INTO `tb_producer_product_property` (`PRDPP_ID`, `PRDPP_NAME`, `PRDUP_ID`) VALUES
+(5, 'Kerah/Collar', 1),
+(6, 'Saku/Pocket', 1),
+(31, 'Lengan/Sleeve', 1),
+(32, 'Manset/Cuff', 1),
+(33, 'Potongan Bahu/Yoke', 1),
+(34, 'Lipit Punggung/Pleat', 1),
+(35, 'Placket', 1),
+(36, 'Saku/Pocket', 2),
+(37, 'Kerah/Collar', 2),
+(38, 'Placket ', 2),
+(39, 'Cuff/Manset', 2),
+(40, 'Lengan/Sleeve', 2),
+(41, 'Lengan/Sleeve', 20),
+(42, 'Kerah/Collar', 20),
+(43, 'Manset/Cuff', 20),
+(44, 'Saku/Pocket', 20),
+(45, 'Placket', 20),
+(46, 'Kerah/Collar', 21),
+(47, 'Ban Pinggang', 22),
+(48, 'Saku/Pocket', 22),
+(49, 'Lipit/Pleat', 22),
+(50, 'Manset/Cuff', 21),
+(51, 'Lengan/Sleeve', 21),
+(52, 'Saku/Pocket', 21),
+(53, 'Hoodie', 21),
+(54, 'Resleting/Zipper', 21),
+(55, 'Kancing/Button', 21),
+(56, 'Resleting/Zipper', 20),
+(57, 'Kancing/Button', 20),
+(58, 'Kancing/Button', 2),
+(59, 'Kancing/Button', 1),
+(60, 'Kancing/Button', 22),
+(61, 'Resleting/Zipper', 22),
+(62, 'Kerah/Collar', 23),
+(63, 'Lengan/Sleeve', 23),
+(64, 'Manset/Cuff', 23),
+(65, 'Resleting/Zipper', 23),
+(66, 'Kancing/Button', 23),
+(67, 'Siluet', 22),
+(68, 'Siluet', 23),
+(69, 'Kerah/Collar', 24),
+(70, 'Lengan/Sleeve', 24),
+(71, 'Manset/Cuff', 24),
+(72, 'Saku/Pocket', 24),
+(73, 'Kelepak Kerah/Lapel', 25),
+(74, 'Belahan Belakang/Vent', 25),
+(75, 'Ban Pinggang', 26),
+(76, 'Saku/Pocket', 26),
+(77, 'Resleting/Zipper', 26),
+(78, 'Bentuk Leher/Neckline', 2),
+(79, 'Bentuk Leher/Neckline', 23),
+(80, 'Bentuk Leher/Neckline', 20),
+(81, 'Kancing/Button', 25),
+(82, 'Saku/Pocket', 25),
+(83, 'Panjang Lengan/Sleeve', 25),
+(84, 'Jenis Lengan/Type of Sleeve', 20),
+(85, 'Jenis Celana/Type of Pants', 26),
+(86, 'Saku/Pocket', 28),
+(87, 'Resleting/Zipper', 28),
+(88, 'Kancing/Button', 28),
+(89, 'Siluet', 26),
+(90, 'Panjang Celana', 26),
+(91, 'Saku/Pocket', 27),
+(92, 'Resleting/Zipper', 27),
+(93, 'Kerah/Collar', 27),
+(94, 'Panjang Jumpsuit', 27),
+(95, 'Kancing/Button', 27),
+(96, 'Jenis Rok/Type of Skirt', 22),
+(97, 'Kerah/Collar', 30),
+(98, 'Lengan/Slevee', 30),
+(99, 'Kancing/Button', 30),
+(100, 'Saku/Pocket', 30),
+(101, 'Jenis Lengan/Type of Sleeve', 30),
+(102, 'Jenis Lengan/Type of sleeve', 23),
+(103, 'Jenis Lengan/Type of Sleeve', 2),
+(104, 'Kerah/Collar', 32),
+(105, 'Jenis Lengan/Type of Sleeve', 32),
+(106, 'Bentuk Leher/Neckline', 32),
+(107, 'Lengan/Sleeve', 32),
+(108, 'Kancing/Button', 32),
+(109, 'Resleting/Zipper', 32),
+(110, 'Manset/Cuff', 32),
+(111, 'Jenis Kebaya', 32),
+(112, 'Model Pet', 31),
+(113, 'Panjang Khimar', 31),
+(114, 'Kerah/Collar', 33),
+(115, 'Lengan/Sleeve', 33),
+(116, 'Saku/Pocket', 33),
+(117, 'Placket', 33),
+(118, 'Kancing/Button', 33),
+(119, 'Manset/Cuff', 33),
+(123, 'Jenis Lengan/Type of Sleeve', 24),
+(124, 'Kancing/Button', 24),
+(125, 'Bentuk Leher/Neckline', 24),
+(126, 'Bentuk Leher/Neckline', 27),
+(127, 'Panjang Lengan/Sleeve', 27),
+(128, 'Jenis Lengan/Type of Sleeve', 27),
+(129, 'Model Celana', 27),
+(130, 'Manset/Cuff', 27),
+(131, 'Kancing/Button', 26),
+(132, 'Bentuk Leher/Neckline', 33),
+(133, 'Jenis Rok/Type of Skirt', 23),
+(134, 'Bur', 21),
+(135, 'Panjang Mukena', 29),
+(136, 'Tali', 29),
+(137, 'Model Celana', 30),
+(138, 'Panjang Celana', 30),
+(139, 'Bentuk Leher/Neckline', 28),
+(140, 'Kerah/Collar', 28);
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `tb_producer_type`
+--
+
+CREATE TABLE `tb_producer_type` (
+  `PRDUT_ID` smallint(6) NOT NULL,
+  `PRDUT_NAME` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data untuk tabel `tb_producer_type`
+--
+
+INSERT INTO `tb_producer_type` (`PRDUT_ID`, `PRDUT_NAME`) VALUES
+(1, 'Bordir'),
+(2, 'Garmen'),
+(3, 'Konveksi'),
+(4, 'Sablon'),
+(5, 'Penjahit');
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `tb_producer_x_product`
+--
+
+CREATE TABLE `tb_producer_x_product` (
+  `PRDXP_ID` int(11) NOT NULL,
+  `PRDU_ID` int(11) NOT NULL,
+  `PRDUP_ID` smallint(6) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data untuk tabel `tb_producer_x_product`
+--
+
+INSERT INTO `tb_producer_x_product` (`PRDXP_ID`, `PRDU_ID`, `PRDUP_ID`) VALUES
+(16, 1, 2),
+(18, 4, 1),
+(19, 5, 2),
+(20, 6, 2),
+(21, 8, 2),
+(22, 8, 1),
+(23, 8, 21),
+(24, 24, 21),
+(25, 24, 28),
+(26, 24, 1),
+(27, 24, 25),
+(28, 24, 26),
+(29, 24, 20),
+(30, 7, 2);
 
 -- --------------------------------------------------------
 
@@ -1531,6 +1963,7 @@ CREATE TABLE `tb_product` (
   `CURR_ID` int(11) NOT NULL,
   `CITY_ID` int(11) NOT NULL,
   `TYPE_ID` int(11) NOT NULL,
+  `STYPE_ID` int(11) NOT NULL,
   `PRO_CREATEDON` datetime DEFAULT NULL,
   `PRO_CREATEDBY` int(11) DEFAULT NULL,
   `PRO_EDITEDON` datetime DEFAULT NULL,
@@ -1541,14 +1974,498 @@ CREATE TABLE `tb_product` (
 -- Dumping data untuk tabel `tb_product`
 --
 
-INSERT INTO `tb_product` (`PRO_ID`, `PRO_NAME`, `PRO_DESC`, `PRO_WEIGHT`, `PRO_PICTURE`, `PRO_STATUS`, `PRO_AVAIL`, `PRO_PRICE`, `PRO_UNIT`, `PRO_VOL_PRICE`, `PRO_VOL_UNIT`, `PRO_PRICE_VENDOR`, `PRO_VOL_PRICE_VENDOR`, `PRO_TOTAL_COUNT`, `PRO_TOTAL_UNIT`, `PRO_TOTAL_WEIGHT`, `VEND_ID`, `CURR_ID`, `CITY_ID`, `TYPE_ID`, `PRO_CREATEDON`, `PRO_CREATEDBY`, `PRO_EDITEDON`, `PRO_EDITEDBY`) VALUES
-(23, 'Kain Kaos PE 40 Loreng', '', '0.80', '', 1, 0, '60000', 2, '60000', 2, '60000', '60000', 0, 0, '0.00', 874, 1, 269, 2, '2019-08-29 10:44:08', 6, NULL, NULL),
-(16, 'Kain Denim Cobra', 'Kain Denim Cobra', '0.25', 'Kain_Denim_COBRA.jpg', 1, 0, '35000', 9, '36000', 9, '30000', '31000', 0, 0, '0.00', 872, 1, 193, 2, '2019-07-16 09:48:03', 6, '2019-09-23 16:20:54', 6),
-(17, 'Drifit Sulkul Stabilo', 'Drifit Sulkul Stabilo', '1.00', 'drifit_sulkul_stabilo.jpg', 1, 0, '80000', 5, '1750000', 9, '75000', '1500000', 0, 0, '0.00', 874, 1, 269, 2, '2019-07-23 15:22:00', 6, '2019-09-24 09:04:19', 6),
-(22, 'Kain Parasut', '', '0.60', '', 1, 0, '60000', 5, '55000', 2, '60000', '55000', 0, 0, '0.00', 879, 1, 269, 2, '2019-08-29 10:10:39', 6, NULL, NULL),
-(24, 'Cover Oxford Cambray', '', '0.20', 'cover_oxford_cambray.jpg', 1, 0, '35000', 5, '25000', 8, '30000', '20000', 100, 9, '20.00', 872, 1, 193, 2, '2019-09-24 11:16:50', 6, '2019-09-24 13:09:21', 6),
-(34, 'Kain Kanvas SR-10', 'Kain Kanvas SR-10 adalah kain kanvas PE yang dipakai untuk sofa tahan air', '0.80', '', 1, 0, '81000', 5, '79000', 5, '72000', '71000', 52, 9, '42.00', 880, 1, 265, 2, '2019-09-27 10:25:03', 6, NULL, NULL),
-(35, 'Parasut Honeycon', '', '0.15', '', 1, 0, '24000', 8, '21000', 8, '20000', '18000', 100, 9, '15.00', 881, 1, 177, 2, '2019-09-27 10:27:55', 6, NULL, NULL);
+INSERT INTO `tb_product` (`PRO_ID`, `PRO_NAME`, `PRO_DESC`, `PRO_WEIGHT`, `PRO_PICTURE`, `PRO_STATUS`, `PRO_AVAIL`, `PRO_PRICE`, `PRO_UNIT`, `PRO_VOL_PRICE`, `PRO_VOL_UNIT`, `PRO_PRICE_VENDOR`, `PRO_VOL_PRICE_VENDOR`, `PRO_TOTAL_COUNT`, `PRO_TOTAL_UNIT`, `PRO_TOTAL_WEIGHT`, `VEND_ID`, `CURR_ID`, `CITY_ID`, `TYPE_ID`, `STYPE_ID`, `PRO_CREATEDON`, `PRO_CREATEDBY`, `PRO_EDITEDON`, `PRO_EDITEDBY`) VALUES
+(23, 'Kain Kaos PE 40 Loreng', '-', '0.20', '', 1, 0, '60000', 5, '57000', 8, '55000', '50000', 100, 9, '20.00', 874, 1, 269, 2, 5, '2019-08-29 10:44:08', 6, '2020-01-31 13:08:23', 6),
+(16, 'Kain Denim Cobra', 'Kain Denim Cobra', '0.25', 'Kain_Denim_COBRA.jpg', 1, 0, '35000', 8, '36000', 8, '30000', '31000', 100, 9, '25.00', 872, 1, 193, 2, 10, '2019-07-16 09:48:03', 6, '2020-01-31 13:07:58', 6),
+(17, 'Drifit Sulkul Stabilo', 'Drifit Sulkul Stabilo', '1.00', 'drifit_sulkul_stabilo.jpg', 1, 0, '80000', 2, '75000', 2, '70000', '60000', 26, 2, '26.00', 874, 1, 269, 2, 9, '2019-07-23 15:22:00', 6, '2020-01-31 11:13:24', 6),
+(22, 'Kain Parasut', '-', '0.18', '', 1, 0, '20500', 5, '17500', 8, '16000', '15000', 120, 9, '22.00', 881, 1, 177, 2, 15, '2019-08-29 10:10:39', 6, '2020-01-31 13:10:09', 6),
+(24, 'Cover Oxford Cambray', '-', '0.20', 'cover_oxford_cambray.jpg', 1, 0, '35000', 5, '25000', 8, '30000', '20000', 100, 9, '20.00', 872, 1, 193, 2, 5, '2019-09-24 11:16:50', 6, '2020-03-27 11:22:25', 6),
+(34, 'Kain Kanvas SR-10', 'Kain Kanvas SR-10 adalah kain kanvas PE yang dipakai untuk sofa tahan air', '0.80', '', 1, 0, '81000', 5, '79000', 5, '72000', '71000', 52, 9, '42.00', 880, 1, 265, 2, 5, '2019-09-27 10:25:03', 6, '2020-01-31 13:08:11', 6),
+(35, 'Parasut Honeycon', '-', '0.15', 'notif.png', 1, 0, '24000', 8, '21000', 8, '20000', '18000', 100, 9, '15.00', 881, 1, 177, 2, 15, '2019-09-27 10:27:55', 6, '2020-01-31 13:36:33', 6),
+(38, 'Kain Parasut Honey Cons (WP)', '-', '0.15', '', 1, 0, '18500', 8, '14500', 8, '14000', '12000', 100, 9, '15.00', 881, 1, 177, 2, 15, '2020-01-30 16:59:46', 6, '2020-01-31 13:10:28', 6),
+(39, 'Taslan Milky', '', '0.20', '', 1, 0, '27500', 5, '0', 0, '23000', '0', 0, 0, '0.00', 882, 1, 177, 2, 0, '2020-03-20 11:14:42', 6, NULL, NULL),
+(40, 'Kanvas Marsoto (Katun)', '-', '0.20', '', 1, 0, '47000', 5, '35000', 8, '41000', '30000', 50, 9, '10.00', 883, 1, 177, 2, 0, '2020-03-20 11:15:24', 6, '2020-03-26 10:33:41', 6);
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `tb_project`
+--
+
+CREATE TABLE `tb_project` (
+  `PRJ_ID` int(11) NOT NULL,
+  `CUST_ID` int(20) NOT NULL,
+  `PRJ_DATE` timestamp NULL DEFAULT NULL,
+  `PRJ_NOTES` varchar(500) DEFAULT NULL,
+  `PRJ_SUBTOTAL` decimal(10,0) DEFAULT NULL,
+  `PRJ_DISCOUNT` decimal(10,0) DEFAULT NULL,
+  `PRJ_DEPOSIT` decimal(10,0) DEFAULT NULL,
+  `PRJ_ADDCOST` decimal(10,0) DEFAULT NULL,
+  `PRJ_TAX` decimal(10,0) DEFAULT NULL,
+  `PRJ_TOTAL` decimal(10,0) DEFAULT NULL,
+  `PRJ_SHIPCOST` decimal(10,0) DEFAULT NULL,
+  `PRJ_GRAND_TOTAL` decimal(10,0) DEFAULT NULL,
+  `PRJ_STATUS` smallint(6) DEFAULT NULL,
+  `PRJ_PAYMENT_METHOD` smallint(6) DEFAULT NULL,
+  `BANK_ID` int(11) DEFAULT NULL,
+  `PRJ_PAYMENT_DATE` date DEFAULT '0000-00-00',
+  `PRJ_DURATION_EXP` smallint(6) DEFAULT NULL,
+  `PRJ_DURATION_EST` smallint(6) DEFAULT NULL,
+  `PRJ_DURATION_ACT` smallint(6) DEFAULT NULL,
+  `USER_ID` int(20) DEFAULT NULL,
+  `CHA_ID` int(20) DEFAULT NULL,
+  `PRJT_ID` smallint(6) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data untuk tabel `tb_project`
+--
+
+INSERT INTO `tb_project` (`PRJ_ID`, `CUST_ID`, `PRJ_DATE`, `PRJ_NOTES`, `PRJ_SUBTOTAL`, `PRJ_DISCOUNT`, `PRJ_DEPOSIT`, `PRJ_ADDCOST`, `PRJ_TAX`, `PRJ_TOTAL`, `PRJ_SHIPCOST`, `PRJ_GRAND_TOTAL`, `PRJ_STATUS`, `PRJ_PAYMENT_METHOD`, `BANK_ID`, `PRJ_PAYMENT_DATE`, `PRJ_DURATION_EXP`, `PRJ_DURATION_EST`, `PRJ_DURATION_ACT`, `USER_ID`, `CHA_ID`, `PRJT_ID`) VALUES
+(13, 15278, '2020-02-21 06:18:28', '', '1225000', '0', '1225000', '0', '0', NULL, NULL, '0', 4, 0, 1, '2020-02-26', 10, 11, NULL, 6, 7, 1),
+(14, 15288, '2020-02-25 06:55:47', '', '1000000', '0', NULL, '0', '0', '1000000', '0', '1000000', 2, 1, NULL, NULL, 10, 15, NULL, 6, 1, 1),
+(15, 15284, '2020-03-04 09:03:26', '', '1200000', '0', NULL, '0', '0', '1200000', '0', '1200000', 4, 1, NULL, NULL, 10, 12, 6, 6, 7, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `tb_project_activity`
+--
+
+CREATE TABLE `tb_project_activity` (
+  `PRJA_ID` smallint(6) NOT NULL,
+  `PRJA_NAME` varchar(30) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data untuk tabel `tb_project_activity`
+--
+
+INSERT INTO `tb_project_activity` (`PRJA_ID`, `PRJA_NAME`) VALUES
+(1, 'Cutting'),
+(3, 'Closed');
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `tb_project_criteria`
+--
+
+CREATE TABLE `tb_project_criteria` (
+  `PRJC_ID` smallint(6) NOT NULL,
+  `PRJC_NAME` varchar(30) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data untuk tabel `tb_project_criteria`
+--
+
+INSERT INTO `tb_project_criteria` (`PRJC_ID`, `PRJC_NAME`) VALUES
+(1, 'Kerapian');
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `tb_project_detail`
+--
+
+CREATE TABLE `tb_project_detail` (
+  `PRJD_ID` int(11) NOT NULL,
+  `PRJ_ID` int(11) NOT NULL,
+  `PRDUP_ID` smallint(6) NOT NULL,
+  `PRJD_IMG` varchar(500) DEFAULT NULL,
+  `PRJD_MATERIAL` varchar(200) DEFAULT NULL,
+  `PRJD_NOTES` varchar(500) DEFAULT NULL,
+  `SIZG_ID` smallint(6) DEFAULT NULL,
+  `PRDU_ID` int(11) DEFAULT NULL,
+  `PRJD_DURATION` smallint(6) DEFAULT NULL,
+  `PRJD_WEIGHT_EST` float DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data untuk tabel `tb_project_detail`
+--
+
+INSERT INTO `tb_project_detail` (`PRJD_ID`, `PRJ_ID`, `PRDUP_ID`, `PRJD_IMG`, `PRJD_MATERIAL`, `PRJD_NOTES`, `SIZG_ID`, `PRDU_ID`, `PRJD_DURATION`, `PRJD_WEIGHT_EST`) VALUES
+(9, 13, 21, 'jaket.jpg', '', '', 1, 4, 10, NULL),
+(10, 14, 2, 'kaos.png, kaos_polos_putih.jpg', 'tes material', 'tes catatan', 1, 4, 11, NULL),
+(11, 15, 20, NULL, 'tes', 'tes', 1, 22, 10, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `tb_project_detail_model`
+--
+
+CREATE TABLE `tb_project_detail_model` (
+  `PRJDM_ID` int(11) NOT NULL,
+  `PRJD_ID` int(11) NOT NULL,
+  `PRDPP_ID` smallint(6) DEFAULT NULL,
+  `PRJDM_IMG` varchar(100) DEFAULT NULL,
+  `PRJDM_NOTES` varchar(500) DEFAULT NULL,
+  `PRJDM_MATERIAL` varchar(50) DEFAULT NULL,
+  `PRJDM_COLOR` varchar(30) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data untuk tabel `tb_project_detail_model`
+--
+
+INSERT INTO `tb_project_detail_model` (`PRJDM_ID`, `PRJD_ID`, `PRDPP_ID`, `PRJDM_IMG`, `PRJDM_NOTES`, `PRJDM_MATERIAL`, `PRJDM_COLOR`) VALUES
+(18, 9, 51, 'lengan.png', 'coba', 'coba', 'coba'),
+(19, 9, 50, 'manset.png', 'tes', 'tes', 'tes'),
+(20, 10, 37, 'perisai-tengah.png', 'tes', 'tes', 'tes'),
+(21, 11, 56, '', 'tes', 'tes', 'tes');
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `tb_project_detail_quantity`
+--
+
+CREATE TABLE `tb_project_detail_quantity` (
+  `PRJDQ_ID` int(11) NOT NULL,
+  `PRJD_ID` int(11) NOT NULL,
+  `SIZE_ID` smallint(6) NOT NULL,
+  `PRJDQ_QTY` smallint(6) DEFAULT NULL,
+  `PRJDQ_PRICE` decimal(10,0) DEFAULT NULL,
+  `PRJDQ_PRICE_PRODUCER` decimal(10,0) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data untuk tabel `tb_project_detail_quantity`
+--
+
+INSERT INTO `tb_project_detail_quantity` (`PRJDQ_ID`, `PRJD_ID`, `SIZE_ID`, `PRJDQ_QTY`, `PRJDQ_PRICE`, `PRJDQ_PRICE_PRODUCER`) VALUES
+(14, 9, 1, 10, '80000', '75000'),
+(15, 9, 2, 5, '85000', '80000'),
+(16, 10, 1, 10, '50000', '45000'),
+(17, 10, 2, 10, '50000', '45000'),
+(18, 11, 1, 12, '100000', '90000');
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `tb_project_payment`
+--
+
+CREATE TABLE `tb_project_payment` (
+  `PRJP_ID` int(11) NOT NULL,
+  `PRJ_ID` int(11) NOT NULL,
+  `PRJP_DATE` timestamp NULL DEFAULT NULL,
+  `PRJP_NOTES` varchar(500) DEFAULT NULL,
+  `PRJP_AMOUNT` decimal(10,0) DEFAULT NULL,
+  `BANK_ID` int(11) DEFAULT NULL,
+  `PRJP_PAYMENT_DATE` date DEFAULT '0000-00-00'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data untuk tabel `tb_project_payment`
+--
+
+INSERT INTO `tb_project_payment` (`PRJP_ID`, `PRJ_ID`, `PRJP_DATE`, `PRJP_NOTES`, `PRJP_AMOUNT`, `BANK_ID`, `PRJP_PAYMENT_DATE`) VALUES
+(3, 14, '2020-03-04 07:06:30', NULL, '10000', 2, '2020-03-03'),
+(5, 15, '2020-03-04 09:11:41', NULL, '250000', 2, '2020-03-04'),
+(6, 14, '2020-03-05 08:50:12', NULL, '90000', 2, '2020-03-05'),
+(7, 14, '2020-03-10 03:50:53', NULL, '900000', 2, '2020-03-10');
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `tb_project_producer`
+--
+
+CREATE TABLE `tb_project_producer` (
+  `PRJPR_ID` int(11) NOT NULL,
+  `PRJD_ID` int(11) NOT NULL,
+  `PRDU_ID` int(11) NOT NULL,
+  `PRJPR_PRICE` decimal(10,0) DEFAULT NULL,
+  `PRJPR_DURATION` smallint(6) DEFAULT NULL,
+  `PRJPR_NOTES` varchar(500) DEFAULT NULL,
+  `PRJPR_IMG` varchar(500) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `tb_project_progress`
+--
+
+CREATE TABLE `tb_project_progress` (
+  `PRJPG_ID` int(11) NOT NULL,
+  `PRJD_ID` int(11) NOT NULL,
+  `PRJA_ID` int(11) NOT NULL,
+  `PRJPG_DATE` timestamp NULL DEFAULT NULL,
+  `PRJPG_IMG` varchar(500) DEFAULT NULL,
+  `PRJPG_NOTES` varchar(500) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data untuk tabel `tb_project_progress`
+--
+
+INSERT INTO `tb_project_progress` (`PRJPG_ID`, `PRJD_ID`, `PRJA_ID`, `PRJPG_DATE`, `PRJPG_IMG`, `PRJPG_NOTES`) VALUES
+(1, 11, 1, '2020-03-06 09:44:56', 'potongan-badan-depan.png', 'ok'),
+(4, 11, 3, '2020-03-10 02:30:56', '', 'tes');
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `tb_project_review`
+--
+
+CREATE TABLE `tb_project_review` (
+  `PRJR_ID` smallint(6) NOT NULL,
+  `PRJ_ID` int(11) NOT NULL,
+  `PRJC_ID` smallint(6) NOT NULL,
+  `PRJR_POINT` smallint(6) NOT NULL,
+  `PRJR_NOTES` varchar(200) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `tb_project_type`
+--
+
+CREATE TABLE `tb_project_type` (
+  `PRJT_ID` smallint(6) NOT NULL,
+  `PRJT_NAME` varchar(30) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data untuk tabel `tb_project_type`
+--
+
+INSERT INTO `tb_project_type` (`PRJT_ID`, `PRJT_NAME`) VALUES
+(1, 'Design');
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `tb_size`
+--
+
+CREATE TABLE `tb_size` (
+  `SIZE_ID` smallint(6) NOT NULL,
+  `SIZE_NAME` varchar(100) NOT NULL,
+  `SIZG_ID` smallint(6) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data untuk tabel `tb_size`
+--
+
+INSERT INTO `tb_size` (`SIZE_ID`, `SIZE_NAME`, `SIZG_ID`) VALUES
+(1, 'M', 1),
+(2, 'L', 1),
+(3, 'XL', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `tb_size_group`
+--
+
+CREATE TABLE `tb_size_group` (
+  `SIZG_ID` smallint(6) NOT NULL,
+  `SIZG_NAME` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data untuk tabel `tb_size_group`
+--
+
+INSERT INTO `tb_size_group` (`SIZG_ID`, `SIZG_NAME`) VALUES
+(1, 'Ukuran Indonesia'),
+(5, 'Ukuran Internasional');
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `tb_size_type`
+--
+
+CREATE TABLE `tb_size_type` (
+  `SIZP_ID` smallint(6) NOT NULL,
+  `SIZP_NAME` varchar(100) NOT NULL,
+  `PRDUP_ID` smallint(6) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data untuk tabel `tb_size_type`
+--
+
+INSERT INTO `tb_size_type` (`SIZP_ID`, `SIZP_NAME`, `PRDUP_ID`) VALUES
+(1, 'Chest', 2),
+(4, 'Length', 2),
+(5, 'Full Shoulder', 2),
+(6, 'Armhole', 2),
+(7, 'Sleeve Length', 2),
+(9, 'Sleeve Open', 2),
+(10, 'Neck Open', 2),
+(11, 'Front Neck Drop', 2),
+(12, 'Collar Rib', 2),
+(13, 'Upline Neck Drop', 2),
+(14, 'Neck', 1),
+(15, 'Chest', 1),
+(16, 'Waist', 1),
+(17, 'Sleeve Length', 1),
+(18, 'Full Shoulder', 1),
+(19, 'Back Length', 1),
+(20, 'Armhole', 1),
+(21, 'Collar', 1),
+(22, 'Cuff', 1),
+(23, 'Lingkar Badan/Chest', 20),
+(24, 'Lingkar Pinggang/Waist', 20),
+(26, 'Lingkar Leher', 20),
+(27, 'Lingkar Panggul/Hip', 20),
+(28, 'Panjang Lengan/Sleeve Length', 20),
+(29, 'Lingkar Lubang Lengan/Armhole', 20),
+(30, 'Bahu ke bahu /Full Shoulder', 20),
+(31, 'Panjang Bahu/Shoulder Width', 20),
+(32, 'Panjang blus dari bahu tertinggi', 20),
+(33, 'Lebar Muka', 20),
+(34, 'Lingkar Pergelangan Tangan', 20),
+(35, 'Panjang Punggung', 20),
+(36, 'Lingkar Badan/Chest', 21),
+(37, 'Panjang Lengan/Sleeve', 21),
+(38, 'Lingkar Lubang Lengan/Armhole', 21),
+(39, 'Lingkar Badan/Chest', 25),
+(40, 'Lingkar Pinggang/Waist', 25),
+(41, 'Lingkar Panggul/Hip', 25),
+(42, 'Lebar Bahu/Full Shoulder', 25),
+(43, 'Lebar Muka', 25),
+(44, 'Panjang Belakang Jas', 25),
+(45, 'Lingkar Leher', 25),
+(46, 'Panjang Punggung', 25),
+(47, 'Lingkar Lubang Lengan/Armhole', 25),
+(48, 'Lingkar Siku', 25),
+(49, 'Panjang Lengan/Sleeve Length', 25),
+(50, 'Lingkar Pergelangan Tangan', 25),
+(51, 'Panjang Siku', 25),
+(52, 'Panjang Jaket', 21),
+(53, 'Lebar Bur', 21),
+(54, 'Lingkar Pergelangan Tangan', 21),
+(55, 'Bahu ke bahu/Full Shoulder', 21),
+(56, 'Lebar Bahu/Shoulder Width', 21),
+(57, 'Panjang Hoodie', 21),
+(58, 'Panjang Rok', 22),
+(59, 'Lingkar Pinggang', 22),
+(60, 'Lingkar Bawah', 22),
+(61, 'Lingkar Pinggul', 22),
+(62, 'Lingkar Pinggang/Waist', 32),
+(63, 'Lingkar Pinggul/Hip', 32),
+(64, 'Lebar Punggung', 32),
+(65, 'Panjang Lengan/Sleeve Length', 32),
+(66, 'Lingkar Pergelangan Tangan', 32),
+(67, 'Panjang Kebaya dari Bahu', 32),
+(68, 'Lingkar Lubang Lengan/Armhole', 33),
+(69, 'Panjang Belakang/Back Length', 33),
+(70, 'Lingkar Badan/Chest', 33),
+(71, 'Kerah/Collar', 33),
+(72, 'Manset/Cuff', 33),
+(73, 'Bahu ke Bahu/Full Shoulder', 33),
+(74, 'Panjang Lengan/Sleeve Length', 33),
+(75, 'Lingkar Badan/Chest', 30),
+(78, 'Panjang Piyama dari Bahu Tertinggi', 30),
+(79, 'Lingkar Lubang Lengan/Armhole', 30),
+(80, 'Lingkar Pinggang/Waist', 30),
+(81, 'Panjang Celana', 30),
+(82, 'Lingkar Pinggul/Hip', 30),
+(83, 'Lingkar Kaki', 30),
+(84, 'Lingkar Pesak', 30),
+(85, 'Panjang Rompi dari Bahu', 28),
+(86, 'Bahu ke Bahu/Full Shoulder', 28),
+(87, 'Lingkar Badan/Chest', 28),
+(88, 'Lingkar Pinggang/Waist', 28),
+(89, 'Lingkar Pinggul/Hip', 28),
+(90, 'Kerah/Collar', 28),
+(91, 'Lingkar Badan/Chest', 24),
+(92, 'Lingkar Pinggul/Hip', 24),
+(93, 'Panjang Outer dari Bahu Tertinggi', 24),
+(94, 'Panjang Lengan/Sleeve Length', 24),
+(95, 'Lingkar Lubang Lengan/Armhole', 24),
+(96, 'Lingkar Pergelangan Tangan', 24),
+(97, 'Panjang Celana', 26),
+(98, 'Lingkar Pinggang/Waist', 26),
+(99, 'Lingkar Pinggul/Hip', 26),
+(100, 'Lingkar Paha', 26),
+(101, 'Lebar Manset/Cuff Width', 20),
+(102, 'Panjang Manset', 20),
+(103, 'Lingkar Lubang Lengan/Armhole', 28),
+(104, 'Lingkar Paha', 27),
+(105, 'Panjang Jumpsuit dari Bahu tertinggi', 27),
+(106, 'Bahu ke bahu /Full Shoulder', 23),
+(107, 'Lebar Manset/Cuff Width', 23),
+(108, 'Lebar Muka', 23),
+(109, 'Lingkar Badan/Chest', 23),
+(110, 'Lingkar Leher', 23),
+(111, ' Lingkar Lubang Lengan/Armhole', 23),
+(112, 'Lingkar Panggul/Hip', 23),
+(113, 'Lingkar Pergelangan Tangan', 23),
+(114, 'Lingkar Pinggang/Waist', 23),
+(115, 'Panjang Bahu/Shoulder Width', 23),
+(116, 'Panjang gaun dari bahu tertinggi', 23),
+(117, 'Panjang Lengan/Sleeve Length', 23),
+(118, 'Panjang Manset', 23),
+(119, 'Panjang Punggung', 23),
+(120, 'Bahu ke bahu /Full Shoulder', 32),
+(121, 'Lebar Manset/Cuff Width', 32),
+(122, 'Lebar Muka', 32),
+(123, 'Lingkar Badan/Chest', 32),
+(124, 'Lingkar Leher', 32),
+(125, 'Lingkar Lubang Lengan/Armhole', 32),
+(126, 'Panjang Bahu/Shoulder Width', 32),
+(127, 'Panjang Manset', 32),
+(128, 'Panjang Punggung', 32),
+(129, 'Lebar Punggung', 20),
+(130, 'Bahu ke bahu /Full Shoulder', 24),
+(131, 'Lebar Manset/Cuff Width', 24),
+(132, 'Lebar Muka', 24),
+(133, 'Lebar Punggung', 24),
+(134, 'Lingkar Leher', 24),
+(135, 'Lingkar Pinggang/Waist', 24),
+(136, 'Panjang Bahu/Shoulder Width', 24),
+(137, 'Panjang Manset', 24),
+(138, ' Panjang Punggung', 24),
+(139, 'Bahu ke bahu /Full Shoulder', 30),
+(140, 'Lebar Manset/Cuff Width', 30),
+(141, ' Bahu ke bahu /Full Shoulder', 27),
+(142, 'Lebar Manset/Cuff Width', 27),
+(143, 'Lebar Muka', 27),
+(144, ' Lebar Punggung', 27),
+(145, 'Lingkar Badan/Chest', 27),
+(146, 'Lingkar Leher', 27),
+(147, 'Lingkar Lubang Lengan/Armhole', 27),
+(148, 'Lingkar Panggul/Hip', 27),
+(149, 'Lingkar Pergelangan Tangan', 27),
+(150, 'Lingkar Pinggang/Waist', 27),
+(151, 'Panjang Bahu/Shoulder Width', 27),
+(152, 'Panjang Lengan/Sleeve Length', 27),
+(153, ' Panjang Manset', 27),
+(154, 'Panjang Punggung', 27);
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `tb_size_value`
+--
+
+CREATE TABLE `tb_size_value` (
+  `SIZV_ID` smallint(6) NOT NULL,
+  `SIZV_VALUE` float NOT NULL,
+  `SIZG_ID` smallint(6) NOT NULL,
+  `SIZP_ID` smallint(6) NOT NULL,
+  `SIZE_ID` smallint(6) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data untuk tabel `tb_size_value`
+--
+
+INSERT INTO `tb_size_value` (`SIZV_ID`, `SIZV_VALUE`, `SIZG_ID`, `SIZP_ID`, `SIZE_ID`) VALUES
+(1, 10, 1, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -12327,6 +13244,37 @@ INSERT INTO `tb_subdistrict` (`SUBD_ID`, `CITY_ID`, `STATE_ID`, `CNTR_ID`, `SUBD
 -- --------------------------------------------------------
 
 --
+-- Struktur dari tabel `tb_subtype`
+--
+
+CREATE TABLE `tb_subtype` (
+  `STYPE_ID` int(11) NOT NULL,
+  `STYPE_NAME` varchar(100) NOT NULL,
+  `TYPE_ID` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data untuk tabel `tb_subtype`
+--
+
+INSERT INTO `tb_subtype` (`STYPE_ID`, `STYPE_NAME`, `TYPE_ID`) VALUES
+(3, 'tes 1', 4),
+(4, 'tes 2', 4),
+(5, 'Katun', 2),
+(6, 'Wool', 2),
+(7, 'Sutera', 2),
+(8, 'Spandex', 2),
+(9, 'Jersey', 2),
+(10, 'Denim', 2),
+(11, 'Batik', 1),
+(12, 'Ulos', 1),
+(13, 'Songket', 1),
+(14, 'Sasirangan', 1),
+(15, 'Polyester', 2);
+
+-- --------------------------------------------------------
+
+--
 -- Struktur dari tabel `tb_type`
 --
 
@@ -12401,9 +13349,14 @@ INSERT INTO `tb_user` (`USER_ID`, `USER_NAME`, `USER_LOGIN`, `USER_PASSWORD`, `G
 (3, 'Sanusi Mulyo', 'sanusi', '59fe1f29ff91ef1c7627ea81e98fa0304f2affc0', 14),
 (4, 'Yagyoo', 'yagyoo', '8978624d52153a771184be82a0a44224ce62dd72', 1),
 (6, 'Superuser', 'superuser', '8e67bb26b358e2ed20fe552ed6fb832f397a507d', 3),
-(9, 'Afifah', 'afifah', 'b5d2ba57db66df2651847d601570a35075073c5c', 1),
+(9, 'Afifah', 'afifah', '7d8902c012547bcfb255e4a13dbb596f77ea3469', 1),
 (63, 'rifqi', 'rifqi', 'd77a5e354be9cb8f2a3c83a841ed84baa2abc267', 2),
-(65, 'dewinur', 'dewinur', '747d4a61a527bd0118fbc9b11e006814c7734cc7', 1);
+(65, 'dewinur', 'dewinur', '747d4a61a527bd0118fbc9b11e006814c7734cc7', 1),
+(66, 'test-cs1', 'test-cs1', '7bf32d6999405f65352a212391e9b032f6429ab2', 1),
+(67, 'test-pm1', 'test-pm1', '567411aaeadb06705db7aef7d6abdb669196029d', 2),
+(68, 'cs1', 'cs111', '65df07de2bf35d97ae2abf3f44b0968ecf5fcbb1', 1),
+(69, 'cs2', 'cs222', '240f3b055bf8305d95efaa54b227d972e9824eaf', 1),
+(70, 'eni widya sari', 'eni.widya', '9054b14098369218be8fa11eca787c08ece85107', 15);
 
 -- --------------------------------------------------------
 
@@ -12422,19 +13375,25 @@ CREATE TABLE `tb_vendor` (
   `SUBD_ID` int(11) NOT NULL,
   `VEND_PHONE` varchar(20) DEFAULT NULL,
   `VEND_EMAIL` varchar(100) DEFAULT NULL,
-  `VEND_STATUS` smallint(6) DEFAULT NULL
+  `VEND_STATUS` smallint(6) DEFAULT NULL,
+  `VEND_COURIER_ID` int(11) DEFAULT NULL,
+  `VEND_COURIER_ADD_UNIT` decimal(10,0) DEFAULT NULL,
+  `VEND_COURIER_ADD_VOL` decimal(10,0) DEFAULT NULL,
+  `VEND_ADDCOST` decimal(10,0) DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data untuk tabel `tb_vendor`
 --
 
-INSERT INTO `tb_vendor` (`VEND_ID`, `VEND_NAME`, `VEND_CPERSON`, `VEND_ADDRESS`, `CNTR_ID`, `STATE_ID`, `CITY_ID`, `SUBD_ID`, `VEND_PHONE`, `VEND_EMAIL`, `VEND_STATUS`) VALUES
-(872, 'Vendor 101', 'Gozali', 'Jl Veteran No. 107', 1, 13, 193, 574, '1234345656', 'gozali@gmail.com', 1),
-(874, 'Vendor 2', 'Pak Bambang', 'Jl. Pembantu no. 11', 1, 14, 269, 6983, '0811-2456-2112', 'bambang@tokoku.com', 1),
-(879, 'Vendor 3', 'Budi Sentosa', '', 1, 14, 269, 6986, '08977656467', '', 1),
-(880, 'Altajaya', 'CS', 'Ruko Perwita Regency, Blok A No.3, Jl. Parangtritis No.Km 3,5, Randubelang, Bangunharjo, Kec. Sewon, Bantul, Daerah Istimewa Yogyakarta 55188', 1, 14, 269, 0, '0813-1981-1199', '', 1),
-(881, 'MegaTex', 'Felix', 'Kb. Jeruk, Kec. Andir, Kota Bandung, Jawa Barat 40181', 1, 12, 177, 338, '+62 852-2222-9898', '', 1);
+INSERT INTO `tb_vendor` (`VEND_ID`, `VEND_NAME`, `VEND_CPERSON`, `VEND_ADDRESS`, `CNTR_ID`, `STATE_ID`, `CITY_ID`, `SUBD_ID`, `VEND_PHONE`, `VEND_EMAIL`, `VEND_STATUS`, `VEND_COURIER_ID`, `VEND_COURIER_ADD_UNIT`, `VEND_COURIER_ADD_VOL`, `VEND_ADDCOST`) VALUES
+(872, 'Vendor 101', 'Gozali', 'Jl Veteran No. 107', 1, 13, 193, 574, '1234345656', 'gozali@gmail.com', 1, NULL, NULL, NULL, NULL),
+(874, 'Vendor 2', 'Pak Bambang', 'Jl. Pembantu no. 11', 1, 14, 269, 6983, '0811-2456-2112', 'bambang@tokoku.com', 1, NULL, NULL, NULL, NULL),
+(879, 'Vendor 3', 'Budi Sentosa', '', 1, 14, 269, 6986, '08977656467', '', 1, NULL, NULL, NULL, NULL),
+(880, 'Altajaya', 'CS', 'Ruko Perwita Regency, Blok A No.3, Jl. Parangtritis No.Km 3,5, Randubelang, Bangunharjo, Kec. Sewon, Bantul, Daerah Istimewa Yogyakarta 55188', 1, 14, 269, 0, '0813-1981-1199', '', 1, 881, '15000', '10000', '10000'),
+(881, 'MegaTex', 'Felix', 'Kb. Jeruk, Kec. Andir, Kota Bandung, Jawa Barat 40181', 1, 12, 177, 338, '+62 852-2222-9898', '', 1, NULL, NULL, NULL, NULL),
+(882, 'Indo Textile', 'Ahmad Mizani', '', 1, 12, 177, 0, '0815-1111-2222', '', 1, NULL, NULL, NULL, NULL),
+(883, 'Indah Mas', 'CS', '', 1, 12, 177, 0, '0819-2222-3333', '', 1, 882, '1000', '500', NULL);
 
 -- --------------------------------------------------------
 
@@ -12473,20 +13432,15 @@ CREATE TABLE `tb_vendor_deposit` (
   `VENDD_ID` int(11) NOT NULL,
   `VENDD_DATE` timestamp NULL DEFAULT NULL,
   `ORDER_ID` int(11) DEFAULT NULL,
+  `ORDV_ID` int(11) DEFAULT NULL,
   `VENDD_DEPOSIT` decimal(10,0) DEFAULT NULL,
   `VENDD_DEPOSIT_STATUS` tinyint(4) DEFAULT NULL,
   `VENDD_ORDER_ID` int(11) DEFAULT NULL,
   `VEND_ID` int(11) DEFAULT NULL,
   `VENDD_CLOSE_DATE` timestamp NULL DEFAULT NULL,
-  `BANK_ID` int(11) DEFAULT NULL
+  `BANK_ID` int(11) DEFAULT NULL,
+  `VENDD_NOTES` varchar(500) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data untuk tabel `tb_vendor_deposit`
---
-
-INSERT INTO `tb_vendor_deposit` (`VENDD_ID`, `VENDD_DATE`, `ORDER_ID`, `VENDD_DEPOSIT`, `VENDD_DEPOSIT_STATUS`, `VENDD_ORDER_ID`, `VEND_ID`, `VENDD_CLOSE_DATE`, `BANK_ID`) VALUES
-(21, '2019-10-15 07:57:59', 91, '52000', 0, NULL, 872, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -12499,32 +13453,11 @@ CREATE TABLE `tb_vendor_price` (
   `VENP_DATE` timestamp NULL DEFAULT NULL,
   `VEND_ID` int(11) DEFAULT NULL,
   `PRO_ID` int(11) DEFAULT NULL,
-  `VENP_QTY` int(11) DEFAULT NULL,
+  `VENP_QTY` float DEFAULT NULL,
   `UMEA_ID` int(11) NOT NULL,
   `OLD_PRICE` decimal(10,0) DEFAULT NULL,
   `NEW_PRICE` decimal(10,0) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data untuk tabel `tb_vendor_price`
---
-
-INSERT INTO `tb_vendor_price` (`VENP_ID`, `VENP_DATE`, `VEND_ID`, `PRO_ID`, `VENP_QTY`, `UMEA_ID`, `OLD_PRICE`, `NEW_PRICE`) VALUES
-(1, '0000-00-00 00:00:00', 879, 22, 1, 5, '60000', '60000'),
-(2, '0000-00-00 00:00:00', 879, 22, 1, 5, '6000', '600000'),
-(3, '0000-00-00 00:00:00', 879, 22, 1, 5, '600000', '600000'),
-(4, '0000-00-00 00:00:00', 879, 22, 1, 5, '50000', '5000'),
-(5, '0000-00-00 00:00:00', 879, 22, 1, 5, '5000', '60000'),
-(6, '0000-00-00 00:00:00', 879, 22, 1, 5, '60000', '6000'),
-(7, '0000-00-00 00:00:00', 879, 22, 1, 5, '6000', '60000'),
-(8, '0000-00-00 00:00:00', 879, 22, 1, 5, '60000', '6000'),
-(9, '2019-10-09 04:46:27', 879, 22, 1, 5, '6000', '60000'),
-(10, '2019-10-09 04:47:08', 881, 35, 2, 9, '1800000', '180000'),
-(11, '2019-10-09 04:47:08', 881, 35, 10, 8, '20000', '2000'),
-(12, '2019-10-09 04:47:44', 881, 35, 2, 9, '180000', '1800000'),
-(13, '2019-10-09 04:47:44', 881, 35, 10, 8, '2000', '20000'),
-(14, '2019-10-09 06:22:44', 881, 35, 10, 8, '20000', '2000'),
-(15, '2019-10-09 06:22:51', 881, 35, 10, 8, '2000', '20000');
 
 --
 -- Indexes for dumped tables
@@ -12682,16 +13615,154 @@ ALTER TABLE `tb_order_vendor`
   ADD PRIMARY KEY (`ORDV_ID`);
 
 --
+-- Indeks untuk tabel `tb_order_vendor_old`
+--
+ALTER TABLE `tb_order_vendor_old`
+  ADD PRIMARY KEY (`ORDV_ID`);
+
+--
+-- Indeks untuk tabel `tb_payment_to_vendor`
+--
+ALTER TABLE `tb_payment_to_vendor`
+  ADD PRIMARY KEY (`PAYTOV_ID`);
+
+--
 -- Indeks untuk tabel `tb_poption`
 --
 ALTER TABLE `tb_poption`
   ADD PRIMARY KEY (`POPT_ID`);
 
 --
+-- Indeks untuk tabel `tb_producer`
+--
+ALTER TABLE `tb_producer`
+  ADD PRIMARY KEY (`PRDU_ID`);
+
+--
+-- Indeks untuk tabel `tb_producer_category`
+--
+ALTER TABLE `tb_producer_category`
+  ADD PRIMARY KEY (`PRDUC_ID`);
+
+--
+-- Indeks untuk tabel `tb_producer_product`
+--
+ALTER TABLE `tb_producer_product`
+  ADD PRIMARY KEY (`PRDUP_ID`);
+
+--
+-- Indeks untuk tabel `tb_producer_product_property`
+--
+ALTER TABLE `tb_producer_product_property`
+  ADD PRIMARY KEY (`PRDPP_ID`);
+
+--
+-- Indeks untuk tabel `tb_producer_type`
+--
+ALTER TABLE `tb_producer_type`
+  ADD PRIMARY KEY (`PRDUT_ID`);
+
+--
+-- Indeks untuk tabel `tb_producer_x_product`
+--
+ALTER TABLE `tb_producer_x_product`
+  ADD PRIMARY KEY (`PRDXP_ID`);
+
+--
 -- Indeks untuk tabel `tb_product`
 --
 ALTER TABLE `tb_product`
   ADD PRIMARY KEY (`PRO_ID`);
+
+--
+-- Indeks untuk tabel `tb_project`
+--
+ALTER TABLE `tb_project`
+  ADD PRIMARY KEY (`PRJ_ID`);
+
+--
+-- Indeks untuk tabel `tb_project_activity`
+--
+ALTER TABLE `tb_project_activity`
+  ADD PRIMARY KEY (`PRJA_ID`);
+
+--
+-- Indeks untuk tabel `tb_project_criteria`
+--
+ALTER TABLE `tb_project_criteria`
+  ADD PRIMARY KEY (`PRJC_ID`);
+
+--
+-- Indeks untuk tabel `tb_project_detail`
+--
+ALTER TABLE `tb_project_detail`
+  ADD PRIMARY KEY (`PRJD_ID`);
+
+--
+-- Indeks untuk tabel `tb_project_detail_model`
+--
+ALTER TABLE `tb_project_detail_model`
+  ADD PRIMARY KEY (`PRJDM_ID`);
+
+--
+-- Indeks untuk tabel `tb_project_detail_quantity`
+--
+ALTER TABLE `tb_project_detail_quantity`
+  ADD PRIMARY KEY (`PRJDQ_ID`);
+
+--
+-- Indeks untuk tabel `tb_project_payment`
+--
+ALTER TABLE `tb_project_payment`
+  ADD PRIMARY KEY (`PRJP_ID`);
+
+--
+-- Indeks untuk tabel `tb_project_producer`
+--
+ALTER TABLE `tb_project_producer`
+  ADD PRIMARY KEY (`PRJPR_ID`);
+
+--
+-- Indeks untuk tabel `tb_project_progress`
+--
+ALTER TABLE `tb_project_progress`
+  ADD PRIMARY KEY (`PRJPG_ID`);
+
+--
+-- Indeks untuk tabel `tb_project_review`
+--
+ALTER TABLE `tb_project_review`
+  ADD PRIMARY KEY (`PRJR_ID`);
+
+--
+-- Indeks untuk tabel `tb_project_type`
+--
+ALTER TABLE `tb_project_type`
+  ADD PRIMARY KEY (`PRJT_ID`);
+
+--
+-- Indeks untuk tabel `tb_size`
+--
+ALTER TABLE `tb_size`
+  ADD PRIMARY KEY (`SIZE_ID`);
+
+--
+-- Indeks untuk tabel `tb_size_group`
+--
+ALTER TABLE `tb_size_group`
+  ADD PRIMARY KEY (`SIZG_ID`);
+
+--
+-- Indeks untuk tabel `tb_size_type`
+--
+ALTER TABLE `tb_size_type`
+  ADD PRIMARY KEY (`SIZP_ID`);
+
+--
+-- Indeks untuk tabel `tb_size_value`
+--
+ALTER TABLE `tb_size_value`
+  ADD PRIMARY KEY (`SIZV_ID`);
 
 --
 -- Indeks untuk tabel `tb_state`
@@ -12707,6 +13778,12 @@ ALTER TABLE `tb_subdistrict`
   ADD KEY `CITY_ID` (`CITY_ID`),
   ADD KEY `STATE_ID` (`STATE_ID`),
   ADD KEY `CNTR_ID` (`CNTR_ID`);
+
+--
+-- Indeks untuk tabel `tb_subtype`
+--
+ALTER TABLE `tb_subtype`
+  ADD PRIMARY KEY (`STYPE_ID`);
 
 --
 -- Indeks untuk tabel `tb_type`
@@ -12758,7 +13835,7 @@ ALTER TABLE `tb_vendor_price`
 -- AUTO_INCREMENT untuk tabel `tb_bank`
 --
 ALTER TABLE `tb_bank`
-  MODIFY `BANK_ID` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=110;
+  MODIFY `BANK_ID` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=113;
 
 --
 -- AUTO_INCREMENT untuk tabel `tb_channel`
@@ -12782,7 +13859,7 @@ ALTER TABLE `tb_country`
 -- AUTO_INCREMENT untuk tabel `tb_courier`
 --
 ALTER TABLE `tb_courier`
-  MODIFY `COURIER_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `COURIER_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- AUTO_INCREMENT untuk tabel `tb_courier_address`
@@ -12794,7 +13871,7 @@ ALTER TABLE `tb_courier_address`
 -- AUTO_INCREMENT untuk tabel `tb_courier_tariff`
 --
 ALTER TABLE `tb_courier_tariff`
-  MODIFY `COUTAR_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `COUTAR_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT untuk tabel `tb_currency`
@@ -12806,7 +13883,7 @@ ALTER TABLE `tb_currency`
 -- AUTO_INCREMENT untuk tabel `tb_customer`
 --
 ALTER TABLE `tb_customer`
-  MODIFY `CUST_ID` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15284;
+  MODIFY `CUST_ID` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15290;
 
 --
 -- AUTO_INCREMENT untuk tabel `tb_customer_activity`
@@ -12818,13 +13895,13 @@ ALTER TABLE `tb_customer_activity`
 -- AUTO_INCREMENT untuk tabel `tb_customer_deposit`
 --
 ALTER TABLE `tb_customer_deposit`
-  MODIFY `CUSTD_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `CUSTD_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=146;
 
 --
 -- AUTO_INCREMENT untuk tabel `tb_customer_log`
 --
 ALTER TABLE `tb_customer_log`
-  MODIFY `CLOG_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15349;
+  MODIFY `CLOG_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15471;
 
 --
 -- AUTO_INCREMENT untuk tabel `tb_docno`
@@ -12836,55 +13913,73 @@ ALTER TABLE `tb_docno`
 -- AUTO_INCREMENT untuk tabel `tb_followup`
 --
 ALTER TABLE `tb_followup`
-  MODIFY `FLWP_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=111;
+  MODIFY `FLWP_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=168;
 
 --
 -- AUTO_INCREMENT untuk tabel `tb_group`
 --
 ALTER TABLE `tb_group`
-  MODIFY `GRP_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `GRP_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT untuk tabel `tb_group_access`
 --
 ALTER TABLE `tb_group_access`
-  MODIFY `GACC_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=96;
+  MODIFY `GACC_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=111;
 
 --
 -- AUTO_INCREMENT untuk tabel `tb_log_sample`
 --
 ALTER TABLE `tb_log_sample`
-  MODIFY `LSAM_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
+  MODIFY `LSAM_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=92;
 
 --
 -- AUTO_INCREMENT untuk tabel `tb_log_stock`
 --
 ALTER TABLE `tb_log_stock`
-  MODIFY `LSTOCK_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=73;
+  MODIFY `LSTOCK_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=153;
+
+--
+-- AUTO_INCREMENT untuk tabel `tb_module`
+--
+ALTER TABLE `tb_module`
+  MODIFY `MOD_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
 
 --
 -- AUTO_INCREMENT untuk tabel `tb_order`
 --
 ALTER TABLE `tb_order`
-  MODIFY `ORDER_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=98;
+  MODIFY `ORDER_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4272;
 
 --
 -- AUTO_INCREMENT untuk tabel `tb_order_detail`
 --
 ALTER TABLE `tb_order_detail`
-  MODIFY `ORDD_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=164;
+  MODIFY `ORDD_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=446;
 
 --
 -- AUTO_INCREMENT untuk tabel `tb_order_letter`
 --
 ALTER TABLE `tb_order_letter`
-  MODIFY `ORDL_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=90;
+  MODIFY `ORDL_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT untuk tabel `tb_order_vendor`
 --
 ALTER TABLE `tb_order_vendor`
-  MODIFY `ORDV_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=155;
+  MODIFY `ORDV_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=382;
+
+--
+-- AUTO_INCREMENT untuk tabel `tb_order_vendor_old`
+--
+ALTER TABLE `tb_order_vendor_old`
+  MODIFY `ORDV_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=373;
+
+--
+-- AUTO_INCREMENT untuk tabel `tb_payment_to_vendor`
+--
+ALTER TABLE `tb_payment_to_vendor`
+  MODIFY `PAYTOV_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=214;
 
 --
 -- AUTO_INCREMENT untuk tabel `tb_poption`
@@ -12893,10 +13988,136 @@ ALTER TABLE `tb_poption`
   MODIFY `POPT_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
+-- AUTO_INCREMENT untuk tabel `tb_producer`
+--
+ALTER TABLE `tb_producer`
+  MODIFY `PRDU_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+
+--
+-- AUTO_INCREMENT untuk tabel `tb_producer_category`
+--
+ALTER TABLE `tb_producer_category`
+  MODIFY `PRDUC_ID` smallint(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT untuk tabel `tb_producer_product`
+--
+ALTER TABLE `tb_producer_product`
+  MODIFY `PRDUP_ID` smallint(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+
+--
+-- AUTO_INCREMENT untuk tabel `tb_producer_product_property`
+--
+ALTER TABLE `tb_producer_product_property`
+  MODIFY `PRDPP_ID` smallint(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=141;
+
+--
+-- AUTO_INCREMENT untuk tabel `tb_producer_type`
+--
+ALTER TABLE `tb_producer_type`
+  MODIFY `PRDUT_ID` smallint(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT untuk tabel `tb_producer_x_product`
+--
+ALTER TABLE `tb_producer_x_product`
+  MODIFY `PRDXP_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+
+--
 -- AUTO_INCREMENT untuk tabel `tb_product`
 --
 ALTER TABLE `tb_product`
-  MODIFY `PRO_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+  MODIFY `PRO_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
+
+--
+-- AUTO_INCREMENT untuk tabel `tb_project`
+--
+ALTER TABLE `tb_project`
+  MODIFY `PRJ_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+
+--
+-- AUTO_INCREMENT untuk tabel `tb_project_activity`
+--
+ALTER TABLE `tb_project_activity`
+  MODIFY `PRJA_ID` smallint(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT untuk tabel `tb_project_criteria`
+--
+ALTER TABLE `tb_project_criteria`
+  MODIFY `PRJC_ID` smallint(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT untuk tabel `tb_project_detail`
+--
+ALTER TABLE `tb_project_detail`
+  MODIFY `PRJD_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+
+--
+-- AUTO_INCREMENT untuk tabel `tb_project_detail_model`
+--
+ALTER TABLE `tb_project_detail_model`
+  MODIFY `PRJDM_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+
+--
+-- AUTO_INCREMENT untuk tabel `tb_project_detail_quantity`
+--
+ALTER TABLE `tb_project_detail_quantity`
+  MODIFY `PRJDQ_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+
+--
+-- AUTO_INCREMENT untuk tabel `tb_project_payment`
+--
+ALTER TABLE `tb_project_payment`
+  MODIFY `PRJP_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT untuk tabel `tb_project_producer`
+--
+ALTER TABLE `tb_project_producer`
+  MODIFY `PRJPR_ID` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT untuk tabel `tb_project_progress`
+--
+ALTER TABLE `tb_project_progress`
+  MODIFY `PRJPG_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT untuk tabel `tb_project_review`
+--
+ALTER TABLE `tb_project_review`
+  MODIFY `PRJR_ID` smallint(6) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT untuk tabel `tb_project_type`
+--
+ALTER TABLE `tb_project_type`
+  MODIFY `PRJT_ID` smallint(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT untuk tabel `tb_size`
+--
+ALTER TABLE `tb_size`
+  MODIFY `SIZE_ID` smallint(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT untuk tabel `tb_size_group`
+--
+ALTER TABLE `tb_size_group`
+  MODIFY `SIZG_ID` smallint(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT untuk tabel `tb_size_type`
+--
+ALTER TABLE `tb_size_type`
+  MODIFY `SIZP_ID` smallint(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=155;
+
+--
+-- AUTO_INCREMENT untuk tabel `tb_size_value`
+--
+ALTER TABLE `tb_size_value`
+  MODIFY `SIZV_ID` smallint(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT untuk tabel `tb_state`
@@ -12909,6 +14130,12 @@ ALTER TABLE `tb_state`
 --
 ALTER TABLE `tb_subdistrict`
   MODIFY `SUBD_ID` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6996;
+
+--
+-- AUTO_INCREMENT untuk tabel `tb_subtype`
+--
+ALTER TABLE `tb_subtype`
+  MODIFY `STYPE_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT untuk tabel `tb_type`
@@ -12926,13 +14153,13 @@ ALTER TABLE `tb_unit_measure`
 -- AUTO_INCREMENT untuk tabel `tb_user`
 --
 ALTER TABLE `tb_user`
-  MODIFY `USER_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=66;
+  MODIFY `USER_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
 
 --
 -- AUTO_INCREMENT untuk tabel `tb_vendor`
 --
 ALTER TABLE `tb_vendor`
-  MODIFY `VEND_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=882;
+  MODIFY `VEND_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=884;
 
 --
 -- AUTO_INCREMENT untuk tabel `tb_vendor_bank`
@@ -12944,13 +14171,13 @@ ALTER TABLE `tb_vendor_bank`
 -- AUTO_INCREMENT untuk tabel `tb_vendor_deposit`
 --
 ALTER TABLE `tb_vendor_deposit`
-  MODIFY `VENDD_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `VENDD_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=70;
 
 --
 -- AUTO_INCREMENT untuk tabel `tb_vendor_price`
 --
 ALTER TABLE `tb_vendor_price`
-  MODIFY `VENP_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `VENP_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

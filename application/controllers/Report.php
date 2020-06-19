@@ -5,6 +5,7 @@ class Report extends CI_Controller {
 
 	function __construct() {
 		parent::__construct();
+		check_not_login();
 		$this->load->model('access_m');
 		$this->load->model('user_m');
 		$this->load->model('followup_m');
@@ -18,13 +19,12 @@ class Report extends CI_Controller {
 		$this->load->model('incomebyproduct_m');
 		$this->load->model('incomebyvendor_m');
 		$this->load->model('profitloss_m');
-		check_not_login();
 		$this->load->library('form_validation');
 	}
 
 	public function index(){
-		$modul = "Report";
-		$access =  $this->access_m->isAccess($this->session->GRP_SESSION, $modul)->row();
+		$modul  = "Report";
+		$access = $this->access_m->isAccess($this->session->GRP_SESSION, $modul)->row();
 		if ((!$access) && ($this->session->GRP_SESSION !=3)) {
 			echo "<script>alert('Anda tidak punya akses ke $modul.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
@@ -36,42 +36,41 @@ class Report extends CI_Controller {
 	}
 
 	public function sample_order(){
-		$modul = "Sample to Order";
-		$access =  $this->access_m->isAccess($this->session->GRP_SESSION, $modul)->row();
+		$modul  = "Sample to Order";
+		$access = $this->access_m->isAccess($this->session->GRP_SESSION, $modul)->row();
 		if ((!$access) && ($this->session->GRP_SESSION !=3)) {
 			echo "<script>alert('Anda tidak punya akses ke $modul.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
 		} else {
 			$data['get_cs'] = $this->followup_m->get_cs()->result();
-			// $data['get_sample'] = $this->followup_m->get_sample_cs()->result();
 			$this->template->load('template', 'report/sample_order', $data);
 		}
 	}
 
 	public function sample_order_json(){
-		$FROM      			= $this->input->post('FROM', TRUE);
-		$TO 	   			= $this->input->post('TO', TRUE);
-		$USER_ID   			= $this->input->post('USER_ID', TRUE);
-		$lists = "";
-		$sample = $this->followup_m->get_sample_cs($FROM, $TO, $USER_ID)->result();
+		$FROM 	 = $this->input->post('FROM', TRUE);
+		$TO 	 = $this->input->post('TO', TRUE);
+		$USER_ID = $this->input->post('USER_ID', TRUE);
+		$lists 	 = "";
+		$sample  = $this->followup_m->get_sample_cs($FROM, $TO, $USER_ID)->result();
 		foreach($sample as $field){
-			$lists .= $user_name[] 			= $field->USER_NAME;
+			$lists .= $user_name[] 			= stripslashes($field->USER_NAME);
 			$lists .= $jumlah_sample[] 		= (int) $field->total;
 			$lists .= $jumlah_flwp[] 		= (int) $field->total_flwp;
 			$lists .= $jumlah_order_flwp[] 	= (int) $field->total_order_flwp;
   		}
   		$callback = array(
-  			'list_user_name'		 =>$user_name,
-  			'list_jumlah_sample'	 =>$jumlah_sample,
-  			'list_jumlah_flwp'		 =>$jumlah_flwp,
-  			'list_jumlah_order_flwp' =>$jumlah_order_flwp,
+  			'list_user_name'		 => $user_name,
+  			'list_jumlah_sample'	 => $jumlah_sample,
+  			'list_jumlah_flwp'		 => $jumlah_flwp,
+  			'list_jumlah_order_flwp' => $jumlah_order_flwp,
   		); 
 	    echo json_encode($callback);
 	}
 
 	public function check_stock_order(){
-		$modul = "Check Stock to Order";
-		$access =  $this->access_m->isAccess($this->session->GRP_SESSION, $modul)->row();
+		$modul  = "Check Stock to Order";
+		$access = $this->access_m->isAccess($this->session->GRP_SESSION, $modul)->row();
 		if ((!$access) && ($this->session->GRP_SESSION !=3)) {
 			echo "<script>alert('Anda tidak punya akses ke $modul.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
@@ -82,29 +81,29 @@ class Report extends CI_Controller {
 	}
 
 	public function check_stock_order_json(){
-		$FROM      = $this->input->post('FROM', TRUE);
-		$TO 	   = $this->input->post('TO', TRUE);
-		$USER_ID 	= $this->input->post('USER_ID', TRUE);
-		$lists = "";
+		$FROM 	 	 = $this->input->post('FROM', TRUE);
+		$TO 	 	 = $this->input->post('TO', TRUE);
+		$USER_ID 	 = $this->input->post('USER_ID', TRUE);
+		$lists 		 = "";
 		$check_stock = $this->followup_m->get_check_stock_cs($FROM, $TO, $USER_ID)->result();
 		foreach($check_stock as $field){
-			$lists .= $user_name[] 			= $field->USER_NAME;
+			$lists .= $user_name[] 			= stripslashes($field->USER_NAME);
 			$lists .= $jumlah_check_stock[] = (int) $field->total;
 			$lists .= $jumlah_flwp[] 		= (int) $field->total_flwp;
 			$lists .= $jumlah_order_flwp[] 	= (int) $field->total_order_flwp;
   		}
   		$callback = array(
-  			'list_user_name'			=>$user_name,
-  			'list_jumlah_check_stock'	=>$jumlah_check_stock,
-  			'list_jumlah_flwp'			=>$jumlah_flwp,
-  			'list_jumlah_order_flwp'	=>$jumlah_order_flwp,
+  			'list_user_name'		  => $user_name,
+  			'list_jumlah_check_stock' => $jumlah_check_stock,
+  			'list_jumlah_flwp'		  => $jumlah_flwp,
+  			'list_jumlah_order_flwp'  => $jumlah_order_flwp,
   		); 
 	    echo json_encode($callback);
 	}
 
 	public function check_stock_performance(){
-		$modul = "Report";
-		$access =  $this->access_m->isAccess($this->session->GRP_SESSION, $modul)->row();
+		$modul  = "Report";
+		$access = $this->access_m->isAccess($this->session->GRP_SESSION, $modul)->row();
 		if ((!$access) && ($this->session->GRP_SESSION !=3)) {
 			echo "<script>alert('Anda tidak punya akses ke $modul.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
@@ -116,7 +115,7 @@ class Report extends CI_Controller {
 	public function check_stock_performance_json(){
 		$FROM      = $this->input->post('FROM', TRUE);
 		$TO 	   = $this->input->post('TO', TRUE);
-		$lists = "";
+		$lists 	   = "";
 		$unchecked = $this->followup_m->get_check_stock_unchecked($FROM, $TO)->result();
 		foreach($unchecked as $field){
 			$lists .= $jumlah_unchecked[] = (int) $field->total;
@@ -133,16 +132,16 @@ class Report extends CI_Controller {
   		}
 		
   		$callback = array(
-  			'list_jumlah_unchecked'		=>$jumlah_unchecked,
-  			'list_jumlah_notavailable'	=>$jumlah_notavailable,
-  			'list_jumlah_available'		=>$jumlah_available,
+  			'list_jumlah_unchecked'	   => $jumlah_unchecked,
+  			'list_jumlah_notavailable' => $jumlah_notavailable,
+  			'list_jumlah_available'	   => $jumlah_available,
   		); 
 	    echo json_encode($callback);
 	}
 
 	public function followup_performance(){
-		$modul = "Report";
-		$access =  $this->access_m->isAccess($this->session->GRP_SESSION, $modul)->row();
+		$modul  = "Report";
+		$access = $this->access_m->isAccess($this->session->GRP_SESSION, $modul)->row();
 		if ((!$access) && ($this->session->GRP_SESSION !=3)) {
 			echo "<script>alert('Anda tidak punya akses ke $modul.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
@@ -152,9 +151,9 @@ class Report extends CI_Controller {
 	}
 
 	public function followup_performance_json(){
-		$FROM      = $this->input->post('FROM', TRUE);
-		$TO 	   = $this->input->post('TO', TRUE);
-		$lists = "";
+		$FROM 	= $this->input->post('FROM', TRUE);
+		$TO 	= $this->input->post('TO', TRUE);
+		$lists 	= "";
 		$closed = $this->followup_m->get_flwp_closed($FROM, $TO)->result();
 		foreach($closed as $field){
 			$lists .= $jumlah_closed[] = (int) $field->total;
@@ -171,16 +170,16 @@ class Report extends CI_Controller {
   		}
 		
   		$callback = array(
-  			'list_jumlah_closed'		=>$jumlah_closed,
-  			'list_jumlah_inprogress'	=>$jumlah_inprogress,
-  			'list_jumlah_order'			=>$jumlah_order,
+  			'list_jumlah_closed'	 => $jumlah_closed,
+  			'list_jumlah_inprogress' => $jumlah_inprogress,
+  			'list_jumlah_order'		 => $jumlah_order,
   		); 
 	    echo json_encode($callback);
 	}
 
 	public function failed_followup(){
-		$modul = "Report";
-		$access =  $this->access_m->isAccess($this->session->GRP_SESSION, $modul)->row();
+		$modul  = "Report";
+		$access = $this->access_m->isAccess($this->session->GRP_SESSION, $modul)->row();
 		if ((!$access) && ($this->session->GRP_SESSION !=3)) {
 			echo "<script>alert('Anda tidak punya akses ke $modul.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
@@ -190,9 +189,9 @@ class Report extends CI_Controller {
 	}
 
 	public function failed_followup_json(){
-		$FROM      = $this->input->post('FROM', TRUE);
-		$TO 	   = $this->input->post('TO', TRUE);
-		$lists = "";
+		$FROM 	 = $this->input->post('FROM', TRUE);
+		$TO 	 = $this->input->post('TO', TRUE);
+		$lists 	 = "";
 		$closed1 = $this->followup_m->get_closed_reason1($FROM, $TO)->result();
 		foreach($closed1 as $field){
 			$lists .= $jumlah_closed1[] = (int) $field->total;
@@ -219,12 +218,12 @@ class Report extends CI_Controller {
   		}
 		
   		$callback = array(
-  			'list_jumlah_closed1'		=>$jumlah_closed1,
-  			'list_jumlah_closed2'		=>$jumlah_closed2,
-  			'list_jumlah_closed3'		=>$jumlah_closed3,
-  			'list_jumlah_closed4'		=>$jumlah_closed4,
-  			'list_jumlah_closed5'		=>$jumlah_closed5,
-  			'list_jumlah_closed6'		=>$jumlah_closed6,
+  			'list_jumlah_closed1' => $jumlah_closed1,
+  			'list_jumlah_closed2' => $jumlah_closed2,
+  			'list_jumlah_closed3' => $jumlah_closed3,
+  			'list_jumlah_closed4' => $jumlah_closed4,
+  			'list_jumlah_closed5' => $jumlah_closed5,
+  			'list_jumlah_closed6' => $jumlah_closed6,
   		); 
 	    echo json_encode($callback);
 	}
@@ -267,8 +266,8 @@ class Report extends CI_Controller {
 	}
 
 	public function income_by_cs(){
-	    $modul = "Income by CS";
-		$access =  $this->access_m->isAccess($this->session->GRP_SESSION, $modul)->row();
+	    $modul  = "Income by CS";
+		$access = $this->access_m->isAccess($this->session->GRP_SESSION, $modul)->row();
 		if ((!$access) && ($this->session->GRP_SESSION !=3)) {
 			echo "<script>alert('Anda tidak punya akses ke $modul.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
@@ -358,13 +357,13 @@ class Report extends CI_Controller {
 	}
 
 	public function income_by_productjson() {
-		$FROM    = $this->input->post('FROM', TRUE);
-		$TO 	 = $this->input->post('TO', TRUE);
-		$PRO_ID  = $this->input->post('PRO_ID', TRUE);
-		$income  = $this->incomebyproduct_m->get($FROM, $TO, $PRO_ID)->result_array();
-		$by_product  = $this->incomebyproduct_m->get_by_product($FROM, $TO, $PRO_ID)->result();
-		$no = 1;
-		$body = "";
+		$FROM    	= $this->input->post('FROM', TRUE);
+		$TO 	 	= $this->input->post('TO', TRUE);
+		$PRO_ID  	= $this->input->post('PRO_ID', TRUE);
+		$income  	= $this->incomebyproduct_m->get($FROM, $TO, $PRO_ID)->result_array();
+		$by_product = $this->incomebyproduct_m->get_by_product($FROM, $TO, $PRO_ID)->result();
+		$no 		= 1;
+		$body 		= "";
 		if(!$income && !$by_product){
 			$body .= "<tr>
 					<td align='center' colspan='7'>No data available in table</td>
@@ -403,7 +402,7 @@ class Report extends CI_Controller {
 					$SUBTOTAL = 0;
 				}
 			}
-			$TOTAL = array_sum($GRANDTOTAL);
+			$TOTAL  = array_sum($GRANDTOTAL);
 			$footer = "
 				<tr>
 					<td colspan='6' align='right' style='font-weight: bold;'>TOTAL</td>
@@ -427,8 +426,8 @@ class Report extends CI_Controller {
 	}
 
 	public function income_by_vendor(){
-	    $modul = "Report";
-		$access =  $this->access_m->isAccess($this->session->GRP_SESSION, $modul)->row();
+	    $modul  = "Report";
+		$access = $this->access_m->isAccess($this->session->GRP_SESSION, $modul)->row();
 		if ((!$access) && ($this->session->GRP_SESSION !=3)) {
 			echo "<script>alert('Anda tidak punya akses ke $modul.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
@@ -483,7 +482,7 @@ class Report extends CI_Controller {
 					$SUBTOTAL = 0;
 				}
 			}
-			$TOTAL = array_sum($GRANDTOTAL);
+			$TOTAL  = array_sum($GRANDTOTAL);
 			$footer = "
 				<tr>
 					<td colspan='4' align='right' style='font-weight: bold;'>TOTAL</td>
@@ -507,8 +506,8 @@ class Report extends CI_Controller {
 	}
 
 	public function profit_loss(){
-	    $modul = "Report";
-		$access =  $this->access_m->isAccess($this->session->GRP_SESSION, $modul)->row();
+	    $modul  = "Report";
+		$access = $this->access_m->isAccess($this->session->GRP_SESSION, $modul)->row();
 		if ((!$access) && ($this->session->GRP_SESSION !=3)) {
 			echo "<script>alert('Anda tidak punya akses ke $modul.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
@@ -519,12 +518,12 @@ class Report extends CI_Controller {
 	}
 
 	public function profit_loss_json() {
-		$FROM   			= $this->input->post('FROM', TRUE);
-		$TO 	 			= $this->input->post('TO', TRUE);
-		$EXCLUDE_SHIPMENT 	= $this->input->post('EXCLUDE_SHIPMENT', TRUE);
-		$income  			= $this->profitloss_m->get($FROM, $TO, $EXCLUDE_SHIPMENT)->result();
-		$no = 1;
-		$body = "";
+		$FROM   		  = $this->input->post('FROM', TRUE);
+		$TO 	 		  = $this->input->post('TO', TRUE);
+		$EXCLUDE_SHIPMENT = $this->input->post('EXCLUDE_SHIPMENT', TRUE);
+		$income  		  = $this->profitloss_m->get($FROM, $TO, $EXCLUDE_SHIPMENT)->result();
+		$no 			  = 1;
+		$body 			  = "";
 		if(!$income){
 			$body .= "<tr>
 					<td align='center' colspan='6'>No data available in table</td>

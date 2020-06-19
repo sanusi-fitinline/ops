@@ -5,55 +5,55 @@ class Calculator extends CI_Controller {
 
 	function __construct() {
 		parent::__construct();
+		check_not_login();
 		$this->load->model('access_m');
 		$this->load->model('area_m');
 		$this->load->model('courier_m');
 		$this->load->model('couaddress_m');
 		$this->load->model('coutariff_m');
-		check_not_login();
 		$this->load->library('rajaongkir');
 		$this->load->library('form_validation');
 	}
 
 	public function index(){
-		$modl = "Calculator";
-		$access =  $this->access_m->isAccess($this->session->GRP_SESSION, $modl)->row();
+		$modl 	= "Calculator";
+		$access = $this->access_m->isAccess($this->session->GRP_SESSION, $modl)->row();
 		if ((!$access) && ($this->session->GRP_SESSION !=3)) {
 			echo "<script>alert('Anda tidak punya akses ke $modl.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
 		} else {
-			$data['courier'] 	= $this->courier_m->getCourier()->result();
-			$data['coutar'] 	= $this->coutariff_m->getTariff()->result();
-			$data['tarif'] 		= $this->coutariff_m->getTariff2($COURIER_LIST = null, $O_CNTR_ID = null, $O_STATE_ID = null, $O_CITY_ID = null, $O_SUBD_ID = null, $D_CNTR_ID = null, $D_STATE_ID = null, $D_CITY_ID = null, $D_SUBD_ID = null);
-			$data['country'] 	= $this->area_m->getCountry()->result();
+			$data['courier'] = $this->courier_m->getCourier()->result();
+			$data['coutar']  = $this->coutariff_m->getTariff()->result();
+			$data['tarif'] 	 = $this->coutariff_m->getTariff2($COURIER_LIST = null, $O_CNTR_ID = null, $O_STATE_ID = null, $O_CITY_ID = null, $O_SUBD_ID = null, $D_CNTR_ID = null, $D_STATE_ID = null, $D_CITY_ID = null, $D_SUBD_ID = null);
+			$data['country'] = $this->area_m->getCountry()->result();
 			$this->template->load('template', 'courier/calculator_data', $data);
 		}
 	}
 
 	public function dataCal(){
-		$COURIER_ID 	= $this->input->post('COURIER_ID');
-		$COURIER_NAME 	= $this->input->post('COURIER_NAME');
-		$WEIGHT 		= $this->input->post('WEIGHT');
+		$COURIER_ID 	= $this->input->post('COURIER_ID', TRUE);
+		$COURIER_NAME 	= $this->input->post('COURIER_NAME', TRUE);
+		$WEIGHT 		= $this->input->post('WEIGHT', TRUE);
 
-		$O_CNTR_ID 		= $this->input->post('O_CNTR_ID');
+		$O_CNTR_ID 		= $this->input->post('O_CNTR_ID', TRUE);
 		$O_STATE_ID 	= $this->input->post('O_STATE_ID');
-		$O_CITY_ID 		= $this->input->post('O_CITY_ID');
-		$O_CITY_RO 		= $this->input->post('O_CITY_RO');
-		$O_SUBD_ID 		= $this->input->post('O_SUBD_ID');		
-		$O_CNTR_NAME 	= $this->input->post('O_CNTR_NAME');
-		$O_STATE_NAME 	= $this->input->post('O_STATE_NAME');
-		$O_CITY_NAME 	= $this->input->post('O_CITY_NAME');
-		$O_SUBD_NAME 	= $this->input->post('O_SUBD_NAME');
+		$O_CITY_ID 		= $this->input->post('O_CITY_ID', TRUE);
+		$O_CITY_RO 		= $this->input->post('O_CITY_RO', TRUE);
+		$O_SUBD_ID 		= $this->input->post('O_SUBD_ID', TRUE);		
+		$O_CNTR_NAME 	= $this->input->post('O_CNTR_NAME', TRUE);
+		$O_STATE_NAME 	= $this->input->post('O_STATE_NAME', TRUE);
+		$O_CITY_NAME 	= $this->input->post('O_CITY_NAME', TRUE);
+		$O_SUBD_NAME 	= $this->input->post('O_SUBD_NAME', TRUE);
 		
-		$D_CNTR_ID 		= $this->input->post('D_CNTR_ID');
-		$D_STATE_ID 	= $this->input->post('D_STATE_ID');
-		$D_CITY_ID 		= $this->input->post('D_CITY_ID');
-		$D_CITY_RO 		= $this->input->post('D_CITY_RO');
-		$D_SUBD_ID 		= $this->input->post('D_SUBD_ID');
-		$D_CNTR_NAME 	= $this->input->post('D_CNTR_NAME');
-		$D_STATE_NAME 	= $this->input->post('D_STATE_NAME');
-		$D_CITY_NAME 	= $this->input->post('D_CITY_NAME');
-		$D_SUBD_NAME 	= $this->input->post('D_SUBD_NAME');
+		$D_CNTR_ID 		= $this->input->post('D_CNTR_ID', TRUE);
+		$D_STATE_ID 	= $this->input->post('D_STATE_ID', TRUE);
+		$D_CITY_ID 		= $this->input->post('D_CITY_ID', TRUE);
+		$D_CITY_RO 		= $this->input->post('D_CITY_RO', TRUE);
+		$D_SUBD_ID 		= $this->input->post('D_SUBD_ID', TRUE);
+		$D_CNTR_NAME 	= $this->input->post('D_CNTR_NAME', TRUE);
+		$D_STATE_NAME 	= $this->input->post('D_STATE_NAME', TRUE);
+		$D_CITY_NAME 	= $this->input->post('D_CITY_NAME', TRUE);
+		$D_SUBD_NAME 	= $this->input->post('D_SUBD_NAME', TRUE);
 	    
 	    $lists = "";
 

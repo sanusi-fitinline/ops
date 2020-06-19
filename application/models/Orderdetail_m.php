@@ -47,6 +47,12 @@ class Orderdetail_m extends CI_Model {
         $this->db->join('tb_unit_measure', 'tb_unit_measure.UMEA_ID=tb_order_detail.UMEA_ID', 'inner');
         if($VEND_ID != null) {
             $this->db->where('tb_order_detail.VEND_ID', $VEND_ID);
+            $this->db->where('tb_order_vendor.VEND_ID', $VEND_ID);
+            if($PAYTOV_ID != null) {
+                $this->db->where('tb_order_vendor.PAYTOV_ID', $PAYTOV_ID);
+            } else {
+                $this->db->where('tb_order_vendor.PAYTOV_ID', null);
+            }
         }
         if ($this->uri->segment(2) == "cancel") {
             $this->db->where('tb_order.ORDER_STATUS', 5);
@@ -55,12 +61,7 @@ class Orderdetail_m extends CI_Model {
             $this->db->where('tb_order.ORDER_STATUS >=', 2);
             $this->db->where('tb_order.ORDER_STATUS <', 5);
         }
-        if($this->uri->segment(2) == "detail") {
-            $this->db->where('tb_order_vendor.PAYTOV_ID', null);
-        }
-        if($this->uri->segment(2) == "view") {
-            $this->db->where('tb_order_vendor.PAYTOV_ID', $PAYTOV_ID);
-        }
+        
         $this->db->order_by('tb_product.PRO_NAME', 'ASC');
         $this->db->group_by('tb_order_detail.ORDD_ID');
         $query = $this->db->get();

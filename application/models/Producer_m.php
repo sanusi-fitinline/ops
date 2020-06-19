@@ -77,7 +77,7 @@ class Producer_m extends CI_Model {
     }
 
 	public function get($PRDU_ID = null) {
-		$this->db->select('tb_producer.*, tb_country.CNTR_NAME, tb_state.STATE_NAME, tb_city.RO_CITY_ID, tb_city.CITY_NAME, tb_subdistrict.SUBD_NAME, tb_producer_category.PRDUC_NAME, tb_producer_type.PRDUT_NAME');
+		$this->db->select('tb_producer.*, tb_country.CNTR_NAME, tb_state.STATE_NAME, tb_city.RO_CITY_ID, tb_city.RO_CITY_ID, tb_city.CITY_NAME, tb_subdistrict.SUBD_NAME, tb_producer_category.PRDUC_NAME, tb_producer_type.PRDUT_NAME');
 		$this->db->from('tb_producer');    
 		$this->db->join('tb_country', 'tb_producer.CNTR_ID=tb_country.CNTR_ID', 'left');
 		$this->db->join('tb_state', 'tb_producer.STATE_ID=tb_state.STATE_ID', 'left');
@@ -130,6 +130,19 @@ class Producer_m extends CI_Model {
 	}
 
 	public function delete($PRDU_ID){
+		// delete producer bank
+		$bank = $this->db->get_where('tb_producer_bank',['PRDU_ID' => $PRDU_ID]);
+		if($bank->num_rows() > 0){
+			$this->db->delete('tb_producer_bank',['PRDU_ID'=>$PRDU_ID]);
+		}
+
+		// delete producer product
+		$product = $this->db->get_where('tb_producer_x_product',['PRDU_ID' => $PRDU_ID]);
+		if($product->num_rows() > 0){
+			$this->db->delete('tb_producer_x_product',['PRDU_ID'=>$PRDU_ID]);
+		}
+
+		// delete producer
 		$this->db->where('PRDU_ID', $PRDU_ID);
 		$this->db->delete('tb_producer');
 	}

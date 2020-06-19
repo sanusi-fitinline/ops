@@ -7,7 +7,7 @@
 	    	<a href="<?php echo site_url('dashboard') ?>">Dashboard</a>
 	  	</li>
 	  	<li class="breadcrumb-item">
-	    	<a href="<?php echo site_url('project') ?>">Order Custom</a>
+	    	<a href="<?php echo site_url('project') ?>">Project</a>
 	  	</li>
 	  	<li class="breadcrumb-item active">Add</a></li>
 	  	<li class="breadcrumb-item active">Detail</li>
@@ -21,7 +21,7 @@
 		        </div>
 		      	<div class="card-body">
 		      		<div class="row">
-						<div class="col-md-12 offset-md-3">
+						<div class="col-md-12 offset-md-2">
 							<form action="<?php echo site_url('project/add_detail_process')?>" method="POST" enctype="multipart/form-data">
 								<div class="row">
 									<div class="col-md-3">
@@ -37,7 +37,7 @@
 										    </select>
 										</div>
 										<div class="form-group">
-											<label>Size Group  <small>* <a style="margin-left:40px; text-decoration: none; color: #28a745;" href=""><i class="fas fa-plus-circle"></i> New Size Group</a></small></label>
+											<label>Size Group  <small>* <a style="margin-left:40px; text-decoration: none; color: #28a745;" href="<?php echo site_url('project/size_group/'.$this->uri->segment(3)) ?>"><i class="fas fa-plus-circle"></i> New Size Group</a></small></label>
 										    <select class="form-control selectpicker" name="SIZG_ID" title="-- Select One --" data-live-search="true" required>
 										    	<?php foreach($size_group as $sizg): ?>
 											    	<option value="<?php echo $sizg->SIZG_ID?>">
@@ -51,7 +51,7 @@
 											<textarea class="form-control" cols="100%" rows="3" name="PRJD_MATERIAL"></textarea>
 										</div>
 									</div>
-									<div class="col-md-3">
+									<div class="col-md-4">
 										<div class="form-group">
 											<label>Notes</label>
 											<textarea class="form-control" cols="100%" rows="5" name="PRJD_NOTES"></textarea>
@@ -60,14 +60,15 @@
 											<label>Picture</label>
 											<div class="input-group">
 												<div class="custom-file">
-													<input type="file" class="custom-file-input" name="PRJD_IMG[]" id="inputGroupFile01" multiple>
-												    <label class="custom-file-label" for="inputGroupFile01">Choose file..</label>
+													<input type="file" class="custom-file-input" name="PRJD_IMG[]" id="inputGroupFile01" accept="image/jpeg, image/png" multiple>
+												    <label class="custom-file-label text-truncate" style="padding-right: 100px;" for="inputGroupFile01">Choose several files</label>
 												</div>
 											</div>
 										</div>
 										<div class="form-group" align="center">
-											<button type="submit" class="btn btn-info" name="simpan"><i class="fa fa-arrow-circle-right"></i> Next</button>
-											<a href="<?php echo site_url('project/cancel_order/'.$this->uri->segment(3)) ?>" class="btn btn-danger" name="batal"><i class="fa fa-times"></i> Cancel</a>
+											<input class="btn btn-info" type="submit" name="new" value="Save &amp; New">
+											<button class="btn btn-primary" type="submit" name="simpan"><i class="fa fa-arrow-circle-right"></i> Next</button>
+											<a href="<?php echo site_url('project/cancel_project/'.$this->uri->segment(3)) ?>" class="btn btn-danger" name="batal"><i class="fa fa-times"></i> Cancel</a>
 										</div>
 									</div>
 								</div>
@@ -86,7 +87,11 @@
 			let filenames = [];
 			let files = document.getElementById("inputGroupFile01").files;
 			if (files.length > 1) {
-				filenames.push("Total Files (" + files.length + ")");
+				for (let i in files) {
+					if (files.hasOwnProperty(i)) {
+					  filenames.push(files[i].name);
+					}
+				}
 			} else {
 				for (let i in files) {
 					if (files.hasOwnProperty(i)) {
@@ -94,7 +99,7 @@
 					}
 				}
 			}
-			$(this).next(".custom-file-label").html(filenames.join(","));
+			$(this).next('.custom-file-label').html(filenames.join(", "));
 		});
 	});
 </script>

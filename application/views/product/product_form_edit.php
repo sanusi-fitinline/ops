@@ -78,7 +78,7 @@
 								</div>									
 								<div class="form-group">
 								    <label>Vendor</label>
-								    <select class="form-control selectpicker" name="VEND_ID" id="VEND_ID" data-live-search="true">
+								    <select class="form-control selectpicker" name="VEND_ID" id="VEND_ID" data-live-search="true" title="-- Select One--">
 							    		<<?php foreach($vendor as $vend): ?>
 									    	<option <?php echo $row->VEND_ID == $vend->VEND_ID ? "selected" : "" ?> value="<?php echo $vend->VEND_ID ?>">
 									    		<?php echo ($vend->VEND_NAME) ?>

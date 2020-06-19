@@ -90,6 +90,7 @@ class Producer_product_property_m extends CI_Model {
         if($PRDUP_ID != null) {
             $this->db->where('PRDUP_ID', $PRDUP_ID);
         }
+        $this->db->order_by('tb_producer_product_property.PRDPP_NAME', 'ASC');
         $query = $this->db->get();
         return $query;
     }

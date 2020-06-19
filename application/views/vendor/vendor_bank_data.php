@@ -48,7 +48,7 @@
     	<div class="modal-content">
 		    <!-- Modal Header -->
 		    <div class="modal-header">
-		        <h4 class="modal-title">Add Product Option</h4>
+		        <h4 class="modal-title">Add Data Bank</h4>
 		        <button type="button" class="close" data-dismiss="modal">&times;</button>
 		    </div>
 			<form action="<?php echo site_url('vendor/add_bank')?>" method="POST" enctype="multipart/form-data">

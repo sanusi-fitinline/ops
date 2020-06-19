@@ -128,7 +128,7 @@
         data: {
             labels: <?php echo json_encode($date) ?>,
             datasets: [{
-                label: ['Aktivitas'],
+                label: ['Activity'],
                 data: <?php echo json_encode($day_act) ?>,
                 datalabels: {
                     align: 'start',

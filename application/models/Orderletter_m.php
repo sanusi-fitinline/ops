@@ -72,17 +72,34 @@ class Orderletter_m extends CI_Model {
 		if($insert) {
 			if($this->input->post('ORDL_DOC') == 1) {
 				if($this->input->post('ORDL_TYPE') == 1) {
-					echo "<script>window.location='".site_url('letter/quotation/'.$ORDER_ID)."'</script>";
+					echo "<script>window.location='".site_url('letter/order_quotation/'.$ORDER_ID)."'</script>";
 				} else if($this->input->post('ORDL_TYPE') == 2) {
-					echo "<script>window.location='".site_url('letter/invoice/'.$ORDER_ID)."'</script>";
+					echo "<script>window.location='".site_url('letter/order_invoice/'.$ORDER_ID)."'</script>";
 				} else {
-					echo "<script>window.location='".site_url('letter/receipt/'.$ORDER_ID)."'</script>";
+					echo "<script>window.location='".site_url('letter/order_receipt/'.$ORDER_ID)."'</script>";
+				}
+			} else if($this->input->post('ORDL_DOC') == 2) {
+				if($this->input->post('ORDL_TYPE') == 2) {
+					echo "<script>window.location='".site_url('letter/sampling_invoice/'.$ORDER_ID)."'</script>";
+				} else if($this->input->post('ORDL_TYPE') == 3) {
+					echo "<script>window.location='".site_url('letter/sampling_receipt/'.$ORDER_ID)."'</script>";
 				}
 			} else {
-				if($this->input->post('ORDL_TYPE') == 2) {
-					echo "<script>window.location='".site_url('letter/invoice_sampling/'.$ORDER_ID)."'</script>";
-				} else if($this->input->post('ORDL_TYPE') == 3) {
-					echo "<script>window.location='".site_url('letter/receipt_sampling/'.$ORDER_ID)."'</script>";
+				if($this->input->post('ORDL_TYPE') == 1) {
+					echo "<script>window.location='".site_url('letter/project_quotation/'.$ORDER_ID)."'</script>";
+				} else if($this->input->post('ORDL_TYPE') == 2) {
+					// update status
+			        $row = $this->db->get_where('tb_project',['PRJ_ID'=>$ORDER_ID])->row();
+			        if($row->PRJ_STATUS < 2){
+			            $update_status = array(
+			                'PRJ_STATUS' => 2, // status invoiced
+			            );
+			            $this->db->where('PRJ_ID', $ORDER_ID)->update('tb_project', $update_status);
+			        }
+			        //
+					echo "<script>window.location='".site_url('letter/project_invoice/'.$ORDER_ID)."'</script>";
+				} else {
+					echo "<script>window.location='".site_url('letter/project_receipt/'.$ORDER_ID)."'</script>";
 				}
 			}
 		} else {
@@ -99,17 +116,34 @@ class Orderletter_m extends CI_Model {
 		if($update) {
 			if($this->input->post('ORDL_DOC') == 1) {
 				if($this->input->post('ORDL_TYPE') == 1) {
-					echo "<script>window.location='".site_url('letter/quotation/'.$ORDER_ID)."'</script>";
+					echo "<script>window.location='".site_url('letter/order_quotation/'.$ORDER_ID)."'</script>";
 				} else if($this->input->post('ORDL_TYPE') == 2) {
-					echo "<script>window.location='".site_url('letter/invoice/'.$ORDER_ID)."'</script>";
+					echo "<script>window.location='".site_url('letter/order_invoice/'.$ORDER_ID)."'</script>";
 				} else {
-					echo "<script>window.location='".site_url('letter/receipt/'.$ORDER_ID)."'</script>";
+					echo "<script>window.location='".site_url('letter/order_receipt/'.$ORDER_ID)."'</script>";
+				}
+			} else if($this->input->post('ORDL_DOC') == 2) {
+				if($this->input->post('ORDL_TYPE') == 2) {
+					echo "<script>window.location='".site_url('letter/sampling_invoice/'.$ORDER_ID)."'</script>";
+				} else if($this->input->post('ORDL_TYPE') == 3) {
+					echo "<script>window.location='".site_url('letter/sampling_receipt/'.$ORDER_ID)."'</script>";
 				}
 			} else {
-				if($this->input->post('ORDL_TYPE') == 2) {
-					echo "<script>window.location='".site_url('letter/invoice_sampling/'.$ORDER_ID)."'</script>";
-				} else if($this->input->post('ORDL_TYPE') == 3) {
-					echo "<script>window.location='".site_url('letter/receipt_sampling/'.$ORDER_ID)."'</script>";
+				if($this->input->post('ORDL_TYPE') == 1) {
+					echo "<script>window.location='".site_url('letter/project_quotation/'.$ORDER_ID)."'</script>";
+				} else if($this->input->post('ORDL_TYPE') == 2) {
+					// update status
+			        $row = $this->db->get_where('tb_project',['PRJ_ID'=>$ORDER_ID])->row();
+			        if($row->PRJ_STATUS < 2){
+			            $update_status = array(
+			                'PRJ_STATUS' => 2, // status invoiced
+			            );
+			            $this->db->where('PRJ_ID', $ORDER_ID)->update('tb_project', $update_status);
+			        }
+			        //
+					echo "<script>window.location='".site_url('letter/project_invoice/'.$ORDER_ID)."'</script>";
+				} else {
+					echo "<script>window.location='".site_url('letter/project_receipt/'.$ORDER_ID)."'</script>";
 				}
 			}
 		} else {

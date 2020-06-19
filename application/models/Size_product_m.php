@@ -65,15 +65,23 @@ class Size_product_m extends CI_Model {
         return $this->db->count_all_results();
     }
 	
-	public function get($SIZG_ID = null) {
+	public function get($SIZP_ID = null) {
 		$this->db->select('*');
 		$this->db->from('tb_size_type');
-		if($SIZG_ID != null) {
-			$this->db->where('SIZG_ID', $SIZG_ID);
+		if($SIZP_ID != null) {
+			$this->db->where('SIZP_ID', $SIZP_ID);
 		}
 		$query = $this->db->get();
 		return $query;
 	}
+
+    public function get_by_product($PRDUP_ID) {
+        $this->db->select('*');
+        $this->db->from('tb_size_type');
+        $this->db->where('PRDUP_ID', $PRDUP_ID);
+        $query = $this->db->get();
+        return $query;
+    }
 
 	public function insert() {
 		$dataInsert = array(

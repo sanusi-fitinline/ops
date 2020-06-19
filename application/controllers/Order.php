@@ -5,6 +5,7 @@ class Order extends CI_Controller {
 
 	function __construct() {
 		parent::__construct();
+		check_not_login();
 		$this->load->model('access_m');
 		$this->load->model('order_m');
 		$this->load->model('orderdetail_m');
@@ -23,15 +24,14 @@ class Order extends CI_Controller {
 		$this->load->model('coutariff_m');
 		$this->load->model('custdeposit_m');
 		$this->load->model('clog_m');
-		check_not_login();
 		$this->load->library('pdf');
 		$this->load->library('rajaongkir');
 		$this->load->library('form_validation');
 	}
 
 	public function index() {
-		$modl = "Order";
-		$access =  $this->access_m->isAccess($this->session->GRP_SESSION, $modl)->row();
+		$modl 	= "Order";
+		$access = $this->access_m->isAccess($this->session->GRP_SESSION, $modl)->row();
 		if ((!$access) && ($this->session->GRP_SESSION !=3)) {
 			echo "<script>alert('Anda tidak punya akses ke $modl.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
@@ -41,11 +41,11 @@ class Order extends CI_Controller {
 	}
 
 	public function orderjson() {
-		$STATUS_FILTER = $this->input->post('STATUS_FILTER', TRUE);
-		$url 	   = $this->config->base_url();
-		$list      = $this->order_m->get_datatables($STATUS_FILTER);
-		$data = array();
-		$no = $_POST['start'];
+		$STATUS_FILTER  = $this->input->post('STATUS_FILTER', TRUE);
+		$url 			= $this->config->base_url();
+		$list 			= $this->order_m->get_datatables($STATUS_FILTER);
+		$data 			= array();
+		$no 			= $_POST['start'];
 		foreach ($list as $field) {
 			if ($field->ORDER_NOTES!=null) {
 				$ORDER_NOTES = $field->ORDER_NOTES;
@@ -72,30 +72,24 @@ class Order extends CI_Controller {
 			$row[] = stripslashes($field->CUST_NAME);
 			$row[] = $ORDER_NOTES;
 			$row[] = stripslashes($field->USER_NAME);
-			if((!$this->access_m->isDelete('Order', 1)->row()) && ($this->session->GRP_SESSION !=3))
-			{
-				if($field->ORDER_STATUS == 5) {
-					$row[] = '<div style="vertical-align: middle; text-align: center;">
-					<a href="'.$url.'order/cancel_detail/'.$field->ORDER_ID.'" class="btn btn-sm btn-primary" title="Detail"><i class="fa fa-search-plus"></i></a></div>';
-				} else {
-					$row[] = '<div style="vertical-align: middle; text-align: center;">
-						<a href="'.$url.'order/detail/'.$field->ORDER_ID.'" class="btn btn-sm btn-primary" title="Detail"><i class="fa fa-search-plus"></i></a></div>';
-				}
+
+			// cek akses delete
+			if((!$this->access_m->isDelete('Order', 1)->row()) && ($this->session->GRP_SESSION !=3)) {
+				$DELETE = "hidden";
+			} else {$DELETE = "";}
+
+			// cek link order cancel
+			if($field->ORDER_STATUS == 5) {
+				$link_order = $url.'order/cancel_detail/'.$field->ORDER_ID;
 			} else {
-				if($field->ORDER_STATUS == 5) {
-					$row[] = '<form action="'.$url.'order/delete_order" method="post"><div style="vertical-align: middle; text-align: center;">
-						<a href="'.$url.'order/cancel_detail/'.$field->ORDER_ID.'" class="btn btn-sm btn-primary" title="Detail"><i class="fa fa-search-plus"></i></a>
-						<input type="hidden" name="ORDER_ID" value="'.$field->ORDER_ID.'">
-						<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></button>
-						</div></form>';
-				} else {
-					$row[] = '<form action="'.$url.'order/delete_order" method="post"><div style="vertical-align: middle; text-align: center;">
-						<a href="'.$url.'order/detail/'.$field->ORDER_ID.'" class="btn btn-sm btn-primary" title="Detail"><i class="fa fa-search-plus"></i></a>
-						<input type="hidden" name="ORDER_ID" value="'.$field->ORDER_ID.'">
-						<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></button>
-						</div></form>';
-				}
+				$link_order = $url.'order/detail/'.$field->ORDER_ID;
 			}
+
+			$row[] = '<form action="'.$url.'order/delete_order" method="post"><div style="vertical-align: middle; text-align: center;">
+				<a href="'.$link_order.'" class="btn btn-sm btn-primary" title="Detail"><i class="fa fa-search-plus"></i></a>
+				<input type="hidden" name="ORDER_ID" value="'.$field->ORDER_ID.'">
+				<button '.$DELETE.' onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></button>
+				</div></form>';
 			$data[] = $row;
 		}
 
@@ -114,17 +108,38 @@ class Order extends CI_Controller {
 		$JENIS 					= $this->input->post('JENIS');
 		$product 				= $this->product_m->get($PRO_ID)->row();
 		$product_option			= $this->poption_m->get_by_product($PRO_ID)->result();
-		$PRO_PRICE 				= number_format($product->PRO_PRICE,0,',','.');
-		$PRO_VOL_PRICE 			= $product->PRO_VOL_PRICE;
+		// harga retail ke customer
+		$PRICE 					= $product->PRO_PRICE;
+		// harga grosir ke customer
+		$VOL_PRICE 				= $product->PRO_VOL_PRICE;
+		// check vendor courier
+		$check 					= $this->vendor_m->get_vend_courier($product->VEND_ID)->row();
+		if($check->VEND_COURIER_ID != null){
+			$VEND_ID 			= $check->VEND_COURIER_ID;
+			// harga retail ke vendor
+			$PRICE_VENDOR 		= $product->PRO_PRICE_VENDOR + $check->VEND_COURIER_ADD_UNIT;
+			// harga grosir ke vendor
+			$VOL_PRICE_VENDOR 	= $product->PRO_VOL_PRICE_VENDOR + $check->VEND_COURIER_ADD_VOL;
+		} else {
+			$VEND_ID 			= $product->VEND_ID;
+			// harga retail ke vendor
+			$PRICE_VENDOR 		= $product->PRO_PRICE_VENDOR;
+			// harga grosir ke vendor
+			$VOL_PRICE_VENDOR 	= $product->PRO_VOL_PRICE_VENDOR;
+		}
+		$PRO_PRICE 				= number_format($PRICE,0,',','.');
+		$PRO_PRICE_VENDOR 		= number_format($PRICE_VENDOR,0,',','.');	
+		$PRO_VOL_PRICE 			= $VOL_PRICE;
 		$PRO_TOTAL_COUNT 		= $product->PRO_TOTAL_COUNT;
 		$GROSIR 				= $PRO_VOL_PRICE * $PRO_TOTAL_COUNT;
 		$GROSIR_PRICE 			= number_format($GROSIR,0,',','.');
-		$PRO_VOL_PRICE_VENDOR 	= $product->PRO_VOL_PRICE_VENDOR;
+		$PRO_VOL_PRICE_VENDOR 	= $VOL_PRICE_VENDOR;
 		$GROSIR_VENDOR 			= $PRO_VOL_PRICE_VENDOR * $PRO_TOTAL_COUNT;
+
 		if($JENIS == 1) {
 			$lists = "
 				<div class='form-group'>
-					<input class='form-control' type='hidden' name='VEND_ID' value='$product->VEND_ID'>
+					<input class='form-control' type='hidden' name='VEND_ID' value='$VEND_ID'>
 				</div>
 				<div class='form-group'>
 					<label>Price</label>
@@ -133,8 +148,8 @@ class Order extends CI_Controller {
 				          	<span class='input-group-text'>$product->CURR_NAME</span>
 				        </div>
 						<input class='form-control' type='text' value='$PRO_PRICE' readonly>
-						<input class='form-control' type='hidden' id='HARGA' name='ORDD_PRICE' value='$product->PRO_PRICE'>
-						<input class='form-control' type='hidden' id='HARGA_VENDOR' name='ORDD_PRICE_VENDOR' value='$product->PRO_PRICE_VENDOR'>
+						<input class='form-control' type='hidden' id='HARGA' name='ORDD_PRICE' value='$PRICE'>
+						<input class='form-control' type='hidden' id='HARGA_VENDOR' name='ORDD_PRICE_VENDOR' value='$PRO_PRICE_VENDOR'>
 						<input class='form-control' type='hidden' name='UMEA_ID' value='$product->PRO_UNIT'>
 						<input class='form-control' type='hidden' name='QTY' value='1'>
 				    </div>
@@ -157,7 +172,7 @@ class Order extends CI_Controller {
 		} else {
 			$lists = "
 				<div class='form-group'>
-					<input class='form-control' type='hidden' name='VEND_ID' value='$product->VEND_ID'>
+					<input class='form-control' type='hidden' name='VEND_ID' value='$VEND_ID'>
 				</div>
 				<div class='form-group'>
 					<label>Price</label>
@@ -194,9 +209,9 @@ class Order extends CI_Controller {
 	}
 
 	public function new_customer() {
-		$data['bank'] 		= $this->bank_m->getBank()->result();
-		$data['channel'] 	= $this->channel_m->getCha()->result();
-		$data['country'] 	= $this->country_m->getCountry()->result();
+		$data['bank'] 	 = $this->bank_m->getBank()->result();
+		$data['channel'] = $this->channel_m->getCha()->result();
+		$data['country'] = $this->country_m->getCountry()->result();
 		$this->template->load('template', 'order/customer_form_add', $data);
 	}
 
@@ -220,12 +235,12 @@ class Order extends CI_Controller {
 	}
 
 	public function addProcess() {
-		$data['row'] =	$this->order_m->add();		
+		$data['row'] = $this->order_m->add();		
 	}
 
 	public function add_detail() {
-		$data['product'] 	= $this->product_m->get()->result();
-		$data['umea'] 		= $this->umea_m->get()->result();
+		$data['product'] = $this->product_m->get()->result();
+		$data['umea'] 	 = $this->umea_m->get()->result();
 		$this->template->load('template', 'order/order_form_add_detail', $data);
 	}
 
@@ -246,32 +261,26 @@ class Order extends CI_Controller {
 	}
 
 	public function detail($ORDER_ID) {
-		$check = $this->order_m->check_cancel($ORDER_ID);
-		if($check->num_rows() > 0) {
+		$query = $this->order_m->get($ORDER_ID);
+		if ($query->num_rows() > 0) {
+			$data['row'] 			= $query->row();
+			$data['bank'] 			= $this->bank_m->getBank()->result();
+			$data['courier'] 		= $this->courier_m->getCourier()->result();
+			$data['detail'] 		= $this->orderdetail_m->get($ORDER_ID)->result();
+			$data['get_by_vendor'] 	= $this->ordervendor_m->get_by_vendor($ORDER_ID)->result();
+			$this->template->load('template', 'order/order_detail', $data);
+		} else {
 			echo "<script>alert('Data tidak ditemukan.')</script>";
 			echo "<script>window.location='".site_url('order')."'</script>";
-		} else {
-			$query = $this->order_m->get($ORDER_ID);
-			if ($query->num_rows() > 0) {
-				$data['row'] 			= $query->row();
-				$data['bank'] 			= $this->bank_m->getBank()->result();
-				$data['courier'] 		= $this->courier_m->getCourier()->result();
-				$data['detail'] 		= $this->orderdetail_m->get($ORDER_ID)->result();
-				$data['get_by_vendor'] 	= $this->ordervendor_m->get_by_vendor($ORDER_ID)->result();
-				$this->template->load('template', 'order/order_detail', $data);
-			} else {
-				echo "<script>alert('Data tidak ditemukan.')</script>";
-				echo "<script>window.location='".site_url('order')."'</script>";
-			}
 		}
 	}
 
 	public function datacal(){
-		$CUST_ID 		= $this->input->post('CUST_ID');
-		$VEND_ID 		= $this->input->post('VEND_ID');
-		$COURIER_ID 	= $this->input->post('COURIER_ID');
-		$COURIER_NAME 	= $this->input->post('COURIER_NAME');
-		$WEIGHT 		= $this->input->post('VENDOR_WEIGHT');
+		$CUST_ID 		= $this->input->post('CUST_ID', TRUE);
+		$VEND_ID 		= $this->input->post('VEND_ID', TRUE);
+		$COURIER_ID 	= $this->input->post('COURIER_ID', TRUE);
+		$COURIER_NAME 	= $this->input->post('COURIER_NAME', TRUE);
+		$WEIGHT 		= $this->input->post('VENDOR_WEIGHT', TRUE);
 		$customer 		= $this->customer_m->get($CUST_ID)->row();
 		$vendor 		= $this->vendor_m->get($VEND_ID)->row();
 		$apinol  		= $this->coutariff_m->getTariff2($COURIER_ID, $vendor->CNTR_ID, $vendor->STATE_ID, $vendor->CITY_ID, $vendor->SUBD_ID, $customer->CNTR_ID, $customer->STATE_ID, $customer->CITY_ID, $customer->SUBD_ID)->result();
@@ -279,7 +288,7 @@ class Order extends CI_Controller {
 		if($customer->CITY_ID!=0){
 		    if($key->COURIER_API == 1){
 		    	$WEIGHT_RO = $WEIGHT*1000;
-				$lists = "<option value='' selected disabled>--- Select one ---</option>";
+				$lists = "";
 		    	if($customer->SUBD_ID!=0){
 		    		$dataCost = $this->rajaongkir->cost($vendor->RO_CITY_ID, $customer->SUBD_ID, $WEIGHT_RO, strtolower($key->COURIER_NAME), 'subdistrict');
 		    	} else{
@@ -367,7 +376,7 @@ class Order extends CI_Controller {
 				}
 				echo "<script>window.location='".site_url('order/detail/'.$ORDER_ID)."'</script>";
 			} else {
-				echo "<script>alert('Data gagal diubah.')</script>";
+				echo "<script>alert('Tidak ada perubahan data.')</script>";
 				echo "<script>window.location='".site_url('order/detail/'.$ORDER_ID)."'</script>";
 			}
 		} else {
@@ -376,14 +385,14 @@ class Order extends CI_Controller {
 				echo "<script>alert('Data berhasil diubah.')</script>";
 				echo "<script>window.location='".site_url('order/detail/'.$ORDER_ID)."'</script>";
 			} else {
-				echo "<script>alert('Data gagal diubah.')</script>";
+				echo "<script>alert('Tidak ada perubahan data.')</script>";
 				echo "<script>window.location='".site_url('order/detail/'.$ORDER_ID)."'</script>";
 			}
 		}
 	}
 
 	public function cancel_detail($ORDER_ID) {
-		$query = $this->order_m->get_cancel($ORDER_ID);
+		$query = $this->order_m->get($ORDER_ID);
 		if ($query->num_rows() > 0) {
 			$data['row'] 			= $query->row();
 			$data['bank'] 			= $this->bank_m->getBank()->result();
@@ -431,7 +440,7 @@ class Order extends CI_Controller {
 	}
 
 	public function delete_order() {
-		$ORDER_ID = $this->input->post('ORDER_ID');
+		$ORDER_ID = $this->input->post('ORDER_ID', TRUE);
 		$delete['delete'] = $this->order_m->delete($ORDER_ID);
 
 		if($delete) {
@@ -450,7 +459,7 @@ class Order extends CI_Controller {
 		$data['pernah_dicetak'] = $this->orderletter_m->get_pernah_dicetak($ORDER_ID, $ORDL_TYPE, $ORDL_DOC)->row();
 		$data['row'] 			= $this->orderletter_m->get()->row();
 		$data['courier_data'] 	= $this->ordervendor_m->get_by_vendor($ORDER_ID)->result();
-    	$this->template->load('template', 'letter/quotation', $data);
+    	$this->template->load('template', 'letter/order_quotation', $data);
     }
 
     public function invoice($ORDER_ID) {
@@ -460,7 +469,7 @@ class Order extends CI_Controller {
 		$data['pernah_dicetak'] = $this->orderletter_m->get_pernah_dicetak($ORDER_ID, $ORDL_TYPE, $ORDL_DOC)->row();
 		$data['row'] 			= $this->orderletter_m->get()->row();
 		$data['courier_data'] 	= $this->ordervendor_m->get_by_vendor($ORDER_ID)->result();
-    	$this->template->load('template', 'letter/invoice', $data);
+    	$this->template->load('template', 'letter/order_invoice', $data);
     }
 
     public function receipt($ORDER_ID) {
@@ -471,7 +480,7 @@ class Order extends CI_Controller {
 		$data['row'] 			= $this->orderletter_m->get()->row();
 		$data['order'] 			= $this->order_m->get($ORDER_ID)->row();
 		$data['courier_data'] 	= $this->ordervendor_m->get_by_vendor($ORDER_ID)->result();
-    	$this->template->load('template', 'letter/receipt', $data);
+    	$this->template->load('template', 'letter/order_receipt', $data);
     }
 
 }

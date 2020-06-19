@@ -27,9 +27,8 @@
 								<input class="form-control form-control-sm datepicker" type="text" name="TO" id="TO" placeholder="To" autocomplete="off">
 							</div>
 						</div>
-						<div class="col-md-2">			
 						<?php if((!$this->access_m->isViewAll('Check Stock to Order', 1)->row()) && ($this->session->GRP_SESSION !=3)):?>
-								<input class="form-control form-control-sm" type="hidden" name="USER_ID" id="USER_ID" value="<?php echo $this->session->USER_SESSION ?>">
+							<input class="form-control form-control-sm" type="hidden" name="USER_ID" id="USER_ID" value="<?php echo $this->session->USER_SESSION ?>">
 						<?php else: ?>
 							<div class="col-md-2">			
 								<div class="form-group">

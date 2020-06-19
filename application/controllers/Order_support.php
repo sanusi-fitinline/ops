@@ -5,6 +5,7 @@ class Order_support extends CI_Controller {
 
 	function __construct() {
 		parent::__construct();
+		check_not_login();
 		$this->load->model('access_m');
 		$this->load->model('order_m');
 		$this->load->model('orderdetail_m');
@@ -20,7 +21,6 @@ class Order_support extends CI_Controller {
 		$this->load->model('vendorbank_m');
 		$this->load->model('courier_m');
 		$this->load->model('coutariff_m');
-		check_not_login();
 		$this->load->library('Pdf');
 		$this->load->library('rajaongkir');
 		$this->load->library('form_validation');
@@ -28,8 +28,8 @@ class Order_support extends CI_Controller {
 
 	public function index()
 	{
-		$modl = "Order SS";
-		$access =  $this->access_m->isAccess($this->session->GRP_SESSION, $modl)->row();
+		$modl 	= "Order SS";
+		$access = $this->access_m->isAccess($this->session->GRP_SESSION, $modl)->row();
 		if ((!$access) && ($this->session->GRP_SESSION !=3)) {
 			echo "<script>alert('Anda tidak punya akses ke $modl.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
@@ -39,11 +39,11 @@ class Order_support extends CI_Controller {
 	}
 
 	public function orderjson() {
-		$STATUS_FILTER = $this->input->post('STATUS_FILTER', TRUE);
-		$url 	   = $this->config->base_url();
-		$list      = $this->order_m->get_datatables($STATUS_FILTER);
-		$data = array();
-		$no = $_POST['start'];
+		$STATUS_FILTER  = $this->input->post('STATUS_FILTER', TRUE);
+		$url 	   		= $this->config->base_url();
+		$list      		= $this->order_m->get_datatables($STATUS_FILTER);
+		$data 			= array();
+		$no 			= $_POST['start'];
 		foreach ($list as $field) {
 			if ($field->ORDER_NOTES!=null) {
 				$ORDER_NOTES = $field->ORDER_NOTES;
@@ -69,17 +69,8 @@ class Order_support extends CI_Controller {
 			$row[] = "<div align='center'>".date('d-m-Y / H:i:s', strtotime($field->ORDER_DATE))."</div>";
 			$row[] = stripslashes($field->CUST_NAME);
 			$row[] = $ORDER_NOTES;
-			if((!$this->access_m->isDelete('Order SS', 1)->row()) && ($this->session->GRP_SESSION !=3))
-			{
-				$row[] = '<div style="vertical-align: middle; text-align: center;">
-					<a href="'.$url.'order_support/detail/'.$field->ORDER_ID.'" class="btn btn-sm btn-primary" title="Detail"><i class="fa fa-search-plus"></i></a></div>';
-			} else {
-				$row[] = '<form action="'.$url.'order_support/delete_order" method="post"><div style="vertical-align: middle; text-align: center;">
-					<a href="'.$url.'order_support/detail/'.$field->ORDER_ID.'" class="btn btn-sm btn-primary" title="Detail"><i class="fa fa-search-plus"></i></a>
-					<input type="hidden" name="ORDER_ID" value="'.$field->ORDER_ID.'">
-					<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></button>
-					</div></form>';
-			}
+			$row[] = '<div style="vertical-align: middle; text-align: center;">
+				<a href="'.$url.'order_support/detail/'.$field->ORDER_ID.'" class="btn btn-sm btn-primary" title="Detail"><i class="fa fa-search-plus"></i></a></div>';
 			$data[] = $row;
 		}
 
@@ -100,7 +91,7 @@ class Order_support extends CI_Controller {
 			$data['bank'] 		= $this->bank_m->getBank()->result();
 			$data['courier'] 	= $this->courier_m->getCourier()->result();
 			$data['detail'] 	= $this->orderdetail_m->get($ORDER_ID)->result();
-			$data['get_by_vendor'] 	= $this->ordervendor_m->get_by_vendor($ORDER_ID)->result();
+			$data['get_by_vendor'] 	= $this->ordervendor_m->get_by_vendor($ORDER_ID)->result_array();
 			$this->template->load('template', 'order/order-support/order_support_detail', $data);
 		} else {
 			echo "<script>alert('Data tidak ditemukan.')</script>";
@@ -132,7 +123,18 @@ class Order_support extends CI_Controller {
 			}
 			echo "<script>window.location='".site_url('order_support/detail/'.$ORDER_ID)."'</script>";
 		} else {
-			echo "<script>alert('Data gagal diubah.')</script>";
+			echo "<script>alert('Tidak ada perubahan data.')</script>";
+			echo "<script>window.location='".site_url('order_support/detail/'.$ORDER_ID)."'</script>";
+		}
+	}
+
+	public function change_vendor($ORDER_ID) {
+		$query['update'] = $this->ordervendor_m->change_vendor($ORDER_ID);
+		if($query) {
+			echo "<script>alert('Data berhasil diubah.')</script>";
+			echo "<script>window.location='".site_url('order_support/detail/'.$ORDER_ID)."'</script>";
+		} else {
+			echo "<script>alert('Tidak ada perubahan data.')</script>";
 			echo "<script>window.location='".site_url('order_support/detail/'.$ORDER_ID)."'</script>";
 		}
 	}

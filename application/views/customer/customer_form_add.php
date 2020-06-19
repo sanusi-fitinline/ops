@@ -26,7 +26,7 @@
 								</div>
 								<div class="form-group">
 									<label>Phone <small>*</small></label>
-									<input class="form-control" type="text" name="CUST_PHONE" autocomplete="off" required>
+									<input class="form-control" type="text" id="CHECK_CUST_PHONE" name="CUST_PHONE" autocomplete="off" required>
 								</div>
 								<div class="form-group">
 									<label>Email</label>
@@ -115,3 +115,52 @@
       	</div>
   	</div>
 </div>
+<script src="<?php echo base_url()?>assets/vendor/jquery/jquery.min.js"></script>
+<script src="<?php echo base_url()?>assets/vendor/sweetalert2/sweetalert2.all.min.js"></script>
+<script type="text/javascript">
+	$(document).ready(function(){
+		$("#CHECK_CUST_PHONE").on('focusout',function(){
+			$.ajax({
+		        url: "<?php echo site_url('customer/check_phone'); ?>",
+		        type: "POST", 
+		        data: {
+		        	CUST_PHONE  : $("#CHECK_CUST_PHONE").val(),
+		        	},
+		        dataType: "json",
+		        beforeSend: function(e) {
+		        	if(e && e.overrideMimeType) {
+		            	e.overrideMimeType("application/json;charset=UTF-8");
+		          	}
+		        },
+		        success: function(response){
+					if(response.input_phone != ""){
+						if(response.input_phone == response.list_phone){
+							Swal.fire({
+								title: 'Customer sudah ada!',
+								text: "Apakah anda ingin mengubah datanya?",
+								icon: 'warning',
+								allowOutsideClick: false,
+								// showCloseButton: true,
+								showCancelButton: true,
+								confirmButtonColor: '#17a2b8',
+								cancelButtonColor: '#6c757d',
+								confirmButtonText: 'Yes',
+								cancelButtonText: 'No',
+							}).then((result) => {
+								if (result.value) {
+									window.location.href = "<?php echo site_url('customer/edit_by_phone/') ?>"+response.list_cust_id;
+								} else if (result.dismiss === Swal.DismissReason.cancel) {
+									window.location.href = "<?php echo site_url('customer/edit_user/') ?>"+response.list_cust_id;
+								}
+							});
+						}
+					}
+		        },
+		        error: function (xhr, ajaxOptions, thrownError) { 
+		          	alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+		        }
+		    });
+
+		});
+	});
+</script>

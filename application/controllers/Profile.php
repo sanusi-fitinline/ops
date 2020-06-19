@@ -5,18 +5,17 @@ class Profile extends CI_Controller {
 
 	function __construct() {
 		parent::__construct();
+		check_not_login();
 		$this->load->model('access_m');
 		$this->load->model('group_m');
 		$this->load->model('user_m');
-		check_not_login();
 		$this->load->library('form_validation');
 	}
 	
-	public function index()
-	{
-		$data['accs'] =	$this->access_m->getMod()->result();
-		$query 	= $this->user_m->get($this->session->USER_SESSION);
+	public function index() {
+		$data['accs'] 	= $this->access_m->getMod()->result();
 		$data['group'] 	= $this->group_m->get()->result();
+		$query 			= $this->user_m->get($this->session->USER_SESSION);
 		if ($query->num_rows() > 0) {
 			$data['row'] =	$query->row();
 			$this->template->load('template', 'user-management/user/user_detail', $data);
@@ -26,11 +25,10 @@ class Profile extends CI_Controller {
 		}
 	}
 
-	public function edit($USER_ID='USER_ID')
-	{
-		$data['accs'] =	$this->access_m->getMod()->result();
-		$query 	= $this->user_m->get($this->session->USER_SESSION);
+	public function edit($USER_ID) {
+		$data['accs'] 	= $this->access_m->getMod()->result();
 		$data['group'] 	= $this->group_m->get()->result();
+		$query 			= $this->user_m->get($this->session->USER_SESSION);
 		if ($query->num_rows() > 0) {
 			$data['row'] =	$query->row();
 			
@@ -58,7 +56,7 @@ class Profile extends CI_Controller {
 					echo "<script>alert('Data berhasil diubah.')</script>";
 					echo "<script>window.location='".site_url('profile')."'</script>";
 				} else {
-					echo "<script>alert('Data gagal diubah.')</script>";
+					echo "<script>alert('Tidak ada perubahan data.')</script>";
 					echo "<script>window.location='".site_url('profile')."'</script>";
 				}
 			}
@@ -69,8 +67,8 @@ class Profile extends CI_Controller {
 	}
 
 	function username_check() {
-		$params['USER_ID']		= $this->input->post('USER_ID', TRUE);
-		$params['USER_NAME']	= $this->input->post('USER_NAME', TRUE);
+		$params['USER_ID'] 	 = $this->input->post('USER_ID', TRUE);
+		$params['USER_NAME'] = $this->input->post('USER_NAME', TRUE);
 		$query = $this->db->query("SELECT * FROM tb_user WHERE USER_NAME = '$params[USER_NAME]' AND USER_ID != '$params[USER_ID]'");
 		if ($query->num_rows() > 0) {
 			$this->form_validation->set_message('username_check', '%s ini sudah digunakan, silakan ganti.');

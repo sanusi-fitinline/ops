@@ -3,7 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Size_value_m extends CI_Model {
 	var $table = 'tb_size_value'; //nama tabel dari database
-    var $column_search = array('SIZV_VALUE', 'SIZG_NAME', 'SIZP_NAME', 'SIZE_NAME'); //field yang diizin untuk pencarian
+    var $column_search = array('SIZV_VALUE', 'PRDUP_NAME', 'SIZG_NAME', 'SIZP_NAME', 'SIZE_NAME'); //field yang diizin untuk pencarian
 
     public function __construct()
     {
@@ -13,8 +13,9 @@ class Size_value_m extends CI_Model {
 
     private function _get_datatables_query()
     {
-        $this->db->select('tb_size_value.*, tb_size_group.SIZG_NAME, tb_size_type.SIZP_NAME, tb_size.SIZE_NAME');
+        $this->db->select('tb_size_value.*, tb_size_group.SIZG_NAME, tb_producer_product.PRDUP_NAME, tb_size_type.SIZP_NAME, tb_size.SIZE_NAME');
 		$this->db->from($this->table);
+        $this->db->join('tb_producer_product', 'tb_producer_product.PRDUP_ID=tb_size_value.PRDUP_ID', 'left');
 		$this->db->join('tb_size_group', 'tb_size_group.SIZG_ID=tb_size_value.SIZG_ID', 'left');
 		$this->db->join('tb_size_type', 'tb_size_type.SIZP_ID=tb_size_value.SIZP_ID', 'left');
 		$this->db->join('tb_size', 'tb_size.SIZE_ID=tb_size_value.SIZE_ID', 'left');
@@ -69,9 +70,10 @@ class Size_value_m extends CI_Model {
     }
 	
 	public function get($SIZV_ID = null) {
-		$this->db->select('tb_size_value.*, tb_size_group.SIZG_NAME, tb_size_type.SIZP_NAME, tb_size.SIZE_NAME');
+		$this->db->select('tb_size_value.*, tb_size_group.SIZG_NAME, tb_producer_product.PRDUP_NAME, tb_size_type.SIZP_NAME, tb_size.SIZE_NAME');
 		$this->db->from('tb_size_value');
-		$this->db->join('tb_size_group', 'tb_size_group.SIZG_ID=tb_size_value.SIZG_ID', 'left');
+		$this->db->join('tb_producer_product', 'tb_producer_product.PRDUP_ID=tb_size_value.PRDUP_ID', 'left');
+        $this->db->join('tb_size_group', 'tb_size_group.SIZG_ID=tb_size_value.SIZG_ID', 'left');
 		$this->db->join('tb_size_type', 'tb_size_type.SIZP_ID=tb_size_value.SIZP_ID', 'left');
 		$this->db->join('tb_size', 'tb_size.SIZE_ID=tb_size_value.SIZE_ID', 'left');
 		$this->db->order_by('tb_size_group.SIZG_NAME', 'ASC');
@@ -84,19 +86,10 @@ class Size_value_m extends CI_Model {
 		return $query;
 	}
 
-    public function get_by_group($SIZG_ID = null){
-        $this->db->select('tb_size_value.SIZE_ID');
-        $this->db->from('tb_size_value');
-        if($SIZG_ID != null) {
-            $this->db->where('tb_size_value.SIZG_ID', $SIZG_ID);
-        }
-        $query = $this->db->get();
-        return $query;
-    }
-
 	public function insert() {
 		$dataInsert = array(
 			'SIZV_VALUE' => $this->input->post('SIZV_VALUE', TRUE),
+            'PRDUP_ID'   => $this->input->post('PRDUP_ID', TRUE),
 			'SIZG_ID' 	 => $this->input->post('SIZG_ID', TRUE),
 			'SIZP_ID' 	 => $this->input->post('SIZP_ID', TRUE),
 			'SIZE_ID' 	 => $this->input->post('SIZE_ID', TRUE),
@@ -107,6 +100,7 @@ class Size_value_m extends CI_Model {
 	public function update($SIZV_ID){
 		$dataUpdate = array(
 			'SIZV_VALUE' => $this->input->post('SIZV_VALUE', TRUE),
+            'PRDUP_ID'   => $this->input->post('PRDUP_ID', TRUE),
 			'SIZG_ID' 	 => $this->input->post('SIZG_ID', TRUE),
 			'SIZP_ID' 	 => $this->input->post('SIZP_ID', TRUE),
 			'SIZE_ID' 	 => $this->input->post('SIZE_ID', TRUE),

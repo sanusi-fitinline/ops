@@ -8,7 +8,7 @@
 	  	<li class="breadcrumb-item active">Size Product</li>
 	</ol>
 	<div class="row">
-		<div class="col-md-6 offset-md-3">
+		<div class="col-md-8 offset-md-2">
 			<!-- DataTables Example -->
 		    <div class="card mb-3">
 		    	<div class="card-header">
@@ -23,10 +23,10 @@
 		          		<table class="table table-bordered" id="myTableSizeProduct" width="100%" cellspacing="0">
 		            		<thead style="font-size: 14px;">
 			                	<tr>
-									<th style="vertical-align: middle; text-align: center;width: 10px">NO</th>
-									<th style="vertical-align: middle; text-align: center;">PRODUCT</th>
-									<th style="vertical-align: middle; text-align: center;">PROPERTY</th>
-									<th style="vertical-align: middle; text-align: center;">ACTION</th>
+									<th style="vertical-align: middle; text-align: center; width: 10px">NO</th>
+									<th style="vertical-align: middle; text-align: center; width: 150px">PRODUCT</th>
+									<th style="vertical-align: middle; text-align: center; width: 200px">PROPERTY</th>
+									<th style="vertical-align: middle; text-align: center; width: 100px">ACTION</th>
 			                  	</tr>
 			                </thead>
 			                <tbody style="font-size: 14px;">

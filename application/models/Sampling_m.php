@@ -34,11 +34,14 @@ class Sampling_m extends CI_Model {
 		if ($CUST_NAME != null) { // filter by customer name
 			$this->db->like('tb_customer.CUST_NAME', $CUST_NAME);
 		}
-		if ($FROM != null && $TO != null) {	// filter by date			
+		if ($FROM != null && $TO != null) {	// filter by date	
+			$this->db->group_start();		
 			$this->db->where('tb_log_sample.LSAM_DATE >=', date('Y-m-d', strtotime($FROM)));
 			$this->db->where('tb_log_sample.LSAM_DATE <=', date('Y-m-d', strtotime('+1 days', strtotime($TO))));
+			$this->db->group_end();
 		}
 		if ($STATUS_FILTER != null) { // filter by status
+			$this->db->group_start();
 			if ($STATUS_FILTER == 1) { // filter status requested
 				$this->db->where('tb_log_sample.LSAM_PAYDATE', null);
 				$this->db->where('tb_log_sample.LSAM_DELDATE', null);
@@ -48,21 +51,28 @@ class Sampling_m extends CI_Model {
 			} else { // filter status delivered
 				$this->db->where('tb_log_sample.LSAM_DELDATE is NOT NULL', null, false);
 			}
+			$this->db->group_end();
 		} 
 		if ($this->uri->segment(1) == "pm") {
+			$this->db->group_start();
 			$this->db->where('tb_log_sample.LSAM_PAYDATE is NOT NULL', NULL, FALSE);
 			$this->db->or_where('tb_log_sample.LSAM_COST', 0);
 			$this->db->where('tb_log_sample.LSAM_DEPOSIT', null);
+			$this->db->group_end();
 		}
 		if ($SEGMENT != null) {
 			if ($SEGMENT == "sampling_unpaid") {
 				$this->db->where('tb_log_sample.LSAM_PAYDATE', null);
 			} else if ($SEGMENT == "sampling_undelivered") {
+				$this->db->group_start();
 				$this->db->where('tb_log_sample.LSAM_PAYDATE is NOT NULL', null, false);
 				$this->db->where('tb_log_sample.LSAM_DELDATE', null);
+				$this->db->group_end();
 			} else if ($SEGMENT == "sampling_need_followup") {
+				$this->db->group_start();
 				$this->db->where('tb_log_sample.LSAM_DELDATE is NOT NULL', null, false);
 				$this->db->where('tb_customer_log.FLWS_ID', null);
+				$this->db->group_end();
 			}
 		}
 		
@@ -207,18 +217,18 @@ class Sampling_m extends CI_Model {
 		return $query;
 	}
 
-	public function check_data($CUST_ID, $LSAM_ID) {
+	public function check_data($CUST_ID, $DATE) {
 		$this->db->select('CUSTD_ID');
 		$this->db->from('tb_customer_deposit');
 		$this->db->where('CUSTD_DEPOSIT_STATUS', 0);
 		$this->db->where('CUST_ID', $CUST_ID);
-		$this->db->where('CUSTD_NOTES', "Sampling ID $LSAM_ID");
+		$this->db->like('CUSTD_NOTES', $DATE);
 		$query = $this->db->get();
 		return $query;
 	}
 
 	public function check_shipcost($LSAM_ID) {
-		$this->db->select('LSAM_COST, CUST_ID');
+		$this->db->select('LSAM_DATE, LSAM_COST, CUST_ID');
 		$this->db->from('tb_log_sample');
 		$this->db->where('LSAM_ID', $LSAM_ID);
 		$query = $this->db->get();
@@ -360,16 +370,23 @@ class Sampling_m extends CI_Model {
 
 		$check = $this->check_shipcost($LSAM_ID)->row();
 		$actual_cost = str_replace(".", "", $this->input->post('LSAM_COST_ACTUAL', TRUE));
+		$CUST_ID = $check->CUST_ID;
+		$DEPOSIT = $check->LSAM_COST - $actual_cost;
+		$DATE 	 = date('d-m-Y', strtotime($check->LSAM_DATE));
+		$check_deposit = $this->check_data($CUST_ID, $DATE);
 		if($check->LSAM_COST != $actual_cost) {
-			$CUST_ID = $check->CUST_ID;
-			$DEPOSIT = $check->LSAM_COST - $actual_cost;
-			$check_deposit = $this->check_data($CUST_ID, $LSAM_ID);
+			if($DEPOSIT > 0){
+				$NOTES = "Kelebihan ongkir sample $DATE";
+			} else {
+				$NOTES = "Kekurangan ongkir sample $DATE";
+			}
 			if ($check_deposit->num_rows() > 0) {
 				$update_customer_deposit = array(
 	                'CUSTD_DEPOSIT'         => $DEPOSIT,
+	                'CUSTD_NOTES'           => $NOTES,
 	            );
 	            $this->db->where('CUST_ID', $CUST_ID);
-	            $this->db->where('CUSTD_NOTES', "Sampling ID $LSAM_ID");
+	            $this->db->like('CUSTD_NOTES', $DATE);
 	            $this->db->update('tb_customer_deposit', $this->db->escape_str($update_customer_deposit));
 			} else {
 				$insert_customer_deposit = array(
@@ -377,9 +394,15 @@ class Sampling_m extends CI_Model {
 	                'CUSTD_DEPOSIT'         => $DEPOSIT,
 	                'CUSTD_DEPOSIT_STATUS'  => 0,
 	                'CUST_ID'               => $CUST_ID,
-	                'CUSTD_NOTES'           => "Sampling ID ".$LSAM_ID,
+	                'CUSTD_NOTES'           => $NOTES,
 	            );
 	            $this->db->insert('tb_customer_deposit', $this->db->escape_str($insert_customer_deposit));
+			}
+		} else {
+			if($check_deposit->num_rows() > 0) {
+	            $this->db->where('CUST_ID', $CUST_ID);
+	            $this->db->like('CUSTD_NOTES', $DATE);
+                $this->db->delete('tb_customer_deposit');
 			}
 		}
 	}

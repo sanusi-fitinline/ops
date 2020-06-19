@@ -1,7 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 require_once dirname(__FILE__) . '/tcpdf/tcpdf.php';
-// define('K_TCPDF_CALLS_IN_HTML', true);
 
 class Pdf extends TCPDF
 {
@@ -20,12 +19,12 @@ class Pdf extends TCPDF
 			$this->SetFont('helvetica', '', 8);
 			$html='<p align="right">Jl. Pangeran Wirosobo, Gg. Wiropamungkas No. 8 Sorosutan,
 				<br>Kec. Umbulharjo, Kota Yogyakarta 55162, Indonesia.<br>
-				Ph. +62 274 4293090 Email: cs@fitinline.com Website: <a style="text-decoration:none; color: black;" href="https://fitinline.com">https://fitinline.com</a></p><hr>';
+				Ph. +62-274-4293090 Email: cs@fitinline.com Website: <a style="text-decoration:none; color: black;" href="https://fitinline.com">https://fitinline.com</a></p><hr>';
 			$this->writeHTML($html, true, false, false, false, '');
 		} else {
 			$this->SetY(5);
 			$this->SetFont('helvetica', '', 9);
-			$html='<p align="right" style="font-style: italic;">Fitinline.com - Phone. +62 274 5305094 Mobile: + 62 812 25696886 Email: cs@fitinline.com</p>';
+			$html='<p align="right" style="font-style: italic;">Fitinline.com - Phone. +62-274-4293090 Mobile: +62-812-2569-6886 Email: cs@fitinline.com</p>';
 			$this->writeHTML($html, true, false, false, false, '');
 		}
 	}

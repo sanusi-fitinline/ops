@@ -124,16 +124,22 @@ class Product_m extends CI_Model {
     }
 
     public function get_subtype_price_list() {
+    	$TYPE_ID  = $this->input->post('TYPE_ID', TRUE);
     	$STYPE_ID = $this->input->post('STYPE_ID', TRUE);
     	$SUBTYPE = array();
-    	foreach($STYPE_ID as $i => $val){
-			$SUBTYPE[] = $STYPE_ID[$i];
-		}
+    	if ($STYPE_ID != null) {
+	    	foreach($STYPE_ID as $i => $val){
+				$SUBTYPE[] = $STYPE_ID[$i];
+			}
+    	}
 
     	$this->db->select('tb_product.STYPE_ID, tb_subtype.STYPE_NAME');
 		$this->db->from('tb_product');
 		$this->db->join('tb_subtype', 'tb_subtype.STYPE_ID=tb_product.STYPE_ID', 'inner');
-		$this->db->where_in('tb_product.STYPE_ID', $SUBTYPE);
+		$this->db->where('tb_product.TYPE_ID', $TYPE_ID);
+		if ($STYPE_ID != null) {
+			$this->db->where_in('tb_product.STYPE_ID', $SUBTYPE);
+		}
 		$this->db->order_by('tb_subtype.STYPE_NAME', 'ASC');
 		$this->db->group_by('tb_product.STYPE_ID');
 		$query = $this->db->get();
@@ -144,8 +150,10 @@ class Product_m extends CI_Model {
     	$TYPE_ID  = $this->input->post('TYPE_ID', TRUE);
     	$STYPE_ID = $this->input->post('STYPE_ID', TRUE);
     	$SUBTYPE = array();
-    	foreach($STYPE_ID as $i => $val){
-			$SUBTYPE[] = $STYPE_ID[$i];
+    	if ($STYPE_ID != null) {
+	    	foreach($STYPE_ID as $i => $val){
+				$SUBTYPE[] = $STYPE_ID[$i];
+			}
 		}
 
     	$this->db->select('tb_product.*, umea_a.UMEA_NAME AS UMEA_NAME_A, umea_b.UMEA_NAME AS UMEA_NAME_B, umea_c.UMEA_NAME AS UMEA_NAME_C, tb_type.TYPE_NAME, tb_subtype.STYPE_NAME');
@@ -156,7 +164,9 @@ class Product_m extends CI_Model {
 		$this->db->join('tb_type', 'tb_type.TYPE_ID=tb_product.TYPE_ID', 'left');
 		$this->db->join('tb_subtype', 'tb_subtype.STYPE_ID=tb_product.STYPE_ID', 'inner');
 		$this->db->where('tb_product.TYPE_ID', $TYPE_ID);
-		$this->db->where_in('tb_product.STYPE_ID', $SUBTYPE);
+		if ($STYPE_ID != null) {
+			$this->db->where_in('tb_product.STYPE_ID', $SUBTYPE);
+		}
 		$this->db->order_by('tb_subtype.STYPE_NAME', 'ASC');
 		$this->db->order_by('tb_product.PRO_NAME', 'ASC');
 		$query = $this->db->get();
