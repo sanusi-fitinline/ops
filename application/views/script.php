@@ -2403,7 +2403,7 @@
 				            },
 			            ],
 			        });
-			        $("#FILTER_PROJECT_FOLLOW_UP").attr("disabled","disabled");
+			        $("#FILTER_ASSIGN_PRODUCER").attr("disabled","disabled");
 		        });
 
 		        // producer

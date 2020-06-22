@@ -39,7 +39,7 @@
 	                    	<th style="vertical-align: middle; text-align: center; width: 80px;">DATE</th>
 	                    	<th style="vertical-align: middle; text-align: center; width: 150px;">CUSTOMER</th>
 	                    	<th style="vertical-align: middle; text-align: center; width: 200px;">PRODUCT</th>
-							<th style="vertical-align: middle; text-align: center;">NOTES</th>
+							<th style="vertical-align: middle; text-align: center;">PRODUCER</th>
 							<th style="vertical-align: middle; text-align: center; width: 110px;">ACTION</th>
 	                  	</tr>
 	                </thead>

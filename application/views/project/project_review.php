@@ -7,10 +7,7 @@
 	    	<a href="<?php echo site_url('dashboard') ?>">Dashboard</a>
 	  	</li>
 	  	<li class="breadcrumb-item">
-	    	<a href="<?php echo $this->uri->segment(1) != "assign_producer" ? site_url('project') : site_url('assign_producer') ?>">Project</a>
-	  	</li>
-	  	<li class="breadcrumb-item" <?php echo $this->uri->segment(1) != "project" ?"hidden" : ""; ?>>
-	    	<a href="<?php echo site_url('project/detail/'.$detail->PRJ_ID) ?>">Detail</a>
+	    	<a href="<?php echo $this->uri->segment(1) != "assign_producer" ? site_url('project_followup') : site_url('assign_producer') ?>">Project</a>
 	  	</li>
 	  	<li class="breadcrumb-item active">Review</li>
 	</ol>
@@ -91,9 +88,9 @@
 									<?php endforeach ?>
 								<?php endif ?>
 							</div>
-							<hr>
+							<hr <?php echo $this->uri->segment(1) != "assign_producer" ? "hidden" : "" ?>>
 							<!-- model -->
-							<div class="row">
+							<div class="row" <?php echo $this->uri->segment(1) != "assign_producer" ? "hidden" : "" ?>>
 								<div class="col-md-12">
 									<h4>Progress</h4>
 									<div class="table-responsive">
@@ -113,14 +110,16 @@
 								                	<?php foreach($progress as $field): ?>
 								                		<tr>
 								                			<td align="center"><?php echo $n++ ?></td>
-								                			<td><?php echo date('d-m-Y / H:i:s', strtotime($field->PRJPG_DATE)) ?></td>
-								                			<td><?php echo $field->PRJA_NAME ?></td>
+								                			<td align="center"><?php echo date('d-m-Y / H:i:s', strtotime($field->PRJPG_DATE)) ?></td>
+								                			<td align="center"><?php echo $field->PRJA_NAME ?></td>
 								                			<td align="center">
 									                			<?php if($field->PRJPG_IMG != null): ?>
 									                				<img style="height: 100px;" class="img-fluid" src="<?php echo base_url('assets/images/project/progress/'.$field->PRJPG_IMG) ?>">
+									                			<?php else: ?>
+									                				-
 									                			<?php endif ?>
 									                		</td>
-								                			<td><?php echo $field->PRJPG_NOTES ?></td>
+								                			<td <?php echo $field->PRJPG_NOTES == null ? "align='center'" : "" ?>><?php echo $field->PRJPG_NOTES != null ? $field->PRJPG_NOTES : "-" ?></td>
 								                		</tr>
 								                	<?php endforeach ?>
 								                <?php else: ?>
@@ -139,14 +138,14 @@
 							<div class="row">
 								<div class="col-md-12">
 									<div <?php echo $row->PRJ_STATUS == 9 ? "hidden" : "" ?>>
-										<a <?php echo $this->uri->segment(1) != "project" ? "hidden" : "" ?> href="#" id="tambah-review" data-toggle="modal" data-target="#add-review" class="btn btn-success btn-sm"><i class="fas fa-plus-circle"></i> Add</a>
+										<a <?php echo $this->uri->segment(1) != "assign_producer" ? "hidden" : "" ?> href="#" id="tambah-review" data-toggle="modal" data-target="#add-review" class="btn btn-success btn-sm"><i class="fas fa-plus-circle"></i> Add</a>
 						        		<p></p>
 						        	</div>
 									<div class="table-responsive">
 						          		<table class="table table-bordered" width="100%" cellspacing="0">
 						            		<thead style="font-size: 14px;">
 							                	<tr>
-							                    	<th style="vertical-align: middle; text-align: center; width: 10px;" <?php echo $this->uri->segment(1) == "project" ? "colspan='2'" : "" ?>>#</th>
+							                    	<th style="vertical-align: middle; text-align: center; width: 10px;" <?php echo $this->uri->segment(1) == "assign_producer" ? "colspan='2'" : "" ?>>#</th>
 							                    	<th style="vertical-align: middle; text-align: center;width: 100px;">CRITERIA</th>
 							                    	<th style="vertical-align: middle; text-align: center;width: 50px;">POINT</th>
 							                    	<th style="vertical-align: middle; text-align: center;width: 100px;">NOTES</th>
@@ -160,8 +159,8 @@
 						                		<?php if($check_review->num_rows() > 0):?>
 								                	<?php foreach($review as $data): ?>
 									                	<tr>
-									                		<td <?php echo $this->uri->segment(1) != "project" ? "hidden" : "" ?> align="center" style="width: 10px;">
-									                			<a href="<?php echo site_url('project/del_review/'.$row->PRJ_ID.'/'.$detail->PRJD_ID.'/'.$data->PRJR_ID) ?>" class="DELETE-REVIEW" style="color: #dc3545; float: left;" onclick="return confirm('Delete Item?')" title="Delete"><i class="fa fa-trash"></i></a>
+									                		<td <?php echo $this->uri->segment(1) != "assign_producer" ? "hidden" : "" ?> align="center" style="width: 10px;">
+									                			<a href="<?php echo site_url('assign_producer/del_review/'.$row->PRJ_ID.'/'.$detail->PRJD_ID.'/'.$data->PRJR_ID) ?>" class="DELETE-REVIEW" style="color: #dc3545; float: left;" onclick="return confirm('Delete Item?')" title="Delete"><i class="fa fa-trash"></i></a>
 									                			<a href="#" class="UBAH-REVIEW" id="UBAH-REVIEW<?php echo $data->PRJR_ID ?>" data-toggle="modal" data-target="#edit-review<?php echo $data->PRJR_ID ?>" style="color: #007bff; float: right;" title="Edit"><i class="fa fa-edit"></i></a>
 									                		</td>
 									                		<td align="center" style="width: 10px;"><?php echo $i++ ?></td>
@@ -200,7 +199,7 @@
 		        <h4 class="modal-title">Add Data Review</h4>
 		        <button type="button" class="close" data-dismiss="modal">&times;</button>
 		    </div>
-			<form action="<?php echo site_url('project/add_review')?>" method="POST" enctype="multipart/form-data">
+			<form action="<?php echo site_url('assign_producer/add_review')?>" method="POST" enctype="multipart/form-data">
 		    <!-- Modal body -->
 			    <div class="modal-body">
 			        <div class="row">
@@ -252,7 +251,7 @@
 			        <h4 class="modal-title">Edit Data Review</h4>
 			        <button type="button" class="close" data-dismiss="modal">&times;</button>
 			    </div>
-				<form action="<?php echo site_url('project/edit_review')?>" method="POST" enctype="multipart/form-data">
+				<form action="<?php echo site_url('assign_producer/edit_review')?>" method="POST" enctype="multipart/form-data">
 			    <!-- Modal body -->
 				    <div class="modal-body">
 				        <div class="row">

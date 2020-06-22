@@ -11,11 +11,11 @@ class Project_followup_m extends CI_Model {
     }
 
     private function _get_datatables_query($STATUS_FILTER = null){
-        $this->db->select('tb_project_detail.*, tb_project.PRJ_STATUS, tb_project.PRJ_PAYMENT_METHOD, tb_project.PRJ_DATE, tb_producer_product.PRDUP_NAME, tb_customer.CUST_NAME, tb_project_producer.PRJPR_ID');
+        $this->db->select('tb_project_detail.*, tb_project.PRJ_STATUS, tb_project.PRJ_PAYMENT_METHOD, tb_project.PRJ_DATE, tb_customer.CUST_NAME, tb_producer_product.PRDUP_NAME, tb_producer.PRDU_NAME, tb_project_producer.PRJPR_ID');
         $this->db->from($this->table);
         $this->db->join('tb_project', 'tb_project.PRJ_ID=tb_project_detail.PRJ_ID', 'left');
         $this->db->join('tb_customer', 'tb_customer.CUST_ID=tb_project.CUST_ID', 'left');
-        $this->db->join('tb_project_detail_quantity', 'tb_project_detail_quantity.PRJD_ID=tb_project_detail.PRJD_ID', 'inner');
+        $this->db->join('tb_producer', 'tb_producer.PRDU_ID=tb_project_detail.PRDU_ID', 'left');
         $this->db->join('tb_producer_product', 'tb_producer_product.PRDUP_ID=tb_project_detail.PRDUP_ID', 'left');
         $this->db->join('tb_project_producer', 'tb_project_producer.PRJD_ID=tb_project_detail.PRJD_ID', 'left');
 
@@ -35,21 +35,14 @@ class Project_followup_m extends CI_Model {
 
         $i = 0;
     
-        foreach ($this->column_search as $item) // loop column 
-        {
-            if($_POST['search']['value']) // if datatable send POST for search
-            {
-                
-                if($i===0) // first loop
-                {
+        foreach ($this->column_search as $item) { // loop column
+            if($_POST['search']['value']) { // if datatable send POST for search
+                if($i===0) { // first loop
                     $this->db->group_start(); // open bracket. query Where with OR clause better with bracket. because maybe can combine with other WHERE with AND.
                     $this->db->like($item, $_POST['search']['value']);
-                }
-                else
-                {
+                } else {
                     $this->db->or_like($item, $_POST['search']['value']);
                 }
-
                 if(count($this->column_search) - 1 == $i) //last loop
                     $this->db->group_end(); //close bracket
             }

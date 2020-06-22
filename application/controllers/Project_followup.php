@@ -21,6 +21,7 @@ class Project_followup extends CI_Controller {
 		$this->load->model('project_producer_m');
 		$this->load->model('project_activity_m');
 		$this->load->model('project_progress_m');
+		$this->load->model('project_review_m');
 		$this->load->model('project_followup_m');
 		$this->load->model('project_shipment_m');
 		$this->load->library('pdf');
@@ -47,9 +48,9 @@ class Project_followup extends CI_Controller {
 		$no 			= $_POST['start'];
 		foreach ($list as $field) {
 
-			if ($field->PRJD_NOTES!=null) {
-				$PRJD_NOTES = $field->PRJD_NOTES;
-			} else {$PRJD_NOTES = "<div align='center'>-</div>";}
+			if ($field->PRDU_ID!=null) {
+				$PRDU_NAME = $field->PRDU_NAME;
+			} else {$PRDU_NAME = "<div align='center'>-</div>";}
 
 			if ($field->PRJPR_ID != null) {
 				$STATUS = "<div class='btn btn-default btn-sm' style='font-size: 11px; color: #fff; background-color:#20c997; border-color:#20c997; border-radius: 6px; padding: 2px 5px 5px 3px; width:90px;'><i class='fa fa-check-circle'></i><span><b> Followed Up</b></span></div>";
@@ -59,18 +60,21 @@ class Project_followup extends CI_Controller {
 
 			// tombol progress muncul jika statusnya project in progress
 			if($field->PRJ_STATUS < 4){
-				$PROGRESS = "hidden";
-			} else {$PROGRESS = "";}
+				$PROGRESS = "style='opacity: 0.5; pointer-events: none;'";
+			} else {$PROGRESS = "style='background-color:#6f42c1; border-color:#6f42c1'";}
 
 			// tombol shipment muncul ketika progress sudah sent
 			$row = $this->project_progress_m->get_max_progress($field->PRJD_ID)->row();
 			if($row->PROGRESS != null){
 				if($row->PROGRESS == 5 || $row->PROGRESS == 8 || $row->PROGRESS == 11){ 
-					$SHIPMENT = "";
-				} else { $SHIPMENT = "hidden";}
-			} else {
-				$SHIPMENT = "hidden";
-			}
+					$SHIPMENT = "style='background-color:#795548; border-color:#795548'";
+				} else {$SHIPMENT = "style='opacity: 0.5; pointer-events: none;'";}
+			} else {$SHIPMENT = "style='opacity: 0.5; pointer-events: none;'";}
+
+			// tombol review muncul ketika project status delivered
+			if($field->PRJ_STATUS != 8) {
+				$REVIEW = "class='btn btn-sm btn-secondary' style='opacity: 0.5; pointer-events: none;'";
+			} else {$REVIEW = "class='btn btn-sm btn-warning'";}
 
 			$row   = array();
 			$row[] = "<div align='center'>$STATUS</div>";
@@ -78,15 +82,15 @@ class Project_followup extends CI_Controller {
 			$row[] = date('d-m-Y / H:i:s', strtotime($field->PRJ_DATE));
 			$row[] = stripslashes($field->CUST_NAME);
 			$row[] = stripslashes($field->PRDUP_NAME);
-			$row[] = stripslashes($PRJD_NOTES);
+			$row[] = stripslashes($PRDU_NAME);
 			$row[] = '<div style="vertical-align: middle; text-align: center;">
 					<a href="'.$url.'project_followup/detail/'.$field->PRJ_ID.'/'.$field->PRJD_ID.'" class="btn btn-primary btn-sm" title="Follow Up"><i class="fa fa-share"></i></a>
-					<a '.$PROGRESS.' href="'.$url.'project_followup/progress/'.$field->PRJD_ID.'" class="btn btn-secondary btn-sm" style="background-color:#6f42c1; border-color:#6f42c1" title="Progress"><i class="fas fa-drafting-compass"></i></a>
-					<a '.$SHIPMENT.' href="'.$url.'project_followup/shipment/'.$field->PRJ_ID.'/'.$field->PRJD_ID.'" class="btn btn-secondary btn-sm" style="background-color:#795548; border-color:#795548" title="Shipment"><i class="fas fa-truck"></i></a>
-					</div>';
+					<a '.$PROGRESS.' href="'.$url.'project_followup/progress/'.$field->PRJD_ID.'" class="btn btn-sm btn-secondary" title="Progress"><i class="fas fa-drafting-compass"></i></a>
+					<hr class="my-2">
+					<a '.$SHIPMENT.' href="'.$url.'project_followup/shipment/'.$field->PRJ_ID.'/'.$field->PRJD_ID.'" class="btn btn-sm btn-secondary" title="Shipment"><i class="fas fa-truck fa-sm"></i></a>
+					<a '.$REVIEW.' href="'.$url.'project_followup/review/'.$field->PRJ_ID.'/'.$field->PRJD_ID.'" title="Review"><i class="fa fa-star"></i></a>
+				</div>';
 			$data[] = $row;
-			// <i class="fas fa-box-open"></i>
-			// 17a2b8
 		}
 
 		$output = array(
@@ -464,6 +468,20 @@ class Project_followup extends CI_Controller {
 		} else {
 			echo "<script>alert('Data gagal dihapus.')</script>";
 			echo "<script>window.location='".site_url('project_followup/shipment/'.$PRJ_ID.'/'.$PRJD_ID)."'</script>";
+		}
+	}
+
+	public function review($PRJ_ID, $PRJD_ID) {
+		$query = $this->project_m->get($PRJ_ID);
+		if ($query->num_rows() > 0) {
+			$data['row'] 		= $query->row();
+			$data['detail'] 	= $this->project_detail_m->get(null, $PRJD_ID)->row();
+			$data['progress'] 	= $this->project_progress_m->get($PRJD_ID)->result();
+			$data['review'] 	= $this->project_review_m->get(null, $PRJD_ID)->result();
+			$this->template->load('template', 'project/project_review', $data);
+		} else {
+			echo "<script>alert('Data tidak ditemukan.')</script>";
+			echo "<script>window.location='".site_url('project')."'</script>";
 		}
 	}
 }

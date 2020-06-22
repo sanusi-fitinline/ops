@@ -16,8 +16,8 @@ class Assign_producer_m extends CI_Model {
         $this->db->join('tb_project', 'tb_project.PRJ_ID=tb_project_detail.PRJ_ID', 'left');
         $this->db->join('tb_customer', 'tb_customer.CUST_ID=tb_project.CUST_ID', 'left');
         $this->db->join('tb_producer_product', 'tb_producer_product.PRDUP_ID=tb_project_detail.PRDUP_ID', 'left');
-        $this->db->join('tb_project_producer', 'tb_project_producer.PRJD_ID=tb_project_detail.PRJD_ID', 'inner');
         $this->db->join('tb_producer', 'tb_producer.PRDU_ID=tb_project_detail.PRDU_ID', 'left');
+        $this->db->join('tb_project_producer', 'tb_project_producer.PRJD_ID=tb_project_detail.PRJD_ID', 'inner');
 
 		if ($STATUS_FILTER != null) { // filter by status
 			$this->db->group_start();

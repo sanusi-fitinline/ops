@@ -21,8 +21,6 @@ class Project extends CI_Controller {
 		$this->load->model('project_producer_m');
 		$this->load->model('project_activity_m');
 		$this->load->model('project_progress_m');
-		$this->load->model('project_criteria_m');
-		$this->load->model('project_review_m');
 		$this->load->model('size_group_m');
 		$this->load->model('size_m');
 		$this->load->model('size_value_m');
@@ -387,59 +385,6 @@ class Project extends CI_Controller {
 		} else {
 			echo "<script>alert('Data tidak ditemukan.')</script>";
 			echo "<script>window.location='".site_url('project')."'</script>";
-		}
-	}
-
-	public function review($PRJ_ID, $PRJD_ID) {
-		$query = $this->project_m->get($PRJ_ID);
-		if ($query->num_rows() > 0) {
-			$data['row'] 		= $query->row();
-			$data['detail'] 	= $this->project_detail_m->get(null, $PRJD_ID)->row();
-			$data['progress'] 	= $this->project_progress_m->get($PRJD_ID)->result();
-			$data['review'] 	= $this->project_review_m->get(null, $PRJD_ID)->result();
-			$data['criteria'] 	= $this->project_criteria_m->get()->result();
-			$this->template->load('template', 'project/project_review', $data);
-		} else {
-			echo "<script>alert('Data tidak ditemukan.')</script>";
-			echo "<script>window.location='".site_url('project')."'</script>";
-		}
-	}
-
-	public function add_review() {
-		$PRJ_ID  	 = $this->input->post('PRJ_ID', TRUE);
-		$PRJD_ID 	 = $this->input->post('PRJD_ID', TRUE);
-		$data['row'] =	$this->project_review_m->insert();
-		if($data) {
-			echo "<script>alert('Data berhasil ditambah.')</script>";
-            echo "<script>window.location='".site_url('project/review/'.$PRJ_ID.'/'.$PRJD_ID)."'</script>";
-        } else {
-            echo "<script>alert('Data gagal ditambah.')</script>";
-            echo "<script>window.location='".site_url('project/review/'.$PRJ_ID.'/'.$PRJD_ID)."'</script>";
-        }	
-	}
-
-	public function edit_review() {
-		$PRJ_ID  = $this->input->post('PRJ_ID', TRUE);
-		$PRJD_ID = $this->input->post('PRJD_ID', TRUE);
-		$PRJR_ID = $this->input->post('PRJR_ID', TRUE);
-		$this->project_review_m->update($PRJR_ID);
-		if($this->db->affected_rows() > 0) {
-			echo "<script>alert('Data berhasil diubah.')</script>";
-			echo "<script>window.location='".site_url('project/review/'.$PRJ_ID.'/'.$PRJD_ID)."'</script>";
-		} else {
-			echo "<script>alert('Tidak ada perubahan data.')</script>";
-			echo "<script>window.location='".site_url('project/review/'.$PRJ_ID.'/'.$PRJD_ID)."'</script>";
-		}
-	}
-
-	public function del_review($PRJ_ID, $PRJD_ID, $PRJR_ID) {
-		$this->project_review_m->delete($PRJR_ID);
-		if($this->db->affected_rows() > 0) {
-			echo "<script>alert('Data berhasil dihapus.')</script>";
-			echo "<script>window.location='".site_url('project/review/'.$PRJ_ID.'/'.$PRJD_ID)."'</script>";
-		} else {
-			echo "<script>alert('Data gagal dihapus.')</script>";
-			echo "<script>window.location='".site_url('project/review/'.$PRJ_ID.'/'.$PRJD_ID)."'</script>";
 		}
 	}
 

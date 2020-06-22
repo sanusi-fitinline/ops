@@ -130,14 +130,16 @@
 										        <a href="#" class="UBAH-PROGRESS" data-toggle="modal" data-target="#edit-progress<?php echo $field->PRJPG_ID ?>" style="color: #007bff; float: right;" title="Edit"><i class="fa fa-edit"></i></a>
 											</td>
 				                			<td align="center"><?php echo $n++ ?></td>
-				                			<td><?php echo date('d-m-Y / H:i:s', strtotime($field->PRJPG_DATE)) ?></td>
-				                			<td><?php echo "(".$field->PRJA_ORDER.") ".$field->PRJA_NAME ?></td>
+				                			<td align="center"><?php echo date('d-m-Y / H:i:s', strtotime($field->PRJPG_DATE)) ?></td>
+				                			<td align="center"><?php echo "(".$field->PRJA_ORDER.") ".$field->PRJA_NAME ?></td>
 				                			<td align="center">
 					                			<?php if($field->PRJPG_IMG != null): ?>
 					                				<img style="height: 100px;" class="img-fluid" src="<?php echo base_url('assets/images/project/progress/'.$field->PRJPG_IMG) ?>">
+					                			<?php else: ?>
+									                -
 					                			<?php endif ?>
 					                		</td>
-				                			<td><?php echo $field->PRJPG_NOTES ?></td>
+				                			<td <?php echo $field->PRJPG_NOTES == null ? "align='center'" : "" ?>><?php echo $field->PRJPG_NOTES != null ? $field->PRJPG_NOTES : "-" ?></td>
 				                		</tr>
 				                	<?php endforeach ?>
 				                <?php else: ?>

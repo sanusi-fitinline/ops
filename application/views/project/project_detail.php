@@ -332,12 +332,9 @@
 									                			<hr>
 									                			<p>Estimasi: <span id="TAMPIL_ETD<?php echo $data->PRJD_ID ?>" style="float: right;"><?php echo $data->PRJD_ETD != null ? $data->PRJD_ETD : "-" ?></span></p>
 									                		</td>
-									                		<td align="left" style="vertical-align: middle;">
-									                			<a style="text-decoration: none;" href="<?php echo site_url('project/detail_view/'.$row->PRJ_ID.'/'.$data->PRJD_ID) ?>" title="View"><i class="fas fa-eye"></i> View</a>
-									                			<hr class="mt-1 mb-1">
-									                			<a class="PROGRESS" href="<?php echo site_url('project/progress/'.$data->PRJD_ID) ?>" style="color:#795548; text-decoration: none;" onMouseOver="this.style.color='#212529'" onMouseOut="this.style.color='#795548'" title="Progress"><i class="fas fa-drafting-compass"></i> Progress</a>
-									                			<hr class="mt-1 mb-1">
-									                			<a class="REVIEW" style="text-decoration: none; color: #ffc107;" onMouseOver="this.style.color='#e0a800'" onMouseOut="this.style.color='#ffc107'" href="<?php echo site_url('project/review/'.$row->PRJ_ID.'/'.$data->PRJD_ID) ?>" title="Review"><i class="fas fa-star"></i> Review</a>
+									                		<td align="center" style="vertical-align: middle;">
+									                			<a class="btn btn-sm btn-primary" href="<?php echo site_url('project/detail_view/'.$row->PRJ_ID.'/'.$data->PRJD_ID) ?>" title="View"><i class="fas fa-eye"></i></a>
+									                			<a class="btn btn-sm btn-default PROGRESS" style="color:#FFFFFF; background-color: #6f42c1; border-color: #6f42c1;" href="<?php echo site_url('project/progress/'.$data->PRJD_ID) ?>" title="Progress"><i class="fas fa-drafting-compass"></i></a>
 									                		</td>
 									                		<input type="hidden" id="PRODUCER<?php echo $data->PRJD_ID ?>" value="<?php echo $data->PRDU_ID ?>">
 									                		<input type="hidden" name="PRJD_ID[]" value="<?php echo $data->PRJD_ID ?>">
@@ -1293,12 +1290,9 @@
 	    // progress
 	    if($("#PRJ_STATUS").val() < 4) { // status in progress
 	    	// disable link progress
-			$(".PROGRESS").css({'opacity' : '0.5', 'pointer-events': 'none', 'color' : '#6c757d'});
-	    };
-
-	    // review
-	    if($("#PRJ_STATUS").val() != 8) { // status delivered
-	    	$(".REVIEW").css({'opacity' : '0.5', 'pointer-events': 'none', 'color' : '#6c757d'});
+	    	$(".PROGRESS").removeClass('btn-default');
+			$(".PROGRESS").addClass('btn-secondary');
+			$(".PROGRESS").css({'opacity' : '0.5', 'pointer-events': 'none', 'color' : '#ffffff', 'background-color' : '', 'border-color' : ''});
 	    };
 
 	    // disabled print letter
