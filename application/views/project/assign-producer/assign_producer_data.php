@@ -40,7 +40,7 @@
 	                    	<th style="vertical-align: middle; text-align: center; width: 150px;">CUSTOMER</th>
 	                    	<th style="vertical-align: middle; text-align: center; width: 200px;">PRODUCT</th>
 							<th style="vertical-align: middle; text-align: center;">PRODUCER</th>
-							<th style="vertical-align: middle; text-align: center; width: 50px;">ACTION</th>
+							<th style="vertical-align: middle; text-align: center; width: 70px;">ACTION</th>
 	                  	</tr>
 	                </thead>
 	                <tbody style="font-size: 14px;">

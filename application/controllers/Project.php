@@ -411,10 +411,10 @@ class Project extends CI_Controller {
 		$data['row'] =	$this->project_review_m->insert();
 		if($data) {
 			echo "<script>alert('Data berhasil ditambah.')</script>";
-            echo "<script>window.location='".site_url('project/detail_view/'.$PRJ_ID.'/'.$PRJD_ID)."'</script>";
+            echo "<script>window.location='".site_url('project/review/'.$PRJ_ID.'/'.$PRJD_ID)."'</script>";
         } else {
             echo "<script>alert('Data gagal ditambah.')</script>";
-            echo "<script>window.location='".site_url('project/detail_view/'.$PRJ_ID.'/'.$PRJD_ID)."'</script>";
+            echo "<script>window.location='".site_url('project/review/'.$PRJ_ID.'/'.$PRJD_ID)."'</script>";
         }	
 	}
 
@@ -425,10 +425,10 @@ class Project extends CI_Controller {
 		$this->project_review_m->update($PRJR_ID);
 		if($this->db->affected_rows() > 0) {
 			echo "<script>alert('Data berhasil diubah.')</script>";
-			echo "<script>window.location='".site_url('project/detail_view/'.$PRJ_ID.'/'.$PRJD_ID)."'</script>";
+			echo "<script>window.location='".site_url('project/review/'.$PRJ_ID.'/'.$PRJD_ID)."'</script>";
 		} else {
 			echo "<script>alert('Tidak ada perubahan data.')</script>";
-			echo "<script>window.location='".site_url('project/detail_view/'.$PRJ_ID.'/'.$PRJD_ID)."'</script>";
+			echo "<script>window.location='".site_url('project/review/'.$PRJ_ID.'/'.$PRJD_ID)."'</script>";
 		}
 	}
 
@@ -436,10 +436,10 @@ class Project extends CI_Controller {
 		$this->project_review_m->delete($PRJR_ID);
 		if($this->db->affected_rows() > 0) {
 			echo "<script>alert('Data berhasil dihapus.')</script>";
-			echo "<script>window.location='".site_url('project/detail_view/'.$PRJ_ID.'/'.$PRJD_ID)."'</script>";
+			echo "<script>window.location='".site_url('project/review/'.$PRJ_ID.'/'.$PRJD_ID)."'</script>";
 		} else {
 			echo "<script>alert('Data gagal dihapus.')</script>";
-			echo "<script>window.location='".site_url('project/detail_view/'.$PRJ_ID.'/'.$PRJD_ID)."'</script>";
+			echo "<script>window.location='".site_url('project/review/'.$PRJ_ID.'/'.$PRJD_ID)."'</script>";
 		}
 	}
 

@@ -7,7 +7,7 @@
 	    	<a href="<?php echo site_url('dashboard') ?>">Dashboard</a>
 	  	</li>
 	  	<li class="breadcrumb-item">
-	    	<a href="<?php echo $this->uri->segment(1) != "project_followup" ? site_url('project') : site_url('project_followup') ?>">Project</a>
+	    	<a href="<?php echo $this->uri->segment(1) != "assign_producer" ? site_url('project') : site_url('assign_producer') ?>">Project</a>
 	  	</li>
 	  	<li class="breadcrumb-item" <?php echo $this->uri->segment(1) != "project" ?"hidden" : ""; ?>>
 	    	<a href="<?php echo site_url('project/detail/'.$detail->PRJ_ID) ?>">Detail</a>
@@ -146,7 +146,7 @@
 						          		<table class="table table-bordered" width="100%" cellspacing="0">
 						            		<thead style="font-size: 14px;">
 							                	<tr>
-							                    	<th style="vertical-align: middle; text-align: center; width: 10px;" <?php echo $this->uri->segment(1) != "project_followup" ? "colspan='2'" : "" ?>>#</th>
+							                    	<th style="vertical-align: middle; text-align: center; width: 10px;" <?php echo $this->uri->segment(1) == "project" ? "colspan='2'" : "" ?>>#</th>
 							                    	<th style="vertical-align: middle; text-align: center;width: 100px;">CRITERIA</th>
 							                    	<th style="vertical-align: middle; text-align: center;width: 50px;">POINT</th>
 							                    	<th style="vertical-align: middle; text-align: center;width: 100px;">NOTES</th>
@@ -166,11 +166,11 @@
 									                		</td>
 									                		<td align="center" style="width: 10px;"><?php echo $i++ ?></td>
 									                		<td><?php echo $data->PRJC_NAME ?></td>
-									                		<td>
+									                		<td align="center">
 									                			<input type="hidden" id="star_point<?php echo $data->PRJR_ID ?>" value="<?php echo $data->PRJR_POINT ?>" readonly>
 									                			<div class="starrr" style="font-size: 16px;" id="star_view<?php echo $data->PRJR_ID ?>"></div>
 									                		</td>
-									                		<td><?php echo $data->PRJR_NOTES ?></td>
+									                		<td <?php echo $data->PRJR_NOTES == null ? "align='center'" : "" ?>><?php echo $data->PRJR_NOTES != null ? $data->PRJR_NOTES : "-" ?></td>
 									                	</tr>
 										            <?php endforeach ?>
 										        <?php else: ?>

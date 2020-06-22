@@ -8,6 +8,9 @@ class Project_followup extends CI_Controller {
 		check_not_login();
 		$this->load->model('access_m');
 		$this->load->model('courier_m');
+		$this->load->model('city_m');
+		$this->load->model('customer_m');
+		$this->load->model('coutariff_m');
 		$this->load->model('project_producer_list_m');
 		$this->load->model('producer_x_product_m');
 		$this->load->model('project_m');
@@ -18,8 +21,6 @@ class Project_followup extends CI_Controller {
 		$this->load->model('project_producer_m');
 		$this->load->model('project_activity_m');
 		$this->load->model('project_progress_m');
-		$this->load->model('project_criteria_m');
-		$this->load->model('project_review_m');
 		$this->load->model('project_followup_m');
 		$this->load->model('project_shipment_m');
 		$this->load->library('pdf');
@@ -363,6 +364,72 @@ class Project_followup extends CI_Controller {
 		}
 	}
 
+	public function datacal(){
+		$PRDU_ID 		= $this->input->post('PRDU_ID', TRUE);
+		$CUST_ID 		= $this->input->post('CUST_ID', TRUE);
+		$COURIER_ID 	= $this->input->post('COURIER_ID', TRUE);
+		$COURIER_NAME 	= $this->input->post('COURIER_NAME', TRUE);
+		$WEIGHT 		= $this->input->post('WEIGHT', TRUE);
+		$customer 		= $this->customer_m->get($CUST_ID)->row();
+		$origin 	    = $this->city_m->getAreaCity(269)->row();
+		$apinol  		= $this->coutariff_m->getTariff2($COURIER_ID, $origin->CNTR_ID, $origin->STATE_ID, $origin->CITY_ID, 0, $customer->CNTR_ID, $customer->STATE_ID, $customer->CITY_ID, $customer->SUBD_ID)->result();
+		$key 			= $this->courier_m->getCourier($COURIER_ID)->row();
+		if($customer->CITY_ID!=0){
+		    if($key->COURIER_API == 1){
+		    	$WEIGHT_RO = $WEIGHT*1000;
+				$lists = "";
+				$etd = "";
+		    	if($customer->SUBD_ID!=0){
+		    		$dataCost = $this->rajaongkir->cost($origin->RO_CITY_ID, $customer->SUBD_ID, $WEIGHT_RO, strtolower($key->COURIER_NAME), 'subdistrict');
+		    	} else{
+		    		$dataCost = $this->rajaongkir->cost($origin->RO_CITY_ID, $customer->CITY_ID, $WEIGHT_RO, strtolower($key->COURIER_NAME), 'city');
+		    	}
+				$detailCost = json_decode($dataCost, true);
+				$status = $detailCost['rajaongkir']['status']['code'];
+				if ($status == 200) {
+					for ($i=0; $i < count($detailCost['rajaongkir']['results']); $i++) {
+						for ($j=0; $j < count($detailCost['rajaongkir']['results'][$i]['costs']); $j++) {
+							$service = $detailCost['rajaongkir']['results'][$i]['costs'][$j]['service'];
+							$lists .= "<option value='$service'>$service</option>";
+						}
+					}
+				}
+			}
+			else{
+				if(!$apinol){
+						$lists = 0;
+						$etd = "";
+						$status = "<p style='font-size:14px;color:red;'><small>* </small>Tarif tidak ditemukan, ganti kurir lain atau input manual.</p>";
+				} else{
+					foreach($apinol as $k) {
+				    	if($k->RULE_ID == 1) {
+							if (round($WEIGHT) <= $k->COUTAR_MIN_KG) {
+								$tarif = ($k->COUTAR_MIN_KG * $k->COUTAR_KG_FIRST) + $k->COUTAR_ADMIN_FEE;
+							} else if (round($WEIGHT) > $k->COUTAR_MIN_KG) {
+								$tarif = (round($WEIGHT) * $k->COUTAR_KG_FIRST) + $k->COUTAR_ADMIN_FEE;
+							}
+						}else if($k->RULE_ID == 2){
+							if (round($WEIGHT) <= $k->COUTAR_MIN_KG) {
+								$tarif = ($k->COUTAR_KG_FIRST + $k->COUTAR_ADMIN_FEE);
+							} else if (round($WEIGHT) > $k->COUTAR_MIN_KG) {
+								$tarif = (((round($WEIGHT) - $k->COUTAR_MIN_KG) * $k->COUTAR_KG_NEXT) + $k->COUTAR_KG_FIRST) + $k->COUTAR_ADMIN_FEE;
+							}
+						}
+						
+						$lists = number_format($tarif,0,',','.');
+						$etd = $k->COUTAR_ETD;
+						$status = "";
+						
+					}
+				}
+			}
+			$callback = array('list_courier'=>$lists, 'list_status'=>$status, 'list_estimasi'=>$etd); 
+		    echo json_encode($callback);
+		} else {
+			echo "Alamat customer belum lengkap.";
+		}
+	}
+
 	public function add_shipment() {
 		$PRJ_ID  		 = $this->input->post('PRJ_ID', TRUE);
 		$PRJD_ID 		 = $this->input->post('PRJD_ID', TRUE);
@@ -397,21 +464,6 @@ class Project_followup extends CI_Controller {
 		} else {
 			echo "<script>alert('Data gagal dihapus.')</script>";
 			echo "<script>window.location='".site_url('project_followup/shipment/'.$PRJ_ID.'/'.$PRJD_ID)."'</script>";
-		}
-	}
-
-	public function review($PRJ_ID, $PRJD_ID) {
-		$query = $this->project_m->get($PRJ_ID);
-		if ($query->num_rows() > 0) {
-			$data['row'] 		= $query->row();
-			$data['detail'] 	= $this->project_detail_m->get(null, $PRJD_ID)->row();
-			$data['progress'] 	= $this->project_progress_m->get($PRJD_ID)->result();
-			$data['review'] 	= $this->project_review_m->get(null, $PRJD_ID)->result();
-			$data['criteria'] 	= $this->project_criteria_m->get()->result();
-			$this->template->load('template', 'project/project_review', $data);
-		} else {
-			echo "<script>alert('Data tidak ditemukan.')</script>";
-			echo "<script>window.location='".site_url('project')."'</script>";
 		}
 	}
 }

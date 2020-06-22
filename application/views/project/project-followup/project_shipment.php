@@ -174,7 +174,9 @@
 			        <div class="row">
 						<div class="col-md-6">
 							<input class="form-control" type="hidden" name="PRJ_ID" value="<?php echo $row->PRJ_ID ?>">
+							<input class="form-control" type="hidden" id="CUST_ID" value="<?php echo $row->CUST_ID ?>">
 							<input class="form-control" type="hidden" name="PRJD_ID" value="<?php echo $detail->PRJD_ID ?>">
+							<input class="form-control" type="hidden" id="WEIGHT" value="<?php echo $detail->PRJD_WEIGHT_EST ?>">
 							<div class="form-group">
 								<label>Delivery Date <small>*</small></label>
 								<div class="input-group">
@@ -203,7 +205,16 @@
 							</div>
 							<div class="form-group">
 								<label>Service</label>
-								<input class="form-control" type="text" name="PRJS_SERVICE_TYPE" autocomplete="off" required>
+								<div id="spinner" style="display:none;" align="center">
+									<img width="70px" src="<?php echo base_url('assets/images/loading.gif') ?>">
+								</div>										
+								<div hidden class="form-group" id="NEW_SERVICE" class="form-group">
+									<select id="NEW_SERVICE_TYPE" class="form-control selectpicker" name="service" title="-- Select Service --">
+									</select>
+								</div>
+								<div class="form-group" id="ACTUAL_SERVICE">
+									<input class="form-control" type="text" id="ACTUAL_SERVICE_TYPE" name="PRJS_SERVICE_TYPE" autocomplete="off" value="">
+								</div>
 							</div>
 						</div>
 						<div class="col-md-6">
@@ -257,7 +268,9 @@
 				        <div class="row">
 							<div class="col-md-6">
 								<input class="form-control" type="hidden" name="PRJ_ID" value="<?php echo $row->PRJ_ID ?>">
+								<input class="form-control" type="hidden" id="CUST_ID<?php echo $ship->PRJS_ID ?>" value="<?php echo $row->CUST_ID ?>">
 								<input class="form-control" type="hidden" name="PRJD_ID" value="<?php echo $detail->PRJD_ID ?>">
+								<input class="form-control" type="hidden" id="WEIGHT<?php echo $ship->PRJS_ID ?>" value="<?php echo $detail->PRJD_WEIGHT_EST ?>">
 								<input class="form-control" type="hidden" name="PRJS_ID" value="<?php echo $ship->PRJS_ID ?>">
 								<div class="form-group">
 									<label>Delivery Date <small>*</small></label>
@@ -287,7 +300,16 @@
 								</div>
 								<div class="form-group">
 									<label>Service</label>
-									<input class="form-control" type="text" name="PRJS_SERVICE_TYPE" value="<?php echo $ship->PRJS_SERVICE_TYPE ?>" autocomplete="off" required>
+									<div id="spinner<?php echo $ship->PRJS_ID ?>" style="display:none;" align="center">
+										<img width="70px" src="<?php echo base_url('assets/images/loading.gif') ?>">
+									</div>										
+									<div hidden class="form-group" id="NEW_SERVICE<?php echo $ship->PRJS_ID ?>" class="form-group">
+										<select id="NEW_SERVICE_TYPE<?php echo $ship->PRJS_ID ?>" class="form-control selectpicker" name="service" title="-- Select Service --">
+										</select>
+									</div>
+									<div class="form-group" id="ACTUAL_SERVICE<?php echo $ship->PRJS_ID ?>">
+										<input class="form-control" type="text" id="ACTUAL_SERVICE_TYPE<?php echo $ship->PRJS_ID ?>" name="PRJS_SERVICE_TYPE" autocomplete="off" value="<?php echo $ship->PRJS_SERVICE_TYPE!=null ? $ship->PRJS_SERVICE_TYPE : ""  ?>">
+									</div>
 								</div>
 							</div>
 							<div class="col-md-6">
@@ -364,9 +386,138 @@
 	    	}
 	    });
 
+	    // Add courier
+	    $("#COURIER_ID").selectpicker('render');
+	    $("#COURIER_ID").change(function(){
+	    	$("#NEW_SERVICE").hide();
+	    	$("#NEW_SERVICE_TYPE").hide();
+	    	var COURIER   = $("#COURIER_ID").val();
+	    	var COURIER_R = COURIER.split(",");
+	    	var COURIER_V = COURIER_R[0];
+	    	var COURIER_A = COURIER_R[1];
+	    	var COURIER_N = COURIER_R[2];
+		    $.ajax({
+		        url: "<?php echo site_url('project_followup/datacal'); ?>", 
+		        type: "POST", 
+		        data: {
+		        	CUST_ID 		: $("#CUST_ID").val(),
+		        	WEIGHT 			: $("#WEIGHT").val(),
+		        	COURIER_ID		: COURIER_V,
+		        	COURIER_NAME	: COURIER_N,
+		        }, 
+		        dataType: "json",
+		        timeout: 3000,
+		        beforeSend: function(e) {
+		        	if(COURIER_A==1){
+						$("#spinner").css("display","block");
+						$("#ACTUAL_SERVICE").hide();
+		        	} else {
+		        		$("#spinner").css("display","none");
+						$("#ACTUAL_SERVICE_TYPE").val("");
+						$("#ACTUAL_SERVICE").show();
+		        	}
+		        	if(e && e.overrideMimeType) {
+		            	e.overrideMimeType("application/json;charset=UTF-8");
+		          	}
+		        },
+		        success: function(response){
+		        	if(COURIER_A==1){
+						$("#spinner").css("display","none");
+						$("#NEW_SERVICE").attr('hidden', false);
+						$("#NEW_SERVICE").show();
+						$("#NEW_SERVICE_TYPE").html(response.list_courier).show();
+						$("#NEW_SERVICE_TYPE").selectpicker('refresh');   
+		        	} else {
+		        		$("#spinner").css("display","none");
+		        		$("#NEW_SERVICE").hide();
+		        		$("#NEW_SERVICE_TYPE").val('');
+		        	}
+		        },
+		        error: function (xhr, status, ajaxOptions, thrownError) {
+		        	$("#spinner").css("display","none");
+		          	if(status === 'timeout'){   
+			            alert('Respon terlalu lama, coba lagi.');
+			        } else {
+		          		alert(xhr.responseText);
+			        }
+		        }
+		    });
+	    });
+
+	    // Add service
+	    $("#NEW_SERVICE_TYPE").change(function(){
+	    	var SERVICE = $("#NEW_SERVICE_TYPE").val();
+	    	$("#ACTUAL_SERVICE_TYPE").val(SERVICE);
+	    });
+
 	    <?php foreach ($shipment as $value): ?>
 	    	$(this).each(function(){
 	    		var prjs_id = "<?php echo $value->PRJS_ID ?>";
+
+	    		// Edit courier
+			    $("#COURIER_ID"+prjs_id).selectpicker('render');
+			    $("#COURIER_ID"+prjs_id).change(function(){
+			    	$("#NEW_SERVICE"+prjs_id).hide();
+			    	$("#NEW_SERVICE_TYPE"+prjs_id).hide();
+			    	var COURIER   = $("#COURIER_ID"+prjs_id).val();
+			    	var COURIER_R = COURIER.split(",");
+			    	var COURIER_V = COURIER_R[0];
+			    	var COURIER_A = COURIER_R[1];
+			    	var COURIER_N = COURIER_R[2];
+				    $.ajax({
+				        url: "<?php echo site_url('project_followup/datacal'); ?>", 
+				        type: "POST", 
+				        data: {
+				        	CUST_ID 		: $("#CUST_ID"+prjs_id).val(),
+				        	WEIGHT 			: $("#WEIGHT"+prjs_id).val(),
+				        	COURIER_ID		: COURIER_V,
+				        	COURIER_NAME	: COURIER_N,
+				        }, 
+				        dataType: "json",
+				        timeout: 3000,
+				        beforeSend: function(e) {
+				        	if(COURIER_A==1){
+								$("#spinner"+prjs_id).css("display","block");
+								$("#ACTUAL_SERVICE"+prjs_id).hide();
+				        	} else {
+				        		$("#spinner"+prjs_id).css("display","none");
+								$("#ACTUAL_SERVICE_TYPE"+prjs_id).val("");
+								$("#ACTUAL_SERVICE"+prjs_id).show();
+				        	}
+				        	if(e && e.overrideMimeType) {
+				            	e.overrideMimeType("application/json;charset=UTF-8");
+				          	}
+				        },
+				        success: function(response){
+				        	if(COURIER_A==1){
+								$("#spinner"+prjs_id).css("display","none");
+								$("#NEW_SERVICE"+prjs_id).attr('hidden', false);
+								$("#NEW_SERVICE"+prjs_id).show();
+								$("#NEW_SERVICE_TYPE"+prjs_id).html(response.list_courier).show();
+								$("#NEW_SERVICE_TYPE"+prjs_id).selectpicker('refresh');   
+				        	} else {
+				        		$("#spinner"+prjs_id).css("display","none");
+				        		$("#NEW_SERVICE"+prjs_id).hide();
+				        		$("#NEW_SERVICE_TYPE"+prjs_id).val('');
+				        	}
+				        },
+				        error: function (xhr, status, ajaxOptions, thrownError) {
+				        	$("#spinner"+prjs_id).css("display","none");
+				          	if(status === 'timeout'){   
+					            alert('Respon terlalu lama, coba lagi.');
+					        } else {
+				          		alert(xhr.responseText);
+					        }
+				        }
+				    });
+			    });
+
+	    		// Edit service
+			    $("#NEW_SERVICE_TYPE"+prjs_id).change(function(){
+			    	var SERVICE = $("#NEW_SERVICE_TYPE"+prjs_id).val();
+			    	$("#ACTUAL_SERVICE_TYPE"+prjs_id).val(SERVICE);
+			    });
+
 	    		$("#EDIT_PRJS_QTY"+prjs_id).on('keyup mouseup',function(){
 	    			if($(this).val() != "") {
 			    		var edit_qty = $(this).val();
@@ -390,8 +541,7 @@
 			            $("#SAVE_EDIT"+prjs_id).removeClass('btn-secondary');
 		            	$("#SAVE_EDIT"+prjs_id).addClass('btn-primary');
 						$("#SAVE_EDIT"+prjs_id).css({'opacity' : '', 'pointer-events': '', 'color' : '#ffffff'});
-			    	}
-	    			
+			    	}	
 	    		});
 	    	});
     	<?php endforeach ?>

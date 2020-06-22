@@ -7,12 +7,14 @@ class Assign_producer extends CI_Controller {
 		parent::__construct();
 		check_not_login();
 		$this->load->model('access_m');
+		$this->load->model('assign_producer_m');
 		$this->load->model('project_m');
 		$this->load->model('project_detail_m');
 		$this->load->model('project_quantity_m');
 		$this->load->model('project_model_m');
 		$this->load->model('project_producer_m');
-		$this->load->model('assign_producer_m');
+		$this->load->model('project_progress_m');
+		$this->load->model('project_review_m');
 		$this->load->library('pdf');
 		$this->load->library('rajaongkir');
 		$this->load->library('form_validation');
@@ -46,6 +48,12 @@ class Assign_producer extends CI_Controller {
 				$STATUS = "<div class='btn btn-default btn-sm' style='font-size: 11px; color: #fff; background-color:#6c757d; border-color:#6c757d; border-radius: 6px; padding: 2px 5px 5px 3px; width:80px;'><i class='fa fa-minus-circle'></i><span><b> Not Assigned</b></span></div>";
 			}
 
+			if($field->PRJ_STATUS != 8) {
+				$REVIEW = "hidden";
+			} else {
+				$REVIEW = "";
+			}
+
 			$row   = array();
 			$row[] = "<div align='center'>$STATUS</div>";
 			$row[] = "<div align='center'>$field->PRJ_ID</div>";
@@ -54,7 +62,9 @@ class Assign_producer extends CI_Controller {
 			$row[] = stripslashes($field->PRDUP_NAME);
 			$row[] = stripslashes($PRDU_NAME);
 			$row[] = '<div style="vertical-align: middle; text-align: center;">
-					<a href="'.$url.'assign_producer/detail/'.$field->PRJ_ID.'/'.$field->PRJD_ID.'" class="btn btn-sm btn-primary" title="Detail"><i class="fa fa-search-plus"></i></a></div>';
+					<a href="'.$url.'assign_producer/detail/'.$field->PRJ_ID.'/'.$field->PRJD_ID.'" class="btn btn-sm btn-primary" title="Detail"><i class="fa fa-search-plus"></i></a>
+					<a '.$REVIEW.' href="'.$url.'assign_producer/review/'.$field->PRJ_ID.'/'.$field->PRJD_ID.'" class="btn btn-sm btn-warning" title="Review"><i class="fa fa-star"></i></a>
+					</div>';
 			$data[] = $row;
 		}
 
@@ -109,6 +119,20 @@ class Assign_producer extends CI_Controller {
 		} else {
 			echo "<script>alert('Tidak ada perubahan data.')</script>";
 			echo "<script>window.location='".site_url('assign_producer/detail/'.$PRJ_ID.'/'.$PRJD_ID)."'</script>";
+		}
+	}
+
+	public function review($PRJ_ID, $PRJD_ID) {
+		$query = $this->project_m->get($PRJ_ID);
+		if ($query->num_rows() > 0) {
+			$data['row'] 	  = $query->row();
+			$data['detail']   = $this->project_detail_m->get(null, $PRJD_ID)->row();
+			$data['progress'] = $this->project_progress_m->get($PRJD_ID)->result();
+			$data['review']   = $this->project_review_m->get(null, $PRJD_ID)->result();
+			$this->template->load('template', 'project/project_review', $data);
+		} else {
+			echo "<script>alert('Data tidak ditemukan.')</script>";
+			echo "<script>window.location='".site_url('project')."'</script>";
 		}
 	}
 }
