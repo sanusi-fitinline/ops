@@ -20,7 +20,7 @@
 		<link href="<?php echo base_url()?>assets/vendor/jquery-ui-1.12.1/jquery-ui.css" rel="stylesheet">
 
 		<!-- Custom styles for this template-->
-		<link href="<?php echo base_url() ?>assets/css/sb-admin.css" rel="stylesheet">
+		<link href="<?php echo base_url() ?>assets/css/sb-admin.min.css" rel="stylesheet">
 		<link href="<?php echo base_url() ?>assets/css/style.css" rel="stylesheet">
 		
 		<!-- Starrr style for star rating -->
@@ -156,6 +156,8 @@
 			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Report')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('report/income_by_product') ?>">Income by Product<hr style="margin: 0;"></a>
 			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Report')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('report/income_by_vendor') ?>">Income by Vendor<hr style="margin: 0;"></a>
 			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Report')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('report/profit_loss') ?>">Profit and Loss<hr style="margin: 0;"></a>
+			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Price Change')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('report/price_change') ?>">Price Change<hr style="margin: 0;"></a>
+			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Shipcost Difference')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('report/shipcost_difference') ?>">Shipcost Difference<hr style="margin: 0;"></a>
 			        </div>
 		      	</li>
 			    <li class="nav-item dropdown <?php if($this->uri->segment(1)=="master"){echo "active";}?>">
@@ -249,27 +251,27 @@
 		<!-- script -->
 		<!-- Pusher core plugin  JavaScript-->
 		<!-- <script src="https://js.pusher.com/5.0/pusher.min.js"></script> -->
-		<script src="<?php echo base_url()?>assets/vendor/pusher-js-master/dist/web/pusher.min.js"></script>
+		<script defer src="<?php echo base_url()?>assets/vendor/pusher-js-master/dist/web/pusher.min.js"></script>
 
 		<!-- Jquery core plugin JavaScript-->
 		<script src="<?php echo base_url()?>assets/vendor/jquery/jquery.min.js"></script>
-		<script src="<?php echo base_url()?>assets/vendor/jquery-mask/jquery.mask.min.js"></script>
-		<script src="<?php echo base_url()?>assets/vendor/jquery-easing/jquery.easing.min.js"></script>
-		<script src="<?php echo base_url()?>assets/vendor/jquery-ui-1.12.1/jquery-ui.min.js"></script>
+		<script defer src="<?php echo base_url()?>assets/vendor/jquery-mask/jquery.mask.min.js"></script>
+		<script defer src="<?php echo base_url()?>assets/vendor/jquery-easing/jquery.easing.min.js"></script>
+		<script defer src="<?php echo base_url()?>assets/vendor/jquery-ui-1.12.1/jquery-ui.min.js"></script>
 
 		<!-- Bootstrap core plugin JavaScript-->
-		<script src="<?php echo base_url()?>assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-		<script src="<?php echo base_url()?>assets/vendor/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
+		<script defer src="<?php echo base_url()?>assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+		<script defer src="<?php echo base_url()?>assets/vendor/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
 
 		<!-- Datatables core plugin JavaScript-->
-		<script src="<?php echo base_url()?>assets/vendor/datatables/jquery.dataTables.min.js"></script>
-		<script src="<?php echo base_url()?>assets/vendor/datatables/dataTables.bootstrap4.min.js"></script>
-
-		<!-- Custom scripts for all pages-->
-		<script src="<?php echo base_url()?>assets/js/sb-admin.min.js"></script>
+		<script defer src="<?php echo base_url()?>assets/vendor/datatables/jquery.dataTables.min.js"></script>
+		<script defer src="<?php echo base_url()?>assets/vendor/datatables/dataTables.bootstrap4.min.js"></script>
 
 		<!-- Starr js for star rating -->
-		<script src="<?php echo base_url()?>assets/vendor/starrr/starrr.js"></script>
+		<script defer src="<?php echo base_url()?>assets/vendor/starrr/starrr.js"></script>
+
+		<!-- Custom scripts for all pages-->
+		<script defer src="<?php echo base_url()?>assets/js/sb-admin.min.js"></script>
 		
 		<?php $this->load->view('script');?>
 	</body>

@@ -101,7 +101,7 @@
 											<input class="form-control" type="text" name="KURIR" value="<?php echo $row->COURIER_NAME." ".$row->LSAM_SERVICE_TYPE ?>" readonly>
 										</div>
 										<div class="form-group">
-											<label>Cost Actual</label>
+											<label>Actual Cost</label>
 											<div class='input-group'>
 												<div class="input-group-prepend">
 										          	<span class="input-group-text">Rp</span>

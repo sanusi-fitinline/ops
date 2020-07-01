@@ -23,124 +23,116 @@ class Calculator extends CI_Controller {
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
 		} else {
 			$data['courier'] = $this->courier_m->getCourier()->result();
+			$data['city'] 	 = $this->area_m->getCity()->result();
+			$data['subd'] 	 = $this->area_m->getSubdistrict()->result();
 			$data['coutar']  = $this->coutariff_m->getTariff()->result();
-			$data['tarif'] 	 = $this->coutariff_m->getTariff2($COURIER_LIST = null, $O_CNTR_ID = null, $O_STATE_ID = null, $O_CITY_ID = null, $O_SUBD_ID = null, $D_CNTR_ID = null, $D_STATE_ID = null, $D_CITY_ID = null, $D_SUBD_ID = null);
-			$data['country'] = $this->area_m->getCountry()->result();
 			$this->template->load('template', 'courier/calculator_data', $data);
 		}
 	}
 
+	public function list_origin(){
+		if (isset($_GET['term'])) {
+			$data = $this->area_m->search_city($_GET['term'])->result_array();
+	        foreach ($data as $row) {
+	            $city[] = array('city_id' => $row['RO_CITY_ID'], 'city_name' => $row['CITY_NAME'].", ".$row['STATE_NAME']);
+	        }
+	    	echo json_encode($city);
+	    }
+	}
+
+	public function list_destination(){
+		if (isset($_GET['term'])) {
+			$data = $this->area_m->search_subd($_GET['term'])->result_array();
+	        foreach ($data as $row) {
+	            $subd[] = array('subd_id' => $row['SUBD_ID'], 'subd_name' => $row['SUBD_NAME'].", ".$row['CITY_NAME'].", ".$row['STATE_NAME']);
+	        }
+	    	echo json_encode($subd);
+	    }
+	}
+
 	public function dataCal(){
-		$COURIER_ID 	= $this->input->post('COURIER_ID', TRUE);
-		$COURIER_NAME 	= $this->input->post('COURIER_NAME', TRUE);
-		$WEIGHT 		= $this->input->post('WEIGHT', TRUE);
-
-		$O_CNTR_ID 		= $this->input->post('O_CNTR_ID', TRUE);
-		$O_STATE_ID 	= $this->input->post('O_STATE_ID');
-		$O_CITY_ID 		= $this->input->post('O_CITY_ID', TRUE);
-		$O_CITY_RO 		= $this->input->post('O_CITY_RO', TRUE);
-		$O_SUBD_ID 		= $this->input->post('O_SUBD_ID', TRUE);		
-		$O_CNTR_NAME 	= $this->input->post('O_CNTR_NAME', TRUE);
-		$O_STATE_NAME 	= $this->input->post('O_STATE_NAME', TRUE);
-		$O_CITY_NAME 	= $this->input->post('O_CITY_NAME', TRUE);
-		$O_SUBD_NAME 	= $this->input->post('O_SUBD_NAME', TRUE);
-		
-		$D_CNTR_ID 		= $this->input->post('D_CNTR_ID', TRUE);
-		$D_STATE_ID 	= $this->input->post('D_STATE_ID', TRUE);
-		$D_CITY_ID 		= $this->input->post('D_CITY_ID', TRUE);
-		$D_CITY_RO 		= $this->input->post('D_CITY_RO', TRUE);
-		$D_SUBD_ID 		= $this->input->post('D_SUBD_ID', TRUE);
-		$D_CNTR_NAME 	= $this->input->post('D_CNTR_NAME', TRUE);
-		$D_STATE_NAME 	= $this->input->post('D_STATE_NAME', TRUE);
-		$D_CITY_NAME 	= $this->input->post('D_CITY_NAME', TRUE);
-		$D_SUBD_NAME 	= $this->input->post('D_SUBD_NAME', TRUE);
+		$COURIER_ID   = $this->input->post('COURIER_ID', TRUE);
+		$WEIGHT 	  = $this->input->post('WEIGHT', TRUE);
+		// kota asal(rajaongkir)
+		$O_RO_CITY_ID = $this->input->post('O_RO_CITY_ID', TRUE);
+		// kota tujuan
+		$D_SUBD_ID 	  = $this->input->post('D_SUBD_ID', TRUE);
 	    
-	    $lists = "";
+	    $orgn 		  = $this->area_m->getCity(null, $O_RO_CITY_ID)->row();
+	    $dest 		  = $this->area_m->getSubdistrict(null, $D_SUBD_ID)->row();
 
-	    if($O_SUBD_NAME !=null){
-			$OSUBDNAME = $O_SUBD_NAME.', ';
-		} else {$OSUBDNAME = '';}
-		if($O_CITY_NAME !=null){
-			$OCITYNAME = $O_CITY_NAME.', ';
-		} else {$OCITYNAME = '';}
-		if($O_STATE_NAME !=null){
-			$OSTATENAME = $O_STATE_NAME.', ';
-		} else {$OSTATENAME = '';}
-		if($O_CNTR_NAME !=null){
-			$OCNTRNAME = $O_CNTR_NAME.'.';
-		} else {$OCNTRNAME = '';}
+	    if($orgn->CITY_NAME !=null){
+			$O_CITY_NAME = $orgn->CITY_NAME;
+		} else {$O_CITY_NAME = "";}
+	    if($orgn->STATE_NAME !=null){
+			$O_STATE_NAME = ", ".$orgn->STATE_NAME;
+		} else {$O_STATE_NAME = "";}
+
+	    if($dest->SUBD_NAME !=null){
+			$D_SUBD_NAME = $dest->SUBD_NAME;
+		} else {$D_SUBD_NAME = "";}
+		if($dest->CITY_NAME !=null){
+			$D_CITY_NAME = ", ".$dest->CITY_NAME;
+		} else {$D_CITY_NAME = "";}
+		if($dest->STATE_NAME !=null){
+			$D_STATE_NAME = ", ".$dest->STATE_NAME;
+		} else {$D_STATE_NAME = "";}
 		
-		if($D_SUBD_NAME !=null){
-			$DSUBDNAME = $D_SUBD_NAME.', ';
-		} else {$DSUBDNAME = '';}
-		if($D_CITY_NAME !=null){
-			$DCITYNAME = $D_CITY_NAME.', ';
-		} else {$DCITYNAME = '';}
-		if($D_STATE_NAME !=null){
-			$DSTATENAME = $D_STATE_NAME.', ';
-		} else {$DSTATENAME = '';}
-		if($D_CNTR_NAME !=null){
-			$DCNTRNAME = $D_CNTR_NAME.'.';
-		} else {$DCNTRNAME = '';}
+	    $lists 		= "";
 
-		// untuk kurir tarif ro
-		$api = $this->courier_m->getApi($COURIER_ID)->result();
-    	foreach ($api as $key) {
-	    	$W = $WEIGHT*1000;
-	    	if($D_SUBD_ID){
-	    		$dataCost = $this->rajaongkir->cost($O_CITY_RO, $D_SUBD_ID, $W, strtolower($key->COURIER_NAME), 'subdistrict');
-	    	} else{
-	    		$dataCost = $this->rajaongkir->cost($O_CITY_RO, $D_CITY_RO, $W, strtolower($key->COURIER_NAME), 'city');
-	    	}
-			$detailCost = json_decode($dataCost, true);
-	    	$status = $detailCost['rajaongkir']['status']['code'];
-	    	if ($status == 200) {
-				for ($i=0; $i < count($detailCost['rajaongkir']['results']); $i++) {
-					for ($j=0; $j < count($detailCost['rajaongkir']['results'][$i]['costs']); $j++) {
-						$service = $detailCost['rajaongkir']['results'][$i]['costs'][$j]['service'];
-						$tarif = $detailCost['rajaongkir']['results'][$i]['costs'][$j]['cost'][0]['value'];
-						$etd = $detailCost['rajaongkir']['results'][$i]['costs'][$j]['cost'][0]['etd'];
-						$lists .= "<tr>
-								<td>".$key->COURIER_NAME.' '.$service."</td>
-								<td>".$OSUBDNAME.$OCITYNAME.$OSTATENAME.$OCNTRNAME."</td>
-								<td>".$DSUBDNAME.$DCITYNAME.$DSTATENAME.$DCNTRNAME."</td>
-								<td align='right'>".number_format($tarif,0,',','.')."</td>
-								<td align='center'>".$etd."</td>
-								
-							</tr>";
+		foreach ($COURIER_ID as $n => $val) {
+			// untuk kurir tarif ro
+			$api = $this->courier_m->getApi($COURIER_ID[$n])->result();
+	    	foreach ($api as $key) {
+		    	$W = $WEIGHT*1000;
+		    	$dataCost = $this->rajaongkir->cost($O_RO_CITY_ID, $D_SUBD_ID, $W, strtolower($key->COURIER_NAME), 'subdistrict');
+				$detailCost = json_decode($dataCost, true);
+		    	$status = $detailCost['rajaongkir']['status']['code'];
+		    	if ($status == 200) {
+					for ($i=0; $i < count($detailCost['rajaongkir']['results']); $i++) {
+						for ($j=0; $j < count($detailCost['rajaongkir']['results'][$i]['costs']); $j++) {
+							$service = $detailCost['rajaongkir']['results'][$i]['costs'][$j]['service'];
+							$tarif = $detailCost['rajaongkir']['results'][$i]['costs'][$j]['cost'][0]['value'];
+							$etd = $detailCost['rajaongkir']['results'][$i]['costs'][$j]['cost'][0]['etd'];
+							$lists .= "<tr>
+									<td>".$key->COURIER_NAME.' '.$service."</td>
+									<td>".$O_CITY_NAME.$O_STATE_NAME."</td>
+									<td>".$D_SUBD_NAME.$D_CITY_NAME.$D_STATE_NAME."</td>
+									<td align='right'>".number_format($tarif,0,',','.')."</td>
+									<td align='center'>".$etd."</td>
+									
+								</tr>";
+						}
 					}
-
-				}
-	    	}
-		}
-		
-		// untuk kurir tarif ops
-		$apinol  = $this->coutariff_m->getTariff2($COURIER_ID, $O_CNTR_ID, $O_STATE_ID, $O_CITY_ID, $O_SUBD_ID, $D_CNTR_ID, $D_STATE_ID, $D_CITY_ID, $D_SUBD_ID)->result();
-		foreach($apinol as $k) {
-	    	if($k->RULE_ID == 1) {
-				if (round($WEIGHT) <= $k->COUTAR_MIN_KG) {
-					$tarif = ($k->COUTAR_MIN_KG * $k->COUTAR_KG_FIRST) + $k->COUTAR_ADMIN_FEE;
-				} else if (round($WEIGHT) > $k->COUTAR_MIN_KG) {
-					$tarif = (round($WEIGHT) * $k->COUTAR_KG_FIRST) + $k->COUTAR_ADMIN_FEE;
-				}
-			}else if($k->RULE_ID == 2){
-				if (round($WEIGHT) <= $k->COUTAR_MIN_KG) {
-					$tarif = ($k->COUTAR_KG_FIRST + $k->COUTAR_ADMIN_FEE);
-				} else if (round($WEIGHT) > $k->COUTAR_MIN_KG) {
-					$tarif = (((round($WEIGHT) - $k->COUTAR_MIN_KG) * $k->COUTAR_KG_NEXT) + $k->COUTAR_KG_FIRST) + $k->COUTAR_ADMIN_FEE;
-				}
+		    	}
 			}
-			$etd = $k->COUTAR_ETD;
-			$lists .= "<tr>
+			
+			// untuk kurir tarif ops
+			$apinol  = $this->coutariff_m->getTariff2($COURIER_ID[$n], $orgn->CNTR_ID, $orgn->STATE_ID, $orgn->CITY_ID, 0, $dest->CNTR_ID, $dest->STATE_ID, $dest->CITY_ID, $dest->SUBD_ID)->result();
+			foreach($apinol as $k) {
+		    	if($k->RULE_ID == 1) {
+					if (round($WEIGHT) <= $k->COUTAR_MIN_KG) {
+						$tarif = ($k->COUTAR_MIN_KG * $k->COUTAR_KG_FIRST) + $k->COUTAR_ADMIN_FEE;
+					} else if (round($WEIGHT) > $k->COUTAR_MIN_KG) {
+						$tarif = (round($WEIGHT) * $k->COUTAR_KG_FIRST) + $k->COUTAR_ADMIN_FEE;
+					}
+				} else if($k->RULE_ID == 2){
+					if (round($WEIGHT) <= $k->COUTAR_MIN_KG) {
+						$tarif = ($k->COUTAR_KG_FIRST + $k->COUTAR_ADMIN_FEE);
+					} else if (round($WEIGHT) > $k->COUTAR_MIN_KG) {
+						$tarif = (((round($WEIGHT) - $k->COUTAR_MIN_KG) * $k->COUTAR_KG_NEXT) + $k->COUTAR_KG_FIRST) + $k->COUTAR_ADMIN_FEE;
+					}
+				}
+				$etd = $k->COUTAR_ETD;
+				$lists .= "<tr>
 						<td>".$k->COURIER_NAME."</td>
-						<td>".$OSUBDNAME.$OCITYNAME.$OSTATENAME.$OCNTRNAME."</td>
-						<td>".$DSUBDNAME.$DCITYNAME.$DSTATENAME.$DCNTRNAME."</td>
+						<td>".$O_CITY_NAME.$O_STATE_NAME."</td>
+						<td>".$D_SUBD_NAME.$D_CITY_NAME.$D_STATE_NAME."</td>
 						<td align='right'>".number_format($tarif,0,',','.')."</td>
 						<td align='center'>".$etd."</td>
-						
 					</tr>";
+			}
 		}
-		
 	    $callback = array('list_courier'=>$lists); 
 	    echo json_encode($callback);
 	}

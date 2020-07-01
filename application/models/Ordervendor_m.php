@@ -5,14 +5,12 @@ class Ordervendor_m extends CI_Model {
     var $table = 'tb_order_vendor'; //nama tabel dari database
     var $column_search = array('tb_vendor.VEND_NAME', 'tb_order_vendor.ORDER_ID', 'tb_order_vendor.ORDV_TOTAL_VENDOR'); //field yang diizin untuk pencarian
 
-    public function __construct()
-    {
+    public function __construct() {
         parent::__construct();
         $this->load->database();
     }
 
-    private function _get_datatables_query($STATUS_FILTER = null)
-    {
+    private function _get_datatables_query($STATUS_FILTER = null) {
         $this->load->model('access_m');
         $modul = "Payment To Vendor";
         $view = 1;
@@ -53,21 +51,14 @@ class Ordervendor_m extends CI_Model {
 
         $i = 0;
     
-        foreach ($this->column_search as $item) // loop column 
-        {
-            if($_POST['search']['value']) // if datatable send POST for search
-            {
-                
-                if($i===0) // first loop
-                {
+        foreach ($this->column_search as $item) { // loop column
+            if($_POST['search']['value']) { // if datatable send POST for search
+                if($i===0) { // first loop
                     $this->db->group_start(); // open bracket. query Where with OR clause better with bracket. because maybe can combine with other WHERE with AND.
                     $this->db->like($item, $_POST['search']['value']);
-                }
-                else
-                {
+                } else {
                     $this->db->or_like($item, $_POST['search']['value']);
                 }
-
                 if(count($this->column_search) - 1 == $i) //last loop
                     $this->db->group_end(); //close bracket
             }
@@ -75,8 +66,7 @@ class Ordervendor_m extends CI_Model {
         }
     }
 
-    function get_datatables($STATUS_FILTER = null)
-    {
+    function get_datatables($STATUS_FILTER = null) {
         $this->_get_datatables_query($STATUS_FILTER);
         if($_POST['length'] != -1)
         $this->db->limit($_POST['length'], $_POST['start']);
@@ -84,15 +74,13 @@ class Ordervendor_m extends CI_Model {
         return $query->result();
     }
 
-    function count_filtered($STATUS_FILTER = null)
-    {
+    function count_filtered($STATUS_FILTER = null) {
         $this->_get_datatables_query($STATUS_FILTER);
         $query = $this->db->get();
         return $query->num_rows();
     }
 
-    public function count_all($STATUS_FILTER = null)
-    {
+    public function count_all($STATUS_FILTER = null) {
         $this->_get_datatables_query($STATUS_FILTER);
         return $this->db->count_all_results();
     }
@@ -132,6 +120,24 @@ class Ordervendor_m extends CI_Model {
         }
         $this->db->group_by('tb_vendor_bank.VBA_ID');
         $this->db->order_by('tb_bank.BANK_NAME', 'ASC');
+        $query = $this->db->get();
+        return $query;
+    }
+
+    public function get_shipcost_difference($FROM, $TO) {
+        $this->db->select('tb_order_vendor.ORDER_ID, tb_order_vendor.ORDV_WEIGHT, tb_order_vendor.ORDV_SHIPCOST, tb_order_vendor.ORDV_WEIGHT_VENDOR, tb_order_vendor.ORDV_SHIPCOST_VENDOR, tb_order_vendor.ORDV_SERVICE_TYPE, tb_order.ORDER_DATE, tb_vendor.VEND_NAME, tb_courier.COURIER_NAME');
+        $this->db->from('tb_order_vendor ');
+        $this->db->join('tb_order', 'tb_order.ORDER_ID=tb_order_vendor.ORDER_ID', 'inner');
+        $this->db->join('tb_vendor', 'tb_vendor.VEND_ID=tb_order_vendor.VEND_ID', 'inner');
+        $this->db->join('tb_courier', 'tb_courier.COURIER_ID=tb_order_vendor.COURIER_ID', 'left');
+        $this->db->where('tb_order_vendor.ORDV_SHIPCOST_VENDOR IS NOT NULL', null, false);
+        $this->db->group_start();
+        $this->db->where('tb_order_vendor.ORDV_SHIPCOST != tb_order_vendor.ORDV_SHIPCOST_VENDOR');
+        $this->db->or_where('tb_order_vendor.ORDV_WEIGHT != tb_order_vendor.ORDV_WEIGHT_VENDOR');
+        $this->db->group_end();
+        $this->db->where('tb_order.ORDER_DATE >=', date('Y-m-d', strtotime($FROM)));
+        $this->db->where('tb_order.ORDER_DATE <=', date('Y-m-d', strtotime('+1 days', strtotime($TO))));
+        $this->db->order_by('tb_order.ORDER_DATE', 'ASC');
         $query = $this->db->get();
         return $query;
     }

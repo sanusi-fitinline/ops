@@ -14,11 +14,11 @@ class Report extends CI_Controller {
 		$this->load->model('order_m');
 		$this->load->model('orderdetail_m');
 		$this->load->model('ordervendor_m');
-		$this->load->model('ordervendor_m');
 		$this->load->model('incomebycs_m');
 		$this->load->model('incomebyproduct_m');
 		$this->load->model('incomebyvendor_m');
 		$this->load->model('profitloss_m');
+		$this->load->model('price_change_m');
 		$this->load->library('form_validation');
 	}
 
@@ -309,7 +309,7 @@ class Report extends CI_Controller {
 				$body .= "<tr>
 						<td align='center'>".$no++."</td>
 						<td>".date('d-m-Y / H:i:s', strtotime($field['ORDER_DATE']))."</td>
-						<td>".$field['USER_NAME']."</td>
+						<td>".stripslashes($field['USER_NAME'])."</td>
 						<td align='center'>".$field['ORDER_ID']."</td>
 						<td align='right'>".number_format($field['ORDER_G_TOTAL'],0,',','.')."</td>
 					</tr>";		
@@ -331,7 +331,7 @@ class Report extends CI_Controller {
 					<td colspan='5' align='right'><em>".$this->terbilang($TOTAL)."</em></td>
 				</tr>";
 			foreach($by_cs as $row){
-				$body .= $user_name[] = $row->USER_NAME;
+				$body .= $user_name[] = stripslashes($row->USER_NAME);
 				$body .= $grand_total[] = $row->GRAND_TOTAL;
 			}
 			$callback = array(
@@ -387,7 +387,7 @@ class Report extends CI_Controller {
 				$body .= "<tr>
 						<td align='center'>".$no++."</td>
 						<td>".date('d-m-Y / H:i:s', strtotime($field['ORDER_DATE']))."</td>
-						<td>".$field['PRO_NAME']."</td>
+						<td>".stripslashes($field['PRO_NAME'])."</td>
 						<td>".$field['ORDD_OPTION']."</td>
 						<td align='center'>".str_replace(".", ",", $field['ORDD_QUANTITY'])."</td>
 						<td align='right'>".number_format($field['ORDD_PRICE'],0,',','.')."</td>
@@ -412,7 +412,7 @@ class Report extends CI_Controller {
 					<td colspan='7' align='right'><em>".$this->terbilang($TOTAL)."</em></td>
 				</tr>";
 			foreach($by_product as $row){
-				$body .= $pro_name[] = $row->PRO_NAME;
+				$body .= $pro_name[] = stripslashes($row->PRO_NAME);
 				$body .= $grand_total[] = $row->GRAND_TOTAL;
 			}
 			$callback = array(
@@ -469,7 +469,7 @@ class Report extends CI_Controller {
 				$body .= "<tr>
 						<td align='center'>".$no++."</td>
 						<td>".date('d-m-Y / H:i:s', strtotime($field['ORDER_DATE']))."</td>
-						<td>".$field['VEND_NAME']."</td>
+						<td>".stripslashes($field['VEND_NAME'])."</td>
 						<td align='center'>".$field['ORDER_ID']."</td>
 						<td align='right'>".number_format($field['TOTAL_ORDV'],0,',','.')."</td>
 					</tr>";
@@ -492,7 +492,7 @@ class Report extends CI_Controller {
 					<td colspan='5' align='right'><em>".$this->terbilang($TOTAL)."</em></td>
 				</tr>";
 			foreach($by_vendor as $row){
-				$body .= $vend_name[] = $row->VEND_NAME;
+				$body .= $vend_name[] = stripslashes($row->VEND_NAME);
 				$body .= $grand_total[] = $row->GRAND_TOTAL;
 			}
 			$callback = array(
@@ -512,8 +512,7 @@ class Report extends CI_Controller {
 			echo "<script>alert('Anda tidak punya akses ke $modul.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
 		} else {
-			$data['get_vendor'] = $this->vendor_m->get()->result();
-			$this->template->load('template', 'report/income/profit_loss', $data);
+			$this->template->load('template', 'report/income/profit_loss');
 		}
 	}
 
@@ -557,6 +556,91 @@ class Report extends CI_Controller {
 					<td colspan='6' align='right'><em>".$this->terbilang($TOTAL_PROFIT_LOSS)."</em></td>
 				</tr>";
 			$callback = array('list_body'=>$body,'list_footer'=>$footer);
+		}
+	    echo json_encode($callback);
+	}
+
+	public function price_change(){
+	    $modul  = "Report";
+		$access = $this->access_m->isAccess($this->session->GRP_SESSION, $modul)->row();
+		if ((!$access) && ($this->session->GRP_SESSION !=3)) {
+			echo "<script>alert('Anda tidak punya akses ke $modul.')</script>";
+			echo "<script>window.location='".site_url('dashboard')."'</script>";
+		} else {
+			$data['get_vendor'] = $this->vendor_m->get()->result();
+			$this->template->load('template', 'report/price_change', $data);
+		}
+	}
+
+	public function price_change_json() {
+		$url 	 = $this->config->base_url();
+		$FROM 	 = $this->input->post('FROM', TRUE);
+		$TO 	 = $this->input->post('TO', TRUE);
+		$VEND_ID = $this->input->post('VEND_ID', TRUE);
+		$price   = $this->price_change_m->get($FROM, $TO, $VEND_ID)->result();
+		$no 	 = 1;
+		$body 	 = "";
+		if(!$price){
+			$body .= "<tr>
+					<td align='center' colspan='8'>No data available in table</td>
+				</tr>";
+			$callback = array('list_body'=>$body);
+		} else {
+			foreach($price as $field){
+				$body .= "<tr>
+						<td align='center'>".$no++."</td>
+						<td>".date('d-m-Y / H:i:s', strtotime($field->VENP_DATE))."</td>
+						<td>".stripslashes($field->VEND_NAME)."</td>
+						<td><a href='".$url."product/edit/".$field->PRO_ID."' target='_blank' style='text-decoration:none;'>".stripslashes($field->PRO_NAME)."</a></td>
+						<td align='center'>".number_format($field->VENP_QTY,0,',','.')."</td>
+						<td align='center'>".stripslashes($field->UMEA_NAME)."</td>
+						<td align='right'>".number_format($field->OLD_PRICE,0,',','.')."</td>
+						<td align='right'>".number_format($field->NEW_PRICE,0,',','.')."</td>
+					</tr>";
+			}
+			$callback = array('list_body'=>$body);
+		}
+	    echo json_encode($callback);
+	}
+
+	public function shipcost_difference(){
+	    $modul  = "Report";
+		$access = $this->access_m->isAccess($this->session->GRP_SESSION, $modul)->row();
+		if ((!$access) && ($this->session->GRP_SESSION !=3)) {
+			echo "<script>alert('Anda tidak punya akses ke $modul.')</script>";
+			echo "<script>window.location='".site_url('dashboard')."'</script>";
+		} else {
+			$this->template->load('template', 'report/shipcost_difference');
+		}
+	}
+
+	public function shipcost_difference_json() {
+		$url 	  = $this->config->base_url();
+		$FROM 	  = $this->input->post('FROM', TRUE);
+		$TO 	  = $this->input->post('TO', TRUE);
+		$shipcost = $this->ordervendor_m->get_shipcost_difference($FROM, $TO)->result();
+		$no 	  = 1;
+		$body 	  = "";
+		if(!$shipcost){
+			$body .= "<tr>
+					<td align='center' colspan='9'>No data available in table</td>
+				</tr>";
+			$callback = array('list_body'=>$body);
+		} else {
+			foreach($shipcost as $field){
+				$body .= "<tr>
+						<td align='center'>".$no++."</td>
+						<td>".date('d-m-Y / H:i:s', strtotime($field->ORDER_DATE))."</td>
+						<td align='center'><a href='".$url."order/detail/".$field->ORDER_ID."' target='_blank' style='text-decoration:none;'>".$field->ORDER_ID."</a></td>
+						<td>".stripslashes($field->VEND_NAME)."</td>
+						<td align='center'>".$field->COURIER_NAME." ".$field->ORDV_SERVICE_TYPE."</td>
+						<td align='center'>".str_replace(".", ",", $field->ORDV_WEIGHT)." Kg</td>
+						<td align='right'>".number_format($field->ORDV_SHIPCOST,0,',','.')."</td>
+						<td align='center'>".str_replace(".", ",", $field->ORDV_WEIGHT_VENDOR)." Kg</td>
+						<td align='right'>".number_format($field->ORDV_SHIPCOST_VENDOR,0,',','.')."</td>
+					</tr>";
+			}
+			$callback = array('list_body'=>$body);
 		}
 	    echo json_encode($callback);
 	}

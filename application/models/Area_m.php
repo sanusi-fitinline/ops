@@ -24,24 +24,56 @@ class Area_m extends CI_Model {
 		return $query;
 	}
 
-	public function getCity($STATE_ID = null) {
-		$this->db->select('*');
+	public function search_city($title) {
+		$this->db->select('tb_city.*, tb_state.STATE_NAME');
 		$this->db->from('tb_city');
-		if($STATE_ID != null) {
-			$this->db->where('STATE_ID', $STATE_ID);
-		}
-		$this->db->order_by('CITY_NAME', 'ASC');
+		$this->db->join('tb_state', 'tb_state.STATE_ID=tb_city.STATE_ID', 'left');
+		$this->db->like('tb_city.CITY_NAME', $title , 'both');
+		$this->db->order_by('tb_city.CITY_NAME', 'ASC');
+		$this->db->limit(10);
 		$query = $this->db->get();
 		return $query;
 	}
 
-	public function getSubdistrict($CITY_ID = null) {
-		$this->db->select('*');
+	public function search_subd($title) {
+		$this->db->select('tb_subdistrict.*, tb_city.CITY_NAME, tb_state.STATE_NAME');
 		$this->db->from('tb_subdistrict');
-		if($CITY_ID != null) {
-			$this->db->where('CITY_ID', $CITY_ID);
+		$this->db->join('tb_city', 'tb_city.CITY_ID=tb_subdistrict.CITY_ID', 'left');
+		$this->db->join('tb_state', 'tb_state.STATE_ID=tb_subdistrict.STATE_ID', 'left');
+		$this->db->like('tb_subdistrict.SUBD_NAME', $title , 'both');
+		$this->db->order_by('tb_subdistrict.SUBD_NAME', 'ASC');
+		$this->db->limit(10);
+		$query = $this->db->get();
+		return $query;
+	}
+
+	public function getCity($STATE_ID = null, $RO_CITY_ID = null) {
+		$this->db->select('tb_city.*, tb_state.STATE_NAME');
+		$this->db->from('tb_city');
+		$this->db->join('tb_state', 'tb_state.STATE_ID=tb_city.STATE_ID', 'left');
+		if($STATE_ID != null) {
+			$this->db->where('tb_city.STATE_ID', $STATE_ID);
 		}
-		$this->db->order_by('SUBD_NAME', 'ASC');
+		if($RO_CITY_ID != null) {
+			$this->db->where('tb_city.RO_CITY_ID', $RO_CITY_ID);
+		}
+		$this->db->order_by('tb_city.CITY_NAME', 'ASC');
+		$query = $this->db->get();
+		return $query;
+	}
+
+	public function getSubdistrict($CITY_ID = null, $SUBD_ID = null) {
+		$this->db->select('tb_subdistrict.*, tb_city.CITY_NAME, tb_state.STATE_NAME');
+		$this->db->from('tb_subdistrict');
+		$this->db->join('tb_city', 'tb_city.CITY_ID=tb_subdistrict.CITY_ID', 'left');
+		$this->db->join('tb_state', 'tb_state.STATE_ID=tb_city.STATE_ID', 'left');
+		if($CITY_ID != null) {
+			$this->db->where('tb_subdistrict.CITY_ID', $CITY_ID);
+		}
+		if($SUBD_ID != null) {
+			$this->db->where('tb_subdistrict.SUBD_ID', $SUBD_ID);
+		}
+		$this->db->order_by('tb_subdistrict.SUBD_NAME', 'ASC');
 		$query = $this->db->get();
 		return $query;
 	}

@@ -15,108 +15,49 @@
 		    		Calculator Tariff
 		    	</div>
 		      	<div class="card-body">
-	      				<div class="row">
-		      				<div class="col-md-12">
-								<div class="form-group">
-									<label>Courier</label>
-									<select class="form-control selectpicker" title="Select Courier" data-live-search="true" name="COURIER_ID" id="COURIER_ID" required>
-										<option value="" selected>ALL</option>
-										<?php foreach($courier as $data): ?>
-								    		<option value="<?php echo $data->COURIER_ID.','.$data->COURIER_NAME?>">
-									    		<?php echo stripslashes($data->COURIER_NAME) ?>
-									    	</option>
-									    <?php endforeach ?>
-								    </select>
-								</div>
-		      				</div>
-							<div class="col-md-6" style="border-right: 1px solid #dfdfdf">
-								<div class="form-group">
-								    <label>Origin Country</label>
-								    <select class="form-control" data-live-search="true" name="O_CNTR_ID" id="CNTR_ID">
-							    		<option value="0">-- Select One --</option>
-								    	<?php foreach($country as $cntr): ?>
-									    	<option value="<?php echo $cntr->CNTR_ID.','.$cntr->CNTR_NAME ?>">
-									    		<?php echo stripslashes($cntr->CNTR_NAME) ?>
-									    	</option>
-									    <?php endforeach ?>
-								    </select>
-								</div>
-								<div class="form-group">
-									<label>Origin State</label>
-									<select class="form-control selectpicker" data-live-search="true" name="O_STATE_ID" id="STATE_ID">
-								    	<div id="loading" style="margin-top: 15px;">
-								         	<img src="<?php echo base_url('assets/images/loading.gif') ?>" width="18"> <small>Loading...</small>
-								        </div>
-								    </select>
-								</div>
-								<div class="form-group">
-									<label>Origin City</label>
-									<select class="form-control selectpicker" data-live-search="true" name="O_CITY_ID" id="CITY_ID">
-								    	<div id="loading" style="margin-top: 15px;">
-								         	<img src="<?php echo base_url('assets/images/loading.gif') ?>" width="18"> <small>Loading...</small>
-								        </div>
-								    </select>
-								</div>
-								<div class="form-group">
-									<label>Origin Subdistrict</label>
-									<select class="form-control selectpicker" data-live-search="true" name="O_SUBD_ID" id="SUBD_ID">
-								    	<div id="loading" style="margin-top: 15px;">
-								         	<img src="<?php echo base_url('assets/images/loading.gif') ?>" width="18"> <small>Loading...</small>
-								        </div>
-								    </select>
-								</div>
-								<div class="form-group">
-									<label>Weight</label>
-									<div class="input-group">
-										<input class="form-control" type="number" min="1" step="0.01" value="1" placeholder="Weight" name="WEIGHT" id="WEIGHT">
-										<div class="input-group-prepend">
-								          	<span class="input-group-text">Kg</i></span>
-								        </div>
-								    </div>
-								</div>
-							</div>
-							<div class="col-md-6">
-								<div class="form-group">
-								    <label>Destination Country</label>
-								    <select class="form-control" data-live-search="true" name="D_CNTR_ID" id="CNTR_ID2">
-							    		<option value="0">-- Select One --</option>
-								    	<?php foreach($country as $cntr): ?>
-									    	<option value="<?php echo $cntr->CNTR_ID.','.$cntr->CNTR_NAME ?>">
-									    		<?php echo stripslashes($cntr->CNTR_NAME) ?>
-									    	</option>
-									    <?php endforeach ?>
-								    </select>
-								</div>
-								<div class="form-group">
-									<label>Destination State</label>
-									<select class="form-control selectpicker" data-live-search="true" name="D_STATE_ID" id="STATE_ID2">
-								    	<div id="loading" style="margin-top: 15px;">
-								         	<img src="<?php echo base_url('assets/images/loading.gif') ?>" width="18"> <small>Loading...</small>
-								        </div>
-								    </select>
-								</div>
-								<div class="form-group">
-									<label>Destination City</label>
-									<select class="form-control selectpicker" data-live-search="true" name="D_CITY_ID" id="CITY_ID2">
-								    	<div id="loading" style="margin-top: 15px;">
-								         	<img src="<?php echo base_url('assets/images/loading.gif') ?>" width="18"> <small>Loading...</small>
-								        </div>
-								    </select>
-								</div>
-								<div class="form-group">
-									<label>Destination Subdistrict</label>
-									<select class="form-control selectpicker" data-live-search="true" name="D_SUBD_ID" id="SUBD_ID2">
-								    	<div id="loading" style="margin-top: 15px;">
-								         	<img src="<?php echo base_url('assets/images/loading.gif') ?>" width="18"> <small>Loading...</small>
-								        </div>
-								    </select>
-								</div>
-								<div class="form-group" align="center">
-									<br>
-									<button id="btn-check" class="btn btn-primary" style="margin-top: 10px;">Check</button>
-								</div>
+      				<div class="row">
+	      				<div class="col-md-6">
+							<div class="form-group">
+								<label>Courier</label>
+								<select class="form-control selectpicker" name="COURIER_ID[]" id="COURIER_ID" title="-- Select Courier --" data-live-search="true" data-actions-box="true" multiple required>
+									<?php foreach($courier as $data): ?>
+							    		<option value="<?php echo $data->COURIER_ID?>">
+								    		<?php echo stripslashes($data->COURIER_NAME) ?>
+								    	</option>
+								    <?php endforeach ?>
+							    </select>
 							</div>
 						</div>
+						<div class="col-md-6">
+							<div class="form-group">
+								<label>Weight</label>
+								<div class="input-group">
+									<input class="form-control" type="number" min="1" step="0.01" value="1" placeholder="Weight" name="WEIGHT" id="WEIGHT">
+									<div class="input-group-prepend">
+							          	<span class="input-group-text">Kg</i></span>
+							        </div>
+							    </div>
+							</div>
+	      				</div>
+						<div class="col-md-12">
+							<div class="form-group">
+								<label>Origin</label>
+							    <input class="form-control" type="text" id="CITY_NAME" value="">
+							    <input class="form-control" type="hidden" id="O_RO_CITY_ID" value="">
+							</div>
+							<div class="form-group">
+							    <label>Destination</label>
+							    <input class="form-control" type="text" id="SUB_NAME" value="">
+							    <input class="form-control" type="hidden" id="D_SUBD_ID" value="">
+							</div>
+						</div>
+						<div class="col-md-12">
+							<div class="form-group" align="center">
+								<br>
+								<button id="btn-check" class="btn btn-primary">Check</button>
+							</div>
+						</div>
+					</div>
 		      	</div>
 		  	</div>
 		</div>
@@ -145,4 +86,95 @@
 	  	</div>
 	</div>
 </div>
-	
+<script src="<?php echo base_url()?>assets/vendor/jquery/jquery.min.js"></script>
+<script defer src="<?php echo base_url()?>assets/vendor/jquery-ui-1.12.1/jquery-ui.min.js"></script>
+<script type="text/javascript">
+	$(document).ready(function(){
+		$("#CITY_NAME").autocomplete({
+			source: function(request, response) {
+		        $.ajax({
+		        	url: "<?php echo site_url('calculator/list_origin'); ?>",
+		        	type: "GET",
+		        	dataType: "json",
+		        	data: {
+			            term: request.term
+			        },
+		          	success: function(data) {
+		          		response($.map(data, function (item) {
+		                    return {
+		                        label	   : item.city_name,
+		                        value_city : item.city_id,
+		                    };
+		                }));
+		          	}
+		        });
+		    },
+		    minLength: 3,
+            select: function (event, ui) {
+		        this.value = ui.item.label;
+		        $("#O_RO_CITY_ID").val(ui.item.value_city);
+		        event.preventDefault();
+		    }
+		});
+
+		$("#SUB_NAME").autocomplete({
+			source: function(request, response) {
+		        $.ajax({
+		        	url: "<?php echo site_url('calculator/list_destination'); ?>",
+		        	type: "GET",
+		        	dataType: "json",
+		        	data: {
+			            term: request.term
+			        },
+		          	success: function(data) {
+		          		response($.map(data, function (item) {
+		                    return {
+		                        label 	   : item.subd_name,
+		                        value_subd : item.subd_id
+		                    };
+		                }));
+		          	}
+		        });
+		    },
+		    minLength: 3,
+            select: function (event, ui) {
+		        this.value = ui.item.label;
+		        $("#D_SUBD_ID").val(ui.item.value_subd);
+		        event.preventDefault();
+		    }
+		});
+
+		$("#btn-check").click(function(){ 
+	    	if (($("#COURIER_ID").val() != "") && ($("#CITY_NAME").val() != "") && ($("#SUB_NAME").val() != "")) {
+	    		$("#result").hide();
+			    $.ajax({
+			        url: "<?php echo site_url('calculator/datacal'); ?>", 
+			        type: "POST", 
+			        data: {
+			        	COURIER_ID   : $("#COURIER_ID").val(),
+			        	WEIGHT 		 : $("#WEIGHT").val(),
+			        	O_RO_CITY_ID : $("#O_RO_CITY_ID").val(),
+			        	D_SUBD_ID	 : $("#D_SUBD_ID").val(),
+			        }, 
+			        dataType: "json",
+			        beforeSend: function(e) {
+			        	$(".spinner").css("display","block");
+			        	if(e && e.overrideMimeType) {
+			            	e.overrideMimeType("application/json;charset=UTF-8");
+			          	}
+			        },
+			        success: function(response){
+				        $(".spinner").css("display","none");
+						$("#result").html(response.list_courier).show('slow');
+			        },
+			        error: function (xhr, ajaxOptions, thrownError) {
+			        	$(".spinner").css("display","none"); 
+			          	alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError); 
+			        }
+			    });
+	    	} else {
+	    		alert("Please complete the data!")
+	    	}
+	    });
+	});
+</script>
