@@ -293,7 +293,7 @@ class Ordervendor_m extends CI_Model {
                 if($ORDD_QUANTITY[$i] != $ORDD_QUANTITY_VENDOR[$i]) {
                     $get_user[$i]       = $this->get_user_id($CUST_ID[$i])->row();
                     $USER_ID[$i]        = $get_user[$i]->USER_ID;
-                    $HASIL_QUANTITY[$i] = $ORDD_QUANTITY[$i] - $ORDD_QUANTITY_VENDOR[$i];
+                    $HASIL_QUANTITY[$i] = round($ORDD_QUANTITY[$i] - $ORDD_QUANTITY_VENDOR[$i], 2);
                     $DEPOSIT[$i]        = $HASIL_QUANTITY[$i] * $ORDD_PRICE[$i];
 
                     if ($HASIL_QUANTITY[$i] > 0) {

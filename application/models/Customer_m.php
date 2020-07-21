@@ -3,18 +3,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Customer_m extends CI_Model {
 	var $table = 'tb_customer'; //nama tabel dari database
-    var $column_search = array('CUST_ID','CUST_NAME'); //field yang diizin untuk pencarian 
-    var $order = array('CUST_NAME' => 'ASC'); // default order 
+    var $column_search = array('CUST_ID','CUST_NAME', 'CUST_PHONE'); //field yang diizin untuk pencarian
 
-    public function __construct()
-    {
+    public function __construct() {
         parent::__construct();
         $this->load->database();
     }
 
-    private function _get_datatables_query()
-    {
-        
+    private function _get_datatables_query() {
 		$this->load->model('access_m');
 		$modl = "Customer";
 		$view = 1;    
@@ -30,40 +26,27 @@ class Customer_m extends CI_Model {
 			if (!$viewall) {
 				$this->db->where('tb_customer.USER_ID', $this->session->USER_SESSION);
 			}
-	    } 
+	    }
+	    $this->db->order_by('tb_customer.CUST_NAME', 'ASC');
 
         $i = 0;
     
-        foreach ($this->column_search as $item) // loop column 
-        {
-            if($_POST['search']['value']) // if datatable send POST for search
-            {
-                
-                if($i===0) // first loop
-                {
+        foreach ($this->column_search as $item) { // loop column
+            if($_POST['search']['value']) { // if datatable send POST for search
+                if($i===0) { // first loop
                     $this->db->group_start(); // open bracket. query Where with OR clause better with bracket. because maybe can combine with other WHERE with AND.
                     $this->db->like($item, $_POST['search']['value']);
-                }
-                else
-                {
+                } else {
                     $this->db->or_like($item, $_POST['search']['value']);
                 }
-
                 if(count($this->column_search) - 1 == $i) //last loop
                     $this->db->group_end(); //close bracket
             }
             $i++;
         }
-        
-       	if(isset($this->order))
-        {
-            $order = $this->order;
-            $this->db->order_by(key($order), $order[key($order)]);
-        }
     }
 
-    function get_datatables()
-    {
+    function get_datatables() {
         $this->_get_datatables_query();
         if($_POST['length'] != -1)
         $this->db->limit($_POST['length'], $_POST['start']);
@@ -71,15 +54,13 @@ class Customer_m extends CI_Model {
         return $query->result();
     }
 
-    function count_filtered()
-    {
+    function count_filtered() {
         $this->_get_datatables_query();
         $query = $this->db->get();
         return $query->num_rows();
     }
 
-    public function count_all()
-    {
+    public function count_all() {
         $this->_get_datatables_query();
         return $this->db->count_all_results();
     }

@@ -121,17 +121,17 @@ class Customer extends CI_Controller {
 	public function check_phone() {
 		$CUST_PHONE = $this->input->post('CUST_PHONE', TRUE);
 		$data 	 	= $this->customer_m->get_cust_phone()->result();
-		$lists 	 	= "";
-		$cust_id 	= "";
+		$validasi 	= "";
+		$cust_id[] 	= "";
 		foreach ($data as $field) {
 			if($this->convert_phone($CUST_PHONE) == $this->convert_phone($field->CUST_PHONE)) {
-				$lists 	 .= $this->convert_phone($field->CUST_PHONE);
-				$cust_id .= $field->CUST_ID;
+				$validasi  .= 1; // true, ada nomor yang sama.
+				$cust_id[] .= $field->CUST_ID;
 			}
 		}
+		$cust = max($cust_id);
 		$input_phone = $this->convert_phone($CUST_PHONE);
-
-		$callback = array('list_cust_id'=>$cust_id, 'list_phone'=>$lists, 'input_phone'=>$input_phone); 
+		$callback = array('list_cust_id'=>$cust, 'list_validasi'=>$validasi, 'list_input_phone'=>$input_phone);
 	    echo json_encode($callback);
 	}
 

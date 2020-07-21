@@ -3,8 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Vendor_m extends CI_Model {
 	var $table = 'tb_vendor'; //nama tabel dari database
-    var $column_search = array('VEND_NAME','VEND_CPERSON', 'VEND_EMAIL'); //field yang diizin untuk pencarian 
-    var $order = array('VEND_NAME' => 'ASC'); // default order 
+    var $column_search = array('VEND_NAME','VEND_CPERSON', 'VEND_EMAIL'); //field yang diizin untuk pencarian
 
     public function __construct()
     {
@@ -12,8 +11,7 @@ class Vendor_m extends CI_Model {
         $this->load->database();
     }
 
-    private function _get_datatables_query()
-    {
+    private function _get_datatables_query() {
         
         $this->db->select('tb_vendor.*, tb_country.CNTR_NAME, tb_state.STATE_NAME, tb_city.CITY_NAME, tb_subdistrict.SUBD_NAME');
 		$this->db->from($this->table);    
@@ -21,34 +19,22 @@ class Vendor_m extends CI_Model {
 		$this->db->join('tb_state', 'tb_vendor.STATE_ID=tb_state.STATE_ID', 'left');
 		$this->db->join('tb_city', 'tb_vendor.CITY_ID=tb_city.CITY_ID', 'left');
 		$this->db->join('tb_subdistrict', 'tb_vendor.SUBD_ID=tb_subdistrict.SUBD_ID', 'left');
+		$this->db->order_by('tb_vendor.VEND_NAME', 'ASC');
 
         $i = 0;
     
-        foreach ($this->column_search as $item) // loop column 
-        {
-            if($_POST['search']['value']) // if datatable send POST for search
-            {
-                
-                if($i===0) // first loop
-                {
+        foreach ($this->column_search as $item) { // loop column
+            if($_POST['search']['value']) { // if datatable send POST for search
+                if($i===0){ // first loop
                     $this->db->group_start(); // open bracket. query Where with OR clause better with bracket. because maybe can combine with other WHERE with AND.
                     $this->db->like($item, $_POST['search']['value']);
-                }
-                else
-                {
+                } else {
                     $this->db->or_like($item, $_POST['search']['value']);
                 }
-
                 if(count($this->column_search) - 1 == $i) //last loop
                     $this->db->group_end(); //close bracket
             }
             $i++;
-        }
-        
-       	if(isset($this->order))
-        {
-            $order = $this->order;
-            $this->db->order_by(key($order), $order[key($order)]);
         }
     }
 
@@ -73,7 +59,6 @@ class Vendor_m extends CI_Model {
         $this->db->from($this->table);
         return $this->db->count_all_results();
     }
-
 	public function get($VEND_ID = null) {
 		$this->db->select('tb_vendor.*, tb_country.CNTR_NAME, tb_state.STATE_NAME, tb_city.RO_CITY_ID, tb_city.CITY_NAME, tb_subdistrict.SUBD_NAME');
 		$this->db->from('tb_vendor');

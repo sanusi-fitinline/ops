@@ -133,8 +133,8 @@
 		          	}
 		        },
 		        success: function(response){
-					if(response.input_phone != ""){
-						if(response.input_phone == response.list_phone){
+					if(response.list_input_phone != ""){
+						if(response.list_validasi != ""){
 							Swal.fire({
 								title: 'Customer sudah ada!',
 								text: "Apakah anda ingin mengubah datanya?",
