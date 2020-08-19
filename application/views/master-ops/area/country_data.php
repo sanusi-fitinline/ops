@@ -18,7 +18,7 @@
 		        </div>
 		      	<div class="card-body">
 		      		<div>
-						<a <?php if((!$this->access_m->isAdd('Country', 1)->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> href="<?php echo site_url('master/addcountry')?>" class="btn btn-success btn-sm"><i class="fas fa-plus-circle"></i> Add</a>
+						<a <?php if((!$this->access_m->isAdd('Area', 1)->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> href="<?php echo site_url('master/addcountry')?>" class="btn btn-success btn-sm"><i class="fas fa-plus-circle"></i> Add</a>
 					</div><br>
 		        	<div class="table-responsive">
 		          		<table class="table table-bordered" id="myTableCountry" width="100%" cellspacing="0">

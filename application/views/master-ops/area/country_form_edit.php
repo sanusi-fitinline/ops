@@ -30,7 +30,7 @@
 								</div>
 								<div align="center">
 									<?php $this->load->model('access_m');?>
-									<?php if((!$this->access_m->isEdit('Country', 1)->row()) && ($this->session->GRP_SESSION !=3)): ?>
+									<?php if((!$this->access_m->isEdit('Area', 1)->row()) && ($this->session->GRP_SESSION !=3)): ?>
 										<a href="<?php echo site_url('master/country/') ?>" class="btn btn-warning" name="batal"><i class="fa fa-arrow-left"></i> Back</a>
 									<?php else:?>
 										<button type="submit" class="btn btn-primary" name="simpan"><i class="fa fa-save"></i> Save</button>

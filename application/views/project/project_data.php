@@ -16,7 +16,7 @@
       	<div class="card-body">
 			<div class="row">
 	      		<div class="col-md-6">
-					<a <?php if((!$this->access_m->isAdd('Project', 1)->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> href="<?php echo site_url('project/add') ?>" class="btn btn-success btn-sm">
+					<a <?php if((!$this->access_m->isAdd('Order Custom', 1)->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> href="<?php echo site_url('project/add') ?>" class="btn btn-success btn-sm">
 						<i class="fas fa-plus-circle"></i> Add</a>
 				</div>
 				<div class="col-md-3">			

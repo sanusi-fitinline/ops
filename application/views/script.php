@@ -438,13 +438,20 @@
 				            	e.overrideMimeType("application/json;charset=UTF-8");
 				          	}
 				        },
-				        success: function(response){ 
+				        success: function(response){
 				          	$("#loading").hide();
 							$("#CITY_ID").html(response.list_city).show();
 							$("#CITY_ID").selectpicker('refresh');
 				        },
-				        error: function (xhr, ajaxOptions, thrownError) { 
-				          	alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError); 
+				        timeout: 3000,
+				        error: function (xhr, status, ajaxOptions, thrownError) { 
+				          	if(status === 'timeout'){   
+					            alert('Respon terlalu lama, silakan coba lagi.');
+					            $("#VEND_ID").selectpicker('val','refresh');
+					            $("#CITY_ID").selectpicker('val','refresh');
+					        } else {
+				          		alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+					        }
 				        }
 				    });
 			    });
@@ -1694,7 +1701,7 @@
 			        $("#FILTER_ORDER_SUPPORT").attr("disabled","disabled");
 		        });
 
-		        // payment-vendor
+		        // payment-producer
 		        var my_payment_producer = $('#my-payment-producer').dataTable({
 		            "processing": true, 
 		            "serverSide": true, 

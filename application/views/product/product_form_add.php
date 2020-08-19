@@ -74,7 +74,7 @@
 								</div>
 								<div class="form-group">
 								    <label>City</label>
-								    <select class="form-control selectpicker" name="CITY_ID" id="CITY_ID"data-live-search="true">
+								    <select class="form-control selectpicker" name="CITY_ID" id="CITY_ID" data-live-search="true">
 							    		<option value="">-- Select One --</option>
 							    		<?php foreach($areacity as $cty): ?>
 									    	<option value="<?php echo $cty->CITY_ID ?>">

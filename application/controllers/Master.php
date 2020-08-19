@@ -35,10 +35,10 @@ class Master extends CI_Controller {
 	}
 
 	public function bank() {
-		$modl 	= "Bank";    
-		$access = $this->access_m->isAccess($this->session->GRP_SESSION, $modl)->row();
+		$modul 	= "Bank";    
+		$access = $this->access_m->isAccess($this->session->GRP_SESSION, $modul)->row();
 		if ((!$access) && ($this->session->GRP_SESSION !=3)) {
-			echo "<script>alert('Anda tidak punya akses ke $modl.')</script>";
+			echo "<script>alert('Anda tidak punya akses ke $modul.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
 		} else {
 			$data['row'] = $this->bank_m->getBank()->result();
@@ -115,10 +115,10 @@ class Master extends CI_Controller {
 	}
 
 	public function currency() {
-		$modl 	= "Currency";    
-		$access = $this->access_m->isAccess($this->session->GRP_SESSION, $modl)->row();
+		$modul 	= "Currency";    
+		$access = $this->access_m->isAccess($this->session->GRP_SESSION, $modul)->row();
 		if ((!$access) && ($this->session->GRP_SESSION !=3)) {
-			echo "<script>alert('Anda tidak punya akses ke $modl.')</script>";
+			echo "<script>alert('Anda tidak punya akses ke $modul.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
 		} else {
 			$data['row'] = $this->currency_m->get()->result();
@@ -194,10 +194,10 @@ class Master extends CI_Controller {
 	}
 
 	public function country(){
-		$modl 	= "Country";
-		$access = $this->access_m->isAccess($this->session->GRP_SESSION, $modl)->row();
+		$modul 	= "Country";
+		$access = $this->access_m->isAccess($this->session->GRP_SESSION, 'Area')->row();
 		if ((!$access) && ($this->session->GRP_SESSION !=3)) {
-			echo "<script>alert('Anda tidak punya akses ke $modl.')</script>";
+			echo "<script>alert('Anda tidak punya akses ke $modul.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
 		} else {
 			$this->template->load('template', 'master-ops/area/country_data');
@@ -284,10 +284,10 @@ class Master extends CI_Controller {
 	}
 
 	public function state(){
-		$modl 	= "State";
-		$access = $this->access_m->isAccess($this->session->GRP_SESSION, $modl)->row();
+		$modul 	= "State";
+		$access = $this->access_m->isAccess($this->session->GRP_SESSION, 'Area')->row();
 		if ((!$access) && ($this->session->GRP_SESSION !=3)) {
-			echo "<script>alert('Anda tidak punya akses ke $modl.')</script>";
+			echo "<script>alert('Anda tidak punya akses ke $modul.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
 		} else {
 			$this->template->load('template', 'master-ops/area/state_data');
@@ -377,10 +377,10 @@ class Master extends CI_Controller {
 	}
 
 	public function city(){
-		$modl 	= "City";
-		$access = $this->access_m->isAccess($this->session->GRP_SESSION, $modl)->row();
+		$modul 	= "City";
+		$access = $this->access_m->isAccess($this->session->GRP_SESSION, 'Area')->row();
 		if ((!$access) && ($this->session->GRP_SESSION !=3)) {
-			echo "<script>alert('Anda tidak punya akses ke $modl.')</script>";
+			echo "<script>alert('Anda tidak punya akses ke $modul.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
 		} else {
 			$this->template->load('template', 'master-ops/area/city_data');
@@ -471,10 +471,10 @@ class Master extends CI_Controller {
 	}
 
 	public function subdistrict(){
-		$modl 	= "Subdistrict";
-		$access = $this->access_m->isAccess($this->session->GRP_SESSION, $modl)->row();
+		$modul 	= "Subdistrict";
+		$access = $this->access_m->isAccess($this->session->GRP_SESSION, 'Area')->row();
 		if ((!$access) && ($this->session->GRP_SESSION !=3)) {
-			echo "<script>alert('Anda tidak punya akses ke $modl.')</script>";
+			echo "<script>alert('Anda tidak punya akses ke $modul.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
 		} else {
 			$this->template->load('template', 'master-ops/area/subd_data');
@@ -568,10 +568,10 @@ class Master extends CI_Controller {
 	}
 
 	public function channel(){
-		$modl 	= "Channel";
-		$access = $this->access_m->isAccess($this->session->GRP_SESSION, $modl)->row();
+		$modul 	= "Channel";
+		$access = $this->access_m->isAccess($this->session->GRP_SESSION, $modul)->row();
 		if ((!$access) && ($this->session->GRP_SESSION !=3)) {
-			echo "<script>alert('Anda tidak punya akses ke $modl.')</script>";
+			echo "<script>alert('Anda tidak punya akses ke $modul.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
 		} else {
 			$data['channel'] 	= $this->channel_m->getCha()->result();
@@ -647,10 +647,10 @@ class Master extends CI_Controller {
 	}
 
 	public function type() {
-		$modl 	= "Product Type";    
-		$access = $this->access_m->isAccess($this->session->GRP_SESSION, $modl)->row();
+		$modul 	= "Product Type";    
+		$access = $this->access_m->isAccess($this->session->GRP_SESSION, $modul)->row();
 		if ((!$access) && ($this->session->GRP_SESSION !=3)) {
-			echo "<script>alert('Anda tidak punya akses ke $modl.')</script>";
+			echo "<script>alert('Anda tidak punya akses ke $modul.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
 		} else {
 			$data['row'] = $this->type_m->get()->result();
@@ -729,10 +729,10 @@ class Master extends CI_Controller {
 	}
 
 	public function subtype($TYPE_ID) {
-		$modl 	= "Product Type";    
-		$access = $this->access_m->isAccess($this->session->GRP_SESSION, $modl)->row();
+		$modul 	= "Product Type";    
+		$access = $this->access_m->isAccess($this->session->GRP_SESSION, $modul)->row();
 		if ((!$access) && ($this->session->GRP_SESSION !=3)) {
-			echo "<script>alert('Anda tidak punya akses ke $modl.')</script>";
+			echo "<script>alert('Anda tidak punya akses ke $modul.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
 		} else {
 			$query = $this->type_m->get($TYPE_ID);
@@ -821,10 +821,10 @@ class Master extends CI_Controller {
 	}
 
 	public function umea(){
-		$modl 	= "Unit Measure";
-		$access = $this->access_m->isAccess($this->session->GRP_SESSION, $modl)->row();
+		$modul 	= "Unit Measure";
+		$access = $this->access_m->isAccess($this->session->GRP_SESSION, $modul)->row();
 		if ((!$access) && ($this->session->GRP_SESSION !=3)) {
-			echo "<script>alert('Anda tidak punya akses ke $modl.')</script>";
+			echo "<script>alert('Anda tidak punya akses ke $modul.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
 		} else {
 			$data['umea'] 	= $this->umea_m->get()->result();

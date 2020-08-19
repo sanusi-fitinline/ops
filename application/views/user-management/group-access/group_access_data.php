@@ -80,8 +80,7 @@
 						<div class="col-md-6">
 							<div class="form-group">
 								<label>Add</label>
-								<select class="form-control selectpicker" name="GACC_ADD" required>
-						    		<option value="">-- Select One --</option>
+								<select class="form-control selectpicker" name="GACC_ADD" title="-- Select One --" required>
 						    		<option value="1">Yes</option>
 						    		<option value="0">No</option>
 							    </select>
@@ -90,8 +89,7 @@
 						<div class="col-md-6">
 							<div class="form-group">
 								<label>Edit</label>
-								<select class="form-control selectpicker" name="GACC_EDIT" required>
-						    		<option value="">-- Select One --</option>
+								<select class="form-control selectpicker" name="GACC_EDIT" title="-- Select One --" required>
 						    		<option value="1">Yes</option>
 						    		<option value="0">No</option>
 							    </select>
@@ -100,8 +98,7 @@
 						<div class="col-md-6">
 							<div class="form-group">
 								<label>Delete</label>
-								<select class="form-control selectpicker" name="GACC_DELETE" required>
-						    		<option value="">-- Select One --</option>
+								<select class="form-control selectpicker" name="GACC_DELETE" title="-- Select One --" required>
 						    		<option value="1">Yes</option>
 						    		<option value="0">No</option>
 							    </select>
@@ -110,8 +107,7 @@
 						<div class="col-md-6">
 							<div class="form-group">
 								<label>View All</label>
-								<select class="form-control selectpicker" name="GACC_VIEWALL" required>
-						    		<option value="">-- Select One --</option>
+								<select class="form-control selectpicker" name="GACC_VIEWALL" title="-- Select One --" required>
 						    		<option value="1">Yes</option>
 						    		<option value="0">No</option>
 							    </select>
