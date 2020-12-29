@@ -150,6 +150,7 @@
 															<div class="form-group">
 																<label>Input Reason <small>*</small></label>
 																<select class="form-control selectpicker" id="ORDER_STATUS_CANCEL" name="ORDER_STATUS_CANCEL" title="-- Select One --">
+														    		<option value="" hidden></option>
 														    		<option value="1">Salah Input</option>
 														    		<option value="2">Order Berubah</option>
 														    		<option value="3">Order Batal</option>
