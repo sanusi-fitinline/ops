@@ -82,20 +82,20 @@ class Payment_vendor extends CI_Controller {
 			if ($field->PAYTOV_ID != null) {
 				if($field->ORDER_STATUS !=5) {
 					$row[] = '<div style="vertical-align: middle; text-align: center;">
-						<a href="'.$url.'payment_vendor/view/'.$field->VEND_ID.'/'.$field->PAYTOV_ID.'" class="btn btn-sm btn-primary" style="color: #ffffff;"><i class="fas fa-search-plus"></i></a></div>';
+						<a href="'.$url.'payment_vendor/view/'.$field->VEND_ID.'/'.$field->PAYTOV_ID.'" class="btn btn-sm btn-primary mb-1" style="color: #ffffff;"><i class="fas fa-search-plus"></i></a></div>';
 				} else {
 					$row[] = '<div style="vertical-align: middle; text-align: center;">
-						<a href="'.$url.'payment_vendor/cancel/'.$field->VEND_ID.'/'.$field->PAYTOV_ID.'" class="btn btn-sm btn-primary" style="color: #ffffff;"><i class="fas fa-search-plus"></i></a></div>';
+						<a href="'.$url.'payment_vendor/cancel/'.$field->VEND_ID.'/'.$field->PAYTOV_ID.'" class="btn btn-sm btn-primary mb-1" style="color: #ffffff;"><i class="fas fa-search-plus"></i></a></div>';
 				}
 				
 			} else {
 				if($field->ORDER_STATUS !=5) {
 					$row[] = '<div style="vertical-align: middle; text-align: center;">
-						<a href="'.$url.'payment_vendor/detail/'.$field->VEND_ID.'" class="btn btn-sm btn-warning" style="color: #ffffff;"><i class="fas fa-dollar-sign"></i> Pay</a></div>';
+						<a href="'.$url.'payment_vendor/detail/'.$field->VEND_ID.'" class="btn btn-sm btn-warning mb-1" style="color: #ffffff;"><i class="fas fa-dollar-sign"></i> Pay</a></div>';
 				} else {
 					$row[] = '<form action="'.$url.'payment_vendor/cancel/'.$field->VEND_ID.'" method="post"><div style="vertical-align: middle; text-align: center;">
 						<input type="hidden" name="PAYTOV_DATE" value="'.$field->PAYTOV_DATE.'">
-						<button class="btn btn-sm btn-primary" style="color: #ffffff;"><i class="fas fa-search-plus"></i></button></div></form>';
+						<button class="btn btn-sm btn-primary mb-1" style="color: #ffffff;"><i class="fas fa-search-plus"></i></button></div></form>';
 				}
 			}
 			$data[] = $row;

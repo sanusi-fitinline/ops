@@ -6,32 +6,25 @@ class Channel_m extends CI_Model {
     var $column_search = array('CHA_NAME'); //field yang diizin untuk pencarian 
     var $order = array('CHA_NAME' => 'ASC'); // default order 
 
-    public function __construct()
-    {
+    public function __construct() {
         parent::__construct();
         $this->load->database();
     }
 
-    private function _get_datatables_query()
-    {
+    private function _get_datatables_query() {
         
         $this->db->select('*');
 		$this->db->from($this->table);    
 
         $i = 0;
     
-        foreach ($this->column_search as $item) // loop column 
-        {
-            if($_POST['search']['value']) // if datatable send POST for search
-            {
+        foreach ($this->column_search as $item) { // loop column 
+            if($_POST['search']['value']) { // if datatable send POST for search
                 
-                if($i===0) // first loop
-                {
+                if($i===0) { // first loop
                     $this->db->group_start(); // open bracket. query Where with OR clause better with bracket. because maybe can combine with other WHERE with AND.
                     $this->db->like($item, $_POST['search']['value']);
-                }
-                else
-                {
+                } else {
                     $this->db->or_like($item, $_POST['search']['value']);
                 }
 
@@ -41,15 +34,13 @@ class Channel_m extends CI_Model {
             $i++;
         }
         
-       	if(isset($this->order))
-        {
+       	if(isset($this->order)) {
             $order = $this->order;
             $this->db->order_by(key($order), $order[key($order)]);
         }
     }
 
-    function get_datatables()
-    {
+    function get_datatables() {
         $this->_get_datatables_query();
         if($_POST['length'] != -1)
         $this->db->limit($_POST['length'], $_POST['start']);
@@ -57,16 +48,14 @@ class Channel_m extends CI_Model {
         return $query->result();
     }
 
-    function count_filtered()
-    {
+    function count_filtered() {
         $this->_get_datatables_query();
         $query = $this->db->get();
         return $query->num_rows();
     }
 
-    public function count_all()
-    {
-        $this->db->from($this->table);
+    public function count_all() {
+        $this->_get_datatables_query();
         return $this->db->count_all_results();
     }
 
@@ -81,21 +70,21 @@ class Channel_m extends CI_Model {
 		return $query;
 	}
 
-	public function insert(){
+	public function insert() {
 		$dataInsert = array(
-			'CHA_NAME'			=> $this->input->post('CHA_NAME', TRUE),
+			'CHA_NAME' => $this->input->post('CHA_NAME', TRUE),
 		);
 		$this->db->insert('tb_channel', $this->db->escape_str($dataInsert));
 	}
 
-	public function update($CHA_ID){
+	public function update($CHA_ID) {
 		$dataUpdate = array(
-			'CHA_NAME'			=> $this->input->post('CHA_NAME', TRUE),
+			'CHA_NAME' => $this->input->post('CHA_NAME', TRUE),
 		);
 		$this->db->where('CHA_ID', $CHA_ID)->update('tb_channel', $this->db->escape_str($dataUpdate));
 	}
 
-	public function delete($CHA_ID){
+	public function delete($CHA_ID) {
 		$this->db->where('CHA_ID', $CHA_ID);
 		// $this->db->where('USER_ID', $this->session->USER_ID);
 		// $this->db->where('GRP_ID', $this->session->USER_ID);

@@ -69,7 +69,7 @@
     $pdf->SetDisplayMode('real', 'default');
     $pdf->AddPage('P', 'A4');
     $i=0;
-    $html= '<h4 align="center">NOTA PEMBELIAN</h4>
+    $html= '<h4 align="center">RECEIPT / NOTA PEMBELIAN</h4>
 	    <table cellpadding="1" style="font-size: 10px">
 	    	<tr>
 	    		<td width="13%">Order Custom</td>
@@ -87,6 +87,11 @@
 	    		<td>'.$letter->ORDL_LNO.'</td>
 	    	</tr>
 	    	<tr>
+	    		<td>Invoice</td>
+	    		<td>:</td>
+	    		<td>'.$invoice->ORDL_LNO.'</td>
+	    	</tr>
+	    	<tr>
 	    		<td>Pembeli</td>
 	    		<td>:</td>
 	    		<td>'.stripslashes($row->CUST_NAME).'</td>
@@ -102,65 +107,47 @@
 	    		<td>'.$row->CUST_PHONE.'</td>
 	    	</tr>
 	    </table>';
+	$html.='<p style="font-size: 10px">Rincian produk,</p>';
 	$html.= '<br><br><table border="1" cellpadding="5" bgcolor="#666666" style="font-size: 9px">
 	        <tr bgcolor="#ffffff">
 	            <th width="10%" align="center">#</th>
 	            <th width="30%" align="center">Nama Produk</th>
-	            <th width="10%" align="center">Ukuran</th>
-	            <th width="20%" align="center">Harga</th>
-	            <th width="10%" align="center">Jumlah</th>
-	            <th width="20%" align="center">Subtotal</th>
+	            <th width="20%" align="center">Jumlah</th>
 	        </tr>';
-	foreach ($quantity as $qty){
-		foreach ($detail as $field){
-			if($qty->PRJD_ID == $field->PRJD_ID){
-				$i++;
-				$html.='<tr bgcolor="#ffffff">
-		            <td align="center">'.$i.'</td>
-		            <td>'.$field->PRDUP_NAME.'</td>
-		            <td align="center">'.$qty->SIZE_NAME.'</td>
-		            <td align="right">'.number_format($qty->PRJDQ_PRICE,0,",",".").'</td>
-		            <td align="center">'.str_replace(".", ",", $qty->PRJDQ_QTY).'</td>
-		            <td align="right">'.number_format($qty->PRJDQ_PRICE * $qty->PRJDQ_QTY,0,",",".").'</td>
-		        </tr>';
-			}
-		}
+	foreach ($detail as $field){
+		$i++;
+		$html.='<tr bgcolor="#ffffff">
+            <td align="center">'.$i.'</td>
+            <td>'.$field->PRDUP_NAME.'</td>
+            <td align="center">'.str_replace(".", ",", $field->PRJD_QTY).'</td>
+        </tr>';
 	}
-    $html.='<tr bgcolor="#ffffff">
-    			<td style="font-weight: bold;" colspan="5" align="right">Total</td>
-				<td align="right">'.number_format($row->PRJ_SUBTOTAL,0,',','.').'</td>
-			</tr>
-			<tr bgcolor="#ffffff">
-				<td style="vertical-align: middle; font-weight: bold" colspan="5" align="right">Diskon</td>
-				<td align="right">'.number_format($row->PRJ_DISCOUNT,0,',','.').'</td>
-			</tr>
-			<tr bgcolor="#ffffff">
-				<td style="font-weight: bold;" colspan="5" align="right">Tambahan</td>
-				<td align="right">'.number_format($row->PRJ_ADDCOST,0,',','.').'</td>
-			</tr>
-			<tr bgcolor="#ffffff">
-				<td style="font-weight: bold;" colspan="5" align="right">Pajak</td>
-				<td align="right">'.number_format($row->PRJ_TAX,0,',','.').'</td>
-			</tr>
-			<tr bgcolor="#ffffff">
-				<td style="vertical-align: middle; font-weight: bold" colspan="5" align="right">Deposit</td>
-				<td align="right">'.number_format($row->PRJ_DEPOSIT,0,',','.').'</td>
-			</tr>
-			<tr bgcolor="#ffffff">
-				<td style="font-weight: bold;" colspan="5" align="right">Total</td>
-				<td align="right">'.number_format($row->PRJ_TOTAL,0,',','.').'</td>
-			</tr>
-			<tr bgcolor="#ffffff">
-				<td style="font-weight: bold;" colspan="5" align="right">Ongkos Kirim</td>
-				<td align="right">'.number_format($row->PRJ_SHIPCOST,0,',','.').'</td>
-			</tr>
-			<tr bgcolor="#ffffff">
-				<td style="font-weight: bold;" colspan="5" align="right">Grand Total</td>
-				<td style="font-weight: bold;" align="right">'.number_format($row->PRJ_GRAND_TOTAL,0,',','.').'
-				</td>
-			</tr>';
     $html.='</table>';
-    $html.='<p style="font-size: 10px">Terbilang: <em>'.terbilang($row->PRJ_GRAND_TOTAL).' Rupiah</em></p>';
+
+	$html.='<p style="font-size: 10px">Jumlah tagihan,</p>';
+	$html.= '<table border="1" cellpadding="5" bgcolor="#666666" style="font-size: 9px">
+        <tr bgcolor="#ffffff">
+            <th width="10%" align="center">#</th>
+            <th width="20%" align="center">Tangal Pembayaran</th>
+            <th width="35%" align="center">Catatan</th>
+            <th width="15%" align="center">Persentase</th>
+            <th width="20%" align="center">Jumlah</th>
+        </tr>';
+
+	
+	$PAYMENT_DATE = date('d-m-Y', strtotime($payment->PRJP_PAYMENT_DATE));
+	
+	if ($payment->PRJP_NOTES != null) {
+		$NOTES = $payment->PRJP_NOTES;
+	} else {$NOTES = "-";}
+	$html.='<tr bgcolor="#ffffff">
+        <td align="center">1</td>
+        <td align="center">'.$PAYMENT_DATE.'</td>
+        <td>'.$NOTES.'</td>
+        <td align="center">'.$payment->PRJP_PCNT.' %</td>
+        <td align="right">'.number_format($payment->PRJP_AMOUNT,0,",",".").'</td>
+    </tr></table>';
+    $html.='<p style="font-size: 10px">Terbilang: <em>'.terbilang($payment->PRJP_AMOUNT).' Rupiah</em></p>';
     if($letter->ORDL_NOTES != null){
     	$html.= '<table cellpadding="1" style="font-size: 10px">
 				<tr bgcolor="#ffffff">

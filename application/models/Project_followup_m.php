@@ -3,14 +3,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Project_followup_m extends CI_Model {
 	var $table = 'tb_project_detail'; //nama tabel dari database
-    var $column_search = array('PRJ_ID','CUST_NAME'); //field yang diizin untuk pencarian
+    var $column_search = array('tb_project_detail.PRJ_ID', 'tb_customer.CUST_NAME', 'tb_producer_product.PRDUP_NAME', 'tb_producer.PRDU_NAME'); //field yang diizin untuk pencarian
 
     public function __construct(){
         parent::__construct();
         $this->load->database();
     }
 
-    private function _get_datatables_query($STATUS_FILTER = null){
+    private function _get_datatables_query($STATUS_FILTER = null) {
         $this->db->select('tb_project_detail.*, tb_project.PRJ_STATUS, tb_project.PRJ_PAYMENT_METHOD, tb_project.PRJ_DATE, tb_customer.CUST_NAME, tb_producer_product.PRDUP_NAME, tb_producer.PRDU_NAME, tb_project_producer.PRJPR_ID');
         $this->db->from($this->table);
         $this->db->join('tb_project', 'tb_project.PRJ_ID=tb_project_detail.PRJ_ID', 'left');
@@ -29,10 +29,6 @@ class Project_followup_m extends CI_Model {
 			$this->db->group_end();
 		}
 
-		$this->db->group_by('tb_project_detail.PRJD_ID');
-        $this->db->order_by('tb_project.PRJ_DATE', 'DESC');
-        $this->db->order_by('tb_producer_product.PRDUP_NAME', 'ASC');
-
         $i = 0;
     
         foreach ($this->column_search as $item) { // loop column
@@ -48,9 +44,14 @@ class Project_followup_m extends CI_Model {
             }
             $i++;
         }
+
+        $this->db->group_by('tb_project_detail.PRJD_ID');
+        $this->db->order_by('tb_project.PRJ_DATE', 'DESC');
+        $this->db->order_by('tb_producer_product.PRDUP_NAME', 'ASC');
+        $this->db->order_by('tb_project_detail.PRJD_ID', 'DESC');
     }
 
-    function get_datatables($STATUS_FILTER = null){
+    function get_datatables($STATUS_FILTER = null) {
         $this->_get_datatables_query($STATUS_FILTER);
         if($_POST['length'] != -1)
         $this->db->limit($_POST['length'], $_POST['start']);
@@ -58,13 +59,13 @@ class Project_followup_m extends CI_Model {
         return $query->result();
     }
 
-    function count_filtered($STATUS_FILTER = null){
+    function count_filtered($STATUS_FILTER = null) {
         $this->_get_datatables_query($STATUS_FILTER);
         $query = $this->db->get();
         return $query->num_rows();
     }
 
-    public function count_all($STATUS_FILTER = null){
+    public function count_all($STATUS_FILTER = null) {
         $this->_get_datatables_query($STATUS_FILTER);
         return $this->db->count_all_results();
     }

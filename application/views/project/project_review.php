@@ -160,8 +160,8 @@
 								                	<?php foreach($review as $data): ?>
 									                	<tr>
 									                		<td <?php echo $this->uri->segment(1) != "assign_producer" ? "hidden" : "" ?> align="center" style="width: 10px;">
-									                			<a href="<?php echo site_url('assign_producer/del_review/'.$row->PRJ_ID.'/'.$detail->PRJD_ID.'/'.$data->PRJR_ID) ?>" class="DELETE-REVIEW" style="color: #dc3545; float: left;" onclick="return confirm('Delete Item?')" title="Delete"><i class="fa fa-trash"></i></a>
-									                			<a href="#" class="UBAH-REVIEW" id="UBAH-REVIEW<?php echo $data->PRJR_ID ?>" data-toggle="modal" data-target="#edit-review<?php echo $data->PRJR_ID ?>" style="color: #007bff; float: right;" title="Edit"><i class="fa fa-edit"></i></a>
+									                			<a href="<?php echo site_url('assign_producer/del_review/'.$row->PRJ_ID.'/'.$detail->PRJD_ID.'/'.$data->PRJR_ID) ?>" class="DELETE-REVIEW mb-1" style="color: #dc3545; float: left;" onclick="return confirm('Delete Item?')" title="Delete"><i class="fa fa-trash"></i></a>
+									                			<a href="#" class="UBAH-REVIEW mb-1" id="UBAH-REVIEW<?php echo $data->PRJR_ID ?>" data-toggle="modal" data-target="#edit-review<?php echo $data->PRJR_ID ?>" style="color: #007bff; float: right;" title="Edit"><i class="fa fa-edit"></i></a>
 									                		</td>
 									                		<td align="center" style="width: 10px;"><?php echo $i++ ?></td>
 									                		<td><?php echo $data->PRJC_NAME ?></td>

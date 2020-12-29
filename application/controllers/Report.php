@@ -18,6 +18,8 @@ class Report extends CI_Controller {
 		$this->load->model('incomebyproduct_m');
 		$this->load->model('incomebyvendor_m');
 		$this->load->model('profitloss_m');
+		$this->load->model('custdeposit_m');
+		$this->load->model('venddeposit_m');
 		$this->load->model('price_change_m');
 		$this->load->library('form_validation');
 	}
@@ -517,12 +519,12 @@ class Report extends CI_Controller {
 	}
 
 	public function profit_loss_json() {
-		$FROM   		  = $this->input->post('FROM', TRUE);
-		$TO 	 		  = $this->input->post('TO', TRUE);
-		$EXCLUDE_SHIPMENT = $this->input->post('EXCLUDE_SHIPMENT', TRUE);
-		$income  		  = $this->profitloss_m->get($FROM, $TO, $EXCLUDE_SHIPMENT)->result();
-		$no 			  = 1;
-		$body 			  = "";
+		$FROM   		  	 = $this->input->post('FROM', TRUE);
+		$TO 	 		  	 = $this->input->post('TO', TRUE);
+		$EXCLUDE_SHIPMENT 	 = $this->input->post('EXCLUDE_SHIPMENT', TRUE);
+		$income  		  	 = $this->profitloss_m->get($FROM, $TO, $EXCLUDE_SHIPMENT)->result();
+		$no 			  	 = 1;
+		$body 			  	 = "";
 		if(!$income){
 			$body .= "<tr>
 					<td align='center' colspan='6'>No data available in table</td>
@@ -530,34 +532,53 @@ class Report extends CI_Controller {
 			$footer = "";
 			$callback = array('list_body'=>$body,'list_footer'=>$footer);
 		} else {
-			foreach($income as $field){
-				$GRAND_TOTAL[] 		  = $field->GRAND_TOTAL;
-				$GRAND_TOTAL_VENDOR[] = $field->GRAND_TOTAL_VENDOR;
+			foreach($income as $field) {
+				$cust_deposit  	  	  = $this->profitloss_m->get_customer_deposit($field->ORDER_ID, $EXCLUDE_SHIPMENT)->row();
+				$vend_deposit  	  	  = $this->profitloss_m->get_vendor_deposit($field->ORDER_ID, $EXCLUDE_SHIPMENT)->row();
+				$CD   				  = $cust_deposit != null ? $cust_deposit->CUSTOMER_DEPOSIT : 0;
+				$VD   				  = $vend_deposit != null ? $vend_deposit->VENDOR_DEPOSIT : 0;
+				$GTC 				  = $field->GRAND_TOTAL - $CD;
+				$GTV 				  = $field->GRAND_TOTAL_VENDOR - $VD;
+				$GRAND_TOTAL[] 		  = $GTC;
+				$GRAND_TOTAL_VENDOR[] = $GTV;
 				$body .= "<tr>
 						<td align='center'>".$no++."</td>
 						<td>".date('d-m-Y / H:i:s', strtotime($field->ORDER_DATE))."</td>
 						<td align='center'>".$field->ORDER_ID."</td>
-						<td align='right'>".number_format($field->GRAND_TOTAL,0,',','.')."</td>
-						<td align='right'>".number_format($field->GRAND_TOTAL_VENDOR,0,',','.')."</td>
-						<td align='right'>".number_format($field->GRAND_TOTAL - $field->GRAND_TOTAL_VENDOR,0,',','.')."</td>
+						<td align='right'>".number_format($GTC,0,',','.')."</td>
+						<td align='right'>".number_format($GTV,0,',','.')."</td>
+						<td align='right'>".number_format($GTC - $GTV,0,',','.')."</td>
 					</tr>";
 			}
 			$TOTAL_GRAND_TOTAL 		  = array_sum($GRAND_TOTAL);
 			$TOTAL_GRAND_TOTAL_VENDOR = array_sum($GRAND_TOTAL_VENDOR);
-			$TOTAL_PROFIT_LOSS 		  = $TOTAL_GRAND_TOTAL - $TOTAL_GRAND_TOTAL_VENDOR;
+			$PROFIT_LOSS 			  = $TOTAL_GRAND_TOTAL - $TOTAL_GRAND_TOTAL_VENDOR;
 			$footer = "
 				<tr>
 					<td colspan='3' align='right' style='font-weight: bold;'>TOTAL</td>
 					<td align='right' style='color: green; font-weight:bold;'>".number_format($TOTAL_GRAND_TOTAL,0,',','.')."</td>
 					<td align='right' style='color: green; font-weight:bold;'>".number_format($TOTAL_GRAND_TOTAL_VENDOR,0,',','.')."</td>
-					<td align='right' style='color: blue; font-weight:bold;'>".number_format($TOTAL_PROFIT_LOSS,0,',','.')."</td>
+					<td align='right' style='color: blue; font-weight:bold;'>".number_format($PROFIT_LOSS,0,',','.')."</td>
 				</tr>
 				<tr>
-					<td colspan='6' align='right'><em>".$this->terbilang($TOTAL_PROFIT_LOSS)."</em></td>
+					<td colspan='6' align='right'><em>".$this->terbilang($PROFIT_LOSS)."</em></td>
 				</tr>";
 			$callback = array('list_body'=>$body,'list_footer'=>$footer);
 		}
 	    echo json_encode($callback);
+	}
+
+	public function outstanding_deposit(){
+	    $modul  = "Report";
+		$access = $this->access_m->isAccess($this->session->GRP_SESSION, $modul)->row();
+		if ((!$access) && ($this->session->GRP_SESSION !=3)) {
+			echo "<script>alert('Anda tidak punya akses ke $modul.')</script>";
+			echo "<script>window.location='".site_url('dashboard')."'</script>";
+		} else {
+			$data['cust_deposit'] = $this->custdeposit_m->get_all_deposit_open()->row();
+			$data['vend_deposit'] = $this->venddeposit_m->get_all_deposit_open()->row();
+			$this->template->load('template', 'report/outstanding_deposit', $data);
+		}
 	}
 
 	public function price_change(){

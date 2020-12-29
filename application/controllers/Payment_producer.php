@@ -59,7 +59,7 @@ class Payment_producer extends CI_Controller {
 			$row[] = stripslashes($field->PRDU_NAME);
 			$row[] = "<div align='center'>".date('d-m-Y / H:i:s', strtotime($field->PRJ_DATE))."</div>";
 			$row[] = '<div style="vertical-align: middle; text-align: center;">
-				<a href="'.$link.'" class="btn btn-sm btn-primary" style="color: #ffffff;" title="detail"><i class="fas fa-search-plus"></i></a></div>';
+				<a href="'.$link.'" class="btn btn-sm btn-primary mb-1" style="color: #ffffff;" title="detail"><i class="fas fa-search-plus"></i></a></div>';
 			$data[] = $row;
 		}
 

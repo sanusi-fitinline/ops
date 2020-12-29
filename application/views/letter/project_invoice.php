@@ -60,9 +60,9 @@
 	    	<a href="<?php echo site_url('dashboard') ?>">Dashboard</a>
 	  	</li>
 	  	<li class="breadcrumb-item">
-	    	<a href="<?php echo site_url('project') ?>">Project</a>
+	    	<a href="<?php echo site_url('prospect') ?>">Prospect</a>
 	  	</li>
-	  	<li class="breadcrumb-item active">Print Quotation</li>
+	  	<li class="breadcrumb-item active">Print Invoice</li>
 	</ol>
     <!-- DataTables Example -->
     <div class="row">
@@ -70,17 +70,17 @@
 		    <div class="card mb-3">
 		    	<div class="card-header">
 		        	<i class="fas fa-print"></i>
-		        	Quotation
+		        	Invoice
 		        </div>
 		      	<div class="card-body">
 		      		<div class="row">
 						<div class="col-md-12">
-							<form action="<?php echo site_url('letter/add/'.$this->uri->segment(3))?>" method="POST" enctype="multipart/form-data">
+							<form action="<?php echo site_url('letter/add/'.$this->uri->segment(3).'/'.$this->uri->segment(4))?>" method="POST" enctype="multipart/form-data">
 								<div class="row">
 									<div class="col-md-3">
 										<div class="form-group">
 											<input type="hidden" name="ORDL_TYPE" value="2">
-											<input type="hidden" name="ORDL_DOC" value="3">
+											<input type="hidden" name="ORDL_DOC" value="4">
 											<input type="hidden" name="ORDL_NO" value="<?php echo $no_urut ?>">
 											<input type="hidden" name="ORDL_LNO" value="<?php echo $format_nomor ?>">
 											<label>Date</label>
@@ -103,7 +103,7 @@
 												} else {$tax = "tanpa pajak";}
 											?>
 											<label>Note</label>
-											<textarea class="form-control" cols="100%" rows="7" name="ORDL_NOTES">1. Proses order max 2 hari setelah pembayaran dilakukan.&#13;&#10;2. Info Pengiriman : menggunakan kurir <?php echo $project->COURIER_NAME." ".$project->PRJ_SERVICE_TYPE." estimasi ".$project->PRJ_ETD ?>&#13;&#10;3. Transaksi <?php echo $tax ?>. Dibayar secara <?php echo $method ?>, dapat ditransfer melalui Bank BCA: 8020169363 atau Bank Mandiri: 1240004177276 atas nama Istofani Api Diany.</textarea>
+											<textarea class="form-control" cols="100%" rows="7" name="ORDL_NOTES">1. Durasi pengerjaan selama <?php echo $project->PRJ_DURATION_EST ?> hari kerja&#13;&#10;2. Pengiriman dilakukan setelah pelunasan dan produksi selesai, menggunakan kurir <?php echo $project->COURIER_NAME." ".$project->PRJ_SERVICE_TYPE." estimasi ".$project->PRJ_ETD ?>&#13;&#10;3. Transaksi <?php echo $tax ?>. Pembayaran dapat ditransfer melalui Bank BCA: 8020169363 atau Bank Mandiri: 1240004177276 atau Bank BRI: 301801003010501 atas nama Istofani Api Diany.</textarea>
 										</div>
 										<div align="center">
 											<button type="submit" class="btn btn-info"><i class="fa fa-print"></i> Print</button>

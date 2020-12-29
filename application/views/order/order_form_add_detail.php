@@ -80,11 +80,9 @@
 											</div>
 										</div>
 										<div class="form-group" align="center">
-											<input class="btn btn-info" name="new" type="submit" value="Save &amp; New">
-											<button class="btn btn-primary" name="simpan" type="submit"><i class="fa fa-save"></i> Save</button>
-										</div>
-										<div class="form-group" align="center">
-											<a href="<?php echo site_url('order/cancel_order/'.$this->uri->segment(3)) ?>" class="btn btn-danger" name="batal"><i class="fa fa-times"></i> Cancel</a>
+											<input class="btn btn-info mb-1" name="new" type="submit" value="Save &amp; New">
+											<button class="btn btn-primary mb-1" name="simpan" type="submit"><i class="fa fa-save"></i> Save</button>
+											<a href="<?php echo site_url('order/cancel_order/'.$this->uri->segment(3)) ?>" class="btn btn-danger mb-1" name="batal"><i class="fa fa-times"></i> Cancel</a>
 										</div>
 									</div>
 								</div>

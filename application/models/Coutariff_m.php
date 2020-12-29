@@ -11,7 +11,7 @@ class Coutariff_m extends CI_Model {
         $this->load->database();
     }
 
-    private function _get_datatables_query() {
+    private function _get_datatables_query($COURIER_ID) {
         $this->db->select('tb_courier_tariff.*, tb_courier.COURIER_NAME, OCNTR.CNTR_NAME AS O_CNTR_NAME, OSTATE.STATE_NAME AS O_STATE_NAME, OCITY.CITY_NAME AS O_CITY_NAME, OSUBD.SUBD_NAME AS O_SUBD_NAME, DCNTR.CNTR_NAME AS D_CNTR_NAME, DSTATE.STATE_NAME AS D_STATE_NAME, DCITY.CITY_NAME AS D_CITY_NAME, DSUBD.SUBD_NAME AS D_SUBD_NAME');
 		$this->db->from($this->table);    
 		$this->db->join('tb_courier', 'tb_courier_tariff.COURIER_ID=tb_courier.COURIER_ID', 'left');
@@ -23,6 +23,7 @@ class Coutariff_m extends CI_Model {
 		$this->db->join('tb_state AS DSTATE', 'DSTATE.STATE_ID=tb_courier_tariff.D_STATE_ID', 'left');
 		$this->db->join('tb_city AS DCITY', 'DCITY.CITY_ID=tb_courier_tariff.D_CITY_ID', 'left');
 		$this->db->join('tb_subdistrict AS DSUBD', 'DSUBD.SUBD_ID=tb_courier_tariff.D_SUBD_ID', 'left');
+		$this->db->where('tb_courier_tariff.COURIER_ID', $COURIER_ID);
 
         $i = 0;
     
@@ -47,8 +48,7 @@ class Coutariff_m extends CI_Model {
     }
 
     function get_datatables($COURIER_ID) {
-        $this->_get_datatables_query();
-        $this->db->where('tb_courier_tariff.COURIER_ID', $COURIER_ID);
+        $this->_get_datatables_query($COURIER_ID);
         if($_POST['length'] != -1)
         $this->db->limit($_POST['length'], $_POST['start']);
         $query = $this->db->get();
@@ -56,15 +56,13 @@ class Coutariff_m extends CI_Model {
     }
 
     function count_filtered($COURIER_ID) {
-        $this->_get_datatables_query();
-        $this->db->where('tb_courier_tariff.COURIER_ID', $COURIER_ID);
+        $this->_get_datatables_query($COURIER_ID);
         $query = $this->db->get();
         return $query->num_rows();
     }
 
     public function count_all($COURIER_ID) {
-        $this->db->from($this->table);
-        $this->db->where('tb_courier_tariff.COURIER_ID', $COURIER_ID);
+        $this->_get_datatables_query($COURIER_ID);
         return $this->db->count_all_results();
     }
 	
@@ -129,7 +127,7 @@ class Coutariff_m extends CI_Model {
 		return $query;	
 	}
 
-	public function insertTariff(){
+	public function insertTariff() {
 		$dataInsert = array(
 			'O_CNTR_ID'			=> $this->input->post('O_CNTR_ID', TRUE),
 			'O_STATE_ID'		=> $this->input->post('O_STATE_ID', TRUE),
@@ -151,7 +149,7 @@ class Coutariff_m extends CI_Model {
 		$this->db->insert('tb_courier_tariff', $this->db->escape_str($dataInsert));
 	}
 
-	public function updateTariff($COUTAR_ID){
+	public function updateTariff($COUTAR_ID) {
 		$dataUpdate = array(
 			'O_CNTR_ID'			=> $this->input->post('O_CNTR_ID', TRUE),
 			'O_STATE_ID'		=> $this->input->post('O_STATE_ID', TRUE),
@@ -172,7 +170,7 @@ class Coutariff_m extends CI_Model {
 		$this->db->where('COUTAR_ID', $COUTAR_ID)->update('tb_courier_tariff', $this->db->escape_str($dataUpdate));
 	}
 
-	public function deleteTariff($COUTAR_ID){
+	public function deleteTariff($COUTAR_ID) {
 		$this->db->where('COUTAR_ID', $COUTAR_ID);
 		$this->db->delete('tb_courier_tariff');
 	}

@@ -136,11 +136,11 @@ class Cs extends CI_Controller {
 				$FOLLOW_UP = "hidden";
 			} else {$FOLLOW_UP = "";}
 
-			$row[] = '<form action="'.$url.'cs/del_sampling" method="post"><div style="vertical-align: middle; text-align: center;"><a href="'.$url.'cs/edit_sampling/'.$field->LSAM_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
+			$row[] = '<form action="'.$url.'cs/del_sampling" method="post"><div style="vertical-align: middle; text-align: center;"><a href="'.$url.'cs/edit_sampling/'.$field->LSAM_ID.'" class="btn btn-primary btn-sm mb-1"><i class="fa fa-pen"></i></a>
 				<input type="hidden" name="LSAM_ID" value="'.$field->LSAM_ID.'">
 				<input type="hidden" id="CLOG_ID" name="CLOG_ID" value="'.$field->CLOG_ID.'">
-				<button '.$DELETE.' onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
-				<a '.$FOLLOW_UP.' href="'.$url.'cs/sampling_followup/'.$field->CLOG_ID.'" class="btn btn-warning btn-sm" title="Follow Up"><i class="fa fa-share"></i></a></div></form>';
+				<button '.$DELETE.' onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm mb-1"><i class="fa fa-trash"></i></button>
+				<a '.$FOLLOW_UP.' href="'.$url.'cs/sampling_followup/'.$field->CLOG_ID.'" class="btn btn-warning btn-sm mb-1" title="Follow Up"><i class="fa fa-share"></i></a></div></form>';
 			$data[] = $row;
 		}
 
@@ -260,6 +260,10 @@ class Cs extends CI_Controller {
 		    		$dataCost = $this->rajaongkir->cost($origin->RO_CITY_ID, $cust->RO_CITY_ID, 1000, strtolower($key->COURIER_NAME), 'city');
 		    	}
 				$detailCost = json_decode($dataCost, true);
+				if ( ($detailCost['rajaongkir']['results'][0]['costs']) == null) {
+					$dataCost = $this->rajaongkir->cost($origin->RO_CITY_ID, $cust->CITY_ID, $WEIGHT, strtolower($key->COURIER_NAME), 'city');
+					$detailCost = json_decode($dataCost, true);
+				}
 				$status = $detailCost['rajaongkir']['status']['code'];
 				if ($status == 200) {
 					for ($i=0; $i < count($detailCost['rajaongkir']['results']); $i++) {
@@ -648,11 +652,11 @@ class Cs extends CI_Controller {
 				$FOLLOW_UP = "hidden";
 			} else {$FOLLOW_UP = "";}
 
-			$row[] = '<form action="'.$url.'cs/del_stock" method="post"><div style="vertical-align: middle; text-align: center;"><a href="'.$url.'cs/edit_check/'.$field->LSTOCK_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
+			$row[] = '<form action="'.$url.'cs/del_stock" method="post"><div style="vertical-align: middle; text-align: center;"><a href="'.$url.'cs/edit_check/'.$field->LSTOCK_ID.'" class="btn btn-primary btn-sm mb-1"><i class="fa fa-pen"></i></a>
 				<input type="hidden" name="LSTOCK_ID" value="'.$field->LSTOCK_ID.'">
 				<input type="hidden" name="CLOG_ID" value="'.$field->CLOG_ID.'">
-				<button '.$DELETE.' onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
-				<a '.$FOLLOW_UP.' href="'.$url.'cs/check_stock_followup/'.$field->CLOG_ID.'" class="btn btn-warning btn-sm" title="Follow Up"><i class="fa fa-share"></i></a></div></form>';
+				<button '.$DELETE.' onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm mb-1"><i class="fa fa-trash"></i></button>
+				<a '.$FOLLOW_UP.' href="'.$url.'cs/check_stock_followup/'.$field->CLOG_ID.'" class="btn btn-warning btn-sm mb-1" title="Follow Up"><i class="fa fa-share"></i></a></div></form>';
 			$data[] = $row;
 		}
 

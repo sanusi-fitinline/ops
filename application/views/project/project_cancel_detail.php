@@ -184,9 +184,11 @@
 						            		<thead style="font-size: 14px;">
 							                	<tr>
 							                    	<th style="vertical-align: middle; text-align: center; width: 10px;">#</th>
-							                    	<th style="vertical-align: middle; text-align: center;width: 100px;">PAYMENT DATE</th>
+							                    	<th style="vertical-align: middle; text-align: center;width: 50px;">DATE</th>
 													<th style="vertical-align: middle; text-align: center; width: 150px;">NOTES</th>
-							                    	<th style="vertical-align: middle; text-align: center;width: 100px;">BANK</th>
+							                    	<th style="vertical-align: middle; text-align: center;width: 50px;">PAYMENT DATE</th>
+							                    	<th style="vertical-align: middle; text-align: center;width: 50px;">BANK</th>
+													<th style="vertical-align: middle; text-align: center;width:50px;">PERCENTAGE</th>
 													<th style="vertical-align: middle; text-align: center;width: 100px;">AMOUNT</th>
 							                  	</tr>
 							                </thead>
@@ -199,27 +201,54 @@
 								                	<?php foreach($payment as $key => $data): ?>
 									                	<tr>
 									                		<td align="center" style="width: 10px;"><?php echo $p++ ?></td>
-									                		<td><?php echo date('d-m-Y', strtotime($data['PRJP_PAYMENT_DATE'])) ?></td>
-									                		<td><?php echo $data['PRJP_NOTES'] != null ? $data['PRJP_NOTES'] : "-" ?></td>
-									                		<td><?php echo $data['BANK_ID'] != null ? $data['BANK_NAME'] : "-" ?></td>
+									                		<td align="center"><?php echo date('d-m-Y', strtotime($data['PRJP_DATE'])) ?></td>
+									                		<td><?php echo $data['PRJP_NOTES'] != null ? $data['PRJP_NOTES'] : "<div align='center'>-</div>" ?></td>
+									                		<td align="center"><?php echo $data['PRJP_PAYMENT_DATE'] != "0000-00-00" ? date('d-m-Y', strtotime($data['PRJP_PAYMENT_DATE'])) : "-" ?></td>
+									                		<td align="center"><?php echo $data['BANK_ID'] != null ? $data['BANK_NAME'] : "-" ?></td>
+									                		<td align="center"><?php echo $data['PRJP_PERCENTAGE']?> %</td>
 									                		<td align="right"><?php echo $data['PRJP_AMOUNT'] != null ? number_format($data['PRJP_AMOUNT'],0,',','.') : "-"?></td>
 									                	</tr>
-									                	<?php $T_AMOUNT[] = $data['PRJP_AMOUNT'] ?>
+									                	<?php
+									                		$PERCENTAGE[] = $data['PRJP_PERCENTAGE'];
+									                		$AMOUNT[] = $data['PRJP_AMOUNT'];
+									                		if($data['BANK_ID']!=null) {
+									                			$PAID[] = $data['PRJP_AMOUNT'];
+									                		} else {
+									                			$PAID[] = 0;
+									                		}
+									                	?>
 										            <?php endforeach ?>
 										        </tbody>
 										        <tfoot style="font-size: 14px;">
 										        	<?php 
-										        		$TOTAL_AMOUNT = array_sum($T_AMOUNT);
+										        		$TOTAL_PERCENTAGE = array_sum($PERCENTAGE);
+										        		$TOTAL_AMOUNT = array_sum($AMOUNT);
+										        		$GET_PAID = array_sum($PAID);
+										        		$REMAINING = $row->PRJ_GRAND_TOTAL - $GET_PAID;
+									        			if($REMAINING != 0) {
+										        			$FOOT_NOTE = "<span style='color: red; font-weight: bold;'>".number_format($REMAINING,0,',','.')."</span>";
+										        		} else {
+									        				$FOOT_NOTE = "<span style='color: green; font-weight: bold;'>PAID OFF</span>";
+									        			}
 										        	?>
+										        	<input type="hidden" id="PERCENTAGE" value="<?php echo $TOTAL_PERCENTAGE ?>">
 								                	<tr>
-								                		<td align="right" colspan="4"><b>TOTAL</b></td>
-								                		<td align="right"><?php echo $TOTAL_AMOUNT != null ? number_format($TOTAL_AMOUNT,0,',','.') : "-"; ?></td>
+								                		<td align="right" colspan="6"><b>TOTAL</b></td>
+								                		<td align="right"><?php echo number_format($TOTAL_AMOUNT,0,',','.'); ?></td>
+								                	</tr>
+								                	<tr>
+								                		<td align="right" colspan="6"><b>GET PAID</b></td>
+								                		<td align="right"><?php echo number_format($GET_PAID,0,',','.'); ?></td>
+								                	</tr>
+								                	<tr>
+								                		<td align="right" colspan="6"><b>REMAINING</b></td>
+								                		<td align="right"><?php echo $FOOT_NOTE; ?></td>
 								                	</tr>
 								                </tfoot>
 										    <?php else: ?>
 										        <tbody style="font-size: 14px;">
 									            	<tr>
-										                <td align="center" colspan="5" style="vertical-align: middle;">No data available in table</td>
+										                <td align="center" colspan="7" style="vertical-align: middle;">No data available in table</td>
 										            </tr>
 							                	</tbody>
 									        <?php endif ?>
@@ -264,7 +293,7 @@
 								                			<?php echo $data->PRJD_NOTES != null ? $data->PRJD_NOTES : "<div align='center'>-</div>" ?>
 								                		</td>
 								                		<td align="center" style="vertical-align: middle;">
-								                			<a style="text-decoration: none;" href="<?php echo $this->uri->segment(1) != "project_followup" ? site_url('project/cancel_detail_view/'.$row->PRJ_ID.'/'.$data->PRJD_ID) : site_url('project_followup/cancel_detail_view/'.$row->PRJ_ID.'/'.$data->PRJD_ID) ?>"><i class="fas fa-eye"></i> View</a>
+								                			<a class="btn btn-sm btn-primary" href="<?php echo $this->uri->segment(1) != "project_followup" ? site_url('project/cancel_detail_view/'.$row->PRJ_ID.'/'.$data->PRJD_ID) : site_url('project_followup/cancel_detail_view/'.$row->PRJ_ID.'/'.$data->PRJD_ID) ?>" title="View"><i class="fas fa-eye"></i></a>
 								                		</td>
 								                	</tr>
 									            <?php endforeach ?>
@@ -352,7 +381,7 @@
 								                					$TOTAL_DEPOSIT = $row->PRJ_DEPOSIT;
 								                				}
 								                			} else {
-								                				$TOTAL_DEPOSIT = $TOTAL_AMOUNT;
+								                				$TOTAL_DEPOSIT = $GET_PAID;
 								                			}
 								                		?>
 								                		<td align="right" style="font-weight: bold;" colspan="6">TOTAL DEPOSIT</td>

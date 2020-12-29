@@ -38,8 +38,7 @@ class Vendor_m extends CI_Model {
         }
     }
 
-    function get_datatables()
-    {
+    function get_datatables() {
         $this->_get_datatables_query();
         if($_POST['length'] != -1)
         $this->db->limit($_POST['length'], $_POST['start']);
@@ -47,16 +46,14 @@ class Vendor_m extends CI_Model {
         return $query->result();
     }
 
-    function count_filtered()
-    {
+    function count_filtered() {
         $this->_get_datatables_query();
         $query = $this->db->get();
         return $query->num_rows();
     }
 
-    public function count_all()
-    {
-        $this->db->from($this->table);
+    public function count_all() {
+        $this->_get_datatables_query();
         return $this->db->count_all_results();
     }
 	public function get($VEND_ID = null) {
@@ -82,7 +79,7 @@ class Vendor_m extends CI_Model {
 		return $query;
 	}
 
-	public function insert(){
+	public function insert() {
 		$ADDRESS 				= $this->input->post('VEND_ADDRESS', TRUE);
 		$VEND_COURIER_ADD_UNIT 	= $this->input->post('VEND_COURIER_ADD_UNIT', TRUE);
 		$VEND_COURIER_ADD_VOL 	= $this->input->post('VEND_COURIER_ADD_VOL', TRUE);
@@ -115,7 +112,7 @@ class Vendor_m extends CI_Model {
 		$this->db->insert('tb_vendor', $this->db->escape_str($params));
 	}
 
-	public function update($VEND_ID){
+	public function update($VEND_ID) {
 		$ADDRESS 				= $this->input->post('VEND_ADDRESS', TRUE);
 		$VEND_COURIER_ADD_UNIT 	= $this->input->post('VEND_COURIER_ADD_UNIT', TRUE);
 		$VEND_COURIER_ADD_VOL 	= $this->input->post('VEND_COURIER_ADD_VOL', TRUE);
@@ -148,7 +145,7 @@ class Vendor_m extends CI_Model {
 		$this->db->where('VEND_ID', $VEND_ID)->update('tb_vendor', $this->db->escape_str($params));
 	}
 
-	public function delete($VEND_ID){
+	public function delete($VEND_ID) {
 		$this->db->where('VEND_ID', $VEND_ID);
 		$this->db->delete('tb_vendor');
 		$this->db->where('VEND_ID', $VEND_ID);

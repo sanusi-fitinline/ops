@@ -28,7 +28,7 @@ class Assign_producer extends CI_Controller {
 			echo "<script>alert('Anda tidak punya akses ke $modul.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
 		} else {
-			$this->template->load('template', 'project/assign-producer/assign_producer_data');
+			$this->template->load('template', 'order-custom/assign-producer/assign_producer_data');
 		}
 	}
 
@@ -49,11 +49,6 @@ class Assign_producer extends CI_Controller {
 				$STATUS = "<div class='btn btn-default btn-sm' style='font-size: 11px; color: #fff; background-color:#6c757d; border-color:#6c757d; border-radius: 6px; padding: 2px 5px 5px 3px; width:80px;'><i class='fa fa-minus-circle'></i><span><b> Not Assigned</b></span></div>";
 			}
 
-			// tombol review muncul ketika project status delivered
-			if($field->PRJ_STATUS != 8) {
-				$REVIEW = "class='btn btn-sm btn-secondary' style='opacity: 0.5; pointer-events: none;'";
-			} else {$REVIEW = "class='btn btn-sm btn-warning'";}
-
 			$row   = array();
 			$row[] = "<div align='center'>$STATUS</div>";
 			$row[] = "<div align='center'>$field->PRJ_ID</div>";
@@ -62,8 +57,7 @@ class Assign_producer extends CI_Controller {
 			$row[] = stripslashes($field->PRDUP_NAME);
 			$row[] = stripslashes($PRDU_NAME);
 			$row[] = '<div style="vertical-align: middle; text-align: center;">
-					<a href="'.$url.'assign_producer/detail/'.$field->PRJ_ID.'/'.$field->PRJD_ID.'" class="btn btn-sm btn-primary" title="Detail"><i class="fa fa-search-plus"></i></a>
-					<a '.$REVIEW.' href="'.$url.'assign_producer/review/'.$field->PRJ_ID.'/'.$field->PRJD_ID.'" title="Review"><i class="fa fa-star"></i></a>
+					<a href="'.$url.'assign_producer/detail/'.$field->PRJ_ID.'/'.$field->PRJD_ID.'" class="btn btn-sm btn-primary mb-1" title="Detail"><i class="fa fa-search-plus"></i></a>
 					</div>';
 			$data[] = $row;
 		}
@@ -87,7 +81,7 @@ class Assign_producer extends CI_Controller {
 			$data['quantity'] 	= $this->project_quantity_m->get($PRJD_ID)->result();
 			$data['offer'] 		= $this->project_producer_m->get(null, $PRJD_ID)->result();
 			$data['offer_det'] 	= $this->project_producer_m->get_detail(null, $PRJD_ID)->result();
-			$this->template->load('template', 'project/assign-producer/assign_producer_detail', $data);
+			$this->template->load('template', 'order-custom/assign-producer/assign_producer_detail', $data);
 		} else {
 			echo "<script>alert('Data tidak ditemukan.')</script>";
 			echo "<script>window.location='".site_url('assign_producer')."'</script>";
@@ -119,59 +113,6 @@ class Assign_producer extends CI_Controller {
 		} else {
 			echo "<script>alert('Tidak ada perubahan data.')</script>";
 			echo "<script>window.location='".site_url('assign_producer/detail/'.$PRJ_ID.'/'.$PRJD_ID)."'</script>";
-		}
-	}
-
-	public function review($PRJ_ID, $PRJD_ID) {
-		$query = $this->project_m->get($PRJ_ID);
-		if ($query->num_rows() > 0) {
-			$data['row'] 		= $query->row();
-			$data['detail'] 	= $this->project_detail_m->get(null, $PRJD_ID)->row();
-			$data['progress'] 	= $this->project_progress_m->get($PRJD_ID)->result();
-			$data['review'] 	= $this->project_review_m->get(null, $PRJD_ID)->result();
-			$data['criteria'] 	= $this->project_criteria_m->get()->result();
-			$this->template->load('template', 'project/project_review', $data);
-		} else {
-			echo "<script>alert('Data tidak ditemukan.')</script>";
-			echo "<script>window.location='".site_url('assign_producer')."'</script>";
-		}
-	}
-
-	public function add_review() {
-		$PRJ_ID  	 = $this->input->post('PRJ_ID', TRUE);
-		$PRJD_ID 	 = $this->input->post('PRJD_ID', TRUE);
-		$data['row'] =	$this->project_review_m->insert();
-		if($data) {
-			echo "<script>alert('Data berhasil ditambah.')</script>";
-            echo "<script>window.location='".site_url('assign_producer/review/'.$PRJ_ID.'/'.$PRJD_ID)."'</script>";
-        } else {
-            echo "<script>alert('Data gagal ditambah.')</script>";
-            echo "<script>window.location='".site_url('assign_producer/review/'.$PRJ_ID.'/'.$PRJD_ID)."'</script>";
-        }	
-	}
-
-	public function edit_review() {
-		$PRJ_ID  = $this->input->post('PRJ_ID', TRUE);
-		$PRJD_ID = $this->input->post('PRJD_ID', TRUE);
-		$PRJR_ID = $this->input->post('PRJR_ID', TRUE);
-		$this->project_review_m->update($PRJR_ID);
-		if($this->db->affected_rows() > 0) {
-			echo "<script>alert('Data berhasil diubah.')</script>";
-			echo "<script>window.location='".site_url('assign_producer/review/'.$PRJ_ID.'/'.$PRJD_ID)."'</script>";
-		} else {
-			echo "<script>alert('Tidak ada perubahan data.')</script>";
-			echo "<script>window.location='".site_url('assign_producer/review/'.$PRJ_ID.'/'.$PRJD_ID)."'</script>";
-		}
-	}
-
-	public function del_review($PRJ_ID, $PRJD_ID, $PRJR_ID) {
-		$this->project_review_m->delete($PRJR_ID);
-		if($this->db->affected_rows() > 0) {
-			echo "<script>alert('Data berhasil dihapus.')</script>";
-			echo "<script>window.location='".site_url('assign_producer/review/'.$PRJ_ID.'/'.$PRJD_ID)."'</script>";
-		} else {
-			echo "<script>alert('Data gagal dihapus.')</script>";
-			echo "<script>window.location='".site_url('assign_producer/review/'.$PRJ_ID.'/'.$PRJD_ID)."'</script>";
 		}
 	}
 }

@@ -7,14 +7,12 @@ class Custdeposit_m extends CI_Model {
     var $column_search = array('CUSTD_DATE','ORDER_ID', 'CUST_NAME'); //field yang diizin untuk pencarian 
     var $order = array('CUSTD_ID' => 'DESC'); // default order 
 
-    public function __construct()
-    {
+    public function __construct() {
         parent::__construct();
         $this->load->database();
     }
 
-    private function _get_datatables_query($STATUS_FILTER = null, $CUSTD_DATE = null, $ORDER_ID = null, $CUST_NAME = null)
-    {
+    private function _get_datatables_query($STATUS_FILTER = null, $CUSTD_DATE = null, $ORDER_ID = null, $CUST_NAME = null) {
         $this->load->model('access_m');
         $modul = "Customer Deposit";
         $view = 1;
@@ -28,7 +26,7 @@ class Custdeposit_m extends CI_Model {
             }
         }
 
-        if($STATUS_FILTER != null){
+        if($STATUS_FILTER != null) {
             if($STATUS_FILTER == 1) { // filter refund
                 $this->db->where('tb_customer_deposit.CUSTD_DEPOSIT_STATUS', 1);
             } elseif($STATUS_FILTER == 2) { // filter used
@@ -38,32 +36,27 @@ class Custdeposit_m extends CI_Model {
             }
         }
 
-        if($CUSTD_DATE != null){
+        if($CUSTD_DATE != null) {
 			$this->db->like('tb_customer_deposit.CUSTD_DATE', date('Y-m-d', strtotime($CUSTD_DATE)));
 		}
 
-		if($ORDER_ID != null){
+		if($ORDER_ID != null) {
 			$this->db->where('tb_customer_deposit.ORDER_ID', $ORDER_ID);
 		}
 
-		if($CUST_NAME != null){
+		if($CUST_NAME != null) {
 			$this->db->like('tb_customer.CUST_NAME', $CUST_NAME);
 		}
 
         $i = 0;
     
-        foreach ($this->column_search as $item) // loop column 
-        {
-            if($_POST['search']['value']) // if datatable send POST for search
-            {
+        foreach ($this->column_search as $item) { // loop column 
+            if($_POST['search']['value']) { // if datatable send POST for search
                 
-                if($i===0) // first loop
-                {
+                if($i===0) { // first loop
                     $this->db->group_start(); // open bracket. query Where with OR clause better with bracket. because maybe can combine with other WHERE with AND.
                     $this->db->like($item, $_POST['search']['value']);
-                }
-                else
-                {
+                } else {
                     $this->db->or_like($item, $_POST['search']['value']);
                 }
 
@@ -73,15 +66,13 @@ class Custdeposit_m extends CI_Model {
             $i++;
         }
         
-        if(isset($this->order))
-        {
+        if(isset($this->order)) {
             $order = $this->order;
             $this->db->order_by(key($order), $order[key($order)]);
         }
     }
 
-    function get_datatables($STATUS_FILTER = null, $CUSTD_DATE = null, $ORDER_ID = null, $CUST_NAME = null)
-    {
+    function get_datatables($STATUS_FILTER = null, $CUSTD_DATE = null, $ORDER_ID = null, $CUST_NAME = null) {
         $this->_get_datatables_query($STATUS_FILTER, $CUSTD_DATE, $ORDER_ID, $CUST_NAME);
         if($_POST['length'] != -1)
         $this->db->limit($_POST['length'], $_POST['start']);
@@ -89,31 +80,29 @@ class Custdeposit_m extends CI_Model {
         return $query->result();
     }
 
-    function count_filtered($STATUS_FILTER = null, $CUSTD_DATE = null, $ORDER_ID = null, $CUST_NAME = null)
-    {
+    function count_filtered($STATUS_FILTER = null, $CUSTD_DATE = null, $ORDER_ID = null, $CUST_NAME = null) {
         $this->_get_datatables_query($STATUS_FILTER, $CUSTD_DATE, $ORDER_ID, $CUST_NAME);
         $query = $this->db->get();
         return $query->num_rows();
     }
 
-    public function count_all($STATUS_FILTER = null, $CUSTD_DATE = null, $ORDER_ID = null, $CUST_NAME = null)
-    {
+    public function count_all($STATUS_FILTER = null, $CUSTD_DATE = null, $ORDER_ID = null, $CUST_NAME = null) {
         $this->_get_datatables_query($STATUS_FILTER, $CUSTD_DATE, $ORDER_ID, $CUST_NAME);
         return $this->db->count_all_results();
     }
 
-    public function check_order_deposit($ORDER_ID){
+    public function check_order_deposit($ORDER_ID) {
         $this->db->where('ORDER_ID', $ORDER_ID);
         return $this->db->get('tb_customer_deposit');
     }
 
-    public function check_deposit($CUST_ID){
+    public function check_deposit($CUST_ID) {
         $this->db->where('CUST_ID', $CUST_ID);
         $this->db->where('CUSTD_DEPOSIT_STATUS', 0);
         return $this->db->get('tb_customer_deposit');
     }
 
-    public function get_deposit($CUST_ID){
+    public function get_deposit($CUST_ID) {
         $this->db->select('CUSTD_DEPOSIT');
         $this->db->from('tb_customer_deposit');
         $this->db->where('CUST_ID', $CUST_ID);
@@ -122,10 +111,18 @@ class Custdeposit_m extends CI_Model {
         return $query;
     }
 
-    public function get_all_deposit($CUST_ID){
+    public function get_all_deposit($CUST_ID) {
         $this->db->select('SUM(CUSTD_DEPOSIT) AS TOTAL_DEPOSIT');
         $this->db->from('tb_customer_deposit');
         $this->db->where('CUST_ID', $CUST_ID);
+        $this->db->where('CUSTD_DEPOSIT_STATUS', 0);
+        $query = $this->db->get();
+        return $query;
+    }
+
+    public function get_all_deposit_open() {
+        $this->db->select('SUM(CUSTD_DEPOSIT) AS TOTAL_DEPOSIT_OPEN');
+        $this->db->from('tb_customer_deposit');
         $this->db->where('CUSTD_DEPOSIT_STATUS', 0);
         $query = $this->db->get();
         return $query;

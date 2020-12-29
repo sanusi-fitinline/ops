@@ -13,22 +13,23 @@ class Letter extends CI_Controller {
 		$this->load->model('project_detail_m');
 		$this->load->model('project_quantity_m');
 		$this->load->model('project_payment_m');
+		$this->load->model('vendor_m');
         $this->load->library('pdf');
     }
     
-    public function add($ORDER_ID) {
+    public function add($ORDER_ID, $SUB_ID = null) {
     	$ORDL_TYPE = $this->input->post('ORDL_TYPE', TRUE);
     	$ORDL_DOC  = $this->input->post('ORDL_DOC', TRUE);
     	$check 	   = $this->orderletter_m->check($ORDER_ID, $ORDL_TYPE, $ORDL_DOC);
     	if ($check->num_rows() > 0) {
-    		$this->orderletter_m->update($ORDER_ID, $ORDL_DOC);
+    		$this->orderletter_m->update($ORDER_ID, $ORDL_DOC, $SUB_ID);
     	} else {
-    		$this->orderletter_m->insert($ORDER_ID);
+    		$this->orderletter_m->insert($ORDER_ID, $SUB_ID);
     	}
     }
 
     public function order_quotation($ORDER_ID) {
-    	$query = $this->orderletter_m->get_quotation($ORDER_ID);
+    	$query = $this->orderletter_m->get_quotation($ORDER_ID, 1);
     	if ($query->num_rows() > 0) {
 			$data['letter'] = $query->row();
 			$data['row'] 	= $this->order_m->get($ORDER_ID)->row();
@@ -41,7 +42,7 @@ class Letter extends CI_Controller {
     }
 
     public function order_invoice($ORDER_ID) {
-    	$query = $this->orderletter_m->get_invoice($ORDER_ID);
+    	$query = $this->orderletter_m->get_invoice($ORDER_ID, 1);
     	if ($query->num_rows() > 0) {
 			$data['letter'] = $query->row();
 			$data['row'] 	= $this->order_m->get($ORDER_ID)->row();
@@ -54,7 +55,7 @@ class Letter extends CI_Controller {
     }
     
     public function order_receipt($ORDER_ID) {
-    	$query = $this->orderletter_m->get_receipt($ORDER_ID);
+    	$query = $this->orderletter_m->get_receipt($ORDER_ID, 1);
     	if ($query->num_rows() > 0) {
 			$data['letter'] = $query->row();
 			$data['row'] 	= $this->order_m->get($ORDER_ID)->row();
@@ -66,8 +67,21 @@ class Letter extends CI_Controller {
 		}
     }
 
+    public function order_purchase($ORDER_ID, $VEND_ID) {
+    	$query = $this->orderletter_m->get_purchase($ORDER_ID, 3);
+    	if ($query->num_rows() > 0) {
+			$data['letter'] = $query->row();
+			$data['row'] 	= $this->vendor_m->get($VEND_ID)->row();
+			$data['detail'] = $this->orderdetail_m->get_detail_vendor($ORDER_ID, $VEND_ID)->result();
+			$this->load->view('letter/order_purchase_print', $data);
+		} else {
+			echo "<script>alert('Data tidak ditemukan.')</script>";
+			echo "<script>window.location='".site_url('order_support')."'</script>";
+		}
+    }
+
     public function sampling_invoice($ORDER_ID) {
-    	$query = $this->orderletter_m->get_invoice($ORDER_ID);
+    	$query = $this->orderletter_m->get_invoice($ORDER_ID, 2);
     	if ($query->num_rows() > 0) {
 			$data['letter'] = $query->row();
 			$data['row'] 	= $this->sampling_m->get($ORDER_ID)->row();
@@ -79,7 +93,7 @@ class Letter extends CI_Controller {
     }
 
     public function sampling_receipt($ORDER_ID) {
-    	$query = $this->orderletter_m->get_receipt($ORDER_ID);
+    	$query = $this->orderletter_m->get_receipt($ORDER_ID, 2);
     	if ($query->num_rows() > 0) {
 			$data['letter'] = $query->row();
 			$data['row'] 	= $this->sampling_m->get($ORDER_ID)->row();
@@ -91,45 +105,47 @@ class Letter extends CI_Controller {
     }
 
     public function project_quotation($PRJ_ID) {
-    	$query = $this->orderletter_m->get_quotation($PRJ_ID);
+    	$query = $this->orderletter_m->get_quotation($PRJ_ID, 4);
     	if ($query->num_rows() > 0) {
-			$data['letter'] 	= $query->row();
-			$data['row'] 		= $this->project_m->get($PRJ_ID)->row();
-			$data['detail'] 	= $this->project_detail_m->get($PRJ_ID, null)->result();
-			$data['quantity'] 	= $this->project_quantity_m->get()->result();
+			$data['letter'] 	 = $query->row();
+			$data['row'] 		 = $this->project_m->get($PRJ_ID)->row();
+			$data['detail'] 	 = $this->project_detail_m->get($PRJ_ID, null)->result();
+			$data['installment'] = $this->project_payment_m->get($PRJ_ID, null)->result();
 			$this->load->view('letter/project_quotation_print', $data);
 		} else {
 			echo "<script>alert('Data tidak ditemukan.')</script>";
-			echo "<script>window.location='".site_url('project')."'</script>";
+			echo "<script>window.location='".site_url('prospect')."'</script>";
 		}
     }
 
-    public function project_invoice($PRJ_ID) {
-    	$query = $this->orderletter_m->get_invoice($PRJ_ID);
+    public function project_invoice($PRJ_ID, $PRJP_ID) {
+    	$query = $this->orderletter_m->get_invoice($PRJ_ID, 4);
     	if ($query->num_rows() > 0) {
 			$data['letter'] 	= $query->row();
 			$data['row'] 		= $this->project_m->get($PRJ_ID)->row();
 			$data['detail'] 	= $this->project_detail_m->get($PRJ_ID, null)->result();
-			$data['quantity'] 	= $this->project_quantity_m->get()->result();
-			$data['payment'] 	= $this->project_payment_m->get($PRJ_ID, null)->result_array();
+			$data['payment'] 	= $this->project_payment_m->get($PRJ_ID, $PRJP_ID)->row();
+			// update invoice date
+			$this->project_payment_m->update_date($PRJP_ID);
 			$this->load->view('letter/project_invoice_print', $data);
 		} else {
 			echo "<script>alert('Data tidak ditemukan.')</script>";
-			echo "<script>window.location='".site_url('project')."'</script>";
+			echo "<script>window.location='".site_url('payment_customer')."'</script>";
 		}
     }
 
     public function project_receipt($PRJ_ID) {
-    	$query = $this->orderletter_m->get_receipt($PRJ_ID);
+    	$query = $this->orderletter_m->get_receipt($PRJ_ID, 4);
     	if ($query->num_rows() > 0) {
 			$data['letter'] 	= $query->row();
 			$data['row'] 		= $this->project_m->get($PRJ_ID)->row();
 			$data['detail'] 	= $this->project_detail_m->get($PRJ_ID, null)->result();
-			$data['quantity'] 	= $this->project_quantity_m->get()->result();
+			$data['payment'] 	= $this->project_payment_m->get($PRJ_ID, $PRJP_ID)->row();
+			$data['invoice'] 	= $this->orderletter_m->get_invoice($PRJ_ID, 4)->row();
 			$this->load->view('letter/project_receipt_print', $data);
 		} else {
 			echo "<script>alert('Data tidak ditemukan.')</script>";
-			echo "<script>window.location='".site_url('project')."'</script>";
+			echo "<script>window.location='".site_url('payment_customer')."'</script>";
 		}
     }
 }

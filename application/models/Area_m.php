@@ -80,19 +80,19 @@ class Area_m extends CI_Model {
 
 	public function insertCountry(){
 		$dataInsert = array(
-			'CNTR_NAME'			=> $this->input->post('CNTR_NAME', TRUE),
+			'CNTR_NAME' => $this->input->post('CNTR_NAME', TRUE),
 		);
 		$this->db->insert('tb_country', $this->db->escape_str($dataInsert));
 	}
 
-	public function updateCountry($CNTR_ID){
+	public function updateCountry($CNTR_ID) {
 		$dataUpdate = array(
-			'CNTR_NAME'			=> $this->input->post('CNTR_NAME', TRUE),
+			'CNTR_NAME' => $this->input->post('CNTR_NAME', TRUE),
 		);
 		$this->db->where('CNTR_ID', $CNTR_ID)->update('tb_country', $this->db->escape_str($dataUpdate));
 	}
 
-	public function deleteCountry($CNTR_ID){
+	public function deleteCountry($CNTR_ID) {
 		$this->db->where('CNTR_ID', $CNTR_ID);
 		$this->db->delete('tb_country');
 	}
@@ -109,7 +109,7 @@ class Area_m extends CI_Model {
 		return $query;
 	}
 
-	public function insertState(){
+	public function insertState() {
 		$dataInsert = array(
 			'CNTR_ID'			=> $this->input->post('CNTR_ID', TRUE),
 			'STATE_NAME'		=> $this->input->post('STATE_NAME', TRUE),
@@ -117,15 +117,15 @@ class Area_m extends CI_Model {
 		$this->db->insert('tb_state', $this->db->escape_str($dataInsert));
 	}
 
-	public function updateState($STATE_ID){
+	public function updateState($STATE_ID) {
 		$dataUpdate = array(
-			'CNTR_ID'			=> $this->input->post('CNTR_ID', TRUE),
-			'STATE_NAME'		=> $this->input->post('STATE_NAME', TRUE),
+			'CNTR_ID' 	 => $this->input->post('CNTR_ID', TRUE),
+			'STATE_NAME' => $this->input->post('STATE_NAME', TRUE),
 		);
 		$this->db->where('STATE_ID', $STATE_ID)->update('tb_state', $this->db->escape_str($dataUpdate));
 	}
 
-	public function deleteState($STATE_ID){
+	public function deleteState($STATE_ID) {
 		$this->db->where('STATE_ID', $STATE_ID);
 		$this->db->delete('tb_state');
 	}
@@ -143,7 +143,7 @@ class Area_m extends CI_Model {
 		return $query;
 	}
 
-	public function insertCity(){
+	public function insertCity() {
 		$dataInsert = array(
 			'CNTR_ID'		=> $this->input->post('CNTR_ID', TRUE),
 			'STATE_ID'		=> $this->input->post('STATE_ID', TRUE),
@@ -152,7 +152,7 @@ class Area_m extends CI_Model {
 		$this->db->insert('tb_city', $this->db->escape_str($dataInsert));
 	}
 
-	public function updateCity($CITY_ID){
+	public function updateCity($CITY_ID) {
 		$dataUpdate = array(
 			'CNTR_ID'		=> $this->input->post('CNTR_ID', TRUE),
 			'STATE_ID'		=> $this->input->post('STATE_ID', TRUE),
@@ -161,7 +161,7 @@ class Area_m extends CI_Model {
 		$this->db->where('CITY_ID', $CITY_ID)->update('tb_city', $this->db->escape_str($dataUpdate));
 	}
 
-	public function deleteCity($CITY_ID){
+	public function deleteCity($CITY_ID) {
 		$this->db->where('CITY_ID', $CITY_ID);
 		$this->db->delete('tb_city');
 	}
@@ -180,27 +180,27 @@ class Area_m extends CI_Model {
 		return $query;
 	}
 
-	public function insertSubd(){
+	public function insertSubd() {
 		$dataInsert = array(
-			'CNTR_ID'		=> $this->input->post('CNTR_ID', TRUE),
-			'STATE_ID'		=> $this->input->post('STATE_ID', TRUE),
-			'CITY_ID'		=> $this->input->post('CITY_ID', TRUE),
-			'SUBD_NAME'		=> $this->input->post('SUBD_NAME', TRUE),
+			'CNTR_ID'   => $this->input->post('CNTR_ID', TRUE),
+			'STATE_ID'  => $this->input->post('STATE_ID', TRUE),
+			'CITY_ID'   => $this->input->post('CITY_ID', TRUE),
+			'SUBD_NAME' => $this->input->post('SUBD_NAME', TRUE),
 		);
 		$this->db->insert('tb_subdistrict', $this->db->escape_str($dataInsert));
 	}
 
-	public function updateSubd($SUBD_ID){
+	public function updateSubd($SUBD_ID) {
 		$dataUpdate = array(
-			'CNTR_ID'		=> $this->input->post('CNTR_ID', TRUE),
-			'STATE_ID'		=> $this->input->post('STATE_ID', TRUE),
-			'CITY_ID'		=> $this->input->post('CITY_ID', TRUE),
-			'SUBD_NAME'		=> $this->input->post('SUBD_NAME', TRUE),
+			'CNTR_ID'	=> $this->input->post('CNTR_ID', TRUE),
+			'STATE_ID'	=> $this->input->post('STATE_ID', TRUE),
+			'CITY_ID'	=> $this->input->post('CITY_ID', TRUE),
+			'SUBD_NAME' => $this->input->post('SUBD_NAME', TRUE),
 		);
 		$this->db->where('SUBD_ID', $SUBD_ID)->update('tb_subdistrict', $this->db->escape_str($dataUpdate));
 	}
 
-	public function deleteSubd($SUBD_ID){
+	public function deleteSubd($SUBD_ID) {
 		$this->db->where('SUBD_ID', $SUBD_ID);
 		$this->db->delete('tb_subdistrict');
 	}

@@ -41,9 +41,11 @@ class Order extends CI_Controller {
 	}
 
 	public function orderjson() {
+		$FROM  			= $this->input->post('FROM', TRUE);
+		$TO  			= $this->input->post('TO', TRUE);
 		$STATUS_FILTER  = $this->input->post('STATUS_FILTER', TRUE);
 		$url 			= $this->config->base_url();
-		$list 			= $this->order_m->get_datatables($STATUS_FILTER);
+		$list 			= $this->order_m->get_datatables($FROM, $TO, $STATUS_FILTER);
 		$data 			= array();
 		$no 			= $_POST['start'];
 		foreach ($list as $field) {
@@ -86,17 +88,17 @@ class Order extends CI_Controller {
 			}
 
 			$row[] = '<form action="'.$url.'order/delete_order" method="post"><div style="vertical-align: middle; text-align: center;">
-				<a href="'.$link_order.'" class="btn btn-sm btn-primary" title="Detail"><i class="fa fa-search-plus"></i></a>
+				<a href="'.$link_order.'" class="btn btn-sm btn-primary mb-1" title="Detail"><i class="fa fa-search-plus"></i></a>
 				<input type="hidden" name="ORDER_ID" value="'.$field->ORDER_ID.'">
-				<button '.$DELETE.' onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></button>
+				<button '.$DELETE.' onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-sm btn-danger mb-1"><i class="fa fa-trash"></i></button>
 				</div></form>';
 			$data[] = $row;
 		}
 
 		$output = array(
 			"draw" => $_POST['draw'],
-			"recordsTotal" => $this->order_m->count_all($STATUS_FILTER),
-			"recordsFiltered" => $this->order_m->count_filtered($STATUS_FILTER),
+			"recordsTotal" => $this->order_m->count_all($FROM, $TO, $STATUS_FILTER),
+			"recordsFiltered" => $this->order_m->count_filtered($FROM, $TO, $STATUS_FILTER),
 			"data" => $data,
 		);
 		//output dalam format JSON
@@ -295,13 +297,30 @@ class Order extends CI_Controller {
 		    		$dataCost = $this->rajaongkir->cost($vendor->RO_CITY_ID, $customer->CITY_ID, $WEIGHT_RO, strtolower($key->COURIER_NAME), 'city');
 		    	}
 				$detailCost = json_decode($dataCost, true);
+				if ( ($detailCost['rajaongkir']['results'][0]['costs']) == null) {
+					$dataCost = $this->rajaongkir->cost($vendor->RO_CITY_ID, $customer->CITY_ID, $WEIGHT_RO, strtolower($key->COURIER_NAME), 'city');
+					$detailCost = json_decode($dataCost, true);
+				}
 				$status = $detailCost['rajaongkir']['status']['code'];
 				if ($status == 200) {
 					for ($i=0; $i < count($detailCost['rajaongkir']['results']); $i++) {
 						for ($j=0; $j < count($detailCost['rajaongkir']['results'][$i]['costs']); $j++) {
 							$service = $detailCost['rajaongkir']['results'][$i]['costs'][$j]['service'];
 							$tarif = $detailCost['rajaongkir']['results'][$i]['costs'][$j]['cost'][0]['value'];
-							$etd = $detailCost['rajaongkir']['results'][$i]['costs'][$j]['cost'][0]['etd']." Hari";
+							$etd = $detailCost['rajaongkir']['results'][$i]['costs'][$j]['cost'][0]['etd'];
+							
+							if( preg_grep("/jam/i", array($etd)) ) {
+							    $etd = $etd;
+							} else if( preg_grep("/hari/i", array($etd)) ) {
+							    $etd = $etd;
+							} else if( preg_grep("/minggu/i", array($etd)) ) {
+							    $etd = $etd;
+							} else if( preg_grep("/bulan/i", array($etd)) ) {
+							    $etd = $etd;
+							} else {
+							    $etd = $etd." Hari";
+							}
+
 							$lists .= "<option value='$tarif,$service,$etd'>$service</option>";
 						}
 					}

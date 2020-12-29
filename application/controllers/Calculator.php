@@ -34,7 +34,10 @@ class Calculator extends CI_Controller {
 		if (isset($_GET['term'])) {
 			$data = $this->area_m->search_city($_GET['term'])->result_array();
 	        foreach ($data as $row) {
-	            $city[] = array('city_id' => $row['RO_CITY_ID'], 'city_name' => $row['CITY_NAME'].", ".$row['STATE_NAME']);
+	            $city[] = array(
+	            	'city_id' => $row['RO_CITY_ID'],
+	            	'city_name' => $row['CITY_NAME'].", ".$row['STATE_NAME']
+	            );
 	        }
 	    	echo json_encode($city);
 	    }
@@ -44,7 +47,11 @@ class Calculator extends CI_Controller {
 		if (isset($_GET['term'])) {
 			$data = $this->area_m->search_subd($_GET['term'])->result_array();
 	        foreach ($data as $row) {
-	            $subd[] = array('subd_id' => $row['SUBD_ID'], 'subd_name' => $row['SUBD_NAME'].", ".$row['CITY_NAME'].", ".$row['STATE_NAME']);
+	            $subd[] = array(
+	            	'city_id' => $row['CITY_ID'],
+	            	'subd_id' => $row['SUBD_ID'],
+	            	'subd_name' => $row['SUBD_NAME'].", ".$row['CITY_NAME'].", ".$row['STATE_NAME']
+	            );
 	        }
 	    	echo json_encode($subd);
 	    }
@@ -56,6 +63,8 @@ class Calculator extends CI_Controller {
 		// kota asal(rajaongkir)
 		$O_RO_CITY_ID = $this->input->post('O_RO_CITY_ID', TRUE);
 		// kota tujuan
+		$D_CITY_ID 	  = $this->input->post('D_CITY_ID', TRUE);
+		// kecamatan tujuan
 		$D_SUBD_ID 	  = $this->input->post('D_SUBD_ID', TRUE);
 	    
 	    $orgn 		  = $this->area_m->getCity(null, $O_RO_CITY_ID)->row();
@@ -85,8 +94,16 @@ class Calculator extends CI_Controller {
 			$api = $this->courier_m->getApi($COURIER_ID[$n])->result();
 	    	foreach ($api as $key) {
 		    	$W = $WEIGHT*1000;
-		    	$dataCost = $this->rajaongkir->cost($O_RO_CITY_ID, $D_SUBD_ID, $W, strtolower($key->COURIER_NAME), 'subdistrict');
+		    	if( $D_SUBD_ID != 0 ) {
+		    		$dataCost = $this->rajaongkir->cost($O_RO_CITY_ID, $D_SUBD_ID, $W, strtolower($key->COURIER_NAME), 'subdistrict');
+		    	} else {
+		    		$dataCost = $this->rajaongkir->cost($O_RO_CITY_ID, $D_CITY_ID, $W, strtolower($key->COURIER_NAME), 'city');
+		    	}
 				$detailCost = json_decode($dataCost, true);
+				if ( ($detailCost['rajaongkir']['results'][0]['costs']) == null) {
+					$dataCost = $this->rajaongkir->cost($O_RO_CITY_ID, $D_CITY_ID, $W, strtolower($key->COURIER_NAME), 'city');
+					$detailCost = json_decode($dataCost, true);
+				}
 		    	$status = $detailCost['rajaongkir']['status']['code'];
 		    	if ($status == 200) {
 					for ($i=0; $i < count($detailCost['rajaongkir']['results']); $i++) {
@@ -94,6 +111,19 @@ class Calculator extends CI_Controller {
 							$service = $detailCost['rajaongkir']['results'][$i]['costs'][$j]['service'];
 							$tarif = $detailCost['rajaongkir']['results'][$i]['costs'][$j]['cost'][0]['value'];
 							$etd = $detailCost['rajaongkir']['results'][$i]['costs'][$j]['cost'][0]['etd'];
+							
+							if( preg_grep("/jam/i", array($etd)) ) {
+							    $etd = $etd;
+							} else if( preg_grep("/hari/i", array($etd)) ) {
+							    $etd = $etd;
+							} else if( preg_grep("/minggu/i", array($etd)) ) {
+							    $etd = $etd;
+							} else if( preg_grep("/bulan/i", array($etd)) ) {
+							    $etd = $etd;
+							} else {
+							    $etd = $etd." Hari";
+							}
+
 							$lists .= "<tr>
 									<td>".$key->COURIER_NAME.' '.$service."</td>
 									<td>".$O_CITY_NAME.$O_STATE_NAME."</td>

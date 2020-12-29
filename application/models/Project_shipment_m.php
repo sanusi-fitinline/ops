@@ -18,7 +18,7 @@ class Project_shipment_m extends CI_Model {
         return $query;
     }
 
-    public function insert(){
+    public function insert() {
     	$date 	 = date('Y-m-d', strtotime($this->input->post('PRJS_DATE', TRUE)));
         $time 	 = date('H:i:s');
         $PRJ_ID  = $this->input->post('PRJ_ID', TRUE);
@@ -56,7 +56,7 @@ class Project_shipment_m extends CI_Model {
         $project = $this->db->get_where('tb_project_detail',['PRJ_ID' => $PRJ_ID])->result();
         foreach ($project as $prj) {
             $ship_status = $this->db->query("SELECT PRJS_STATUS FROM tb_project_shipment WHERE PRJD_ID = '$prj->PRJD_ID' ORDER BY PRJS_ID DESC");
-            if($ship_status->num_rows() > 0){
+            if($ship_status->num_rows() > 0) {
                 $key = $ship_status->row();
                 if($key->PRJS_STATUS == 2) {
                     $PRJ_STATUS = 8; // delivered
@@ -75,7 +75,7 @@ class Project_shipment_m extends CI_Model {
         }
     }
 
-    public function update(){
+    public function update() {
     	$date 	 = date('Y-m-d', strtotime($this->input->post('PRJS_DATE', TRUE)));
         $time 	 = date('H:i:s');
         $PRJ_ID  = $this->input->post('PRJ_ID', TRUE);
@@ -114,7 +114,7 @@ class Project_shipment_m extends CI_Model {
         $project = $this->db->get_where('tb_project_detail',['PRJ_ID' => $PRJ_ID])->result();
         foreach ($project as $prj) {
             $ship_status = $this->db->query("SELECT PRJS_STATUS FROM tb_project_shipment WHERE PRJD_ID = '$prj->PRJD_ID' ORDER BY PRJS_ID DESC");
-            if($ship_status->num_rows() > 0){
+            if($ship_status->num_rows() > 0) {
                 $key = $ship_status->row();
                 if($key->PRJS_STATUS == 2) {
                     $PRJ_STATUS = 8; // delivered

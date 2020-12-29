@@ -65,11 +65,20 @@ class Customer extends CI_Controller {
 			$row[] = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$ADDRESS).$SUBD.$CITY.$STATE.$CNTR;
 			$row[] = $field->USER_NAME;
 			if((!$this->access_m->isDelete('Customer', 1)->row()) && ($this->session->GRP_SESSION !=3)){
-				$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="'.$url.'customer/edit/'.$field->CUST_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a></div>';
+				$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="'.$url.'customer/edit/'.$field->CUST_ID.'" class="btn btn-primary btn-sm mb-1"><i class="fa fa-pen"></i></a></div>';
 			} else {
-				$row[] = '<form action="'.$url.'customer/del" method="post"><div style="vertical-align: middle; text-align: center;"><a href="'.$url.'customer/edit/'.$field->CUST_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
-					<input type="hidden" name="CUST_ID" value="'.$field->CUST_ID.'">
-					<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button></div></form>';
+				$sampling = $this->db->get_where('tb_log_sample',['CUST_ID' => $field->CUST_ID]);
+				$stock 	  = $this->db->get_where('tb_log_stock',['CUST_ID' => $field->CUST_ID]);
+				$order 	  = $this->db->get_where('tb_order',['CUST_ID' => $field->CUST_ID]);
+		        if($sampling->num_rows() > 0 || $stock->num_rows() > 0 || $order->num_rows() > 0){
+		        	$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="'.$url.'customer/edit/'.$field->CUST_ID.'" class="btn btn-primary btn-sm mb-1"><i class="fa fa-pen"></i></a>
+						<input type="hidden" name="CUST_ID" value="'.$field->CUST_ID.'">
+						<button onclick="'."return alert('Customer telah melakukan transaksi, proses hapus data tidak dapat dilakukan.')".'" type="submit" class="btn btn-danger btn-sm mb-1"><i class="fa fa-trash"></i></button></div>';
+		        } else {
+					$row[] = '<form action="'.$url.'customer/del" method="post"><div style="vertical-align: middle; text-align: center;"><a href="'.$url.'customer/edit/'.$field->CUST_ID.'" class="btn btn-primary btn-sm mb-1"><i class="fa fa-pen"></i></a>
+						<input type="hidden" name="CUST_ID" value="'.$field->CUST_ID.'">
+						<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm mb-1"><i class="fa fa-trash"></i></button></div></form>';
+		        }
 			}
 			$data[] = $row;
 		}
@@ -143,15 +152,30 @@ class Customer extends CI_Controller {
 	}
 
 	public function addProcess() {
-		$data['row'] =	$this->customer_m->insert();
-		if ($data) {
-			echo "<script>alert('Data berhasil ditambah.')</script>";
-			echo "<script>window.location='".site_url('customer')."'</script>";
-		} else{
-			echo "<script>alert('Data gagal ditambah.')</script>";
-			echo "<script>window.location='".site_url('customer')."'</script>";
+		$CUST_PHONE = $this->input->post('CUST_PHONE', TRUE);
+		$cust_data 	= $this->customer_m->get_cust_phone()->result();
+		$validasi 	= "";
+		$cust_id[] 	= "";
+		foreach ($cust_data as $field) {
+			if($this->convert_phone($CUST_PHONE) == $this->convert_phone($field->CUST_PHONE)) {
+				$validasi  .= 1; // true, ada nomor yang sama.
+				$cust_id[] .= $field->CUST_ID;
+			}
 		}
-		
+		$cust = max($cust_id);
+
+		if ($validasi != "") {
+			$this->edit_user($cust);
+		} else {
+			$data['row'] =	$this->customer_m->insert();
+			if ($data) {
+				echo "<script>alert('Data berhasil ditambah.')</script>";
+				echo "<script>window.location='".site_url('customer')."'</script>";
+			} else{
+				echo "<script>alert('Data gagal ditambah.')</script>";
+				echo "<script>window.location='".site_url('customer')."'</script>";
+			}
+		}
 	}
 
 	public function edit($CUST_ID) {

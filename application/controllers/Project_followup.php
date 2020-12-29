@@ -73,8 +73,8 @@ class Project_followup extends CI_Controller {
 
 			// tombol review muncul ketika project status delivered
 			if($field->PRJ_STATUS != 8) {
-				$REVIEW = "class='btn btn-sm btn-secondary' style='opacity: 0.5; pointer-events: none;'";
-			} else {$REVIEW = "class='btn btn-sm btn-warning'";}
+				$REVIEW = "class='btn btn-sm btn-secondary mb-1' style='opacity: 0.5; pointer-events: none;'";
+			} else {$REVIEW = "class='btn btn-sm btn-warning mb-1'";}
 
 			$row   = array();
 			$row[] = "<div align='center'>$STATUS</div>";
@@ -84,10 +84,10 @@ class Project_followup extends CI_Controller {
 			$row[] = stripslashes($field->PRDUP_NAME);
 			$row[] = stripslashes($PRDU_NAME);
 			$row[] = '<div style="vertical-align: middle; text-align: center;">
-					<a href="'.$url.'project_followup/detail/'.$field->PRJ_ID.'/'.$field->PRJD_ID.'" class="btn btn-primary btn-sm" title="Follow Up"><i class="fa fa-share"></i></a>
-					<a '.$PROGRESS.' href="'.$url.'project_followup/progress/'.$field->PRJD_ID.'" class="btn btn-sm btn-secondary" title="Progress"><i class="fas fa-drafting-compass"></i></a>
+					<a href="'.$url.'project_followup/detail/'.$field->PRJ_ID.'/'.$field->PRJD_ID.'" class="btn btn-primary btn-sm mb-1" title="Follow Up"><i class="fa fa-share"></i></a>
+					<a '.$PROGRESS.' href="'.$url.'project_followup/progress/'.$field->PRJD_ID.'" class="btn btn-sm btn-secondary mb-1" title="Progress"><i class="fas fa-drafting-compass"></i></a>
 					<hr class="my-2">
-					<a '.$SHIPMENT.' href="'.$url.'project_followup/shipment/'.$field->PRJ_ID.'/'.$field->PRJD_ID.'" class="btn btn-sm btn-secondary" title="Shipment"><i class="fas fa-truck fa-sm"></i></a>
+					<a '.$SHIPMENT.' href="'.$url.'project_followup/shipment/'.$field->PRJ_ID.'/'.$field->PRJD_ID.'" class="btn btn-sm btn-secondary mb-1" title="Shipment"><i class="fas fa-truck fa-sm"></i></a>
 					<a '.$REVIEW.' href="'.$url.'project_followup/review/'.$field->PRJ_ID.'/'.$field->PRJD_ID.'" title="Review"><i class="fa fa-star"></i></a>
 				</div>';
 			$data[] = $row;

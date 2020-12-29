@@ -96,7 +96,7 @@
 					            	<div class="col-md-4">
 					            		<div class="form-group">
 											<label>Customer</label>
-											<input class="form-control" type="hidden" name="CUST_ID" value="<?php echo $row->CUST_ID ?>">
+											<input class="form-control" type="hidden" id="CUST_ID" name="CUST_ID" value="<?php echo $row->CUST_ID ?>">
 											<input class="form-control" type="text" name="CUST_NAME" value="<?php echo $row->CUST_NAME ?>" autocomplete="off" readonly>
 										</div>
 										<div class="form-group">
@@ -115,10 +115,10 @@
 										</div>
 					            	</div>
 					            	<div class="col-md-12">
-										<a href="<?php echo base_url('project/quotation/'.$row->PRJ_ID)?>" target="_blank" class="btn btn-sm btn-primary" id="QUOTATION"><i class="fa fa-print"></i> QUOTATION</a>
-										<a href="<?php echo base_url('project/invoice/'.$row->PRJ_ID)?>" target="_blank" class="btn btn-sm btn-primary" id="INVOICE"><i class="fa fa-print"></i> INVOICE</a>
-										<a href="<?php echo base_url('project/receipt/'.$row->PRJ_ID)?>" target="_blank" class="btn btn-sm btn-primary" id="RECEIPT"><i class="fa fa-print"></i> RECEIPT</a>
-										<input type="submit" name="CANCEL" <?php if((!$this->access_m->isEdit('Order Custom', 1)->row()) && ($this->session->GRP_SESSION !=3)) {echo "class='btn btn-sm btn-secondary' disabled";} else {echo "class='btn btn-sm btn-warning'";}?> onclick="return confirm('Cancel order?')" value="CANCEL ORDER">
+										<a href="<?php echo base_url('project/quotation/'.$row->PRJ_ID)?>" target="_blank" class="btn btn-sm btn-primary mb-1" id="QUOTATION"><i class="fa fa-print"></i> QUOTATION</a>
+										<a href="<?php echo base_url('project/invoice/'.$row->PRJ_ID)?>" target="_blank" class="btn btn-sm btn-primary mb-1" id="INVOICE"><i class="fa fa-print"></i> INVOICE</a>
+										<a href="<?php echo base_url('project/receipt/'.$row->PRJ_ID)?>" target="_blank" class="btn btn-sm btn-primary mb-1" id="RECEIPT"><i class="fa fa-print"></i> RECEIPT</a>
+										<input type="submit" name="CANCEL" <?php if((!$this->access_m->isEdit('Order Custom', 1)->row()) && ($this->session->GRP_SESSION !=3)) {echo "class='btn btn-sm btn-secondary mb-1' disabled";} else {echo "class='btn btn-sm btn-warning mb-1'";}?> onclick="return confirm('Cancel order?')" value="CANCEL ORDER">
 									</div>
 					            </div>
 					            <hr>
@@ -229,8 +229,8 @@
 									                	<?php foreach($payment as $key => $data): ?>
 										                	<tr>
 										                		<td align="center" style="width: 10px;">
-										                			<a href="<?php echo site_url('project/del_installment/'.$row->PRJ_ID.'/'.$data['PRJP_ID']) ?>" class="DELETE-INSTALLMENT" style="color: #dc3545; float: left;" onclick="return confirm('Delete Item?')" title="Delete"><i class="fa fa-trash"></i></a>
-										                			<a href="#" class="UBAH-INSTALLMENT" id="UBAH-INSTALLMENT<?php echo $data['PRJP_ID'] ?>" data-toggle="modal" data-target="#edit-installment<?php echo $data['PRJP_ID'] ?>" style="color: #007bff; float: right;" title="Edit"><i class="fa fa-edit"></i></a>
+										                			<a href="<?php echo site_url('project/del_installment/'.$row->PRJ_ID.'/'.$data['PRJP_ID']) ?>" class="DELETE-INSTALLMENT mb-1" style="color: #dc3545; float: left;" onclick="return confirm('Delete Item?')" title="Delete"><i class="fa fa-trash"></i></a>
+										                			<a href="#" class="UBAH-INSTALLMENT mb-1" id="UBAH-INSTALLMENT<?php echo $data['PRJP_ID'] ?>" data-toggle="modal" data-target="#edit-installment<?php echo $data['PRJP_ID'] ?>" style="color: #007bff; float: right;" title="Edit"><i class="fa fa-edit"></i></a>
 										                		</td>
 										                		<td align="center" style="width: 10px;"><?php echo $p++ ?></td>
 										                		<td align="center"><?php echo date('d-m-Y', strtotime($data['PRJP_DATE'])) ?></td>
@@ -333,8 +333,8 @@
 									                			<p>Estimasi: <span id="TAMPIL_ETD<?php echo $data->PRJD_ID ?>" style="float: right;"><?php echo $data->PRJD_ETD != null ? $data->PRJD_ETD : "-" ?></span></p>
 									                		</td>
 									                		<td align="center" style="vertical-align: middle;">
-									                			<a class="btn btn-sm btn-primary" href="<?php echo site_url('project/detail_view/'.$row->PRJ_ID.'/'.$data->PRJD_ID) ?>" title="View"><i class="fas fa-eye"></i></a>
-									                			<a class="btn btn-sm btn-default PROGRESS" style="color:#FFFFFF; background-color: #6f42c1; border-color: #6f42c1;" href="<?php echo site_url('project/progress/'.$data->PRJD_ID) ?>" title="Progress"><i class="fas fa-drafting-compass"></i></a>
+									                			<a class="btn btn-sm btn-primary mb-1" href="<?php echo site_url('project/detail_view/'.$row->PRJ_ID.'/'.$data->PRJD_ID) ?>" title="View"><i class="fas fa-eye"></i></a>
+									                			<a class="btn btn-sm btn-default mb-1 PROGRESS" style="color:#FFFFFF; background-color: #6f42c1; border-color: #6f42c1;" href="<?php echo site_url('project/progress/'.$data->PRJD_ID) ?>" title="Progress"><i class="fas fa-drafting-compass"></i></a>
 									                		</td>
 									                		<input type="hidden" id="PRODUCER<?php echo $data->PRJD_ID ?>" value="<?php echo $data->PRDU_ID ?>">
 									                		<input type="hidden" name="PRJD_ID[]" value="<?php echo $data->PRJD_ID ?>">
@@ -1158,7 +1158,7 @@
 				        	COURIER_NAME	: COURIER_N,
 				        	}, 
 				        dataType: "json",
-				        timeout: 3000,
+				        timeout: 9000,
 				        beforeSend: function(e) {
 				        	if(COURIER_A==1){
 								$("#spinner").css("display","block");
@@ -1242,7 +1242,7 @@
 				        	SERVICE 		: SERVICE,
 				        	}, 
 				        dataType: "json",
-				        timeout: 3000,
+				        timeout: 9000,
 				        beforeSend: function(e) {
 				        	if(e && e.overrideMimeType) {
 				            	e.overrideMimeType("application/json;charset=UTF-8");

@@ -39,32 +39,32 @@ class Courier extends CI_Controller {
 			$row[] = $field->COURIER_NAME;
 			if($field->COURIER_API != 0) {
 				if((!$this->access_m->isDelete('Courier', 1)->row()) && ($this->session->GRP_SESSION !=3)){
-					$row[] = '<a href="#" data-toggle="modal" data-target="#edit-courier'.$field->COURIER_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i>
+					$row[] = '<a href="#" data-toggle="modal" data-target="#edit-courier'.$field->COURIER_ID.'" class="btn btn-primary btn-sm mb-1"><i class="fa fa-pen"></i>
 						</a>
-						<a href="'.$url.'courier/address/'.$field->COURIER_ID.'" class="btn btn-secondary btn-sm"><i class="fa fa-flag"></i> Address</a>';
+						<a href="'.$url.'courier/address/'.$field->COURIER_ID.'" class="btn btn-secondary btn-sm mb-1"><i class="fa fa-flag"></i> Address</a>';
 				} else {
 					$row[] = '<form action="'.$url.'courier/del" method="post">
-							<a href="#" data-toggle="modal" data-target="#edit-courier'.$field->COURIER_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i>
+							<a href="#" data-toggle="modal" data-target="#edit-courier'.$field->COURIER_ID.'" class="btn btn-primary btn-sm mb-1"><i class="fa fa-pen"></i>
 							</a>
 							<input type="hidden" name="COURIER_ID" value="'.$field->COURIER_ID.'">
-							<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
-							<a href="'.$url.'courier/address/'.$field->COURIER_ID.'" class="btn btn-secondary btn-sm"><i class="fa fa-flag"></i> Address</a>
+							<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm mb-1"><i class="fa fa-trash"></i></button>
+							<a href="'.$url.'courier/address/'.$field->COURIER_ID.'" class="btn btn-secondary btn-sm mb-1"><i class="fa fa-flag"></i> Address</a>
 						</form>';
 				}	
 			} else {
 				if((!$this->access_m->isDelete('Courier', 1)->row()) && ($this->session->GRP_SESSION !=3)){
-					$row[] = '<a href="#" data-toggle="modal" data-target="#edit-courier'.$field->COURIER_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i>
+					$row[] = '<a href="#" data-toggle="modal" data-target="#edit-courier'.$field->COURIER_ID.'" class="btn btn-primary btn-sm mb-1"><i class="fa fa-pen"></i>
 						</a>
-						<a href="'.$url.'courier/address/'.$field->COURIER_ID.'" class="btn btn-secondary btn-sm"><i class="fa fa-flag"></i> Address</a>
-						<a href="'.$url.'courier/tariff/'.$field->COURIER_ID.'" class="btn btn-info btn-sm"><i class="fa fa-calculator"></i> Tariff</a>';
+						<a href="'.$url.'courier/address/'.$field->COURIER_ID.'" class="btn btn-secondary btn-sm mb-1"><i class="fa fa-flag"></i> Address</a>
+						<a href="'.$url.'courier/tariff/'.$field->COURIER_ID.'" class="btn btn-info btn-sm mb-1"><i class="fa fa-calculator"></i> Tariff</a>';
 				} else {
 					$row[] = '<form action="'.$url.'courier/del" method="post">
-							<a href="#" data-toggle="modal" data-target="#edit-courier'.$field->COURIER_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i>
+							<a href="#" data-toggle="modal" data-target="#edit-courier'.$field->COURIER_ID.'" class="btn btn-primary btn-sm mb-1"><i class="fa fa-pen"></i>
 							</a>
 							<input type="hidden" name="COURIER_ID" value="'.$field->COURIER_ID.'">
-							<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
-							<a href="'.$url.'courier/address/'.$field->COURIER_ID.'" class="btn btn-secondary btn-sm"><i class="fa fa-flag"></i> Address</a>
-							<a href="'.$url.'courier/tariff/'.$field->COURIER_ID.'" class="btn btn-info btn-sm"><i class="fa fa-calculator"></i> Tariff</a>
+							<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm mb-1"><i class="fa fa-trash"></i></button>
+							<a href="'.$url.'courier/address/'.$field->COURIER_ID.'" class="btn btn-secondary btn-sm mb-1"><i class="fa fa-flag"></i> Address</a>
+							<a href="'.$url.'courier/tariff/'.$field->COURIER_ID.'" class="btn btn-info btn-sm mb-1"><i class="fa fa-calculator"></i> Tariff</a>
 						</form>';
 				}
 			}
@@ -160,12 +160,12 @@ class Courier extends CI_Controller {
 			$row[] = $field->COUADD_PHONE;
 			$row[] = [str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$ADDRESS).$SUBD.$CITY.$STATE.$CNTR];
 			if((!$this->access_m->isDelete('Courier', 1)->row()) && ($this->session->GRP_ID !=3)){
-				$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="'.$url.'courier/editaddress/'.$field->COUADD_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a></div>';
+				$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="'.$url.'courier/editaddress/'.$field->COUADD_ID.'" class="btn btn-primary btn-sm mb-1"><i class="fa fa-pen"></i></a></div>';
 			} else {
-				$row[] = '<form action="'.$url.'courier/deladdress" method="post"><div style="vertical-align: middle; text-align: center;"><a href="'.$url.'courier/editaddress/'.$field->COUADD_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
+				$row[] = '<form action="'.$url.'courier/deladdress" method="post"><div style="vertical-align: middle; text-align: center;"><a href="'.$url.'courier/editaddress/'.$field->COUADD_ID.'" class="btn btn-primary btn-sm mb-1"><i class="fa fa-pen"></i></a>
 					<input type="hidden" name="COURIER_ID" value="'.$field->COURIER_ID.'">
 					<input type="hidden" name="COUADD_ID" value="'.$field->COUADD_ID.'">
-					<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button></div></form>';
+					<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm mb-1"><i class="fa fa-trash"></i></button></div></form>';
 			}
 			$data[] = $row;
 		}
@@ -290,12 +290,12 @@ class Courier extends CI_Controller {
 			$row[] = '<div style="vertical-align: middle; text-align: center;">'.number_format($field->COUTAR_KG_NEXT,0,',','.').'</div>';
 			$row[] = '<div style="vertical-align: middle; text-align: center;">'.number_format($field->COUTAR_ADMIN_FEE,0,',','.').'</div>';
 			if((!$this->access_m->isDelete('Courier', 1)->row()) && ($this->session->GRP_SESSION !=3)){
-				$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="'.$url.'courier/edittariff/'.$field->COUTAR_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a></div>';
+				$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="'.$url.'courier/edittariff/'.$field->COUTAR_ID.'" class="btn btn-primary btn-sm mb-1"><i class="fa fa-pen"></i></a></div>';
 			} else {
-				$row[] = '<form action="'.$url.'courier/deltariff" method="post"><div style="vertical-align: middle; text-align: center;"><a href="'.$url.'courier/edittariff/'.$field->COUTAR_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
+				$row[] = '<form action="'.$url.'courier/deltariff" method="post"><div style="vertical-align: middle; text-align: center;"><a href="'.$url.'courier/edittariff/'.$field->COUTAR_ID.'" class="btn btn-primary btn-sm mb-1"><i class="fa fa-pen"></i></a>
 					<input type="hidden" name="COURIER_ID" value="'.$field->COURIER_ID.'">
 					<input type="hidden" name="COUTAR_ID" value="'.$field->COUTAR_ID.'">
-					<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button></div></form>';
+					<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm mb-1"><i class="fa fa-trash"></i></button></div></form>';
 			}
 			$data[] = $row;
 		}

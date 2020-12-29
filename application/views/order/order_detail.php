@@ -128,13 +128,13 @@
 									</div>
 								</div>
 								<div>
-									<a href="<?php echo site_url('order/add_detail/'.$row->ORDER_ID) ?>" class="btn btn-success btn-sm" <?php if($row->ORDER_STATUS != null || $row->ORDER_STATUS != 0){echo "hidden";} ?>><i class="fas fa-plus-circle"></i> ADD PRODUCT</a>
-									<a href="<?php echo base_url('order/quotation/'.$row->ORDER_ID)?>" target="_blank" class="btn btn-sm btn-primary" id="QUOTATION"><i class="fa fa-print"></i> QUOTATION</a>
-									<a href="<?php echo base_url('order/invoice/'.$row->ORDER_ID)?>" target="_blank" class="btn btn-sm btn-primary" id="INVOICE"><i class="fa fa-print"></i> INVOICE</a>
-									<a href="<?php echo base_url('order/receipt/'.$row->ORDER_ID)?>" target="_blank" class="btn btn-sm btn-primary" id="RECEIPT"><i class="fa fa-print"></i> RECEIPT</a>
+									<a href="<?php echo site_url('order/add_detail/'.$row->ORDER_ID) ?>" class="btn btn-success btn-sm mb-1" <?php if($row->ORDER_STATUS != null || $row->ORDER_STATUS != 0){echo "hidden";} ?>><i class="fas fa-plus-circle"></i> ADD PRODUCT</a>
+									<a href="<?php echo base_url('order/quotation/'.$row->ORDER_ID)?>" target="_blank" class="btn btn-sm btn-primary mb-1" id="QUOTATION"><i class="fa fa-print"></i> QUOTATION</a>
+									<a href="<?php echo base_url('order/invoice/'.$row->ORDER_ID)?>" target="_blank" class="btn btn-sm btn-primary mb-1" id="INVOICE"><i class="fa fa-print"></i> INVOICE</a>
+									<a href="<?php echo base_url('order/receipt/'.$row->ORDER_ID)?>" target="_blank" class="btn btn-sm btn-primary mb-1" id="RECEIPT"><i class="fa fa-print"></i> RECEIPT</a>
 									<!-- <input type="hidden" name="ORDER_STATUS_ID" value="<?php echo $row->ORDER_STATUS ?>"> -->
-									<input type="submit" name="CANCEL" <?php if((!$this->access_m->isEdit('Order', 1)->row()) && ($this->session->GRP_SESSION !=3)) {echo "class='btn btn-sm btn-secondary' disabled";} else {echo "class='btn btn-sm btn-warning'";} if($row->ORDER_STATUS >= 2) {echo "hidden";} ?> onclick="return confirm('Cancel order?')" value="CANCEL ORDER">
-									<a <?php if((!$this->access_m->isEdit('Order', 1)->row()) && ($this->session->GRP_SESSION !=3)) {echo "class='btn btn-sm btn-secondary' disabled";} else {echo "class='btn btn-sm btn-warning'";} if($row->ORDER_STATUS < 2) {echo "hidden";} ?> href="#" data-toggle="modal" data-target="#cancel-order"></i> CANCEL ORDER</a>
+									<input type="submit" name="CANCEL" <?php if((!$this->access_m->isEdit('Order', 1)->row()) && ($this->session->GRP_SESSION !=3)) {echo "class='btn btn-sm btn-secondary mb-1' disabled";} else {echo "class='btn btn-sm btn-warning mb-1'";} if($row->ORDER_STATUS >= 2) {echo "hidden";} ?> onclick="return confirm('Cancel order?')" value="CANCEL ORDER">
+									<a <?php if((!$this->access_m->isEdit('Order', 1)->row()) && ($this->session->GRP_SESSION !=3)) {echo "class='btn btn-sm btn-secondary mb-1' disabled";} else {echo "class='btn btn-sm btn-warning mb-1'";} if($row->ORDER_STATUS < 2) {echo "hidden";} ?> href="#" data-toggle="modal" data-target="#cancel-order"></i> CANCEL ORDER</a>
 									<!-- The Modal Cancel Order -->
 									<div class="modal fade" id="cancel-order">
 										<div class="modal-dialog">
@@ -149,8 +149,7 @@
 														<div class="col-md-12">
 															<div class="form-group">
 																<label>Input Reason <small>*</small></label>
-																<select class="form-control selectpicker" name="ORDER_STATUS_CANCEL">
-														    		<option value="" selected disabled>-- Select One --</option>
+																<select class="form-control selectpicker" name="ORDER_STATUS_CANCEL" title="-- Select One --" required>
 														    		<option value="1">Salah Input</option>
 														    		<option value="2">Order Berubah</option>
 														    		<option value="3">Order Batal</option>
@@ -255,7 +254,7 @@
 													    	<label>DEPOSIT (-)</label>
 													    <?php else: ?>
 															<div class="custom-control custom-checkbox">
-														     	<input type="checkbox" class="custom-control-input" id="check-deposit" name="check-deposit" <?php if($row->ORDER_DEPOSIT != null){echo "checked";} ?> <?php if($DEPOSIT < 0){echo "checked disabled";} ?>>
+														     	<input type="checkbox" class="custom-control-input" id="check-deposit" name="check-deposit" <?php if($row->ORDER_DEPOSIT != null){echo "checked";} ?> >
 														     	<label class="custom-control-label" for="check-deposit">DEPOSIT (-)</label>
 														    </div>
 													    <?php endif ?>
@@ -435,7 +434,7 @@
 				        	COURIER_NAME 		: COURIER_N,
 				        	}, 
 				        dataType: "json",
-				        timeout: 3000,
+				        timeout: 9000,
 				        beforeSend: function(e) {
 				        	if(COURIER_A==1){
 								$("#spinner"+vendor).css("display","block");
@@ -579,7 +578,7 @@
 				        	}
 				        },
 				        error: function (xhr, status, ajaxOptions, thrownError) {
-				        	$("#spinner"+vendor).css("display","none"); 
+				        	$("#spinner"+vendor).css("display","none");
 				          	if(status === 'timeout'){   
 					            alert('Respon terlalu lama, coba lagi.');
 					        } else {

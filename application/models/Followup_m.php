@@ -6,14 +6,12 @@ class Followup_m extends CI_Model {
     var $column_search = array('FLWP_DATE','CUST_NAME', 'CACT_NAME','FLWS_NAME'); //field yang diizin untuk pencarian 
     var $order = array('FLWP_ID' => 'DESC'); // default order 
 
-    public function __construct()
-    {
+    public function __construct() {
         parent::__construct();
         $this->load->database();
     }
 
-    private function _get_datatables_query($CLOG_ID = null)
-    {
+    private function _get_datatables_query($CLOG_ID = null) {
         $this->load->model('access_m');
         $modul = "Follow Up";
         $view = 1;  
@@ -30,24 +28,20 @@ class Followup_m extends CI_Model {
                 $this->db->where('tb_customer_log.USER_ID', $this->session->USER_SESSION);
             }
         }
-		if($CLOG_ID != null){
+		if($CLOG_ID != null) {
 			$this->db->where('tb_followup.CLOG_ID', $CLOG_ID);
 		}
 
         $i = 0;
     
-        foreach ($this->column_search as $item) // loop column 
-        {
+        foreach ($this->column_search as $item) { // loop column 
             if($_POST['search']['value']) // if datatable send POST for search
             {
                 
-                if($i===0) // first loop
-                {
+                if($i===0) { // first loop
                     $this->db->group_start(); // open bracket. query Where with OR clause better with bracket. because maybe can combine with other WHERE with AND.
                     $this->db->like($item, $_POST['search']['value']);
-                }
-                else
-                {
+                } else {
                     $this->db->or_like($item, $_POST['search']['value']);
                 }
 
@@ -57,15 +51,13 @@ class Followup_m extends CI_Model {
             $i++;
         }
         
-       	if(isset($this->order))
-        {
+       	if(isset($this->order)) {
             $order = $this->order;
             $this->db->order_by(key($order), $order[key($order)]);
         }
     }
 
-    function get_datatables($CLOG_ID = null)
-    {
+    function get_datatables($CLOG_ID = null) {
         $this->_get_datatables_query($CLOG_ID);
         if($_POST['length'] != -1)
         $this->db->limit($_POST['length'], $_POST['start']);
@@ -73,20 +65,18 @@ class Followup_m extends CI_Model {
         return $query->result();
     }
 
-    function count_filtered($CLOG_ID = null)
-    {
+    function count_filtered($CLOG_ID = null) {
         $this->_get_datatables_query($CLOG_ID);
         $query = $this->db->get();
         return $query->num_rows();
     }
 
-    public function count_all($CLOG_ID = null)
-    {
+    public function count_all($CLOG_ID = null) {
         $this->_get_datatables_query($CLOG_ID);
         return $this->db->count_all_results();
     }
 
-	public function get($FLWP_ID = null){
+	public function get($FLWP_ID = null) {
         $this->load->model('access_m');
         $modul = "Follow Up";
         $view = 1;  
@@ -445,18 +435,18 @@ class Followup_m extends CI_Model {
             $insert_order        = $this->db->insert('tb_order', $this->db->escape_str($order));
 
             if($insert_order) {
-                $ORDER_ID           = $this->db->insert_id();
-                $CUST_ID            = $this->input->post('CUST_ID', TRUE);
-                $CHA_ID             = $this->input->post('CHA_ID', TRUE);
-                $USER_ID            = $this->input->post('USER_ID', TRUE);
-                $PRO_ID             = $this->input->post('PRO_ID', TRUE);
-                $VEND_ID            = $this->input->post('VEND_ID', TRUE);
-                $ORDD_QUANTITY      = $this->input->post('ORDD_QUANTITY', TRUE);
-                $ORDD_OPTION        = $this->input->post('ORDD_OPTION', TRUE);
-                $UMEA_ID            = $this->input->post('UMEA_ID', TRUE);
-                $PRICE              = str_replace(".", "", $this->input->post('PRICE', TRUE));
-                $PRICE_VENDOR       = str_replace(".", "", $this->input->post('PRICE_VENDOR', TRUE));
-                $ORDD_WEIGHT        = $this->input->post('ORDD_WEIGHT', TRUE);
+                $ORDER_ID      = $this->db->insert_id();
+                $CUST_ID       = $this->input->post('CUST_ID', TRUE);
+                $CHA_ID        = $this->input->post('CHA_ID', TRUE);
+                $USER_ID       = $this->input->post('USER_ID', TRUE);
+                $PRO_ID        = $this->input->post('PRO_ID', TRUE);
+                $VEND_ID       = $this->input->post('VEND_ID', TRUE);
+                $ORDD_QUANTITY = $this->input->post('ORDD_QUANTITY', TRUE);
+                $ORDD_OPTION   = $this->input->post('ORDD_OPTION', TRUE);
+                $UMEA_ID       = $this->input->post('UMEA_ID', TRUE);
+                $PRICE         = str_replace(".", "", $this->input->post('PRICE', TRUE));
+                $PRICE_VENDOR  = str_replace(".", "", $this->input->post('PRICE_VENDOR', TRUE));
+                $ORDD_WEIGHT   = $this->input->post('ORDD_WEIGHT', TRUE);
 
                 // insert tb_order_detail
                 $this->load->model('product_m');
@@ -466,7 +456,7 @@ class Followup_m extends CI_Model {
                     if(($UMEA_ID[$i] == $product[$i]->PRO_TOTAL_UNIT) && ($UMEA_ID[$i] != $product[$i]->PRO_UNIT)) {
                         $UNIT[$i]          = $product[$i]->PRO_VOL_UNIT;
                         $QTY[$i]           = $product[$i]->PRO_TOTAL_COUNT * $ORDD_QUANTITY[$i];
-                        $WEIGHT[$i]        = $product[$i]->PRO_TOTAL_WEIGHT;
+                        $WEIGHT[$i]        = $product[$i]->PRO_WEIGHT * $QTY[$i];
                         $HARGA[$i]         = $product[$i]->PRO_VOL_PRICE;
                         $HARGA_VENDOR[$i]  = $product[$i]->PRO_VOL_PRICE_VENDOR;
                     } else {
@@ -499,8 +489,8 @@ class Followup_m extends CI_Model {
                         if(!$check_num[$x]) {
                             // insert tb_order_vendor
                             $insert_detail_vendor = array(
-                                'ORDER_ID'          => $ORDER_ID,
-                                'VEND_ID'           => $VEND_ID[$x],
+                                'ORDER_ID' => $ORDER_ID,
+                                'VEND_ID'  => $VEND_ID[$x],
                             );
                             $this->db->insert('tb_order_vendor', $insert_detail_vendor);
                         }
@@ -542,18 +532,18 @@ class Followup_m extends CI_Model {
             $insert_order        = $this->db->insert('tb_order', $this->db->escape_str($order));
 
             if($insert_order) {
-                $ORDER_ID           = $this->db->insert_id();
-                $CUST_ID            = $this->input->post('CUST_ID', TRUE);
-                $CHA_ID             = $this->input->post('CHA_ID', TRUE);
-                $USER_ID            = $this->input->post('USER_ID', TRUE);
-                $PRO_ID             = $this->input->post('PRO_ID', TRUE);
-                $VEND_ID            = $this->input->post('VEND_ID', TRUE);
-                $ORDD_QUANTITY      = $this->input->post('ORDD_QUANTITY', TRUE);
-                $ORDD_OPTION        = $this->input->post('ORDD_OPTION', TRUE);
-                $UMEA_ID            = $this->input->post('UMEA_ID', TRUE);
-                $PRICE              = str_replace(".", "", $this->input->post('PRICE', TRUE));
-                $PRICE_VENDOR       = str_replace(".", "", $this->input->post('PRICE_VENDOR', TRUE));
-                $ORDD_WEIGHT        = $this->input->post('ORDD_WEIGHT', TRUE);
+                $ORDER_ID      = $this->db->insert_id();
+                $CUST_ID       = $this->input->post('CUST_ID', TRUE);
+                $CHA_ID        = $this->input->post('CHA_ID', TRUE);
+                $USER_ID       = $this->input->post('USER_ID', TRUE);
+                $PRO_ID        = $this->input->post('PRO_ID', TRUE);
+                $VEND_ID       = $this->input->post('VEND_ID', TRUE);
+                $ORDD_QUANTITY = $this->input->post('ORDD_QUANTITY', TRUE);
+                $ORDD_OPTION   = $this->input->post('ORDD_OPTION', TRUE);
+                $UMEA_ID       = $this->input->post('UMEA_ID', TRUE);
+                $PRICE         = str_replace(".", "", $this->input->post('PRICE', TRUE));
+                $PRICE_VENDOR  = str_replace(".", "", $this->input->post('PRICE_VENDOR', TRUE));
+                $ORDD_WEIGHT   = $this->input->post('ORDD_WEIGHT', TRUE);
 
 
                 // insert tb_order_detail
@@ -591,7 +581,7 @@ class Followup_m extends CI_Model {
                 if($insert_detail) {
                     $this->load->model('ordervendor_m');
                     $insert_detail_vendor = array();
-                    foreach($VEND_ID as $x => $val){
+                    foreach($VEND_ID as $x => $val) {
                         $check[$x] = $this->ordervendor_m->check_order_vendor($ORDER_ID, $VEND_ID[$x]);
                         $check_num[$x] = $check[$x]->num_rows() > 0;
                         if(!$check_num[$x]) {
@@ -639,8 +629,7 @@ class Followup_m extends CI_Model {
             if ($CLOG_ID != null) {
                 $this->db->where('tb_followup.CLOG_ID', $CLOG_ID);
             }
-        }
-        else {
+        } else {
             $this->db->select('tb_followup.*, tb_customer_log.*, tb_customer.*, tb_country.CNTR_NAME, tb_state.STATE_NAME, tb_city.CITY_NAME, tb_subdistrict.SUBD_NAME, tb_customer_activity.CACT_NAME, tb_user.USER_NAME, tb_followup_status.FLWS_NAME, tb_followup_closed.FLWC_NAME');
             $this->db->from('tb_followup');
             $this->db->join('tb_customer_log', 'tb_customer_log.CLOG_ID=tb_followup.CLOG_ID', 'left');
@@ -666,16 +655,16 @@ class Followup_m extends CI_Model {
         $date = date('Y-m-d', strtotime($this->input->post('FLWP_DATE', TRUE)));
         $time = date('H:i:s');
         $dataLog = array(
-            'CLOG_ID'       => $this->input->post('CLOG_ID', TRUE),
-            'CLOG_DATE'     => $date.' '.$time,
-            'CACT_ID'       => $this->input->post('CACT_ID', TRUE),
-            'CUST_ID'       => $this->input->post('CUST_ID', TRUE),
-            'USER_ID'       => $this->input->post('USER_ID', TRUE),
-            'CHA_ID'        => $this->input->post('CHA_ID', TRUE),
-            'FLWS_ID'       => $this->input->post('FLWS_ID', TRUE),
+            'CLOG_ID'   => $this->input->post('CLOG_ID', TRUE),
+            'CLOG_DATE' => $date.' '.$time,
+            'CACT_ID'   => $this->input->post('CACT_ID', TRUE),
+            'CUST_ID'   => $this->input->post('CUST_ID', TRUE),
+            'USER_ID'   => $this->input->post('USER_ID', TRUE),
+            'CHA_ID'    => $this->input->post('CHA_ID', TRUE),
+            'FLWS_ID'   => $this->input->post('FLWS_ID', TRUE),
         );
         $this->db->insert('tb_customer_log', $this->db->escape_str($dataLog));
-        if($dataLog){
+        if($dataLog) {
             $params['FLWP_DATE']    = $date;
             $params['FLWP_NOTES']   = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$this->input->post('FLWP_NOTES', TRUE));
             $params['FLWS_ID']      = $this->input->post('FLWS_ID', TRUE);
@@ -691,7 +680,7 @@ class Followup_m extends CI_Model {
         $updateLog = array(
             'CUST_ID' => $this->input->post('CUST_ID', TRUE),
             'USER_ID' => $this->input->post('USER_ID', TRUE),
-            'CHA_ID' => $this->input->post('CHA_ID', TRUE),
+            'CHA_ID'  => $this->input->post('CHA_ID', TRUE),
         );
         $this->db->where('CLOG_ID', $CLOG_ID)->update('tb_customer_log', $this->db->escape_str($updateLog));
 

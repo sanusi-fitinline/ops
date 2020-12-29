@@ -125,9 +125,9 @@
 				                				<form id="FORM_DELETE<?php echo $field->PRJPG_ID ?>" action="<?php echo site_url('project_followup/delete_progress')?>" method="POST" enctype="multipart/form-data">
 							                		<input type="hidden" name="PRJD_ID" value="<?php echo $detail->PRJD_ID ?>">
 				                					<input type="hidden" name="PRJPG_ID" value="<?php echo $field->PRJPG_ID ?>">
-			                						<a id="DELETE-PROGRESS<?php echo $field->PRJPG_ID ?>" class="DELETE-PROGRESS" style="color: #dc3545; float: left; cursor: pointer;" title="Delete"><i class="fa fa-trash"></i></a>
+			                						<a id="DELETE-PROGRESS<?php echo $field->PRJPG_ID ?>" class="DELETE-PROGRESS mb-1" style="color: #dc3545; float: left; cursor: pointer;" title="Delete"><i class="fa fa-trash"></i></a>
 			                					</form>
-										        <a href="#" class="UBAH-PROGRESS" data-toggle="modal" data-target="#edit-progress<?php echo $field->PRJPG_ID ?>" style="color: #007bff; float: right;" title="Edit"><i class="fa fa-edit"></i></a>
+										        <a href="#" class="UBAH-PROGRESS mb-1" data-toggle="modal" data-target="#edit-progress<?php echo $field->PRJPG_ID ?>" style="color: #007bff; float: right;" title="Edit"><i class="fa fa-edit"></i></a>
 											</td>
 				                			<td align="center"><?php echo $n++ ?></td>
 				                			<td align="center"><?php echo date('d-m-Y / H:i:s', strtotime($field->PRJPG_DATE)) ?></td>

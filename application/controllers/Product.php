@@ -22,8 +22,7 @@ class Product extends CI_Controller {
 		$this->load->library('form_validation');
 	}
 
-	public function index()
-	{
+	public function index() {
 		$modl 	= "Product";
 		$access = $this->access_m->isAccess($this->session->GRP_SESSION, $modl)->row();
 		if ((!$access) && ($this->session->GRP_SESSION !=3)) {
@@ -72,10 +71,10 @@ class Product extends CI_Controller {
 			$row[] = "<div align='center'>$PRO_TOTAL_COUNT</div>";
 			if($this->session->GRP_SESSION ==3){
 				$row[] = '<form action="'.$url.'product/del" method="post"><div style="vertical-align: middle; text-align: center;">
-						<a href="'.$url.'product/edit/'.$field->PRO_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
+						<a href="'.$url.'product/edit/'.$field->PRO_ID.'" class="btn btn-primary btn-sm mb-1"><i class="fa fa-pen"></i></a>
 						<input type="hidden" name="PRO_ID" value="'.$field->PRO_ID.'">
-						<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
-						<a  href="'.$url.'product/option/'.$field->PRO_ID.'" class="btn btn-info btn-sm"><i class="fa fa-plus-square"></i> Option</a>
+						<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm mb-1"><i class="fa fa-trash"></i></button>
+						<a  href="'.$url.'product/option/'.$field->PRO_ID.'" class="btn btn-info btn-sm mb-1"><i class="fa fa-plus-square"></i> Option</a>
 					</div></form>';
 			}
 			$data[] = $row;
@@ -227,7 +226,7 @@ class Product extends CI_Controller {
 			$row[] = '<div style="vertical-align: middle; text-align: center;">'.$no.'</div>';
 			$row[] = stripslashes($field->PRO_NAME);
 			$row[] = stripslashes($field->POPT_NAME);
-			$row[] = '<div style="vertical-align: middle; text-align: center;"><img class="box-content" style="width: 65px;height: 90px;" src="'.$url.'/assets/images/product/option/'.$field->POPT_PICTURE.'"></div>';
+			$row[] = '<div style="vertical-align: middle; text-align: center;"><img class="box-content" style="width: 65px;height: 90px;" src="'.$url.'assets/images/product/option/'.$field->POPT_PICTURE.'"></div>';
 			if((!$this->access_m->isDelete('Product Option', 1)->row()) && ($this->session->GRP_SESSION !=3)){
 				$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="'.$url.'product/editoption/'.$field->POPT_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a></div>';
 			} else {

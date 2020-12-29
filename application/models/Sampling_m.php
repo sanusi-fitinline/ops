@@ -6,14 +6,12 @@ class Sampling_m extends CI_Model {
     var $column_search = array('CUST_NAME', 'LSAM_NOTES', 'LSAM_RCPNO'); //field yang diizin untuk pencarian 
     var $order = array('LSAM_DATE' => 'DESC'); // default order 
 
-    public function __construct()
-    {
+    public function __construct() {
         parent::__construct();
         $this->load->database();
     }
 
-    private function _get_datatables_query($CUST_NAME = null, $FROM = null, $TO = null, $STATUS_FILTER = null, $SEGMENT = null)
-    {
+    private function _get_datatables_query($CUST_NAME = null, $FROM = null, $TO = null, $STATUS_FILTER = null, $SEGMENT = null) {
 		$this->load->model('access_m');
 		$modul = "Product Sampling CS";
 		$modul2 = "Product Sampling PM";
@@ -78,18 +76,13 @@ class Sampling_m extends CI_Model {
 		
         $i = 0;
     
-        foreach ($this->column_search as $item) // loop column 
-        {
-            if($_POST['search']['value']) // if datatable send POST for search
-            {
+        foreach ($this->column_search as $item) { // loop column 
+            if($_POST['search']['value']) { // if datatable send POST for search
                 
-                if($i===0) // first loop
-                {
+                if($i===0) { // first loop
                     $this->db->group_start(); // open bracket. query Where with OR clause better with bracket. because maybe can combine with other WHERE with AND.
                     $this->db->like($item, $_POST['search']['value']);
-                }
-                else
-                {
+                } else {
                     $this->db->or_like($item, $_POST['search']['value']);
                 }
 
@@ -99,8 +92,7 @@ class Sampling_m extends CI_Model {
             $i++;
         }
         
-       	if(isset($this->order))
-        {
+       	if(isset($this->order)) {
             $order = $this->order;
             $this->db->order_by(key($order), $order[key($order)]);
         }
@@ -122,8 +114,7 @@ class Sampling_m extends CI_Model {
         return $query->num_rows();
     }
 
-    public function count_all($CUST_NAME = null, $FROM = null, $TO = null, $STATUS_FILTER = null, $SEGMENT = null)
-    {
+    public function count_all($CUST_NAME = null, $FROM = null, $TO = null, $STATUS_FILTER = null, $SEGMENT = null) {
         $this->_get_datatables_query($CUST_NAME, $FROM, $TO, $STATUS_FILTER, $SEGMENT);
         return $this->db->count_all_results();
     }
@@ -248,12 +239,12 @@ class Sampling_m extends CI_Model {
 		$date 		= date('Y-m-d', strtotime($this->input->post('LSAM_DATE', TRUE)));
 		$time 		= date('H:i:s');
 		$dataLog = array(
-			'CLOG_ID'		=> $this->input->post('CLOG_ID', TRUE),
-			'CLOG_DATE'		=> $date.' '.$time,
-			'CACT_ID'		=> $this->input->post('CACT_ID', TRUE),
-			'CUST_ID'		=> $this->input->post('CUST_ID', TRUE),
-			'USER_ID'		=> $this->session->USER_SESSION,
-			'CHA_ID'		=> $this->input->post('CHA_ID', TRUE),
+			'CLOG_ID'	=> $this->input->post('CLOG_ID', TRUE),
+			'CLOG_DATE' => $date.' '.$time,
+			'CACT_ID'	=> $this->input->post('CACT_ID', TRUE),
+			'CUST_ID'	=> $this->input->post('CUST_ID', TRUE),
+			'USER_ID'	=> $this->session->USER_SESSION,
+			'CHA_ID'	=> $this->input->post('CHA_ID', TRUE),
 		);
 		$this->db->insert('tb_customer_log', $this->db->escape_str($dataLog));
 		if($dataLog){
@@ -310,8 +301,8 @@ class Sampling_m extends CI_Model {
 	public function update($CLOG_ID) {
 		date_default_timezone_set('Asia/Jakarta');
 		$dataLog = array(
-			'CUST_ID'		=> $this->input->post('CUST_ID', TRUE),
-			'CHA_ID'		=> $this->input->post('CHA_ID', TRUE),
+			'CUST_ID' => $this->input->post('CUST_ID', TRUE),
+			'CHA_ID'  => $this->input->post('CHA_ID', TRUE),
 		);
 		$this->db->where('CLOG_ID', $CLOG_ID)->update('tb_customer_log', $this->db->escape_str($dataLog));	
 
@@ -375,7 +366,7 @@ class Sampling_m extends CI_Model {
 		$DATE 	 = date('d-m-Y', strtotime($check->LSAM_DATE));
 		$check_deposit = $this->check_data($CUST_ID, $DATE);
 		if($check->LSAM_COST != $actual_cost) {
-			if($DEPOSIT > 0){
+			if($DEPOSIT > 0) {
 				$NOTES = "Kelebihan ongkir sample $DATE";
 			} else {
 				$NOTES = "Kekurangan ongkir sample $DATE";

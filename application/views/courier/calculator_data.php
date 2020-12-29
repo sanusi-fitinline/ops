@@ -48,6 +48,7 @@
 							<div class="form-group">
 							    <label>Destination</label>
 							    <input class="form-control" type="text" id="SUB_NAME" value="">
+							    <input class="form-control" type="hidden" id="D_CITY_ID" value="">
 							    <input class="form-control" type="hidden" id="D_SUBD_ID" value="">
 							</div>
 						</div>
@@ -102,8 +103,8 @@
 		          	success: function(data) {
 		          		response($.map(data, function (item) {
 		                    return {
-		                        label	   : item.city_name,
 		                        value_city : item.city_id,
+		                        label	   : item.city_name,
 		                    };
 		                }));
 		          	}
@@ -129,8 +130,9 @@
 		          	success: function(data) {
 		          		response($.map(data, function (item) {
 		                    return {
-		                        label 	   : item.subd_name,
-		                        value_subd : item.subd_id
+		                        value_city : item.city_id,
+		                        value_subd : item.subd_id,
+		                        label 	   : item.subd_name
 		                    };
 		                }));
 		          	}
@@ -139,6 +141,7 @@
 		    minLength: 3,
             select: function (event, ui) {
 		        this.value = ui.item.label;
+		        $("#D_CITY_ID").val(ui.item.value_city);
 		        $("#D_SUBD_ID").val(ui.item.value_subd);
 		        event.preventDefault();
 		    }
@@ -154,6 +157,7 @@
 			        	COURIER_ID   : $("#COURIER_ID").val(),
 			        	WEIGHT 		 : $("#WEIGHT").val(),
 			        	O_RO_CITY_ID : $("#O_RO_CITY_ID").val(),
+			        	D_CITY_ID	 : $("#D_CITY_ID").val(),
 			        	D_SUBD_ID	 : $("#D_SUBD_ID").val(),
 			        }, 
 			        dataType: "json",

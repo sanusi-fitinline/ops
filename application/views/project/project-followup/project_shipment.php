@@ -130,8 +130,8 @@
 							                <?php foreach($shipment as $data): ?>
 							                	<tr>
 							                		<td align="center" style="width: 10px;">
-							                			<a href="<?php echo site_url('project_followup/del_shipment/'.$row->PRJ_ID.'/'.$data->PRJD_ID.'/'.$data->PRJS_ID) ?>" class="DELETE_SHIPMENT" style="color: #dc3545; float: left;" onclick="return confirm('Delete Item?')" title="Delete"><i class="fa fa-trash"></i></a>
-							                			<a href="#" class="UBAH_SHIPMENT" id="UBAH-SHIPMENT<?php echo $data->PRJS_ID ?>" data-toggle="modal" data-target="#edit-shipment<?php echo $data->PRJS_ID ?>" style="color: #007bff; float: right;" title="Edit"><i class="fa fa-edit"></i></a>
+							                			<a href="<?php echo site_url('project_followup/del_shipment/'.$row->PRJ_ID.'/'.$data->PRJD_ID.'/'.$data->PRJS_ID) ?>" class="DELETE_SHIPMENT mb-1" style="color: #dc3545; float: left;" onclick="return confirm('Delete Item?')" title="Delete"><i class="fa fa-trash"></i></a>
+							                			<a href="#" class="UBAH_SHIPMENT mb-1" id="UBAH-SHIPMENT<?php echo $data->PRJS_ID ?>" data-toggle="modal" data-target="#edit-shipment<?php echo $data->PRJS_ID ?>" style="color: #007bff; float: right;" title="Edit"><i class="fa fa-edit"></i></a>
 							                		</td>
 							                		<td align="center" style="vertical-align: middle; width: 10px;"><?php echo $n++ ?></td>
 							                		<td><?php echo date('d-m-Y / H:i:s', strtotime($data->PRJS_DATE)) ?></td>

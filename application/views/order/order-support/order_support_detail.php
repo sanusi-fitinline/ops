@@ -206,6 +206,10 @@
 											     	<input type="checkbox" class="custom-control-input" id="add-sender<?php echo $data['VEND_ID'] ?>" name="add_sender">
 											     	<label class="custom-control-label" for="add-sender<?php echo $data['VEND_ID'] ?>">Add Sender</label>
 											    </div>
+											    <div class="custom-control custom-checkbox">
+											     	<input type="checkbox" class="custom-control-input" id="sent-supplier<?php echo $data['VEND_ID'] ?>" name="sent_supplier" checked="true">
+											     	<label class="custom-control-label" for="sent-supplier<?php echo $data['VEND_ID'] ?>">Sent by Supplier</label>
+											    </div>
 											</div>
 											<div class="form-group" id="foo<?php echo $data['VEND_ID'] ?>" hidden>
 												<?php
@@ -242,7 +246,9 @@
 												<p id="pengirim<?php echo $data['VEND_ID'] ?>" style="display: none;" id="sender<?php echo $data['VEND_ID'] ?>">PENGIRIM : FITINLINE, KOTA YOGYAKARTA, 0274-4293090.</p>
 											</div>
 											<div class="form-group grp_copy" align="right">
-										     	<a style="color: #ffffff" class="btn btn-sm btn-info btn_copy<?php echo $data['VEND_ID'] ?>" id="INSTRUCTION<?php echo $data['VEND_ID'] ?>" data-clipboard-action="copy" data-clipboard-target="#foo<?php echo $data['VEND_ID'] ?>"><i class="fa fa-paste"></i> Order Instruction</a>
+										     	<a style="color: #ffffff" class="btn btn-sm btn-info mb-1 btn_copy<?php echo $data['VEND_ID'] ?>" id="INSTRUCTION<?php echo $data['VEND_ID'] ?>" data-clipboard-action="copy" data-clipboard-target="#foo<?php echo $data['VEND_ID'] ?>"><i class="fa fa-paste"></i> Order Instruction</a>
+												<a href="<?php echo base_url('order_support/purchase/'.$row->ORDER_ID).'/'.$data['VEND_ID'].'/1'?>" target="_blank" class="btn btn-sm btn-primary mb-1" id="PURCHASE-V1<?php echo $data['VEND_ID'] ?>"><i class="fa fa-print"></i> Print PO</a>
+												<a style="display: none" href="<?php echo base_url('order_support/purchase/'.$row->ORDER_ID).'/'.$data['VEND_ID'].'/0'?>" target="_blank" class="btn btn-sm btn-primary mb-1" id="PURCHASE-V0<?php echo $data['VEND_ID'] ?>"><i class="fa fa-print"></i> Print PO</a>
 											</div>
 										</div>
 									</div>
@@ -339,11 +345,11 @@
 												     	<input type="checkbox" class="custom-control-input" id="cetak_total<?php echo $data['VEND_ID'] ?>" name="cetak_total">
 												     	<label class="custom-control-label" for="cetak_total<?php echo $data['VEND_ID'] ?>">Cetak Total</label>
 												    </div>
-													<a style="color: #FFFF" class="btn btn-sm btn-info CETAK_LABEL" id="CETAK_LABEL<?php echo $data['VEND_ID'] ?>"><i class="fa fa-print"></i> LABEL</a>
+													<a style="color: #FFFF" class="btn btn-sm btn-info mb-1 CETAK_LABEL" id="CETAK_LABEL<?php echo $data['VEND_ID'] ?>"><i class="fa fa-print"></i> LABEL</a>
 													<?php if((!$this->access_m->isEdit('Order SS', 1)->row()) && ($this->session->GRP_SESSION !=3)) : ?>
-										        		<button class="btn btn-sm btn-secondary" type="submit" name="UPDATE_SHIPMENT" disabled><i class="fa fa-shipping-fast"></i> UPDATE SHIPMENT</button>
+										        		<button class="btn btn-sm btn-secondary mb-1" type="submit" name="UPDATE_SHIPMENT" disabled><i class="fa fa-shipping-fast"></i> UPDATE SHIPMENT</button>
 											        <?php else: ?>
-											        	<button style="float: right;" class="btn btn-sm btn-primary" type="submit" name="UPDATE_SHIPMENT"><i class="fa fa-shipping-fast"></i> UPDATE SHIPMENT</button>
+											        	<button style="float: right;" class="btn btn-sm btn-primary mb-1" type="submit" name="UPDATE_SHIPMENT"><i class="fa fa-shipping-fast"></i> UPDATE SHIPMENT</button>
 											        <?php endif ?>
 										        </div>
 											</div>
@@ -385,21 +391,34 @@
 					var clipboard = new ClipboardJS('.btn_copy'+vendor, {
 					    text: function() {
 					    	if ($("#hide-customer-phone"+vendor).is(":checked")){
-								var penerima = $("#penerima"+vendor).text().toUpperCase();
+								var penerima = $("#penerima"+vendor).text().toUpperCase()+"\n";
 							} else {
-								var penerima = $("#penerima-asli"+vendor).text().toUpperCase();
+								var penerima = $("#penerima-asli"+vendor).text().toUpperCase()+"\n";
 							}
 					    	if ($("#add-sender"+vendor).is(":checked")){
-								var pengirim = $("#pengirim"+vendor).text().toUpperCase();
+								var pengirim = $("#pengirim"+vendor).text().toUpperCase()+"\n";
 							} else {
 								var pengirim = "";
 							}
-					        var a = $("#order"+vendor).text();
-					       	var b = $(".produk"+vendor).text().toUpperCase();
-					        var c = $("#kurir"+vendor).text();
+							if($("#sent-supplier"+vendor).prop('checked') == true){
+							    var kurir 	 = $("#kurir"+vendor).text()+"\n";
+								if ($("#hide-customer-phone"+vendor).is(":checked")){
+									var penerima = $("#penerima"+vendor).text().toUpperCase()+"\n";
+								} else {
+									var penerima = $("#penerima-asli"+vendor).text().toUpperCase()+"\n";
+								}
+								var pengirim = $("#pengirim"+vendor).text().toUpperCase()+"\n";
+							} else {
+								var kurir 	 = "";
+								var penerima = "";
+								var pengirim = "";
+							}
+					        var a = $("#order"+vendor).text()+"\n";
+					       	var b = $(".produk"+vendor).text().toUpperCase()+"\n";
+					        var c = kurir;
 					        var d = penerima;
 					        var e = pengirim;
-					        var f = a+"\n"+b+"\n"+c+"\n"+d+"\n"+e;
+					        var f = a+b+c+d+e;
 					        return f;
 					    }
 					});
@@ -411,9 +430,20 @@
 					clipboard.on('error', function(e) {
 						setTooltip('Failed!');
 						hideTooltip();
-					});					
+					});
+
+					$("#sent-supplier"+vendor).click(function(){
+						if($("#sent-supplier"+vendor).prop('checked') == true){
+							$("#PURCHASE-V1"+vendor).css("display", "inline-block");
+							$("#PURCHASE-V0"+vendor).css("display", "none");
+						} else {
+							$("#PURCHASE-V1"+vendor).css("display", "none");
+							$("#PURCHASE-V0"+vendor).css("display", "inline-block");
+						}
+					});
 				});
 			});
+
 
 		<?php endforeach ?>
 

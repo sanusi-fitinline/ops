@@ -6,8 +6,7 @@ class Producer_x_product_m extends CI_Model {
     var $column_search = array('PRDUP_NAME'); //field yang diizin untuk pencarian 
     var $order = array('PRDUP_NAME' => 'ASC'); // default order 
 
-    public function __construct()
-    {
+    public function __construct() {
         parent::__construct();
         $this->load->database();
     }
@@ -17,24 +16,19 @@ class Producer_x_product_m extends CI_Model {
 		$this->db->from($this->table);
 		$this->db->join('tb_producer', 'tb_producer.PRDU_ID=tb_producer_x_product.PRDU_ID', 'left');
 		$this->db->join('tb_producer_product', 'tb_producer_product.PRDUP_ID=tb_producer_x_product.PRDUP_ID', 'left');
-		if($PRDU_ID != null){
+		if($PRDU_ID != null) {
 			$this->db->where('tb_producer_x_product.PRDU_ID', $PRDU_ID);
 		}
 
         $i = 0;
     
-        foreach ($this->column_search as $item) // loop column 
-        {
-            if($_POST['search']['value']) // if datatable send POST for search
-            {
+        foreach ($this->column_search as $item) { // loop column 
+            if($_POST['search']['value']) { // if datatable send POST for search
                 
-                if($i===0) // first loop
-                {
+                if($i===0) { // first loop
                     $this->db->group_start(); // open bracket. query Where with OR clause better with bracket. because maybe can combine with other WHERE with AND.
                     $this->db->like($item, $_POST['search']['value']);
-                }
-                else
-                {
+                } else {
                     $this->db->or_like($item, $_POST['search']['value']);
                 }
 
@@ -44,15 +38,13 @@ class Producer_x_product_m extends CI_Model {
             $i++;
         }
         
-       	if(isset($this->order))
-        {
+       	if(isset($this->order)) {
             $order = $this->order;
             $this->db->order_by(key($order), $order[key($order)]);
         }
     }
 
-    function get_datatables($PRDU_ID = null)
-    {
+    function get_datatables($PRDU_ID = null) {
         $this->_get_datatables_query($PRDU_ID);
         if($_POST['length'] != -1)
         $this->db->limit($_POST['length'], $_POST['start']);
@@ -60,15 +52,13 @@ class Producer_x_product_m extends CI_Model {
         return $query->result();
     }
 
-    function count_filtered($PRDU_ID = null)
-    {
+    function count_filtered($PRDU_ID = null) {
         $this->_get_datatables_query($PRDU_ID);
         $query = $this->db->get();
         return $query->num_rows();
     }
 
-    public function count_all($PRDU_ID = null)
-    {
+    public function count_all($PRDU_ID = null) {
         $this->_get_datatables_query($PRDU_ID);
         return $this->db->count_all_results();
     }
@@ -78,7 +68,7 @@ class Producer_x_product_m extends CI_Model {
 		$this->db->from('tb_producer_x_product');
 		$this->db->join('tb_producer', 'tb_producer.PRDU_ID=tb_producer_x_product.PRDU_ID', 'left');
 		$this->db->join('tb_producer_product', 'tb_producer_product.PRDUP_ID=tb_producer_x_product.PRDUP_ID', 'left');
-		if($PRDXP_ID != null){
+		if($PRDXP_ID != null) {
 			$this->db->where('tb_producer_x_product.PRDXP_ID', $PRDXP_ID);
 		}
 		$this->db->order_by('tb_producer_product.PRDUP_NAME', 'ASC');
@@ -117,7 +107,7 @@ class Producer_x_product_m extends CI_Model {
 		$this->db->where('PRDXP_ID', $PRDXP_ID)->update('tb_producer_x_product', $this->db->escape_str($dataUpdate));
 	}
 
-	public function delete($PRDXP_ID){
+	public function delete($PRDXP_ID) {
 		$this->db->where('PRDXP_ID', $PRDXP_ID);
 		$this->db->delete('tb_producer_x_product');
 	}

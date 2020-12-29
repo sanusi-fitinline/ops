@@ -6,14 +6,12 @@ class Ckstock_m extends CI_Model {
     var $column_search = array('PRO_NAME', 'LSTOCK_COLOR'); //field yang diizin untuk pencarian 
     var $order = array('LSTOCK_DATE' => 'DESC'); // default order 
 
-    public function __construct()
-    {
+    public function __construct() {
         parent::__construct();
         $this->load->database();
     }
 
-    private function _get_datatables_query($CLOG_ID = null, $CUST_NAME = null, $FROM = null, $TO = null, $STATUS_FILTER = null, $SEGMENT = null)
-    {
+    private function _get_datatables_query($CLOG_ID = null, $CUST_NAME = null, $FROM = null, $TO = null, $STATUS_FILTER = null, $SEGMENT = null) {
 		$this->load->model('access_m');
 		$modul = "Check Stock CS";
 		$modul2 = "Check Stock PM";
@@ -31,7 +29,7 @@ class Ckstock_m extends CI_Model {
 				$this->db->where('tb_log_stock.USER_ID', $this->session->USER_SESSION);
 			}
 	    }
-		if($CLOG_ID != null){
+		if($CLOG_ID != null) {
 			$this->db->where('tb_log_stock.CLOG_ID', $CLOG_ID);
 		}
 		if ($CUST_NAME != null) { // filter by customer name
@@ -67,18 +65,13 @@ class Ckstock_m extends CI_Model {
 		
         $i = 0;
     
-        foreach ($this->column_search as $item) // loop column 
-        {
-            if($_POST['search']['value']) // if datatable send POST for search
-            {
+        foreach ($this->column_search as $item) { // loop column 
+            if($_POST['search']['value']) { // if datatable send POST for search
                 
-                if($i===0) // first loop
-                {
+                if($i===0) { // first loop
                     $this->db->group_start(); // open bracket. query Where with OR clause better with bracket. because maybe can combine with other WHERE with AND.
                     $this->db->like($item, $_POST['search']['value']);
-                }
-                else
-                {
+                } else {
                     $this->db->or_like($item, $_POST['search']['value']);
                 }
 
@@ -88,15 +81,13 @@ class Ckstock_m extends CI_Model {
             $i++;
         }
         
-       	if(isset($this->order))
-        {
+       	if(isset($this->order)) {
             $order = $this->order;
             $this->db->order_by(key($order), $order[key($order)]);
         }
     }
 
-    function get_datatables($CLOG_ID = null, $CUST_NAME = null, $FROM = null, $TO = null, $STATUS_FILTER = null, $SEGMENT = null)
-    {
+    function get_datatables($CLOG_ID = null, $CUST_NAME = null, $FROM = null, $TO = null, $STATUS_FILTER = null, $SEGMENT = null) {
         $this->_get_datatables_query($CLOG_ID, $CUST_NAME, $FROM, $TO, $STATUS_FILTER, $SEGMENT);
         if($_POST['length'] != -1)
         $this->db->limit($_POST['length'], $_POST['start']);
@@ -104,15 +95,13 @@ class Ckstock_m extends CI_Model {
         return $query->result();
     }
 
-    function count_filtered($CLOG_ID = null, $CUST_NAME = null, $FROM = null, $TO = null, $STATUS_FILTER = null, $SEGMENT = null)
-    {
+    function count_filtered($CLOG_ID = null, $CUST_NAME = null, $FROM = null, $TO = null, $STATUS_FILTER = null, $SEGMENT = null) {
         $this->_get_datatables_query($CLOG_ID, $CUST_NAME, $FROM, $TO, $STATUS_FILTER, $SEGMENT);
         $query = $this->db->get();
         return $query->num_rows();
     }
 
-    public function count_all($CLOG_ID = null, $CUST_NAME = null, $FROM = null, $TO = null, $STATUS_FILTER = null, $SEGMENT = null)
-    {
+    public function count_all($CLOG_ID = null, $CUST_NAME = null, $FROM = null, $TO = null, $STATUS_FILTER = null, $SEGMENT = null) {
         $this->_get_datatables_query($CLOG_ID, $CUST_NAME, $FROM, $TO, $STATUS_FILTER, $SEGMENT);
         return $this->db->count_all_results();
     }
@@ -165,7 +154,7 @@ class Ckstock_m extends CI_Model {
 				$this->db->where('tb_log_stock.USER_ID', $this->session->USER_SESSION);
 			}
 	    }
-		if($CLOG_ID != null){
+		if($CLOG_ID != null) {
 			$this->db->where('tb_log_stock.CLOG_ID', $CLOG_ID);
 		}
 		$query = $this->db->get();
@@ -222,17 +211,17 @@ class Ckstock_m extends CI_Model {
 		$date 		= date('Y-m-d', strtotime($this->input->post('LSTOCK_DATE', TRUE)));
 		$time 		= date('H:i:s');
 		$dataLog = array(
-			'CLOG_ID'		=> $this->input->post('CLOG_ID', TRUE),
-			'CLOG_DATE'		=> $date.' '.$time,
-			'CACT_ID'		=> $this->input->post('CACT_ID', TRUE),
-			'CUST_ID'		=> $this->input->post('CUST_ID', TRUE),
-			'USER_ID'		=> $this->session->USER_SESSION,
-			'CHA_ID'		=> $this->input->post('CHA_ID', TRUE),
+			'CLOG_ID'   => $this->input->post('CLOG_ID', TRUE),
+			'CLOG_DATE' => $date.' '.$time,
+			'CACT_ID'	=> $this->input->post('CACT_ID', TRUE),
+			'CUST_ID'	=> $this->input->post('CUST_ID', TRUE),
+			'USER_ID'	=> $this->session->USER_SESSION,
+			'CHA_ID'	=> $this->input->post('CHA_ID', TRUE),
 		);
 		if($this->input->post('CLOG_ID') == null) {
 			$this->db->insert('tb_customer_log', $this->db->escape_str($dataLog));
 		}
-		if($dataLog){
+		if($dataLog) {
 			if($this->input->post('CLOG_ID') != null) {
 				$id_log = $this->input->post('CLOG_ID', TRUE);
 			} else {
@@ -258,12 +247,12 @@ class Ckstock_m extends CI_Model {
 		$date 		= date('Y-m-d', strtotime($this->input->post('LSTOCK_DATE', TRUE)));
 		$time 		= date('H:i:s');
 		$dataLog = array(
-			'CLOG_ID'		=> $this->input->post('CLOG_ID', TRUE),
-			'CLOG_DATE'		=> $date.' '.$time,
-			'CACT_ID'		=> $this->input->post('CACT_ID', TRUE),
-			'CUST_ID'		=> $this->input->post('CUST_ID', TRUE),
-			'USER_ID'		=> $this->session->USER_SESSION,
-			'CHA_ID'		=> $this->input->post('CHA_ID', TRUE),
+			'CLOG_ID'	=> $this->input->post('CLOG_ID', TRUE),
+			'CLOG_DATE' => $date.' '.$time,
+			'CACT_ID'	=> $this->input->post('CACT_ID', TRUE),
+			'CUST_ID'	=> $this->input->post('CUST_ID', TRUE),
+			'USER_ID'	=> $this->session->USER_SESSION,
+			'CHA_ID'	=> $this->input->post('CHA_ID', TRUE),
 		);
 		if($this->input->post('CLOG_ID') == null) {
 			$this->db->insert('tb_customer_log', $this->db->escape_str($dataLog));
@@ -300,8 +289,8 @@ class Ckstock_m extends CI_Model {
 
 	public function update($LSTOCK_ID) {
 		$dataLog = array(
-			'CUST_ID'		=> $this->input->post('CUST_ID', TRUE),
-			'CHA_ID'		=> $this->input->post('CHA_ID', TRUE),
+			'CUST_ID' => $this->input->post('CUST_ID', TRUE),
+			'CHA_ID'  => $this->input->post('CHA_ID', TRUE),
 		);
 		$this->db->where('CLOG_ID', $this->input->post('CLOG_ID', TRUE))->update('tb_customer_log', $this->db->escape_str($dataLog));
 
@@ -318,8 +307,8 @@ class Ckstock_m extends CI_Model {
 
 	public function pm_update($LSTOCK_ID) {
 		$dataUpdate = array(
-			'LSTOCK_STATUS'		=> $this->input->post('LSTOCK_STATUS', TRUE),
-			'LSTOCK_VNOTES'		=> str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$this->input->post('LSTOCK_VNOTES', TRUE)),
+			'LSTOCK_STATUS' => $this->input->post('LSTOCK_STATUS', TRUE),
+			'LSTOCK_VNOTES' => str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$this->input->post('LSTOCK_VNOTES', TRUE)),
 		);
 		$this->db->where('LSTOCK_ID', $LSTOCK_ID)->update('tb_log_stock', $this->db->escape_str($dataUpdate));
 	}

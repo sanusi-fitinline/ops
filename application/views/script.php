@@ -682,7 +682,7 @@
 				        	COURIER_NAME 		: COURIER_N,
 				        	}, 
 				        dataType: "json",
-				        timeout: 3000,
+				        timeout: 9000,
 				        beforeSend: function(e) {
 				        	if(COURIER_A==1){
 								$(".spinner2").css("display","block");
@@ -1618,6 +1618,8 @@
 		            "processing": true, 
 		            "serverSide": true, 
 		            "ordering": false,
+		            // "stateSave": true,
+		            // "stateDuration": -1,
 		            "order": [], 
 		            "ajax": {
 		                "url": "<?php echo site_url('order/orderjson')?>",
@@ -1633,16 +1635,39 @@
 		        });
 
 		        $("#FILTER_ORDER").click(function(){
+		        	if ($('#FROM').val() == null) {
+				        var FROM_VALUE = null;
+			    	} else {
+				    	var FROM_VALUE = $('#FROM').val();
+			    	}
+			    	if ($('#TO').val() == null) {
+				        var TO_VALUE = null;
+			    	} else {
+				    	var TO_VALUE  = $('#TO').val();
+			    	}
+			    	var data = 'FROM=' + FROM_VALUE + '&TO=' + TO_VALUE + '&STATUS_FILTER=' + $('#STATUS').val();
 		        	var myTableOrder = $('#myTableOrder').dataTable({
 			            "destroy": true,
 			            "processing": true, 
 			            "serverSide": true, 
 			            "ordering": false,
+			            // "stateSave": true,
+			            // "stateDuration": -1,
+			            // "stateSaveCallback": function (settings, data) {
+							// Send an Ajax request to the server with the state object
+						// 	$.ajax( {
+				  //               "url": "<?php echo site_url('order/orderjson')?>",
+				  //               "type": "POST",
+				  //               "data": data,
+				  //           });
+						// },
 			            "order": [], 
 			            "ajax": {
 			                "url": "<?php echo site_url('order/orderjson')?>",
 			                "type": "POST",
 			                "data": {
+			                	"FROM" 			: FROM_VALUE,
+			                	"TO" 			: TO_VALUE,
 			                	"STATUS_FILTER" : $('#STATUS').val()
 			                },
 			            },
@@ -2168,7 +2193,51 @@
 				            },
 			            ],
 			        });
-			        $("#FILTER_PROJECT").attr("disabled","disabled");
+			        // $("#FILTER_PROJECT").attr("disabled","disabled");
+		        });
+
+		        // prospect
+		        var myTableProspect = $('#myTableProspect').dataTable({
+		            "processing": true, 
+		            "serverSide": true, 
+		            "ordering": false,
+		            "order": [], 
+		            "ajax": {
+		                "url": "<?php echo site_url('prospect/prospect_json')?>",
+		                "type": "POST"
+		            },
+		            "deferRender": true,
+		            "columnDefs": [
+			            { 
+			                "targets": [ 0 ], 
+			                "orderable": false, 
+			            },
+		            ],
+		        });
+
+		        $("#FILTER_PROSPECT").click(function(){
+		        	var myTableProspect = $('#myTableProspect').dataTable({
+			            "destroy": true,
+			            "processing": true, 
+			            "serverSide": true, 
+			            "ordering": false,
+			            "order": [], 
+			            "ajax": {
+			                "url": "<?php echo site_url('prospect/prospect_json')?>",
+			                "type": "POST",
+			                "data": {
+			                	"STATUS_FILTER" : $('#STATUS').val()
+			                },
+			            },
+			            "deferRender": true,
+			            "columnDefs": [
+				            { 
+				                "targets": [ 0 ], 
+				                "orderable": false, 
+				            },
+			            ],
+			        });
+			        $("#FILTER_PROSPECT").attr("disabled","disabled");
 		        });
 
 		        // project follow up
@@ -2215,6 +2284,50 @@
 			        $("#FILTER_PROJECT_FOLLOW_UP").attr("disabled","disabled");
 		        });
 
+		        // prospect follow up
+		        var myTableProspectFollowUp = $('#myTableProspectFollowUp').dataTable({
+		            "processing": true, 
+		            "serverSide": true, 
+		            "ordering": false,
+		            "order": [], 
+		            "ajax": {
+		                "url": "<?php echo site_url('prospect_followup/prospect_json')?>",
+		                "type": "POST"
+		            },
+		            "deferRender": true, 
+		            "columnDefs": [
+			            { 
+			                "targets": [ 0 ], 
+			                "orderable": false, 
+			            },
+		            ],
+		        });
+
+		        $("#FILTER_PROSPECT_FOLLOW_UP").click(function(){
+		        	var myTableProspectFollowUp = $('#myTableProspectFollowUp').dataTable({
+			            "destroy": true,
+			            "processing": true, 
+			            "serverSide": true, 
+			            "ordering": false,
+			            "order": [], 
+			            "ajax": {
+			                "url": "<?php echo site_url('prospect_followup/prospect_json')?>",
+			                "type": "POST",
+			                "data": {
+			                	"STATUS_FILTER" : $('#STATUS').val()
+			                },
+			            },
+			            "deferRender": true,
+			            "columnDefs": [
+				            { 
+				                "targets": [ 0 ], 
+				                "orderable": false, 
+				            },
+			            ],
+			        });
+			        $("#FILTER_PROSPECT_FOLLOW_UP").attr("disabled","disabled");
+		        });
+
 		        // list project producer
 		        var project_producer_list = $('#project_producer_list').dataTable({
 		            "processing": true, 
@@ -2225,6 +2338,30 @@
 		            "order": [], 
 		            "ajax": {
 		                "url": "<?php echo site_url('project_followup/project_producer_json')?>",
+		                "type": "POST",
+		                "data": {
+		                	"PRDUP_ID" : $('#PRDUP_ID').val()
+		                },
+		            },
+		            "deferRender": true, 
+		            "columnDefs": [
+			            { 
+			                "targets": [ 0 ], 
+			                "orderable": false, 
+			            },
+		            ],
+		        });
+
+		        // list prospect producer
+		        var prospect_producer_list = $('#prospect_producer_list').dataTable({
+		            "processing": true, 
+		            "serverSide": true, 
+		            "ordering": false,
+		            "lengthChange": true,
+		            "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+		            "order": [], 
+		            "ajax": {
+		                "url": "<?php echo site_url('prospect_followup/prospect_producer_json')?>",
 		                "type": "POST",
 		                "data": {
 		                	"PRDUP_ID" : $('#PRDUP_ID').val()
@@ -2281,6 +2418,50 @@
 			            ],
 			        });
 			        $("#FILTER_ASSIGN_PRODUCER").attr("disabled","disabled");
+		        });
+
+		        // payment from customer
+		        var myTablePaymentCustomer = $('#table_payment_customer').dataTable({
+		            "processing": true, 
+		            "serverSide": true, 
+		            "ordering": false,
+		            "order": [], 
+		            "ajax": {
+		                "url": "<?php echo site_url('payment_customer/payment_json')?>",
+		                "type": "POST"
+		            },
+		            "deferRender": true,
+		            "columnDefs": [
+			            { 
+			                "targets": [ 0 ], 
+			                "orderable": false, 
+			            },
+		            ],
+		        });
+
+		        $("#FILTER_PAYMENT_CUSTOMER").click(function(){
+		        	var myTablePaymentCustomer = $('#table_payment_customer').dataTable({
+			            "destroy": true,
+			            "processing": true, 
+			            "serverSide": true, 
+			            "ordering": false,
+			            "order": [], 
+			            "ajax": {
+			                "url": "<?php echo site_url('payment_customer/payment_json')?>",
+			                "type": "POST",
+			                "data": {
+			                	"STATUS_FILTER" : $('#STATUS').val()
+			                },
+			            },
+			            "deferRender": true,
+			            "columnDefs": [
+				            { 
+				                "targets": [ 0 ], 
+				                "orderable": false, 
+				            },
+			            ],
+			        });
+			        $("#FILTER_PAYMENT_CUSTOMER").attr("disabled","disabled");
 		        });
 
 		        // producer

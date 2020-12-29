@@ -47,8 +47,6 @@ class Ordervendor_m extends CI_Model {
             $this->db->group_end();
         }
 
-        $this->db->order_by('tb_order.ORDER_ID', 'DESC');
-
         $i = 0;
     
         foreach ($this->column_search as $item) { // loop column
@@ -64,6 +62,8 @@ class Ordervendor_m extends CI_Model {
             }
             $i++;
         }
+
+        $this->db->order_by('tb_order.ORDER_ID', 'DESC');
     }
 
     function get_datatables($STATUS_FILTER = null) {
@@ -142,13 +142,13 @@ class Ordervendor_m extends CI_Model {
         return $query;
     }
 
-    public function check_order_vendor($ORDER_ID, $VEND_ID){
+    public function check_order_vendor($ORDER_ID, $VEND_ID) {
         $this->db->where('ORDER_ID', $ORDER_ID);
         $this->db->where('VEND_ID ', $VEND_ID);
         return $this->db->get('tb_order_vendor');
     }
 
-    public function check_price_vendor($ORDD_ID, $ORDD_PRICE_VENDOR){
+    public function check_price_vendor($ORDD_ID, $ORDD_PRICE_VENDOR) {
         $this->db->where('ORDD_ID', $ORDD_ID);
         $this->db->where('ORDD_PRICE_VENDOR', $ORDD_PRICE_VENDOR);
         return $this->db->get('tb_order_detail');
@@ -262,7 +262,7 @@ class Ordervendor_m extends CI_Model {
 
             // insert vendor_price
             $insert_vendor_price = array();
-            foreach($ORDD_ID as $x => $val){
+            foreach($ORDD_ID as $x => $val) {
                 $check[$x]       = $this->check_price_vendor($ORDD_ID[$x], $NEW_PRICE_VENDOR[$x]);
                 $check_price[$x] = $check[$x]->num_rows() > 0;
                 if(!$check_price[$x]) {
@@ -281,7 +281,7 @@ class Ordervendor_m extends CI_Model {
 
             // update tb_order_detail
             $update_detail_vendor = array();
-            foreach($ORDD_ID as $i => $val){
+            foreach($ORDD_ID as $i => $val) {
                 $update_detail_vendor = array(
                     'ORDD_PRICE_VENDOR'    => $NEW_PRICE_VENDOR[$i],
                     'ORDD_QUANTITY_VENDOR' => $ORDD_QUANTITY_VENDOR[$i],
@@ -384,12 +384,12 @@ class Ordervendor_m extends CI_Model {
         } else {
             $NOTES = "Kekurangan ongkir order";
         }
-        $CHECK_STATUS        = $this->get_shipcost_status($PAYTOV_ID)->row();
-        $get_user            = $this->get_user_id($CUST_ID)->row();
-        $USER_ID             = $get_user->USER_ID;
+        $CHECK_STATUS = $this->get_shipcost_status($PAYTOV_ID)->row();
+        $get_user     = $this->get_user_id($CUST_ID)->row();
+        $USER_ID      = $get_user->USER_ID;
 
         $updateDetail = array();
-        foreach($ORDD_ID as $i => $val){
+        foreach($ORDD_ID as $i => $val) {
             $updateDetail = array(
                 'ORDD_OPTION' => $ORDD_OPTION[$i],
             );

@@ -101,10 +101,10 @@ class Followup extends CI_Controller {
 			}
 
 			$row[] = '<form action="'.$url.'followup/del_followup" method="post"><div style="vertical-align: middle; text-align: center;">
-					<a href="'.$link_detail.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
+					<a href="'.$link_detail.'" class="btn btn-primary btn-sm mb-1"><i class="fa fa-pen"></i></a>
 					<input type="hidden" name="FLWP_ID" value="'.$field->FLWP_ID.'">
 					<input type="hidden" name="CLOG_ID" value="'.$field->CLOG_ID.'">
-					<button '.$DELETE.' onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
+					<button '.$DELETE.' onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm mb-1"><i class="fa fa-trash"></i></button>
 				</div></form>';
 			$data[] = $row;
 		}
@@ -181,20 +181,20 @@ class Followup extends CI_Controller {
 			$row[] = "<div align='center'>$STATUS</div>";
 			if ($field->CACT_ID == 1){
 				$row[] = '<div style="vertical-align: middle; text-align: center;">
-				<a href="'.$url.'followup/sampling_followup/'.$field->CLOG_ID.'" class="btn btn-warning btn-sm" title="Follow Up"><i class="fa fa-share"></i></a></div>';
+				<a href="'.$url.'followup/sampling_followup/'.$field->CLOG_ID.'" class="btn btn-warning btn-sm mb-1" title="Follow Up"><i class="fa fa-share"></i></a></div>';
 			}
 			else if ($field->CACT_ID == 2) {
 				$row[] = '<div style="vertical-align: middle; text-align: center;">
-				<a href="'.$url.'followup/check_stock_followup/'.$field->CLOG_ID.'" class="btn btn-warning btn-sm" title="Follow Up"><i class="fa fa-share"></i></a></div>';
+				<a href="'.$url.'followup/check_stock_followup/'.$field->CLOG_ID.'" class="btn btn-warning btn-sm mb-1" title="Follow Up"><i class="fa fa-share"></i></a></div>';
 			}
 			else if ($field->CACT_ID == 4) {
 				if ($this->session->GRP_SESSION == 3) {
 					$row[] = '<div style="vertical-align: middle; text-align: center;">
-					<a href="'.$url.'followup/assign_edit/'.$field->CLOG_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
-					<a href="'.$url.'followup/assign_followup/'.$field->CLOG_ID.'" class="btn btn-warning btn-sm" title="Follow Up"><i class="fa fa-share"></i></a></div>';
+					<a href="'.$url.'followup/assign_edit/'.$field->CLOG_ID.'" class="btn btn-primary btn-sm mb-1"><i class="fa fa-pen"></i></a>
+					<a href="'.$url.'followup/assign_followup/'.$field->CLOG_ID.'" class="btn btn-warning btn-sm mb-1" title="Follow Up"><i class="fa fa-share"></i></a></div>';
 				} else {
 					$row[] = '<div style="vertical-align: middle; text-align: center;">
-					<a href="'.$url.'followup/assign_followup/'.$field->CLOG_ID.'" class="btn btn-warning btn-sm" title="Follow Up"><i class="fa fa-share"></i></a></div>';
+					<a href="'.$url.'followup/assign_followup/'.$field->CLOG_ID.'" class="btn btn-warning btn-sm mb-1" title="Follow Up"><i class="fa fa-share"></i></a></div>';
 				}
 			}
 			$data[] = $row;

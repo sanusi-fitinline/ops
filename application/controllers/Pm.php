@@ -90,10 +90,10 @@ class Pm extends CI_Controller {
 				$DELETE = "hidden";
 			} else {$DELETE = "";}
 
-			$row[] = '<form action="'.$url.'pm/del_sampling" method="post"><div style="vertical-align: middle; text-align: center;"><a href="'.$url.'pm/edit_sampling/'.$field->LSAM_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
+			$row[] = '<form action="'.$url.'pm/del_sampling" method="post"><div style="vertical-align: middle; text-align: center;"><a href="'.$url.'pm/edit_sampling/'.$field->LSAM_ID.'" class="btn btn-primary btn-sm mb-1"><i class="fa fa-pen"></i></a>
 				<input type="hidden" name="LSAM_ID" value="'.$field->LSAM_ID.'">
 				<input type="hidden" name="CLOG_ID" value="'.$field->CLOG_ID.'">
-				<button '.$DELETE.' onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button></div></form>';
+				<button '.$DELETE.' onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm mb-1"><i class="fa fa-trash"></i></button></div></form>';
 			$data[] = $row;
 		}
 
@@ -217,10 +217,10 @@ class Pm extends CI_Controller {
 				$DELETE = "hidden";
 			} else {$DELETE = "";}
 
-			$row[] = '<form action="'.$url.'pm/del_stock" method="post"><div style="vertical-align: middle; text-align: center;"><a href="'.$url.'pm/edit_check/'.$field->LSTOCK_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
+			$row[] = '<form action="'.$url.'pm/del_stock" method="post"><div style="vertical-align: middle; text-align: center;"><a href="'.$url.'pm/edit_check/'.$field->LSTOCK_ID.'" class="btn btn-primary btn-sm mb-1"><i class="fa fa-pen"></i></a>
 				<input type="hidden" name="LSTOCK_ID" value="'.$field->LSTOCK_ID.'">
 				<input type="hidden" name="CLOG_ID" value="'.$field->CLOG_ID.'">
-				<button '.$DELETE.' onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button></div></form>';
+				<button '.$DELETE.' onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm mb-1"><i class="fa fa-trash"></i></button></div></form>';
 			$data[] = $row;
 		}
 

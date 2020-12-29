@@ -60,15 +60,15 @@
 									</div>
 									<div class="col-md-6">
 										<div class="form-group row">
-											<label for="inputNotes" class="col-sm-3 col-form-label">Size Group</label>
+											<label for="inputSizeGroup" class="col-sm-3 col-form-label">Size Group</label>
 											<div class="col-sm-9">
-												<select class="form-control selectpicker" name="SIZG_ID" title="-- Select One --" data-live-search="true" required>
-										    	<?php foreach($size_group as $sizg): ?>
-											    	<option value="<?php echo $sizg->SIZG_ID?>" <?php echo $detail->SIZG_ID == $sizg->SIZG_ID ? "selected" : "" ?>>
-											    		<?php echo stripslashes($sizg->SIZG_NAME) ?>
-											    	</option>
-											    <?php endforeach ?>
-										    </select>
+												<select class="form-control selectpicker" for="inputSizeGroup" name="SIZG_ID" title="-- Select One --" data-live-search="true" required>
+											    	<?php foreach($size_group as $sizg): ?>
+												    	<option value="<?php echo $sizg->SIZG_ID?>" <?php echo $detail->SIZG_ID == $sizg->SIZG_ID ? "selected" : "" ?>>
+												    		<?php echo stripslashes($sizg->SIZG_NAME) ?>
+												    	</option>
+												    <?php endforeach ?>
+											    </select>
 											</div>
 										</div>
 										<div class="form-group row">
@@ -124,8 +124,8 @@
 								                	<?php foreach($model as $value): ?>
 									                	<tr>
 									                		<td align="center" style="width: 10px;">
-									                			<a href="<?php echo site_url('project/del_model/'.$row->PRJ_ID.'/'.$detail->PRJD_ID.'/'.$value->PRJDM_ID) ?>" class="DELETE-MODEL" style="color: #dc3545; float: left;" onclick="return confirm('Delete Item?')" title="Delete"><i class="fa fa-trash"></i></a>
-									                			<a href="#" class="UBAH-MODEL" id="UBAH-MODEL<?php echo $value->PRJDM_ID ?>" data-toggle="modal" data-target="#edit-model<?php echo $value->PRJDM_ID ?>" style="color: #007bff; float: right;" title="Edit"><i class="fa fa-edit"></i></a>
+									                			<a href="<?php echo site_url('project/del_model/'.$row->PRJ_ID.'/'.$detail->PRJD_ID.'/'.$value->PRJDM_ID) ?>" class="DELETE-MODEL mb-1" style="color: #dc3545; float: left;" onclick="return confirm('Delete Item?')" title="Delete"><i class="fa fa-trash"></i></a>
+									                			<a href="#" class="UBAH-MODEL mb-1" id="UBAH-MODEL<?php echo $value->PRJDM_ID ?>" data-toggle="modal" data-target="#edit-model<?php echo $value->PRJDM_ID ?>" style="color: #007bff; float: right;" title="Edit"><i class="fa fa-edit"></i></a>
 									                		</td>
 									                		<td align="center" style="width: 10px;"><?php echo $n++ ?></td>
 									                		<td><?php echo $value->PRDPP_NAME ?></td>

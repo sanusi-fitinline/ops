@@ -106,61 +106,87 @@
 	        <tr bgcolor="#ffffff">
 	            <th width="10%" align="center">#</th>
 	            <th width="30%" align="center">Nama Produk</th>
-	            <th width="10%" align="center">Ukuran</th>
+	            <th width="20%" align="center">Jumlah</th>
 	            <th width="20%" align="center">Harga</th>
-	            <th width="10%" align="center">Jumlah</th>
 	            <th width="20%" align="center">Subtotal</th>
 	        </tr>';
-	foreach ($quantity as $qty){
-		foreach ($detail as $field){
-			if($qty->PRJD_ID == $field->PRJD_ID){
-				$i++;
-				$html.='<tr bgcolor="#ffffff">
-		            <td align="center">'.$i.'</td>
-		            <td>'.$field->PRDUP_NAME.'</td>
-		            <td align="center">'.$qty->SIZE_NAME.'</td>
-		            <td align="right">'.number_format($qty->PRJDQ_PRICE,0,",",".").'</td>
-		            <td align="center">'.str_replace(".", ",", $qty->PRJDQ_QTY).'</td>
-		            <td align="right">'.number_format($qty->PRJDQ_PRICE * $qty->PRJDQ_QTY,0,",",".").'</td>
-		        </tr>';
-			}
-		}
+	foreach ($detail as $field){
+		$i++;
+		$html.='<tr bgcolor="#ffffff">
+            <td align="center">'.$i.'</td>
+            <td>'.$field->PRDUP_NAME.'</td>
+            <td align="center">'.str_replace(".", ",", $field->PRJD_QTY).'</td>
+            <td align="right">'.number_format($field->PRJD_PRICE,0,",",".").'</td>
+            <td align="right">'.number_format($field->PRJD_PRICE * $field->PRJD_QTY,0,",",".").'</td>
+        </tr>';
 	}
     $html.='<tr bgcolor="#ffffff">
-    			<td style="font-weight: bold;" colspan="5" align="right">Total</td>
+    			<td style="font-weight: bold;" colspan="4" align="right">Subtotal</td>
 				<td align="right">'.number_format($row->PRJ_SUBTOTAL,0,',','.').'</td>
-			</tr>
-			<tr bgcolor="#ffffff">
-				<td style="vertical-align: middle; font-weight: bold" colspan="5" align="right">Diskon</td>
-				<td align="right">'.number_format($row->PRJ_DISCOUNT,0,',','.').'</td>
-			</tr>
-			<tr bgcolor="#ffffff">
-				<td style="font-weight: bold;" colspan="5" align="right">Tambahan</td>
-				<td align="right">'.number_format($row->PRJ_ADDCOST,0,',','.').'</td>
-			</tr>
-			<tr bgcolor="#ffffff">
-				<td style="font-weight: bold;" colspan="5" align="right">Pajak</td>
-				<td align="right">'.number_format($row->PRJ_TAX,0,',','.').'</td>
-			</tr>
-			<tr bgcolor="#ffffff">
-				<td style="vertical-align: middle; font-weight: bold" colspan="5" align="right">Deposit</td>
-				<td align="right">'.number_format($row->PRJ_DEPOSIT,0,',','.').'</td>
-			</tr>
-			<tr bgcolor="#ffffff">
-				<td style="font-weight: bold;" colspan="5" align="right">Total</td>
-				<td align="right">'.number_format($row->PRJ_TOTAL,0,',','.').'</td>
-			</tr>
-			<tr bgcolor="#ffffff">
-				<td style="font-weight: bold;" colspan="5" align="right">Ongkos Kirim</td>
+			</tr>';
+	if ($row->PRJ_DISCOUNT != null && $row->PRJ_DISCOUNT != 0) {
+		$html.='<tr bgcolor="#ffffff">
+					<td style="vertical-align: middle; font-weight: bold" colspan="4" align="right">Diskon</td>
+					<td align="right">'.number_format($row->PRJ_DISCOUNT,0,',','.').'</td>
+				</tr>';
+	}
+	if ($row->PRJ_ADDCOST != null && $row->PRJ_ADDCOST != 0) {
+		$html.='<tr bgcolor="#ffffff">
+					<td style="font-weight: bold;" colspan="4" align="right">Tambahan</td>
+					<td align="right">'.number_format($row->PRJ_ADDCOST,0,',','.').'</td>
+				</tr>';
+	}
+	if ($row->PRJ_TAX != null && $row->PRJ_TAX != 0) {
+		$html.='<tr bgcolor="#ffffff">
+					<td style="font-weight: bold;" colspan="4" align="right">Pajak</td>
+					<td align="right">'.number_format($row->PRJ_TAX,0,',','.').'</td>
+				</tr>';
+	}
+	if ($row->PRJ_DEPOSIT != null && $row->PRJ_DEPOSIT != 0) {
+		$html.='<tr bgcolor="#ffffff">
+					<td style="vertical-align: middle; font-weight: bold" colspan="4" align="right">Deposit</td>
+					<td align="right">'.number_format($row->PRJ_DEPOSIT,0,',','.').'</td>
+				</tr>';
+	}
+	// $html.='<tr bgcolor="#ffffff">
+	// 			<td style="font-weight: bold;" colspan="4" align="right">Total</td>
+	// 			<td align="right">'.number_format($row->PRJ_TOTAL,0,',','.').'</td>
+	// 		</tr>';
+	$html.='<tr bgcolor="#ffffff">
+				<td style="font-weight: bold;" colspan="4" align="right">Ongkos Kirim</td>
 				<td align="right">'.number_format($row->PRJ_SHIPCOST,0,',','.').'</td>
 			</tr>
 			<tr bgcolor="#ffffff">
-				<td style="font-weight: bold;" colspan="5" align="right">Grand Total</td>
+				<td style="font-weight: bold;" colspan="4" align="right">Grand Total</td>
 				<td style="font-weight: bold;" align="right">'.number_format($row->PRJ_GRAND_TOTAL,0,',','.').'
 				</td>
 			</tr>';
     $html.='</table>';
     $html.='<p style="font-size: 10px">Terbilang: <em>'.terbilang($row->PRJ_GRAND_TOTAL).' Rupiah</em></p>';
+    if($row->PRJ_PAYMENT_METHOD == 1 && !empty($installment)){
+    	$html.='<p style="font-size: 10px">Cara Pembayaran:</p>';
+    	$html.= '<br><br><table border="1" cellpadding="5" bgcolor="#666666" style="font-size: 9px">
+	        <tr bgcolor="#ffffff">
+	            <th width="15%" align="center">Cicilan Ke-</th>
+	            <th width="45%" align="center">Catatan</th>
+	            <th width="20%" align="center">Persentase</th>
+	            <th width="20%" align="center">Jumlah</th>
+	        </tr>';
+		foreach ($installment as $key){
+			$cicilan[] = $key->PRJP_AMOUNT;
+			$html.='<tr bgcolor="#ffffff">
+	            <td align="center">'.$key->PRJP_NO.'</td>
+	            <td>'.$key->PRJP_NOTES.'</td>
+	            <td align="center">'.$key->PRJP_PCNT.' %</td>
+	            <td align="right">'.number_format($key->PRJP_AMOUNT,0,",",".").'</td>
+	        </tr>';
+		}
+		$total_cicilan = array_sum($cicilan);
+		$html.='<tr bgcolor="#ffffff">
+				<td colspan="3" align="right">Total</td>
+				<td align="right">'.number_format($total_cicilan,0,',','.').'</td>
+			</tr></table><br><br>';
+    }
     if($letter->ORDL_NOTES != null){
     	$html.= '<table cellpadding="1" style="font-size: 10px">
 				<tr bgcolor="#ffffff">

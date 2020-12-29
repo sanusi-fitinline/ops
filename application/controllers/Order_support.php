@@ -41,7 +41,7 @@ class Order_support extends CI_Controller {
 	public function orderjson() {
 		$STATUS_FILTER  = $this->input->post('STATUS_FILTER', TRUE);
 		$url 	   		= $this->config->base_url();
-		$list      		= $this->order_m->get_datatables($STATUS_FILTER);
+		$list      		= $this->order_m->get_datatables(null, null, $STATUS_FILTER);
 		$data 			= array();
 		$no 			= $_POST['start'];
 		foreach ($list as $field) {
@@ -70,14 +70,14 @@ class Order_support extends CI_Controller {
 			$row[] = stripslashes($field->CUST_NAME);
 			$row[] = $ORDER_NOTES;
 			$row[] = '<div style="vertical-align: middle; text-align: center;">
-				<a href="'.$url.'order_support/detail/'.$field->ORDER_ID.'" class="btn btn-sm btn-primary" title="Detail"><i class="fa fa-search-plus"></i></a></div>';
+				<a href="'.$url.'order_support/detail/'.$field->ORDER_ID.'" class="btn btn-sm btn-primary mb-1" title="Detail"><i class="fa fa-search-plus"></i></a></div>';
 			$data[] = $row;
 		}
 
 		$output = array(
 			"draw" => $_POST['draw'],
-			"recordsTotal" => $this->order_m->count_all($STATUS_FILTER),
-			"recordsFiltered" => $this->order_m->count_filtered($STATUS_FILTER),
+			"recordsTotal" => $this->order_m->count_all(null, null, $STATUS_FILTER),
+			"recordsFiltered" => $this->order_m->count_filtered(null, null, $STATUS_FILTER),
 			"data" => $data,
 		);
 		//output dalam format JSON
@@ -91,7 +91,7 @@ class Order_support extends CI_Controller {
 			$data['bank'] 		= $this->bank_m->getBank()->result();
 			$data['courier'] 	= $this->courier_m->getCourier()->result();
 			$data['detail'] 	= $this->orderdetail_m->get($ORDER_ID)->result();
-			$data['get_by_vendor'] 	= $this->ordervendor_m->get_by_vendor($ORDER_ID)->result_array();
+			$data['get_by_vendor'] = $this->ordervendor_m->get_by_vendor($ORDER_ID)->result_array();
 			$this->template->load('template', 'order/order-support/order_support_detail', $data);
 		} else {
 			echo "<script>alert('Data tidak ditemukan.')</script>";
@@ -151,4 +151,14 @@ class Order_support extends CI_Controller {
 			echo "<script>window.location='".site_url('order_support')."'</script>";
 		}
 	}
+
+	public function purchase($ORDER_ID, $VEND_ID) {
+    	$ORDL_TYPE 	= 4;
+    	$ORDL_DOC 	= 3;
+    	$data['check'] 			= $this->orderletter_m->check($ORDER_ID, $ORDL_TYPE, $ORDL_DOC);
+		$data['pernah_dicetak'] = $this->orderletter_m->get_pernah_dicetak($ORDER_ID, $ORDL_TYPE, $ORDL_DOC)->row();
+		$data['row'] 			= $this->orderletter_m->get()->row();
+		$data['detail'] 		= $this->ordervendor_m->get_by_vendor($ORDER_ID, $VEND_ID)->row();
+    	$this->template->load('template', 'letter/order_purchase', $data);
+    }
 }

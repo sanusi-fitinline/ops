@@ -37,7 +37,7 @@ class Project_review_m extends CI_Model {
 		$this->db->where('PRJR_ID', $PRJR_ID)->update('tb_project_review', $this->db->escape_str($dataUpdate));
 	}
 
-	public function delete($PRJR_ID){
+	public function delete($PRJR_ID) {
 		$this->db->where('PRJR_ID', $PRJR_ID);
 		$this->db->delete('tb_project_review');
 	}

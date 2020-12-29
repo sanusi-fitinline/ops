@@ -34,10 +34,10 @@ class Management extends CI_Controller {
 			$row[] = stripslashes($field->USER_NAME);
 			$row[] = $field->USER_LOGIN;
 			$row[] = $field->GRP_NAME;
-			$row[] = '<form action="'.$url.'management/deluser" method="post"><div style="vertical-align: middle; text-align: center;"><a href="'.$url.'management/edituser/'.$field->USER_ID.'" class="btn btn-primary btn-sm">
+			$row[] = '<form action="'.$url.'management/deluser" method="post"><div style="vertical-align: middle; text-align: center;"><a href="'.$url.'management/edituser/'.$field->USER_ID.'" class="btn btn-primary btn-sm mb-1">
 				<i class="fa fa-pen"></i></a>
 				<input type="hidden" name="USER_ID" value="'.$field->USER_ID.'">
-				<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button></div></form>';
+				<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm mb-1"><i class="fa fa-trash"></i></button></div></form>';
 			$data[] = $row;
 		
 		}
@@ -164,10 +164,10 @@ class Management extends CI_Controller {
 			$row[] = '<div style="vertical-align: middle; text-align: center;">'.$no.'</div>';
 			$row[] = $field->GRP_NAME;
 			$row[] = '<form action="'.$url.'management/delgroup" method="post"><div style="vertical-align: middle; text-align: center;">
-					<a href="#" data-toggle="modal" data-target="#edit-grp'.$field->GRP_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
+					<a href="#" data-toggle="modal" data-target="#edit-grp'.$field->GRP_ID.'" class="btn btn-primary btn-sm mb-1"><i class="fa fa-pen"></i></a>
 					<input type="hidden" name="GRP_ID" value="'.$field->GRP_ID.'">
-					<button onclick="'."return confirm('Hapus data? User dan Access dengan group ".$field->GRP_NAME." akan ikut terhapus.')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
-					<a  href="'.$url.'management/access/'.$field->GRP_ID.'" class="btn btn-warning btn-sm"><i class="fa fa-bolt"></i> Access</a></div></form>';
+					<button onclick="'."return confirm('Hapus data? User dan Access dengan group ".$field->GRP_NAME." akan ikut terhapus.')".'" type="submit" class="btn btn-danger btn-sm mb-1"><i class="fa fa-trash"></i></button>
+					<a  href="'.$url.'management/access/'.$field->GRP_ID.'" class="btn btn-warning btn-sm mb-1"><i class="fa fa-bolt"></i> Access</a></div></form>';
 			$data[] = $row;
 		
 		}
@@ -233,10 +233,10 @@ class Management extends CI_Controller {
 			$row   = array();
 			$row[] = '<div style="vertical-align: middle; text-align: center;">'.$no.'</div>';
 			$row[] = $field->MOD_NAME;
-			$row[] = '<form action="'.$url.'management/delmodule" method="post"><div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-mod'.$field->MOD_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i>
+			$row[] = '<form action="'.$url.'management/delmodule" method="post"><div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-mod'.$field->MOD_ID.'" class="btn btn-primary btn-sm mb-1"><i class="fa fa-pen"></i>
 					</a>
 				<input type="hidden" name="MOD_ID" value="'.$field->MOD_ID.'">
-				<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button></div></form>';
+				<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm mb-1"><i class="fa fa-trash"></i></button></div></form>';
 			$data[] = $row;
 		
 		}
@@ -323,10 +323,10 @@ class Management extends CI_Controller {
 			$row[] = '<div style="vertical-align: middle; text-align: center;">'.$GACC_DELETE.'</div>';
 			$row[] = '<div style="vertical-align: middle; text-align: center;">'.$GACC_VIEWALL.'</div>';
 			$row[] = '<form action="'.$url.'management/delgroupaccess" method="post"><div style="vertical-align: middle; text-align: center;">
-				<a href="#" data-toggle="modal" data-target="#edit-grp-acc'.$field->GACC_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
+				<a href="#" data-toggle="modal" data-target="#edit-grp-acc'.$field->GACC_ID.'" class="btn btn-primary btn-sm mb-1"><i class="fa fa-pen"></i></a>
 				<input class="form-control" type="hidden" name="GRP_ID" value="'.$field->GRP_ID.'" autocomplete="off" required>
 				<input type="hidden" name="GACC_ID" value="'.$field->GACC_ID.'">
-				<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button></div></form>';
+				<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm mb-1"><i class="fa fa-trash"></i></button></div></form>';
 			$data[] = $row;
 		}
 

@@ -64,7 +64,7 @@ class Customer_deposit extends CI_Controller {
 				$row[] = "";
 			} else {
 				$row[] = '<div style="vertical-align: middle; text-align: center;">
-						<a href="'.$url.'customer_deposit/payment/'.$field->CUSTD_ID.'" class="btn btn-sm btn-warning" style="color: #ffffff;"><i class="fas fa-dollar-sign"></i> Pay</a></div>';
+						<a href="'.$url.'customer_deposit/payment/'.$field->CUSTD_ID.'" class="btn btn-sm btn-warning mb-1" style="color: #ffffff;"><i class="fas fa-dollar-sign"></i> Pay</a></div>';
 			}
 			
 			$data[] = $row;

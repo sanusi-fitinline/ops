@@ -58,12 +58,12 @@ class Master extends CI_Controller {
 			$row[] = stripslashes($field->BANK_NAME);
 			$row[] = '<div style="vertical-align: middle; text-align: center;"><img width="50px" class="img-responsive" src="'.$url.'assets/images/bank/'.$field->BANK_LOGO.'"</div>';
 			if((!$this->access_m->isDelete('Bank', 1)->row()) && ($this->session->GRP_SESSION !=3)){
-				$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-bank'.$field->BANK_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a></div>';
+				$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-bank'.$field->BANK_ID.'" class="btn btn-primary btn-sm mb-1"><i class="fa fa-pen"></i></a></div>';
 			} else {
-				$row[] = '<form action="'.$url.'master/delbank" method="post"><div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-bank'.$field->BANK_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i>
+				$row[] = '<form action="'.$url.'master/delbank" method="post"><div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-bank'.$field->BANK_ID.'" class="btn btn-primary btn-sm mb-1"><i class="fa fa-pen"></i>
 						</a>
 					<input type="hidden" name="BANK_ID" value="'.$field->BANK_ID.'">
-					<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button></div></form>';
+					<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm mb-1"><i class="fa fa-trash"></i></button></div></form>';
 			}
 			$data[] = $row;
 		
@@ -137,12 +137,12 @@ class Master extends CI_Controller {
 			$row[] = '<div style="vertical-align: middle; text-align: center;">'.$no.'</div>';
 			$row[] = $field->CURR_NAME;
 			if((!$this->access_m->isDelete('Currency', 1)->row()) && ($this->session->GRP_SESSION !=3)){
-				$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-currency'.$field->CURR_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a></div>';
+				$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-currency'.$field->CURR_ID.'" class="btn btn-primary btn-sm mb-1"><i class="fa fa-pen"></i></a></div>';
 			} else {
-				$row[] = '<form action="'.$url.'master/delcurrency" method="post"><div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-currency'.$field->CURR_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i>
+				$row[] = '<form action="'.$url.'master/delcurrency" method="post"><div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-currency'.$field->CURR_ID.'" class="btn btn-primary btn-sm mb-1"><i class="fa fa-pen"></i>
 						</a>
 					<input type="hidden" name="CURR_ID" value="'.$field->CURR_ID.'">
-					<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button></div></form>';
+					<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm mb-1"><i class="fa fa-trash"></i></button></div></form>';
 			}
 			$data[] = $row;
 		
@@ -215,11 +215,11 @@ class Master extends CI_Controller {
 			$row[] = '<div style="vertical-align: middle; text-align: center;">'.$no.'</div>';
 			$row[] = $field->CNTR_NAME;
 			if((!$this->access_m->isDelete('Country', 1)->row()) && ($this->session->GRP_SESSION !=3)){
-				$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="'.$url.'master/editcountry/'.$field->CNTR_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a></div>';
+				$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="'.$url.'master/editcountry/'.$field->CNTR_ID.'" class="btn btn-primary btn-sm mb-1"><i class="fa fa-pen"></i></a></div>';
 			} else {
-				$row[] = '<form action="'.$url.'master/delcountry" method="post"><div style="vertical-align: middle; text-align: center;"><a href="'.$url.'master/editcountry/'.$field->CNTR_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
+				$row[] = '<form action="'.$url.'master/delcountry" method="post"><div style="vertical-align: middle; text-align: center;"><a href="'.$url.'master/editcountry/'.$field->CNTR_ID.'" class="btn btn-primary btn-sm mb-1"><i class="fa fa-pen"></i></a>
 					<input type="hidden" name="CNTR_ID" value="'.$field->CNTR_ID.'">
-					<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button></div></form>';
+					<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm mb-1"><i class="fa fa-trash"></i></button></div></form>';
 			}
 			$data[] = $row;
 		}
@@ -305,11 +305,11 @@ class Master extends CI_Controller {
 			$row[] = '<div style="vertical-align: middle; text-align: center;">'.$no.'</div>';
 			$row[] = [$field->STATE_NAME,' '.$field->CNTR_NAME];
 			if((!$this->access_m->isDelete('State', 1)->row()) && ($this->session->GRP_SESSION !=3)){
-				$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="'.$url.'master/editsubd/'.$field->STATE_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a></div>';
+				$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="'.$url.'master/editsubd/'.$field->STATE_ID.'" class="btn btn-primary btn-sm mb-1"><i class="fa fa-pen"></i></a></div>';
 			} else {
-				$row[] = '<form action="'.$url.'master/delstate" method="post"><div style="vertical-align: middle; text-align: center;"><a href="'.$url.'master/editstate/'.$field->STATE_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
+				$row[] = '<form action="'.$url.'master/delstate" method="post"><div style="vertical-align: middle; text-align: center;"><a href="'.$url.'master/editstate/'.$field->STATE_ID.'" class="btn btn-primary btn-sm mb-1"><i class="fa fa-pen"></i></a>
 					<input type="hidden" name="STATE_ID" value="'.$field->STATE_ID.'">
-					<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button></div></form>';
+					<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm mb-1"><i class="fa fa-trash"></i></button></div></form>';
 			}
 			$data[] = $row;
 		}
@@ -398,11 +398,11 @@ class Master extends CI_Controller {
 			$row[] = '<div style="vertical-align: middle; text-align: center;">'.$no.'</div>';
 			$row[] = [$field->CITY_NAME, ' '.$field->STATE_NAME,' '.$field->CNTR_NAME];
 			if((!$this->access_m->isDelete('City', 1)->row()) && ($this->session->GRP_SESSION !=3)){
-				$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="'.$url.'master/editsubd/'.$field->CITY_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a></div>';
+				$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="'.$url.'master/editsubd/'.$field->CITY_ID.'" class="btn btn-primary btn-sm mb-1"><i class="fa fa-pen"></i></a></div>';
 			} else {
-				$row[] = '<form action="'.$url.'master/delcity" method="post"><div style="vertical-align: middle; text-align: center;"><a href="'.$url.'master/editcity/'.$field->CITY_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
+				$row[] = '<form action="'.$url.'master/delcity" method="post"><div style="vertical-align: middle; text-align: center;"><a href="'.$url.'master/editcity/'.$field->CITY_ID.'" class="btn btn-primary btn-sm mb-1"><i class="fa fa-pen"></i></a>
 					<input type="hidden" name="CITY_ID" value="'.$field->CITY_ID.'">
-					<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button></div></form>';
+					<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm mb-1"><i class="fa fa-trash"></i></button></div></form>';
 			}
 			$data[] = $row;
 		}
@@ -492,11 +492,11 @@ class Master extends CI_Controller {
 			$row[] = '<div style="vertical-align: middle; text-align: center;">'.$no.'</div>';
 			$row[] = [$field->SUBD_NAME, ' '.$field->CITY_NAME, ' '.$field->STATE_NAME,' '.$field->CNTR_NAME];
 			if((!$this->access_m->isDelete('Subdistrict', 1)->row()) && ($this->session->GRP_SESSION !=3)){
-				$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="'.$url.'master/editsubd/'.$field->SUBD_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a></div>';
+				$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="'.$url.'master/editsubd/'.$field->SUBD_ID.'" class="btn btn-primary btn-sm mb-1"><i class="fa fa-pen"></i></a></div>';
 			} else {
-				$row[] = '<form action="'.$url.'master/delsubd" method="post"><div style="vertical-align: middle; text-align: center;"><a href="'.$url.'master/editsubd/'.$field->SUBD_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
+				$row[] = '<form action="'.$url.'master/delsubd" method="post"><div style="vertical-align: middle; text-align: center;"><a href="'.$url.'master/editsubd/'.$field->SUBD_ID.'" class="btn btn-primary btn-sm mb-1"><i class="fa fa-pen"></i></a>
 					<input type="hidden" name="SUBD_ID" value="'.$field->SUBD_ID.'">
-					<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button></div></form>';
+					<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm mb-1"><i class="fa fa-trash"></i></button></div></form>';
 			}
 
 			$data[] = $row;
@@ -590,12 +590,12 @@ class Master extends CI_Controller {
 			$row[] = '<div style="vertical-align: middle; text-align: center;">'.$no.'</div>';
 			$row[] = $field->CHA_NAME;
 			if((!$this->access_m->isDelete('Channel', 1)->row()) && ($this->session->GRP_SESSION !=3)){
-				$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-cha'.$field->CHA_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a></div>';
+				$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-cha'.$field->CHA_ID.'" class="btn btn-primary btn-sm mb-1"><i class="fa fa-pen"></i></a></div>';
 			} else {
-				$row[] = '<form action="'.$url.'master/delcha" method="post"><div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-cha'.$field->CHA_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i>
+				$row[] = '<form action="'.$url.'master/delcha" method="post"><div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-cha'.$field->CHA_ID.'" class="btn btn-primary btn-sm mb-1"><i class="fa fa-pen"></i>
 						</a>
 					<input type="hidden" name="CHA_ID" value="'.$field->CHA_ID.'">
-					<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button></div></form>';
+					<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm mb-1"><i class="fa fa-trash"></i></button></div></form>';
 			}
 			$data[] = $row;
 		
@@ -669,14 +669,14 @@ class Master extends CI_Controller {
 			$row[] = '<div style="vertical-align: middle; text-align: center;">'.$no.'</div>';
 			$row[] = stripslashes($field->TYPE_NAME);
 			if((!$this->access_m->isDelete('Product Type', 1)->row()) && ($this->session->GRP_SESSION !=3)){
-				$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-type'.$field->TYPE_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
-					<a  href="'.$url.'master/subtype/'.$field->TYPE_ID.'" class="btn btn-info btn-sm"><i class="fa fa-plus-square"></i> Subtype</a></div>';
+				$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-type'.$field->TYPE_ID.'" class="btn btn-primary btn-sm mb-1"><i class="fa fa-pen"></i></a>
+					<a  href="'.$url.'master/subtype/'.$field->TYPE_ID.'" class="btn btn-info btn-sm mb-1"><i class="fa fa-plus-square"></i> Subtype</a></div>';
 			} else {
-				$row[] = '<form action="'.$url.'master/deltype" method="post"><div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-type'.$field->TYPE_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i>
+				$row[] = '<form action="'.$url.'master/deltype" method="post"><div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-type'.$field->TYPE_ID.'" class="btn btn-primary btn-sm mb-1"><i class="fa fa-pen"></i>
 						</a>
 					<input type="hidden" name="TYPE_ID" value="'.$field->TYPE_ID.'">
-					<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
-					<a  href="'.$url.'master/subtype/'.$field->TYPE_ID.'" class="btn btn-info btn-sm"><i class="fa fa-plus-square"></i> Subtype</a>
+					<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm mb-1"><i class="fa fa-trash"></i></button>
+					<a  href="'.$url.'master/subtype/'.$field->TYPE_ID.'" class="btn btn-info btn-sm mb-1"><i class="fa fa-plus-square"></i> Subtype</a>
 					</div></form>';
 			}
 			$data[] = $row;
@@ -760,13 +760,13 @@ class Master extends CI_Controller {
 			$row[] = stripslashes($field->TYPE_NAME);
 			$row[] = stripslashes($field->STYPE_NAME);
 			if((!$this->access_m->isDelete('Product Type', 1)->row()) && ($this->session->GRP_SESSION !=3)){
-				$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-subtype'.$field->STYPE_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a></div>';
+				$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-subtype'.$field->STYPE_ID.'" class="btn btn-primary btn-sm mb-1"><i class="fa fa-pen"></i></a></div>';
 			} else {
-				$row[] = '<form action="'.$url.'master/delsubtype" method="post"><div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-subtype'.$field->STYPE_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i>
+				$row[] = '<form action="'.$url.'master/delsubtype" method="post"><div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-subtype'.$field->STYPE_ID.'" class="btn btn-primary btn-sm mb-1"><i class="fa fa-pen"></i>
 						</a>
 					<input type="hidden" name="TYPE_ID" value="'.$field->TYPE_ID.'">
 					<input type="hidden" name="STYPE_ID" value="'.$field->STYPE_ID.'">
-					<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button></div></form>';
+					<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm mb-1"><i class="fa fa-trash"></i></button></div></form>';
 			}
 			$data[] = $row;
 		
@@ -843,12 +843,12 @@ class Master extends CI_Controller {
 			$row[] = '<div style="vertical-align: middle; text-align: center;">'.$no.'</div>';
 			$row[] = $field->UMEA_NAME;
 			if((!$this->access_m->isDelete('Unit Measure', 1)->row()) && ($this->session->GRP_SESSION !=3)){
-				$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-umea'.$field->UMEA_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a></div>';
+				$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-umea'.$field->UMEA_ID.'" class="btn btn-primary btn-sm mb-1"><i class="fa fa-pen"></i></a></div>';
 			} else {
-				$row[] = '<form action="'.$url.'master/delumea" method="post"><div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-umea'.$field->UMEA_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i>
+				$row[] = '<form action="'.$url.'master/delumea" method="post"><div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-umea'.$field->UMEA_ID.'" class="btn btn-primary btn-sm mb-1"><i class="fa fa-pen"></i>
 						</a>
 					<input type="hidden" name="UMEA_ID" value="'.$field->UMEA_ID.'">
-					<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button></div></form>';
+					<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm mb-1"><i class="fa fa-trash"></i></button></div></form>';
 			}
 			$data[] = $row;
 		

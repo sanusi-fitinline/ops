@@ -1,14 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.9.1
+-- version 5.0.4
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 27 Mar 2020 pada 07.38
+-- Waktu pembuatan: 27 Nov 2020 pada 04.45
 -- Versi server: 10.4.8-MariaDB
 -- Versi PHP: 7.3.10
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -42,7 +41,7 @@ INSERT INTO `tb_bank` (`BANK_ID`, `BANK_NAME`, `BANK_LOGO`) VALUES
 (1, 'BRI', 'bri.png'),
 (2, 'MANDIRI', 'mandiri.png'),
 (3, 'BCA', 'bca.png'),
-(4, 'BNI', ''),
+(4, 'BNI', 'Bart_Simpson.png'),
 (34, 'Deposit', '');
 
 -- --------------------------------------------------------
@@ -930,7 +929,7 @@ CREATE TABLE `tb_customer` (
   `CUST_NAME` varchar(50) NOT NULL,
   `CUST_EMAIL` varchar(100) DEFAULT NULL,
   `CUST_ADDRESS` varchar(500) DEFAULT NULL,
-  `CUST_PHONE` varchar(20) NOT NULL,
+  `CUST_PHONE` varchar(50) NOT NULL,
   `CNTR_ID` int(11) DEFAULT NULL,
   `STATE_ID` int(11) DEFAULT NULL,
   `CITY_ID` int(11) DEFAULT NULL,
@@ -952,24 +951,28 @@ INSERT INTO `tb_customer` (`CUST_ID`, `CUST_NAME`, `CUST_EMAIL`, `CUST_ADDRESS`,
 (15262, 'Munawar', 'coba@gmail.com', 'Jl. Baru', '089123456879', 1, 13, 215, 5866, 2, '123456789', 'Munawar', 7, 2, '2019-05-20 03:53:58'),
 (15264, 'Haris Putra', 'coba@gmail.com', 'Banaran', '089123456879', 1, 13, 215, 5876, 1, '123456789', 'Haris Putra', 1, 6, '2019-05-21 09:03:06'),
 (15265, 'Sigit', 'coba@gmail.com', '', '089123456123', 1, 1, 15, 4250, 2, '666444332123', 'Sigit', 6, 6, '2019-05-21 09:25:41'),
-(15269, 'supardi', 'a@mail.com', 'Jl. Kepatihan Raya no.110', '081212348765', 1, 14, 269, 6983, 0, '', '', 9, 9, '2019-05-24 07:36:32'),
+(15269, 'supardi', 'a@mail.com', 'Jl. Kepatihan Raya no.110', '081212348765', 1, 14, 269, 6983, 0, '', '', 9, 6, '2019-05-24 07:36:32'),
 (15270, 'coba', 'coba@gmail.com', 'Jl Mawar No. 27', '08274379459', 1, 15, 240, 0, 3, '', '', 5, 6, '2019-05-27 06:46:00'),
 (15271, 'Irianto', 'iriasnto@rocketmail.com', '', '085282929211', 1, 13, 198, 1458, 3, '', '', 7, 6, '2019-07-11 08:42:43'),
 (15275, 'Roni', 'roni@yahoo.com', '', '085808980456', 1, 17, 270, 259, 3, '868768678', 'Roni', 7, 6, '2019-07-16 06:25:53'),
 (15276, 'Yuga Adi Kusuma', '', 'Jalan Sukodami 2 No. 17, Kelurahan Mojo, Kecamatan Gubeng, Kota Surabaya 60285', '087855796998', 1, 15, 264, 6138, 3, '', '', 7, 6, '2019-07-16 08:18:16'),
 (15277, 'AYUB WIRASUKMA', '', 'Jl Kepodang 3 RT 10 RW 12, Gondomanan, Kota Yogyakarta, Daerah Istimewa Yogyakarta, Indonesia.', '081332265693', 1, 14, 269, 6984, 0, '', '', 3, 65, '2019-07-16 08:33:04'),
-(15278, 'Andi Santoso', '', '', '08978574363', 1, 15, 243, 4347, 0, '', '', 7, 6, '2019-08-05 06:05:15'),
+(15278, 'Andi Santoso', '', '', '089785743634', 1, 15, 243, 4347, 0, '', '', 7, 6, '2019-08-05 06:05:15'),
 (15279, 'Steffi', '', 'jl ciliwung raya no 10A, mlatiharjo, semarang timur, kota semarang, Jawa Tengah', '085640691046', 1, 13, 224, 5510, 0, '', '', 7, 6, '2019-08-05 06:09:47'),
 (15280, 'Romadhoni', '', 'Jl. Veteran 1007, Warungboto, UH IV', '08976262819', 1, 14, 269, 6993, 4, '0220212121', 'Romadhoni', 4, 65, '2019-08-07 08:03:51'),
 (15281, 'Kurniawan', '', 'Jln Jembatan Besi Raya RT03 RW03 NO 39, Kec:Tambora JAKARTA BARAT', '082307111854', 1, 11, 187, 2094, 0, '', '', 1, 64, '2019-08-09 07:18:55'),
 (15282, 'Rojali', '', '', '08796754345', 1, 11, 188, 2098, 0, '', '', 6, 9, '2019-08-28 04:59:38'),
 (15283, 'NURUL HIDAYATI ', '', 'UD. BARUNA RAYA, Jl tumenggung suryo no.40 kav.B kel. Bunulrejo, kec. Blimbing, Kota Malang, Jawa Timur 65126', '081313848517', 1, 15, 260, 3634, 0, '', '', 7, 6, '2019-09-27 03:22:13'),
-(15284, 'test-customer1', '', '123', '089198372284', 1, 15, 260, 3634, 0, '', '', 7, 6, '2019-11-01 02:31:04'),
+(15284, 'test-customer1', '', '123', '08161182673', 1, 15, 260, 3634, 0, '', '', 7, 6, '2019-11-01 02:31:04'),
 (15285, 'Sanusi Mulyo', '', 'Dsn. Bareng RT 02/05, Ds. Sriwedari', '08562933101', 1, 15, 243, 4347, 1, '1234567890', 'Sanusi Mulyo', 1, 6, '2019-12-17 02:41:30'),
 (15286, 'customer1', '', 'Jl. Widuri no 49 Kasihan Bantul', '081211110000', 1, 14, 265, 543, 0, '', '', 7, 6, '2019-12-27 02:25:13'),
 (15287, 'customer2', '', '', '0812-2222-0000', 1, 15, 240, 3615, 0, '', '', 4, 6, '2019-12-27 03:07:32'),
 (15288, 'Fendi Budi', '', '', '086573839012', 1, 15, 259, 3509, 2, '4524234', 'Fendi Budi', 1, 6, '2020-01-21 02:59:46'),
-(15289, 'nana meliana', 'nana@gmail.com', 'jl sawit No.31', '081233973762', 1, 14, 269, 6993, 3, '12343526536', 'nana meliana', 7, 9, '2020-03-02 06:14:00');
+(15289, 'nana meliana', 'nana@gmail.com', 'jl sawit No.31', '081233973762', 1, 14, 269, 6993, 3, '12343526536', 'nana meliana', 7, 9, '2020-03-02 06:14:00'),
+(15295, 'a1', '', '', '081 907 755 855', 0, 0, 0, 0, 0, '', '', 7, 6, '2020-10-28 01:52:07'),
+(15291, 'Diah Wiratama', '', 'Jl. Kangasem no 11, Bawen, Semarang', '0812-1111-2222', 1, 13, 214, 5483, 0, '', '', 7, 6, '2020-06-01 03:32:33'),
+(15292, 'Lucas', '', '', '+62 852-5858-2233', 0, 0, 0, 0, 0, '', '', 7, 6, '2020-07-02 02:02:54'),
+(15293, 'Vivi Silviana', '', 'Apartemen Mediterania Garden Residences 1, Tower Dahlia, Unit D35HK, Jl Tanjung Duren Raya Kav 5-9, Jakarta Barat', '08161182673', 1, 11, 187, 2088, 0, '', '', 1, 6, '2020-07-07 06:27:26');
 
 -- --------------------------------------------------------
 
@@ -1017,7 +1020,8 @@ CREATE TABLE `tb_customer_deposit` (
 --
 
 INSERT INTO `tb_customer_deposit` (`CUSTD_ID`, `CUSTD_DATE`, `ORDER_ID`, `ORDV_ID`, `CUSTD_DEPOSIT`, `CUSTD_DEPOSIT_STATUS`, `CUSTD_ORDER_ID`, `CUST_ID`, `USER_ID`, `CUSTD_PAY_DATE`, `CUSTD_NOTES`) VALUES
-(145, '2020-03-18 08:10:58', 4261, NULL, '196000', 0, NULL, 15261, 2, NULL, NULL);
+(145, '2020-03-18 08:10:58', 4261, NULL, '196000', 0, NULL, 15261, 2, NULL, NULL),
+(146, '2020-05-05 09:35:05', NULL, NULL, '-3000', 0, NULL, 15288, NULL, NULL, 'Kekurangan ongkir sample 16-03-2020');
 
 -- --------------------------------------------------------
 
@@ -1070,7 +1074,8 @@ INSERT INTO `tb_customer_log` (`CLOG_ID`, `CLOG_DATE`, `CACT_ID`, `CUST_ID`, `US
 (15467, '2020-03-18 07:54:35', 4, 15261, 65, 2, 2),
 (15468, '2020-03-18 08:04:11', 2, 15261, 65, 2, 4),
 (15469, '2020-03-18 08:24:57', 4, 15261, 65, 2, 2),
-(15470, '2020-03-18 08:26:31', 2, 15261, 65, 2, 4);
+(15470, '2020-03-18 08:26:31', 2, 15261, 65, 2, 4),
+(15472, '2020-03-31 10:45:19', 2, 15277, 65, 3, NULL);
 
 -- --------------------------------------------------------
 
@@ -1302,7 +1307,7 @@ INSERT INTO `tb_log_sample` (`LSAM_ID`, `LSAM_DATE`, `LSAM_NOTES`, `LSAM_COST`, 
 (88, '2020-01-17 06:34:20', 'Kain Drifit Hijau Stabill', '11000', NULL, '11000', '2020-01-16 17:00:00', '2020-01-19 17:00:00', '44534534534534', 19, 'REG', 269, 15279, 2, 6, 15443),
 (89, '2020-01-20 08:14:20', 'tes', '11000', NULL, NULL, '2020-01-19 17:00:00', NULL, '', 19, 'REG', 269, 15279, 2, 6, 15445),
 (90, '2020-01-28 09:04:15', 'tes', '0', NULL, NULL, '2020-01-27 17:00:00', NULL, '', 30, 'COD', 269, 15285, 2, 6, 15448),
-(91, '2020-03-16 01:27:59', 'tes', '16000', NULL, NULL, NULL, NULL, '', 19, 'REG', 269, 15288, 0, 6, 15460);
+(91, '2020-03-16 01:27:59', 'tes', '16000', NULL, '19000', '2020-04-29 17:00:00', '2020-04-29 17:00:00', '63653456456', 19, 'REG', 269, 15288, 2, 6, 15460);
 
 -- --------------------------------------------------------
 
@@ -1344,7 +1349,8 @@ INSERT INTO `tb_log_stock` (`LSTOCK_ID`, `LSTOCK_DATE`, `LSTOCK_COLOR`, `LSTOCK_
 (148, '2020-03-18 06:49:51', 'hitam', 1, '', NULL, NULL, 35, 9, 15289, 6, 15463),
 (149, '2020-03-18 06:53:47', 'biru', 1, '', NULL, NULL, 38, 9, 15285, 65, 15464),
 (151, '2020-03-18 08:04:11', 'biru', 1, '', '', 1, 35, 9, 15261, 65, 15468),
-(152, '2020-03-18 08:26:31', 'biru', 1, '', '', 1, 22, 9, 15261, 65, 15470);
+(152, '2020-03-18 08:26:31', 'biru', 1, '', '', 1, 22, 9, 15261, 65, 15470),
+(154, '2020-03-31 10:45:19', 'biru', 1, '', '', 1, 22, 9, 15277, 65, 15472);
 
 -- --------------------------------------------------------
 
@@ -1368,10 +1374,7 @@ INSERT INTO `tb_module` (`MOD_ID`, `MOD_NAME`) VALUES
 (4, 'Channel'),
 (8, 'Vendor'),
 (19, 'Product Type'),
-(10, 'Country'),
-(11, 'State'),
-(12, 'City'),
-(13, 'Subdistrict'),
+(12, 'Area'),
 (14, 'Courier'),
 (15, 'Product'),
 (16, 'Unit Measure'),
@@ -1392,13 +1395,20 @@ INSERT INTO `tb_module` (`MOD_ID`, `MOD_NAME`) VALUES
 (37, 'Check Stock to Order'),
 (38, 'Income by CS'),
 (39, 'Producer'),
-(40, 'Producer Category'),
-(41, 'Producer Type'),
-(42, 'Producer Product'),
-(43, 'Size'),
-(44, 'Project Type'),
-(45, 'Project Activity'),
-(46, 'Project Criteria');
+(40, 'Producer Bank'),
+(41, 'Producer Category'),
+(42, 'Producer Type'),
+(43, 'Producer Product'),
+(44, 'Size'),
+(45, 'Project Type'),
+(46, 'Project Activity'),
+(47, 'Project Criteria'),
+(48, 'Payment To Producer'),
+(49, 'Price Change'),
+(50, 'Shipcost Difference'),
+(51, 'Order Custom'),
+(52, 'Follow Up VR'),
+(53, 'Assign Producer');
 
 -- --------------------------------------------------------
 
@@ -1512,6 +1522,18 @@ CREATE TABLE `tb_order_letter` (
   `ORDL_DOC` tinyint(4) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data untuk tabel `tb_order_letter`
+--
+
+INSERT INTO `tb_order_letter` (`ORDL_ID`, `ORDL_DATE`, `ORDER_ID`, `ORDL_TYPE`, `ORDL_NO`, `ORDL_LNO`, `ORDL_NOTES`, `ORDL_DOC`) VALUES
+(1, '2020-05-13 17:00:00', 4265, 1, 1, '001/OPS/QUO/V/2020', '1. Proses order max 2 hari setelah pembayaran dilakukan.\\r\\n2. Info Pengiriman :\\r\\n-     Pengiriman dari Kota Bandung, menggunakan JNE REG estimasi 1-2 Hari.\\r\\n3. Transaksi tanpa Pajak. Pembayaran dalam dapat ditransfer melalui Bank BCA: 8020169363 atau Bank Mandiri: 1240004177276 atas nama Istofani Api Diany.', 1),
+(2, '2020-05-16 17:00:00', 21, 1, 2, '002/OPS/QUO/V/2020', '1. Proses order max 2 hari setelah pembayaran dilakukan.\\r\\n2. Info Pengiriman : menggunakan kurir JNE OKE estimasi \\r\\n3. Transaksi tanpa Pajak. Pembayaran dalam dapat ditransfer melalui Bank BCA: 8020169363 atau Bank Mandiri: 1240004177276 atas nama Istofani Api Diany.', 3),
+(3, '2020-05-31 17:00:00', 21, 2, 3, '003/OPS/INV/VI/2020', '1. Proses order max 2 hari setelah pembayaran dilakukan.\\r\\n2. Info Pengiriman : menggunakan kurir JNE OKE estimasi \\r\\n3. Transaksi tanpa Pajak. Pembayaran dalam dapat ditransfer melalui Bank BCA: 8020169363 atau Bank Mandiri: 1240004177276 atas nama Istofani Api Diany.', 3),
+(4, '2020-06-11 17:00:00', 23, 1, 4, '004/OPS/QUO/VI/2020', '1. Proses order max 2 hari setelah pembayaran dilakukan.\\r\\n2. Info Pengiriman : menggunakan kurir POS Paket Jumbo Ekonomi estimasi 4.-5 hari\\r\\n3. Transaksi tanpa pajak. Dibayar secara cicilan, dapat ditransfer melalui Bank BCA: 8020169363 atau Bank Mandiri: 1240004177276 atas nama Istofani Api Diany.', 3),
+(5, '2020-06-11 17:00:00', 23, 2, 5, '005/OPS/INV/VI/2020', '1. Proses order max 2 hari setelah pembayaran dilakukan.\\r\\n2. Info Pengiriman : menggunakan kurir POS Paket Jumbo Ekonomi estimasi 4.-5 hari\\r\\n3. Transaksi tanpa pajak. Dibayar secara cicilan, dapat ditransfer melalui Bank BCA: 8020169363 atau Bank Mandiri: 1240004177276 atas nama Istofani Api Diany.', 3),
+(6, '2020-06-11 17:00:00', 25, 2, 6, '006/OPS/INV/VI/2020', '1. Proses order max 2 hari setelah pembayaran dilakukan.\\r\\n2. Info Pengiriman : menggunakan kurir WAHANA Normal estimasi 5 hari\\r\\n3. Transaksi tanpa pajak. Dibayar secara cicilan, dapat ditransfer melalui Bank BCA: 8020169363 atau Bank Mandiri: 1240004177276 atas nama Istofani Api Diany.', 3);
+
 -- --------------------------------------------------------
 
 --
@@ -1537,7 +1559,7 @@ CREATE TABLE `tb_order_vendor` (
   `ORDV_SERVICE_TYPE` varchar(20) DEFAULT NULL,
   `ORDV_ETD` varchar(20) DEFAULT NULL,
   `PAYTOV_ID` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data untuk tabel `tb_order_vendor`
@@ -1585,7 +1607,7 @@ CREATE TABLE `tb_order_vendor_old` (
   `ORDV_SERVICE_TYPE` varchar(20) DEFAULT NULL,
   `ORDV_ETD` varchar(20) DEFAULT NULL,
   `PAYTOV_ID` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data untuk tabel `tb_order_vendor_old`
@@ -1618,7 +1640,7 @@ CREATE TABLE `tb_payment_to_vendor` (
   `PAYTOV_SHIPCOST_STATUS` tinyint(4) DEFAULT NULL,
   `PAYTOV_DEPOSIT` decimal(10,0) DEFAULT NULL,
   `PAYTOV_TOTAL` decimal(10,0) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data untuk tabel `tb_payment_to_vendor`
@@ -1669,15 +1691,13 @@ CREATE TABLE `tb_producer` (
   `PRDU_STATUS` smallint(6) DEFAULT NULL,
   `PRDUC_ID` smallint(6) NOT NULL,
   `PRDUT_ID` smallint(6) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data untuk tabel `tb_producer`
 --
 
 INSERT INTO `tb_producer` (`PRDU_ID`, `PRDU_NAME`, `PRDU_CPERSON`, `PRDU_ADDRESS`, `CNTR_ID`, `STATE_ID`, `CITY_ID`, `SUBD_ID`, `PRDU_PHONE`, `PRDU_EMAIL`, `PRDU_STATUS`, `PRDUC_ID`, `PRDUT_ID`) VALUES
-(1, 'Producer 1', 'Anto', '', 1, 12, 177, 0, '087398476786', 'pro1@gmail.com', 1, 1, 2),
-(3, 'Producer 2', 'Roy', '', 1, 15, 260, 3636, '087986456763', '', 1, 1, 3),
 (4, 'Penjahit Inna Pertiwi', 'Inna Pertiwi', 'Jl. Pajajaran 1 no 10', 1, 14, 268, 5790, '08122223344', '', 1, 1, 5),
 (6, 'Art Fashion', 'Abi', 'Jl. Imogiri Barat No.2, Bakung, Bangunharjo, Kec. Sewon, Bantul, Daerah Istimewa Yogyakarta 55188', 1, 14, 265, 539, '0821-3602-9466', '', 1, 1, 3),
 (7, 'Arto Konveksi', 'Arto Konveksi', 'Jl Kerajinan no. 5 RT 08 Pemukiman Industri Kecil (PIK) Gunung Sempu, Kasih, Tamantirto, Kec. Kasihan, Bantul, Daerah Istimewa Yogyakarta 55183', 1, 14, 265, 543, '0856-3330-071', '', 1, 1, 3),
@@ -1700,7 +1720,32 @@ INSERT INTO `tb_producer` (`PRDU_ID`, `PRDU_NAME`, `PRDU_CPERSON`, `PRDU_ADDRESS
 (25, 'Just Konveksi', 'Just Konveksi', 'Jl. Sembung, Minggiran, Sendangtirto, Kec. Berbah, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55573', 1, 14, 268, 5779, '0838-6948-1965', '', 1, 1, 3),
 (26, 'Jangkrik Production', 'Jangkrik Production', 'Jl. Jomegatan No.314, Tegal Kenanga, Ngestiharjo, Kec. Kasihan, Bantul, Daerah Istimewa Yogyakarta 55184', 1, 14, 265, 543, '0877-0536-3463', '', 1, 1, 3),
 (27, 'Ozza Konveksi', 'Ozza Konveksi', 'jalan depokan II, peleman RT 32, RW.10, Rejowinangun, Kec. Kotagede, Kota Yogyakarta, Daerah Istimewa Yogyakarta 55171', 1, 14, 269, 6986, '0896-1577-2461', '', 1, 1, 3),
-(29, 'Indo Konveksi ', 'Indo Konveksi ', 'Jl. Jati Pratama, Kutu Dukuh, Sinduadi, Kec. Mlati, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55284', 1, 14, 268, 5786, '0858-8121-1266', '', 1, 1, 3);
+(29, 'Indo Konveksi ', 'Indo Konveksi ', 'Jl. Jati Pratama, Kutu Dukuh, Sinduadi, Kec. Mlati, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55284', 1, 14, 268, 5786, '0858-8121-1266', '', 1, 1, 3),
+(30, 'Konveksi Blus', 'Pak Aan', 'Jl. Wirosaban Barat 145, Sorosutan Umbulharjo', 1, 14, 269, 6993, '081312344556', '', 1, 1, 3),
+(31, 'Koveksi Top Markotop', 'Doni', '', 1, 13, 225, 6164, '0812-2233-4455', '', 1, 1, 3);
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `tb_producer_bank`
+--
+
+CREATE TABLE `tb_producer_bank` (
+  `PBA_ID` int(11) NOT NULL,
+  `PBA_ACCNAME` varchar(100) NOT NULL,
+  `PBA_ACCNO` varchar(100) NOT NULL,
+  `PRDU_ID` int(11) NOT NULL,
+  `BANK_ID` int(11) NOT NULL,
+  `PBA_PRIMARY` tinyint(11) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data untuk tabel `tb_producer_bank`
+--
+
+INSERT INTO `tb_producer_bank` (`PBA_ID`, `PBA_ACCNAME`, `PBA_ACCNO`, `PRDU_ID`, `BANK_ID`, `PBA_PRIMARY`) VALUES
+(1, 'Konveksi Gemilang 354', '123', 24, 3, 1),
+(2, 'Konveksi TOP', '123', 31, 3, 1);
 
 -- --------------------------------------------------------
 
@@ -1711,7 +1756,7 @@ INSERT INTO `tb_producer` (`PRDU_ID`, `PRDU_NAME`, `PRDU_CPERSON`, `PRDU_ADDRESS
 CREATE TABLE `tb_producer_category` (
   `PRDUC_ID` smallint(6) NOT NULL,
   `PRDUC_NAME` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data untuk tabel `tb_producer_category`
@@ -1731,7 +1776,7 @@ CREATE TABLE `tb_producer_product` (
   `PRDUP_ID` smallint(6) NOT NULL,
   `PRDUP_NAME` varchar(100) NOT NULL,
   `PRDUC_ID` smallint(6) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data untuk tabel `tb_producer_product`
@@ -1765,7 +1810,7 @@ CREATE TABLE `tb_producer_product_property` (
   `PRDPP_ID` smallint(6) NOT NULL,
   `PRDPP_NAME` varchar(100) NOT NULL,
   `PRDUP_ID` smallint(6) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data untuk tabel `tb_producer_product_property`
@@ -1891,7 +1936,7 @@ INSERT INTO `tb_producer_product_property` (`PRDPP_ID`, `PRDPP_NAME`, `PRDUP_ID`
 CREATE TABLE `tb_producer_type` (
   `PRDUT_ID` smallint(6) NOT NULL,
   `PRDUT_NAME` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data untuk tabel `tb_producer_type`
@@ -1914,7 +1959,7 @@ CREATE TABLE `tb_producer_x_product` (
   `PRDXP_ID` int(11) NOT NULL,
   `PRDU_ID` int(11) NOT NULL,
   `PRDUP_ID` smallint(6) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data untuk tabel `tb_producer_x_product`
@@ -1934,7 +1979,10 @@ INSERT INTO `tb_producer_x_product` (`PRDXP_ID`, `PRDU_ID`, `PRDUP_ID`) VALUES
 (27, 24, 25),
 (28, 24, 26),
 (29, 24, 20),
-(30, 7, 2);
+(30, 7, 2),
+(31, 30, 20),
+(32, 31, 26),
+(33, 31, 27);
 
 -- --------------------------------------------------------
 
@@ -2012,19 +2060,21 @@ CREATE TABLE `tb_project` (
   `PRJ_DURATION_EXP` smallint(6) DEFAULT NULL,
   `PRJ_DURATION_EST` smallint(6) DEFAULT NULL,
   `PRJ_DURATION_ACT` smallint(6) DEFAULT NULL,
+  `COURIER_ID` int(11) DEFAULT NULL,
+  `PRJ_SERVICE_TYPE` varchar(20) DEFAULT NULL,
+  `PRJ_ETD` varchar(20) DEFAULT NULL,
   `USER_ID` int(20) DEFAULT NULL,
   `CHA_ID` int(20) DEFAULT NULL,
   `PRJT_ID` smallint(6) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data untuk tabel `tb_project`
 --
 
-INSERT INTO `tb_project` (`PRJ_ID`, `CUST_ID`, `PRJ_DATE`, `PRJ_NOTES`, `PRJ_SUBTOTAL`, `PRJ_DISCOUNT`, `PRJ_DEPOSIT`, `PRJ_ADDCOST`, `PRJ_TAX`, `PRJ_TOTAL`, `PRJ_SHIPCOST`, `PRJ_GRAND_TOTAL`, `PRJ_STATUS`, `PRJ_PAYMENT_METHOD`, `BANK_ID`, `PRJ_PAYMENT_DATE`, `PRJ_DURATION_EXP`, `PRJ_DURATION_EST`, `PRJ_DURATION_ACT`, `USER_ID`, `CHA_ID`, `PRJT_ID`) VALUES
-(13, 15278, '2020-02-21 06:18:28', '', '1225000', '0', '1225000', '0', '0', NULL, NULL, '0', 4, 0, 1, '2020-02-26', 10, 11, NULL, 6, 7, 1),
-(14, 15288, '2020-02-25 06:55:47', '', '1000000', '0', NULL, '0', '0', '1000000', '0', '1000000', 2, 1, NULL, NULL, 10, 15, NULL, 6, 1, 1),
-(15, 15284, '2020-03-04 09:03:26', '', '1200000', '0', NULL, '0', '0', '1200000', '0', '1200000', 4, 1, NULL, NULL, 10, 12, 6, 6, 7, 1);
+INSERT INTO `tb_project` (`PRJ_ID`, `CUST_ID`, `PRJ_DATE`, `PRJ_NOTES`, `PRJ_SUBTOTAL`, `PRJ_DISCOUNT`, `PRJ_DEPOSIT`, `PRJ_ADDCOST`, `PRJ_TAX`, `PRJ_TOTAL`, `PRJ_SHIPCOST`, `PRJ_GRAND_TOTAL`, `PRJ_STATUS`, `PRJ_PAYMENT_METHOD`, `BANK_ID`, `PRJ_PAYMENT_DATE`, `PRJ_DURATION_EXP`, `PRJ_DURATION_EST`, `PRJ_DURATION_ACT`, `COURIER_ID`, `PRJ_SERVICE_TYPE`, `PRJ_ETD`, `USER_ID`, `CHA_ID`, `PRJT_ID`) VALUES
+(39, 15278, '2020-11-26 06:51:02', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, '0000-00-00', NULL, NULL, NULL, NULL, NULL, NULL, 6, 7, 1),
+(40, 15277, '2020-11-26 06:58:06', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, '0000-00-00', NULL, NULL, NULL, NULL, NULL, NULL, 6, 3, 1);
 
 -- --------------------------------------------------------
 
@@ -2034,16 +2084,27 @@ INSERT INTO `tb_project` (`PRJ_ID`, `CUST_ID`, `PRJ_DATE`, `PRJ_NOTES`, `PRJ_SUB
 
 CREATE TABLE `tb_project_activity` (
   `PRJA_ID` smallint(6) NOT NULL,
-  `PRJA_NAME` varchar(30) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `PRJA_NAME` varchar(30) NOT NULL,
+  `PRJA_ORDER` smallint(6) NOT NULL,
+  `PRJT_ID` smallint(6) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data untuk tabel `tb_project_activity`
 --
 
-INSERT INTO `tb_project_activity` (`PRJA_ID`, `PRJA_NAME`) VALUES
-(1, 'Cutting'),
-(3, 'Closed');
+INSERT INTO `tb_project_activity` (`PRJA_ID`, `PRJA_NAME`, `PRJA_ORDER`, `PRJT_ID`) VALUES
+(1, 'Cutting', 1, 1),
+(2, 'Making', 2, 1),
+(3, 'Trimming', 3, 1),
+(4, 'Finishing', 4, 1),
+(5, 'Sent', 5, 1),
+(6, 'In Progress', 1, 2),
+(7, 'Complete', 2, 2),
+(8, 'Sent', 3, 2),
+(9, 'In Progress', 1, 3),
+(10, 'Complete', 2, 3),
+(11, 'Sent', 3, 3);
 
 -- --------------------------------------------------------
 
@@ -2054,14 +2115,16 @@ INSERT INTO `tb_project_activity` (`PRJA_ID`, `PRJA_NAME`) VALUES
 CREATE TABLE `tb_project_criteria` (
   `PRJC_ID` smallint(6) NOT NULL,
   `PRJC_NAME` varchar(30) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data untuk tabel `tb_project_criteria`
 --
 
 INSERT INTO `tb_project_criteria` (`PRJC_ID`, `PRJC_NAME`) VALUES
-(1, 'Kerapian');
+(1, 'Kerapian'),
+(2, 'Kebersihan'),
+(3, 'Ketepatan Waktu');
 
 -- --------------------------------------------------------
 
@@ -2076,20 +2139,24 @@ CREATE TABLE `tb_project_detail` (
   `PRJD_IMG` varchar(500) DEFAULT NULL,
   `PRJD_MATERIAL` varchar(200) DEFAULT NULL,
   `PRJD_NOTES` varchar(500) DEFAULT NULL,
+  `PRJD_QTY` smallint(6) DEFAULT NULL,
+  `PRJD_BUDGET` decimal(10,0) DEFAULT NULL,
+  `PRJD_PRICE` decimal(10,0) DEFAULT NULL,
   `SIZG_ID` smallint(6) DEFAULT NULL,
   `PRDU_ID` int(11) DEFAULT NULL,
   `PRJD_DURATION` smallint(6) DEFAULT NULL,
-  `PRJD_WEIGHT_EST` float DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `PRJD_WEIGHT_EST` float DEFAULT NULL,
+  `PRJD_SHIPCOST` decimal(10,0) DEFAULT NULL,
+  `PRJD_ETD` varchar(20) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data untuk tabel `tb_project_detail`
 --
 
-INSERT INTO `tb_project_detail` (`PRJD_ID`, `PRJ_ID`, `PRDUP_ID`, `PRJD_IMG`, `PRJD_MATERIAL`, `PRJD_NOTES`, `SIZG_ID`, `PRDU_ID`, `PRJD_DURATION`, `PRJD_WEIGHT_EST`) VALUES
-(9, 13, 21, 'jaket.jpg', '', '', 1, 4, 10, NULL),
-(10, 14, 2, 'kaos.png, kaos_polos_putih.jpg', 'tes material', 'tes catatan', 1, 4, 11, NULL),
-(11, 15, 20, NULL, 'tes', 'tes', 1, 22, 10, NULL);
+INSERT INTO `tb_project_detail` (`PRJD_ID`, `PRJ_ID`, `PRDUP_ID`, `PRJD_IMG`, `PRJD_MATERIAL`, `PRJD_NOTES`, `PRJD_QTY`, `PRJD_BUDGET`, `PRJD_PRICE`, `SIZG_ID`, `PRDU_ID`, `PRJD_DURATION`, `PRJD_WEIGHT_EST`, `PRJD_SHIPCOST`, `PRJD_ETD`) VALUES
+(37, 39, 20, 'blus1.jpg', NULL, NULL, 10, '100000', NULL, 1, NULL, NULL, NULL, NULL, NULL),
+(38, 40, 2, NULL, NULL, NULL, 15, '80000', NULL, 1, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -2105,17 +2172,7 @@ CREATE TABLE `tb_project_detail_model` (
   `PRJDM_NOTES` varchar(500) DEFAULT NULL,
   `PRJDM_MATERIAL` varchar(50) DEFAULT NULL,
   `PRJDM_COLOR` varchar(30) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data untuk tabel `tb_project_detail_model`
---
-
-INSERT INTO `tb_project_detail_model` (`PRJDM_ID`, `PRJD_ID`, `PRDPP_ID`, `PRJDM_IMG`, `PRJDM_NOTES`, `PRJDM_MATERIAL`, `PRJDM_COLOR`) VALUES
-(18, 9, 51, 'lengan.png', 'coba', 'coba', 'coba'),
-(19, 9, 50, 'manset.png', 'tes', 'tes', 'tes'),
-(20, 10, 37, 'perisai-tengah.png', 'tes', 'tes', 'tes'),
-(21, 11, 56, '', 'tes', 'tes', 'tes');
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -2130,18 +2187,15 @@ CREATE TABLE `tb_project_detail_quantity` (
   `PRJDQ_QTY` smallint(6) DEFAULT NULL,
   `PRJDQ_PRICE` decimal(10,0) DEFAULT NULL,
   `PRJDQ_PRICE_PRODUCER` decimal(10,0) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data untuk tabel `tb_project_detail_quantity`
 --
 
 INSERT INTO `tb_project_detail_quantity` (`PRJDQ_ID`, `PRJD_ID`, `SIZE_ID`, `PRJDQ_QTY`, `PRJDQ_PRICE`, `PRJDQ_PRICE_PRODUCER`) VALUES
-(14, 9, 1, 10, '80000', '75000'),
-(15, 9, 2, 5, '85000', '80000'),
-(16, 10, 1, 10, '50000', '45000'),
-(17, 10, 2, 10, '50000', '45000'),
-(18, 11, 1, 12, '100000', '90000');
+(49, 37, 1, 5, NULL, NULL),
+(50, 37, 2, 5, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -2154,20 +2208,27 @@ CREATE TABLE `tb_project_payment` (
   `PRJ_ID` int(11) NOT NULL,
   `PRJP_DATE` timestamp NULL DEFAULT NULL,
   `PRJP_NOTES` varchar(500) DEFAULT NULL,
+  `PRJP_PERCENTAGE` float DEFAULT NULL,
   `PRJP_AMOUNT` decimal(10,0) DEFAULT NULL,
   `BANK_ID` int(11) DEFAULT NULL,
   `PRJP_PAYMENT_DATE` date DEFAULT '0000-00-00'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
 
 --
--- Dumping data untuk tabel `tb_project_payment`
+-- Struktur dari tabel `tb_project_payment_to_producer`
 --
 
-INSERT INTO `tb_project_payment` (`PRJP_ID`, `PRJ_ID`, `PRJP_DATE`, `PRJP_NOTES`, `PRJP_AMOUNT`, `BANK_ID`, `PRJP_PAYMENT_DATE`) VALUES
-(3, 14, '2020-03-04 07:06:30', NULL, '10000', 2, '2020-03-03'),
-(5, 15, '2020-03-04 09:11:41', NULL, '250000', 2, '2020-03-04'),
-(6, 14, '2020-03-05 08:50:12', NULL, '90000', 2, '2020-03-05'),
-(7, 14, '2020-03-10 03:50:53', NULL, '900000', 2, '2020-03-10');
+CREATE TABLE `tb_project_payment_to_producer` (
+  `PRJP2P_ID` int(11) NOT NULL,
+  `PRJD_ID` int(11) NOT NULL,
+  `PRJP2P_DATE` timestamp NULL DEFAULT NULL,
+  `PRJP2P_NOTES` varchar(500) DEFAULT NULL,
+  `PRJP2P_AMOUNT` decimal(10,0) DEFAULT NULL,
+  `BANK_ID` int(11) DEFAULT NULL,
+  `PRJP2P_STATUS` tinyint(4) DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -2179,11 +2240,40 @@ CREATE TABLE `tb_project_producer` (
   `PRJPR_ID` int(11) NOT NULL,
   `PRJD_ID` int(11) NOT NULL,
   `PRDU_ID` int(11) NOT NULL,
-  `PRJPR_PRICE` decimal(10,0) DEFAULT NULL,
   `PRJPR_DURATION` smallint(6) DEFAULT NULL,
+  `PRJPR_PRICE` decimal(10,0) DEFAULT NULL,
   `PRJPR_NOTES` varchar(500) DEFAULT NULL,
   `PRJPR_IMG` varchar(500) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data untuk tabel `tb_project_producer`
+--
+
+INSERT INTO `tb_project_producer` (`PRJPR_ID`, `PRJD_ID`, `PRDU_ID`, `PRJPR_DURATION`, `PRJPR_PRICE`, `PRJPR_NOTES`, `PRJPR_IMG`) VALUES
+(20, 37, 30, 16, '80000', '', ''),
+(21, 38, 8, 15, '70000', '', '');
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `tb_project_producer_detail`
+--
+
+CREATE TABLE `tb_project_producer_detail` (
+  `PRJPRD_ID` int(11) NOT NULL,
+  `PRJPR_ID` int(11) NOT NULL,
+  `PRJDQ_ID` int(11) NOT NULL,
+  `PRJPRD_PRICE` decimal(10,0) DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data untuk tabel `tb_project_producer_detail`
+--
+
+INSERT INTO `tb_project_producer_detail` (`PRJPRD_ID`, `PRJPR_ID`, `PRJDQ_ID`, `PRJPRD_PRICE`) VALUES
+(27, 20, 49, '7000'),
+(26, 20, 50, '70000');
 
 -- --------------------------------------------------------
 
@@ -2198,7 +2288,7 @@ CREATE TABLE `tb_project_progress` (
   `PRJPG_DATE` timestamp NULL DEFAULT NULL,
   `PRJPG_IMG` varchar(500) DEFAULT NULL,
   `PRJPG_NOTES` varchar(500) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data untuk tabel `tb_project_progress`
@@ -2206,7 +2296,12 @@ CREATE TABLE `tb_project_progress` (
 
 INSERT INTO `tb_project_progress` (`PRJPG_ID`, `PRJD_ID`, `PRJA_ID`, `PRJPG_DATE`, `PRJPG_IMG`, `PRJPG_NOTES`) VALUES
 (1, 11, 1, '2020-03-06 09:44:56', 'potongan-badan-depan.png', 'ok'),
-(4, 11, 3, '2020-03-10 02:30:56', '', 'tes');
+(4, 11, 3, '2020-03-10 02:30:56', '', 'tes'),
+(9, 19, 1, '2020-06-12 03:49:33', '', ''),
+(10, 19, 3, '2020-06-12 03:49:41', '', ''),
+(11, 19, 4, '2020-06-13 09:12:02', '', ''),
+(12, 19, 5, '2020-06-14 09:15:57', '', 'Sudah dikirim dengan kurir indah cargo no resi 123'),
+(13, 20, 5, '2020-06-22 06:55:57', '', 'sudah selesai dan dikirim');
 
 -- --------------------------------------------------------
 
@@ -2216,11 +2311,30 @@ INSERT INTO `tb_project_progress` (`PRJPG_ID`, `PRJD_ID`, `PRJA_ID`, `PRJPG_DATE
 
 CREATE TABLE `tb_project_review` (
   `PRJR_ID` smallint(6) NOT NULL,
-  `PRJ_ID` int(11) NOT NULL,
+  `PRJD_ID` int(11) NOT NULL,
   `PRJC_ID` smallint(6) NOT NULL,
   `PRJR_POINT` smallint(6) NOT NULL,
   `PRJR_NOTES` varchar(200) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `tb_project_shipment`
+--
+
+CREATE TABLE `tb_project_shipment` (
+  `PRJS_ID` int(11) NOT NULL,
+  `PRJD_ID` int(11) NOT NULL,
+  `PRJS_DATE` timestamp NULL DEFAULT NULL,
+  `PRJS_NOTES` varchar(500) DEFAULT NULL,
+  `PRJS_QTY` int(11) DEFAULT NULL,
+  `PRJS_STATUS` tinyint(4) DEFAULT NULL,
+  `PRJS_SHIPCOST` decimal(10,0) DEFAULT NULL,
+  `COURIER_ID` int(11) DEFAULT NULL,
+  `PRJS_SERVICE_TYPE` varchar(20) DEFAULT NULL,
+  `PRJS_RECIEPT_NO` varchar(20) DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -2231,14 +2345,16 @@ CREATE TABLE `tb_project_review` (
 CREATE TABLE `tb_project_type` (
   `PRJT_ID` smallint(6) NOT NULL,
   `PRJT_NAME` varchar(30) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data untuk tabel `tb_project_type`
 --
 
 INSERT INTO `tb_project_type` (`PRJT_ID`, `PRJT_NAME`) VALUES
-(1, 'Design');
+(1, 'Custom'),
+(2, 'Design'),
+(3, 'Pattern');
 
 -- --------------------------------------------------------
 
@@ -2250,7 +2366,7 @@ CREATE TABLE `tb_size` (
   `SIZE_ID` smallint(6) NOT NULL,
   `SIZE_NAME` varchar(100) NOT NULL,
   `SIZG_ID` smallint(6) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data untuk tabel `tb_size`
@@ -2259,7 +2375,13 @@ CREATE TABLE `tb_size` (
 INSERT INTO `tb_size` (`SIZE_ID`, `SIZE_NAME`, `SIZG_ID`) VALUES
 (1, 'M', 1),
 (2, 'L', 1),
-(3, 'XL', 1);
+(3, 'XL', 1),
+(4, 'S', 6),
+(5, 'M', 6),
+(6, 'L', 6),
+(7, '10', 7),
+(8, '11', 7),
+(9, 'AllSize', 1);
 
 -- --------------------------------------------------------
 
@@ -2270,15 +2392,17 @@ INSERT INTO `tb_size` (`SIZE_ID`, `SIZE_NAME`, `SIZG_ID`) VALUES
 CREATE TABLE `tb_size_group` (
   `SIZG_ID` smallint(6) NOT NULL,
   `SIZG_NAME` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data untuk tabel `tb_size_group`
 --
 
 INSERT INTO `tb_size_group` (`SIZG_ID`, `SIZG_NAME`) VALUES
-(1, 'Ukuran Indonesia'),
-(5, 'Ukuran Internasional');
+(1, 'General'),
+(5, 'Ukuran Internasional'),
+(6, 'Ukuran Nana Meliana'),
+(7, 'Ukuran Celana Nana Meliana');
 
 -- --------------------------------------------------------
 
@@ -2290,7 +2414,7 @@ CREATE TABLE `tb_size_type` (
   `SIZP_ID` smallint(6) NOT NULL,
   `SIZP_NAME` varchar(100) NOT NULL,
   `PRDUP_ID` smallint(6) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data untuk tabel `tb_size_type`
@@ -2455,17 +2579,19 @@ INSERT INTO `tb_size_type` (`SIZP_ID`, `SIZP_NAME`, `PRDUP_ID`) VALUES
 CREATE TABLE `tb_size_value` (
   `SIZV_ID` smallint(6) NOT NULL,
   `SIZV_VALUE` float NOT NULL,
+  `PRDUP_ID` smallint(6) NOT NULL,
   `SIZG_ID` smallint(6) NOT NULL,
   `SIZP_ID` smallint(6) NOT NULL,
   `SIZE_ID` smallint(6) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data untuk tabel `tb_size_value`
 --
 
-INSERT INTO `tb_size_value` (`SIZV_ID`, `SIZV_VALUE`, `SIZG_ID`, `SIZP_ID`, `SIZE_ID`) VALUES
-(1, 10, 1, 1, 1);
+INSERT INTO `tb_size_value` (`SIZV_ID`, `SIZV_VALUE`, `PRDUP_ID`, `SIZG_ID`, `SIZP_ID`, `SIZE_ID`) VALUES
+(1, 10, 2, 1, 1, 1),
+(3, 87, 26, 1, 98, 1);
 
 -- --------------------------------------------------------
 
@@ -13251,7 +13377,7 @@ CREATE TABLE `tb_subtype` (
   `STYPE_ID` int(11) NOT NULL,
   `STYPE_NAME` varchar(100) NOT NULL,
   `TYPE_ID` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data untuk tabel `tb_subtype`
@@ -13639,6 +13765,12 @@ ALTER TABLE `tb_producer`
   ADD PRIMARY KEY (`PRDU_ID`);
 
 --
+-- Indeks untuk tabel `tb_producer_bank`
+--
+ALTER TABLE `tb_producer_bank`
+  ADD PRIMARY KEY (`PBA_ID`);
+
+--
 -- Indeks untuk tabel `tb_producer_category`
 --
 ALTER TABLE `tb_producer_category`
@@ -13717,10 +13849,22 @@ ALTER TABLE `tb_project_payment`
   ADD PRIMARY KEY (`PRJP_ID`);
 
 --
+-- Indeks untuk tabel `tb_project_payment_to_producer`
+--
+ALTER TABLE `tb_project_payment_to_producer`
+  ADD PRIMARY KEY (`PRJP2P_ID`);
+
+--
 -- Indeks untuk tabel `tb_project_producer`
 --
 ALTER TABLE `tb_project_producer`
   ADD PRIMARY KEY (`PRJPR_ID`);
+
+--
+-- Indeks untuk tabel `tb_project_producer_detail`
+--
+ALTER TABLE `tb_project_producer_detail`
+  ADD PRIMARY KEY (`PRJPRD_ID`);
 
 --
 -- Indeks untuk tabel `tb_project_progress`
@@ -13733,6 +13877,12 @@ ALTER TABLE `tb_project_progress`
 --
 ALTER TABLE `tb_project_review`
   ADD PRIMARY KEY (`PRJR_ID`);
+
+--
+-- Indeks untuk tabel `tb_project_shipment`
+--
+ALTER TABLE `tb_project_shipment`
+  ADD PRIMARY KEY (`PRJS_ID`);
 
 --
 -- Indeks untuk tabel `tb_project_type`
@@ -13841,7 +13991,7 @@ ALTER TABLE `tb_bank`
 -- AUTO_INCREMENT untuk tabel `tb_channel`
 --
 ALTER TABLE `tb_channel`
-  MODIFY `CHA_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `CHA_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
 
 --
 -- AUTO_INCREMENT untuk tabel `tb_city`
@@ -13883,7 +14033,7 @@ ALTER TABLE `tb_currency`
 -- AUTO_INCREMENT untuk tabel `tb_customer`
 --
 ALTER TABLE `tb_customer`
-  MODIFY `CUST_ID` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15290;
+  MODIFY `CUST_ID` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15296;
 
 --
 -- AUTO_INCREMENT untuk tabel `tb_customer_activity`
@@ -13895,13 +14045,13 @@ ALTER TABLE `tb_customer_activity`
 -- AUTO_INCREMENT untuk tabel `tb_customer_deposit`
 --
 ALTER TABLE `tb_customer_deposit`
-  MODIFY `CUSTD_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=146;
+  MODIFY `CUSTD_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=147;
 
 --
 -- AUTO_INCREMENT untuk tabel `tb_customer_log`
 --
 ALTER TABLE `tb_customer_log`
-  MODIFY `CLOG_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15471;
+  MODIFY `CLOG_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15473;
 
 --
 -- AUTO_INCREMENT untuk tabel `tb_docno`
@@ -13937,37 +14087,37 @@ ALTER TABLE `tb_log_sample`
 -- AUTO_INCREMENT untuk tabel `tb_log_stock`
 --
 ALTER TABLE `tb_log_stock`
-  MODIFY `LSTOCK_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=153;
+  MODIFY `LSTOCK_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=155;
 
 --
 -- AUTO_INCREMENT untuk tabel `tb_module`
 --
 ALTER TABLE `tb_module`
-  MODIFY `MOD_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
+  MODIFY `MOD_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
 
 --
 -- AUTO_INCREMENT untuk tabel `tb_order`
 --
 ALTER TABLE `tb_order`
-  MODIFY `ORDER_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4272;
+  MODIFY `ORDER_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4273;
 
 --
 -- AUTO_INCREMENT untuk tabel `tb_order_detail`
 --
 ALTER TABLE `tb_order_detail`
-  MODIFY `ORDD_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=446;
+  MODIFY `ORDD_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=448;
 
 --
 -- AUTO_INCREMENT untuk tabel `tb_order_letter`
 --
 ALTER TABLE `tb_order_letter`
-  MODIFY `ORDL_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `ORDL_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT untuk tabel `tb_order_vendor`
 --
 ALTER TABLE `tb_order_vendor`
-  MODIFY `ORDV_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=382;
+  MODIFY `ORDV_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=383;
 
 --
 -- AUTO_INCREMENT untuk tabel `tb_order_vendor_old`
@@ -13991,13 +14141,19 @@ ALTER TABLE `tb_poption`
 -- AUTO_INCREMENT untuk tabel `tb_producer`
 --
 ALTER TABLE `tb_producer`
-  MODIFY `PRDU_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `PRDU_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+
+--
+-- AUTO_INCREMENT untuk tabel `tb_producer_bank`
+--
+ALTER TABLE `tb_producer_bank`
+  MODIFY `PBA_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT untuk tabel `tb_producer_category`
 --
 ALTER TABLE `tb_producer_category`
-  MODIFY `PRDUC_ID` smallint(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `PRDUC_ID` smallint(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT untuk tabel `tb_producer_product`
@@ -14015,13 +14171,13 @@ ALTER TABLE `tb_producer_product_property`
 -- AUTO_INCREMENT untuk tabel `tb_producer_type`
 --
 ALTER TABLE `tb_producer_type`
-  MODIFY `PRDUT_ID` smallint(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `PRDUT_ID` smallint(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT untuk tabel `tb_producer_x_product`
 --
 ALTER TABLE `tb_producer_x_product`
-  MODIFY `PRDXP_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `PRDXP_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT untuk tabel `tb_product`
@@ -14033,79 +14189,97 @@ ALTER TABLE `tb_product`
 -- AUTO_INCREMENT untuk tabel `tb_project`
 --
 ALTER TABLE `tb_project`
-  MODIFY `PRJ_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `PRJ_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
 -- AUTO_INCREMENT untuk tabel `tb_project_activity`
 --
 ALTER TABLE `tb_project_activity`
-  MODIFY `PRJA_ID` smallint(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `PRJA_ID` smallint(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT untuk tabel `tb_project_criteria`
 --
 ALTER TABLE `tb_project_criteria`
-  MODIFY `PRJC_ID` smallint(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `PRJC_ID` smallint(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT untuk tabel `tb_project_detail`
 --
 ALTER TABLE `tb_project_detail`
-  MODIFY `PRJD_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `PRJD_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
 -- AUTO_INCREMENT untuk tabel `tb_project_detail_model`
 --
 ALTER TABLE `tb_project_detail_model`
-  MODIFY `PRJDM_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `PRJDM_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
 -- AUTO_INCREMENT untuk tabel `tb_project_detail_quantity`
 --
 ALTER TABLE `tb_project_detail_quantity`
-  MODIFY `PRJDQ_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `PRJDQ_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 
 --
 -- AUTO_INCREMENT untuk tabel `tb_project_payment`
 --
 ALTER TABLE `tb_project_payment`
-  MODIFY `PRJP_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `PRJP_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+
+--
+-- AUTO_INCREMENT untuk tabel `tb_project_payment_to_producer`
+--
+ALTER TABLE `tb_project_payment_to_producer`
+  MODIFY `PRJP2P_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT untuk tabel `tb_project_producer`
 --
 ALTER TABLE `tb_project_producer`
-  MODIFY `PRJPR_ID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `PRJPR_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+
+--
+-- AUTO_INCREMENT untuk tabel `tb_project_producer_detail`
+--
+ALTER TABLE `tb_project_producer_detail`
+  MODIFY `PRJPRD_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT untuk tabel `tb_project_progress`
 --
 ALTER TABLE `tb_project_progress`
-  MODIFY `PRJPG_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `PRJPG_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT untuk tabel `tb_project_review`
 --
 ALTER TABLE `tb_project_review`
-  MODIFY `PRJR_ID` smallint(6) NOT NULL AUTO_INCREMENT;
+  MODIFY `PRJR_ID` smallint(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT untuk tabel `tb_project_shipment`
+--
+ALTER TABLE `tb_project_shipment`
+  MODIFY `PRJS_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT untuk tabel `tb_project_type`
 --
 ALTER TABLE `tb_project_type`
-  MODIFY `PRJT_ID` smallint(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `PRJT_ID` smallint(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT untuk tabel `tb_size`
 --
 ALTER TABLE `tb_size`
-  MODIFY `SIZE_ID` smallint(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `SIZE_ID` smallint(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT untuk tabel `tb_size_group`
 --
 ALTER TABLE `tb_size_group`
-  MODIFY `SIZG_ID` smallint(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `SIZG_ID` smallint(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT untuk tabel `tb_size_type`
@@ -14117,7 +14291,7 @@ ALTER TABLE `tb_size_type`
 -- AUTO_INCREMENT untuk tabel `tb_size_value`
 --
 ALTER TABLE `tb_size_value`
-  MODIFY `SIZV_ID` smallint(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `SIZV_ID` smallint(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT untuk tabel `tb_state`
@@ -14171,13 +14345,13 @@ ALTER TABLE `tb_vendor_bank`
 -- AUTO_INCREMENT untuk tabel `tb_vendor_deposit`
 --
 ALTER TABLE `tb_vendor_deposit`
-  MODIFY `VENDD_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=70;
+  MODIFY `VENDD_ID` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT untuk tabel `tb_vendor_price`
 --
 ALTER TABLE `tb_vendor_price`
-  MODIFY `VENP_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `VENP_ID` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

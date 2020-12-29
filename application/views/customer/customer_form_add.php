@@ -95,7 +95,7 @@
 								</div>
 								<div class="form-group">
 								    <label>Channel <small>*</small></label>
-								    <select class="form-control selectpicker" name="CHA_ID" title="-- Select One --" data-live-search="true" required>
+								    <select class="form-control selectpicker" id="CHANNEL" name="CHA_ID" title="-- Select One --" data-live-search="true" required>
 								    	<?php foreach($channel as $cha): ?>
 									    	<option value="<?php echo $cha->CHA_ID ?>">
 									    		<?php echo stripslashes($cha->CHA_NAME) ?>
@@ -104,7 +104,7 @@
 								    </select>
 								</div>
 								<div align="center">
-									<button type="submit" class="btn btn-primary" name="simpan"><i class="fa fa-save"></i> Save</button>
+									<button type="submit" class="btn btn-primary" name="simpan" id="SIMPAN"><i class="fa fa-save"></i> Save</button>
 									<a href="<?php echo site_url('customer') ?>" class="btn btn-danger" name="batal"><i class="fa fa-times"></i> Cancel</a>
 								</div>
 							</div>
@@ -135,24 +135,31 @@
 		        success: function(response){
 					if(response.list_input_phone != ""){
 						if(response.list_validasi != ""){
-							Swal.fire({
-								title: 'Customer sudah ada!',
-								text: "Apakah anda ingin mengubah datanya?",
-								icon: 'warning',
-								allowOutsideClick: false,
-								// showCloseButton: true,
-								showCancelButton: true,
-								confirmButtonColor: '#17a2b8',
-								cancelButtonColor: '#6c757d',
-								confirmButtonText: 'Yes',
-								cancelButtonText: 'No',
-							}).then((result) => {
-								if (result.value) {
-									window.location.href = "<?php echo site_url('customer/edit_by_phone/') ?>"+response.list_cust_id;
-								} else if (result.dismiss === Swal.DismissReason.cancel) {
-									window.location.href = "<?php echo site_url('customer/edit_user/') ?>"+response.list_cust_id;
-								}
-							});
+							$("#SIMPAN").attr("disabled", "disabled");
+							$("#SIMPAN").removeClass("btn btn-primary").addClass("btn btn-secondary");
+							if(confirm('Customer sudah ada!\nApakah anda ingin mengubah datanya?')) {
+								window.location.href = "<?php echo site_url('customer/edit_by_phone/') ?>"+response.list_cust_id;
+							} else {
+								window.location.href = "<?php echo site_url('customer/edit_user/') ?>"+response.list_cust_id;
+							}
+							// Swal.fire({
+							// 	title: 'Customer sudah ada!',
+							// 	text: "Apakah anda ingin mengubah datanya?",
+							// 	icon: 'warning',
+							// 	allowOutsideClick: false,
+							// 	// showCloseButton: true,
+							// 	showCancelButton: true,
+							// 	confirmButtonColor: '#17a2b8',
+							// 	cancelButtonColor: '#6c757d',
+							// 	confirmButtonText: 'Yes',
+							// 	cancelButtonText: 'No',
+							// }).then((result) => {
+							// 	if (result.value) {
+							// 		window.location.href = "<?php echo site_url('customer/edit_by_phone/') ?>"+response.list_cust_id;
+							// 	} else if (result.dismiss === Swal.DismissReason.cancel) {
+							// 		window.location.href = "<?php echo site_url('customer/edit_user/') ?>"+response.list_cust_id;
+							// 	}
+							// });
 						}
 					}
 		        },
@@ -160,7 +167,38 @@
 		          	alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
 		        }
 		    });
+		});
 
+		$("#CHANNEL").on('change', function(){
+			$.ajax({
+		        url: "<?php echo site_url('customer/check_phone'); ?>",
+		        type: "POST", 
+		        data: {
+		        	CUST_PHONE  : $("#CHECK_CUST_PHONE").val(),
+		        	},
+		        dataType: "json",
+		        beforeSend: function(e) {
+		        	if(e && e.overrideMimeType) {
+		            	e.overrideMimeType("application/json;charset=UTF-8");
+		          	}
+		        },
+		        success: function(response){
+					if(response.list_input_phone != ""){
+						if(response.list_validasi != ""){
+							$("#SIMPAN").attr("disabled", "disabled");
+							$("#SIMPAN").removeClass("btn btn-primary").addClass("btn btn-secondary");
+							if(confirm('Customer sudah ada!\nApakah anda ingin mengubah datanya?')) {
+								window.location.href = "<?php echo site_url('customer/edit_by_phone/') ?>"+response.list_cust_id;
+							} else {
+								window.location.href = "<?php echo site_url('customer/edit_user/') ?>"+response.list_cust_id;
+							}
+						}
+					}
+		        },
+		        error: function (xhr, ajaxOptions, thrownError) { 
+		          	alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+		        }
+		    });
 		});
 	});
 </script>

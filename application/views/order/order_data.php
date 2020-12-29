@@ -15,17 +15,21 @@
         </div>
       	<div class="card-body">
 			<div class="row">
-	      		<div class="col-md-6">
-					<a <?php if((!$this->access_m->isAdd('Order', 1)->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> href="<?php echo site_url('order/add') ?>" class="btn btn-success btn-sm">
+	      		<div class="col-md-4">
+					<a <?php if((!$this->access_m->isAdd('Order', 1)->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> href="<?php echo site_url('order/add') ?>" class="btn btn-sm btn-success mb-3">
 						<i class="fas fa-plus-circle"></i> Add</a>
 				</div>
-				<div class="col-md-3">			
-					<div class="form-group" align="right">
-						<a class="form-control-sm btn btn-sm btn-default" style="border: 2px solid #dc3545;" href="<?php echo site_url('order') ?>"><i class="fa fa-redo"></i> Reset</a>
-						<button class="form-control-sm btn btn-sm btn-default" style="border: 2px solid #17a2b8;" id="FILTER_ORDER"><i class="fas fa-filter"></i> Filter</button>
+				<div class="col-md-2">			
+					<div class="form-group">
+						<input class="form-control form-control-sm datepicker" type="text" name="FROM" id="FROM" placeholder="From" autocomplete="off">
 					</div>
 				</div>
-				<div class="col-md-3">			
+				<div class="col-md-2">			
+					<div class="form-group">
+						<input class="form-control form-control-sm datepicker" type="text" name="TO" id="TO" placeholder="To" autocomplete="off">
+					</div>
+				</div>
+				<div class="col-md-2">			
 					<div class="form-group">
 						<select class="form-control form-control-sm selectpicker" title="--Select Status--" name="status" id="STATUS">
 				    		<option class="form-control-sm" value="0">Confirm</option>
@@ -35,6 +39,12 @@
 				    		<option class="form-control-sm" value="4">Delivered</option>
 				    		<option class="form-control-sm" value="5">Cancel</option>
 					    </select>
+					</div>
+				</div>
+				<div class="col-md-2">			
+					<div class="form-group" align="right">
+						<button class="form-control-sm btn btn-sm btn-default" style="border: 2px solid #17a2b8;" id="FILTER_ORDER"><i class="fas fa-filter"></i> Filter</button>
+						<a class="form-control-sm btn btn-sm btn-default" style="border: 2px solid #dc3545;" href="<?php echo site_url('order') ?>"><i class="fa fa-redo"></i> Reset</a>
 					</div>
 				</div>
 			</div>

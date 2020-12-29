@@ -25,6 +25,9 @@
 		
 		<!-- Starrr style for star rating -->
 		<link href="<?php echo base_url()?>assets/vendor/starrr/starrr.css" rel="stylesheet">
+
+		<!-- Magnific Popup core CSS file -->
+		<link rel="stylesheet" href="<?php echo base_url()?>assets/vendor/magnific-popup/magnific-popup.css">
 	</head>
 
 	<body id="page-top">
@@ -118,7 +121,7 @@
 		      	</li>
 		      	<?php 
 		      		if($this->session->GRP_SESSION !=3) {
-		      			if ((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Order Custom')->row()) && (!$this->access_m->isAccess($this->session->GRP_SESSION, 'Follow Up VR')->row()) && (!$this->access_m->isAccess($this->session->GRP_SESSION, 'Assign Producer')->row())) {
+		      			if ( ( !$this->access_m->isAccess($this->session->GRP_SESSION, 'Prospect')->row() ) && ( !$this->access_m->isAccess($this->session->GRP_SESSION, 'Follow Up VR')->row() ) && ( !$this->access_m->isAccess($this->session->GRP_SESSION, 'Assign Producer')->row() ) && ( !$this->access_m->isAccess($this->session->GRP_SESSION, 'Payment From Customer')->row() ) && ( !$this->access_m->isAccess($this->session->GRP_SESSION, 'Project')->row() ) ) {
 		      				$visible_order_custom = "hidden";
 		      			} else {
 		      				$visible_order_custom = "";
@@ -127,7 +130,7 @@
 		      			$visible_order_custom = "";
 		      		}
 		      	?>
-		      	<li <?php echo $visible_order_custom; ?> class="nav-item dropdown <?php if($this->uri->segment(1)=="project" || $this->uri->segment(1)=="project_followup" || $this->uri->segment(1)=="assign_producer"){echo "active";}?>">
+		      	<li hidden <?php echo $visible_order_custom; ?> class="nav-item dropdown <?php if($this->uri->segment(1)=="project" || $this->uri->segment(1)=="project_followup" || $this->uri->segment(1)=="assign_producer"){echo "active";}?>">
 		        	<a class="nav-link dropdown-toggle" href="#" id="pagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 		          		<i class="fas fa-fw fa-pencil-ruler"></i>
 		          		<span>Order-Custom</span>
@@ -138,6 +141,23 @@
 			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Assign Producer')->row()) && ($this->session->GRP_SESSION !=3) ){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('assign_producer') ?>">Assign Producer<hr style="margin: 0;"></a>
 			        </div>
 		      	</li>
+
+
+		      	<!-- new order-custom -->
+		      	<li <?php echo $visible_order_custom; ?> class="nav-item dropdown <?php if($this->uri->segment(1)=="prospect" || $this->uri->segment(1)=="prospect_followup" || $this->uri->segment(1)=="assign_producer" || $this->uri->segment(1)=="payment_customer" || $this->uri->segment(1)=="project"){echo "active";}?>">
+		        	<a class="nav-link dropdown-toggle" href="#" id="pagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		          		<i class="fas fa-fw fa-pencil-ruler"></i>
+		          		<span>Order-Custom</span>
+		        	</a>
+			        <div class="dropdown-menu" aria-labelledby="pagesDropdown">
+			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Prospect')->row()) && ($this->session->GRP_SESSION !=3) ){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('prospect') ?>">Prospect<hr style="margin: 0;"></a>
+			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Follow Up VR')->row()) && ($this->session->GRP_SESSION !=3) ){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('prospect_followup') ?>">Follow Up<hr style="margin: 0;"></a>
+			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Assign Producer')->row()) && ($this->session->GRP_SESSION !=3) ){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('assign_producer') ?>">Assign Producer<hr style="margin: 0;"></a>
+			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Payment From Customer')->row()) && ($this->session->GRP_SESSION !=3) ){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('payment_customer') ?>">Payment From<br>Customer<hr style="margin: 0;"></a>
+			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Project')->row()) && ($this->session->GRP_SESSION !=3) ){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('project') ?>">Project<hr style="margin: 0;"></a>
+			        </div>
+		      	</li>
+
 		      	<?php
 		      		if($this->session->GRP_SESSION !=3) {
 		      			if ((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Payment To Producer')->row()) && (!$this->access_m->isAccess($this->session->GRP_SESSION, 'Payment To Vendor')->row()) && (!$this->access_m->isAccess($this->session->GRP_SESSION, 'Customer Deposit')->row()) && (!$this->access_m->isAccess($this->session->GRP_SESSION, 'Vendor Deposit')->row())) {
@@ -211,6 +231,7 @@
 			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Report')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('report/income_by_product') ?>">Income by Product<hr style="margin: 0;"></a>
 			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Report')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('report/income_by_vendor') ?>">Income by Vendor<hr style="margin: 0;"></a>
 			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Report')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('report/profit_loss') ?>">Profit and Loss<hr style="margin: 0;"></a>
+			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Report')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('report/outstanding_deposit') ?>">Outstanding<br>Deposit<hr style="margin: 0;"></a>
 			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Price Change')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('report/price_change') ?>">Price Change<hr style="margin: 0;"></a>
 			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Shipcost Difference')->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('report/shipcost_difference') ?>">Shipcost Difference<hr style="margin: 0;"></a>
 			        </div>
@@ -328,27 +349,30 @@
 		<!-- script -->
 		<!-- Pusher core plugin  JavaScript-->
 		<!-- <script src="https://js.pusher.com/5.0/pusher.min.js"></script> -->
-		<script defer src="<?php echo base_url()?>assets/vendor/pusher-js-master/dist/web/pusher.min.js"></script>
+		<script src="<?php echo base_url()?>assets/vendor/pusher-js-master/dist/web/pusher.min.js"></script>
 
 		<!-- Jquery core plugin JavaScript-->
 		<script src="<?php echo base_url()?>assets/vendor/jquery/jquery.min.js"></script>
-		<script defer src="<?php echo base_url()?>assets/vendor/jquery-mask/jquery.mask.min.js"></script>
-		<script defer src="<?php echo base_url()?>assets/vendor/jquery-easing/jquery.easing.min.js"></script>
-		<script defer src="<?php echo base_url()?>assets/vendor/jquery-ui-1.12.1/jquery-ui.min.js"></script>
+		<script src="<?php echo base_url()?>assets/vendor/jquery-mask/jquery.mask.min.js"></script>
+		<script src="<?php echo base_url()?>assets/vendor/jquery-easing/jquery.easing.min.js"></script>
+		<script src="<?php echo base_url()?>assets/vendor/jquery-ui-1.12.1/jquery-ui.min.js"></script>
+
+		<!-- Magnific Popup core JS file -->
+		<script src="<?php echo base_url()?>assets/vendor/magnific-popup/jquery.magnific-popup.min.js"></script>
 
 		<!-- Bootstrap core plugin JavaScript-->
-		<script defer src="<?php echo base_url()?>assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-		<script defer src="<?php echo base_url()?>assets/vendor/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
+		<script src="<?php echo base_url()?>assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+		<script src="<?php echo base_url()?>assets/vendor/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
 
 		<!-- Datatables core plugin JavaScript-->
-		<script defer src="<?php echo base_url()?>assets/vendor/datatables/jquery.dataTables.min.js"></script>
-		<script defer src="<?php echo base_url()?>assets/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+		<script src="<?php echo base_url()?>assets/vendor/datatables/jquery.dataTables.min.js"></script>
+		<script src="<?php echo base_url()?>assets/vendor/datatables/dataTables.bootstrap4.min.js"></script>
 
 		<!-- Starr js for star rating -->
-		<script defer src="<?php echo base_url()?>assets/vendor/starrr/starrr.js"></script>
+		<script src="<?php echo base_url()?>assets/vendor/starrr/starrr.js"></script>
 
 		<!-- Custom scripts for all pages-->
-		<script defer src="<?php echo base_url()?>assets/js/sb-admin.min.js"></script>
+		<script src="<?php echo base_url()?>assets/js/sb-admin.min.js"></script>
 		
 		<?php $this->load->view('script');?>
 	</body>

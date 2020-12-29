@@ -6,14 +6,12 @@ class Couaddress_m extends CI_Model {
     var $column_search = array('COURIER_NAME', 'COUADD_CPERSON'); //field yang diizin untuk pencarian 
     var $order = array('COUADD_CPERSON' => 'ASC'); // default order 
 
-    public function __construct()
-    {
+    public function __construct() {
         parent::__construct();
         $this->load->database();
     }
 
-    private function _get_datatables_query()
-    {
+    private function _get_datatables_query($COURIER_ID) {
         
         $this->db->select('tb_courier_address.*, tb_courier.COURIER_NAME, tb_country.CNTR_NAME, tb_state.STATE_NAME, tb_city.CITY_NAME, tb_subdistrict.SUBD_NAME');
 		$this->db->from($this->table);    
@@ -22,21 +20,17 @@ class Couaddress_m extends CI_Model {
 		$this->db->join('tb_state', 'tb_state.STATE_ID=tb_courier_address.STATE_ID', 'left');
 		$this->db->join('tb_city', 'tb_city.CITY_ID=tb_courier_address.CITY_ID', 'left');
 		$this->db->join('tb_subdistrict', 'tb_subdistrict.SUBD_ID=tb_courier_address.SUBD_ID', 'left');
+		$this->db->where('tb_courier_address.COURIER_ID', $COURIER_ID);
 
         $i = 0;
     
-        foreach ($this->column_search as $item) // loop column 
-        {
-            if($_POST['search']['value']) // if datatable send POST for search
-            {
+        foreach ($this->column_search as $item) { // loop column 
+            if($_POST['search']['value']) { // if datatable send POST for search
                 
-                if($i===0) // first loop
-                {
+                if($i===0) { // first loop
                     $this->db->group_start(); // open bracket. query Where with OR clause better with bracket. because maybe can combine with other WHERE with AND.
                     $this->db->like($item, $_POST['search']['value']);
-                }
-                else
-                {
+                } else {
                     $this->db->or_like($item, $_POST['search']['value']);
                 }
 
@@ -46,35 +40,28 @@ class Couaddress_m extends CI_Model {
             $i++;
         }
         
-       	if(isset($this->order))
-        {
+       	if(isset($this->order)) {
             $order = $this->order;
             $this->db->order_by(key($order), $order[key($order)]);
         }
     }
 
-    function get_datatables($COURIER_ID)
-    {
-        $this->_get_datatables_query();
-        $this->db->where('tb_courier_address.COURIER_ID', $COURIER_ID);
+    function get_datatables($COURIER_ID) {
+        $this->_get_datatables_query($COURIER_ID);
         if($_POST['length'] != -1)
         $this->db->limit($_POST['length'], $_POST['start']);
         $query = $this->db->get();
         return $query->result();
     }
 
-    function count_filtered($COURIER_ID)
-    {
-        $this->_get_datatables_query();
-        $this->db->where('tb_courier_address.COURIER_ID', $COURIER_ID);
+    function count_filtered($COURIER_ID) {
+        $this->_get_datatables_query($COURIER_ID);
         $query = $this->db->get();
         return $query->num_rows();
     }
 
-    public function count_all($COURIER_ID)
-    {
-        $this->db->from($this->table);
-        $this->db->where('tb_courier_address.COURIER_ID', $COURIER_ID);
+    public function count_all($COURIER_ID) {
+        $this->_get_datatables_query($COURIER_ID);
         return $this->db->count_all_results();
     }
 
@@ -112,21 +99,21 @@ class Couaddress_m extends CI_Model {
 		return $query;	
 	}
 
-	public function insertAddress(){
+	public function insertAddress() {
 		$dataInsert = array(
-			'COUADD_CPERSON'	=> $this->input->post('COUADD_CPERSON', TRUE),
-			'COUADD_PHONE'		=> $this->input->post('COUADD_PHONE', TRUE),
-			'COUADD_ADDRESS'	=> str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$this->input->post('COUADD_ADDRESS', TRUE)),
-			'CNTR_ID'			=> $this->input->post('CNTR_ID', TRUE),
-			'STATE_ID'			=> $this->input->post('STATE_ID', TRUE),
-			'CITY_ID'			=> $this->input->post('CITY_ID', TRUE),
-			'SUBD_ID'			=> $this->input->post('SUBD_ID', TRUE),
-			'COURIER_ID'		=> $this->input->post('COURIER_ID', TRUE),
+			'COUADD_CPERSON' => $this->input->post('COUADD_CPERSON', TRUE),
+			'COUADD_PHONE'	 => $this->input->post('COUADD_PHONE', TRUE),
+			'COUADD_ADDRESS' => str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$this->input->post('COUADD_ADDRESS', TRUE)),
+			'CNTR_ID'		 => $this->input->post('CNTR_ID', TRUE),
+			'STATE_ID'		 => $this->input->post('STATE_ID', TRUE),
+			'CITY_ID'		 => $this->input->post('CITY_ID', TRUE),
+			'SUBD_ID'		 => $this->input->post('SUBD_ID', TRUE),
+			'COURIER_ID'	 => $this->input->post('COURIER_ID', TRUE),
 		);
 		$this->db->insert('tb_courier_address', $this->db->escape_str($dataInsert));
 	}
 
-	public function updateAddress($COUADD_ID){
+	public function updateAddress($COUADD_ID) {
 		$dataUpdate = array(
 			'COUADD_CPERSON'	=> $this->input->post('COUADD_CPERSON', TRUE),
 			'COUADD_PHONE'		=> $this->input->post('COUADD_PHONE', TRUE),
@@ -139,10 +126,9 @@ class Couaddress_m extends CI_Model {
 		$this->db->where('COUADD_ID', $COUADD_ID)->update('tb_courier_address', $this->db->escape_str($dataUpdate));
 	}
 
-	public function deleteAddress($COUADD_ID){
+	public function deleteAddress($COUADD_ID) {
 		$this->db->where('COUADD_ID', $COUADD_ID);
 		$this->db->delete('tb_courier_address');
 	}
-	
 
 }

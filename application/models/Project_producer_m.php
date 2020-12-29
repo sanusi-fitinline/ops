@@ -45,62 +45,71 @@ class Project_producer_m extends CI_Model {
 	}
 
 	public function insert() {
-		$config['upload_path']          = './assets/images/project/offer/';
-	    $config['allowed_types']        = 'jpg|jpeg|png';
-	    $config['encrypt_name'] 		= FALSE;
-	    $config['remove_spaces'] 		= TRUE;
-	    $config['overwrite']			= FALSE;
-	    $config['max_size']             = 3024; // 3MB
-	    $config['max_width']            = 5000;
-	    $config['max_height']           = 5000;
+		$config['upload_path']	 = './assets/images/project/offer/';
+	    $config['allowed_types'] = 'jpg|jpeg|png';
+	    $config['encrypt_name']	 = FALSE;
+	    $config['remove_spaces'] = TRUE;
+	    $config['overwrite']	 = FALSE;
+	    $config['max_size']	     = 3024; // 3MB
+	    $config['max_width']	 = 5000;
+	    $config['max_height']	 = 5000;
 	    $this->load->library('upload');
 	    $this->upload->initialize($config);
 
-	    if (!$this->upload->do_upload('PRJPR_IMG'))
-        {
+	    if ( !$this->upload->do_upload('PRJPR_IMG') ) {
             $gambar = '';
         } else {
             $gambar = $this->upload->data('file_name', TRUE);
         }
 
-		$dataInsert = array(
-			'PRJD_ID' 		 => $this->input->post('PRJD_ID', TRUE),
-			'PRDU_ID' 		 => $this->input->post('PRDU_ID', TRUE),
-			'PRJPR_DURATION' => $this->input->post('PRJPR_DURATION', TRUE),
-			'PRJPR_NOTES' 	 => str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$this->input->post('PRJPR_NOTES', TRUE)),
-			'PRJPR_IMG' 	 => $gambar,
-		);
-		$this->db->insert('tb_project_producer', $this->db->escape_str($dataInsert));
+		$params['PRJD_ID'] 		  = $this->input->post('PRJD_ID', TRUE);
+		$params['PRDU_ID'] 		  = $this->input->post('PRDU_ID', TRUE);
+		$params['PRJPR_DURATION'] = $this->input->post('PRJPR_DURATION', TRUE);
+		if ( !empty( $this->input->post('PRJPR_PRICE') ) ) {
+			$params['PRJPR_PRICE'] = str_replace(".", "", $this->input->post('PRJPR_PRICE', TRUE));
+		}
+		$params['PRJPR_NOTES'] 	  = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$this->input->post('PRJPR_NOTES', TRUE));
+		$params['PRJPR_IMG'] 	  = $gambar;
 
-		// insert tb_project_producer_detail
+		$this->db->insert('tb_project_producer', $this->db->escape_str($params));
+
+		// insert detail
 		$PRJPR_ID 	  = $this->db->insert_id();
 		$PRJDQ_ID 	  = $this->input->post('PRJDQ_ID', TRUE);
 		$PRJPRD_PRICE = str_replace(".", "", $this->input->post('PRJPRD_PRICE', TRUE));
-		$data_detail = array();
-		foreach($PRJDQ_ID as $i => $val){
-            // update tb_order_vendor
-			$data_detail = array(
-				'PRJPR_ID' 		=> $PRJPR_ID,
-				'PRJDQ_ID' 		=> $PRJDQ_ID[$i],
-				'PRJPRD_PRICE' 	=> $PRJPRD_PRICE[$i],
-			);
-			$this->db->insert('tb_project_producer_detail', $this->db->escape_str($data_detail));
+		if ( !empty( $PRJDQ_ID ) ) {
+			$data_detail = array();
+			foreach($PRJDQ_ID as $i => $val) {
+				$data_detail = array(
+					'PRJPR_ID' 		=> $PRJPR_ID,
+					'PRJDQ_ID' 		=> $PRJDQ_ID[$i],
+					'PRJPRD_PRICE' 	=> $PRJPRD_PRICE[$i],
+				);
+				$this->db->insert('tb_project_producer_detail', $this->db->escape_str($data_detail));
+			}
+		}
+
+		$PRJ_ID = $this->input->post('PRJ_ID', TRUE);
+		$row = $this->db->get_where('tb_project', ['PRJ_ID'=>$PRJ_ID])->row();
+		if ($row->PRJ_STATUS < 1) {
+			$status['PRJ_STATUS'] = 1;
+			$this->db->where('PRJ_ID', $PRJ_ID)->update('tb_project', $this->db->escape_str($status));
 		}
 	}
 
 	public function update($PRJPR_ID) {
-		$config['upload_path']          = './assets/images/project/offer/';
-	    $config['allowed_types']        = 'jpg|jpeg|png';
-	    $config['encrypt_name'] 		= FALSE;
-	    $config['remove_spaces'] 		= TRUE;
-	    $config['overwrite']			= FALSE;
-	    $config['max_size']             = 3024; // 3MB
-	    $config['max_width']            = 5000;
-	    $config['max_height']           = 5000;
+		$config['upload_path']	 = './assets/images/project/offer/';
+	    $config['allowed_types'] = 'jpg|jpeg|png';
+	    $config['encrypt_name']	 = FALSE;
+	    $config['remove_spaces'] = TRUE;
+	    $config['overwrite']	 = FALSE;
+	    $config['max_size']		 = 3024; // 3MB
+	    $config['max_width']	 = 5000;
+	    $config['max_height']	 = 5000;
 	    $this->load->library('upload');
 	    $this->upload->initialize($config);
 
-	    if (!$this->upload->do_upload('PRJPR_IMG')){
+	    if ( !$this->upload->do_upload('PRJPR_IMG') ) {
             $gambar = $this->input->post('OLD_IMG', TRUE);
         } else {
         	$row = $this->db->get_where('tb_project_producer',['PRJPR_ID' => $PRJPR_ID])->row();
@@ -112,37 +121,45 @@ class Project_producer_m extends CI_Model {
             $gambar = $this->upload->data('file_name', TRUE);
         }
 
-		$dataUpdate = array(
-			'PRDU_ID' 		 => $this->input->post('PRDU_ID', TRUE),
-			'PRJPR_DURATION' => $this->input->post('PRJPR_DURATION', TRUE),
-			'PRJPR_NOTES' 	 => str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$this->input->post('PRJPR_NOTES', TRUE)),
-			'PRJPR_IMG' 	 => $gambar,
-		);
-		$this->db->where('PRJPR_ID', $PRJPR_ID)->update('tb_project_producer', $this->db->escape_str($dataUpdate));
+		$params['PRDU_ID'] 		  = $this->input->post('PRDU_ID', TRUE);
+		$params['PRJPR_DURATION'] = $this->input->post('PRJPR_DURATION', TRUE);
+		if ( !empty( $this->input->post('PRJPR_PRICE') ) ) {
+			$params['PRJPR_PRICE'] = str_replace(".", "", $this->input->post('PRJPR_PRICE', TRUE));
+		}
+		$params['PRJPR_NOTES'] 	  = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$this->input->post('PRJPR_NOTES', TRUE));
+		$params['PRJPR_IMG'] 	  = $gambar;
+
+		$this->db->where('PRJPR_ID', $PRJPR_ID)->update('tb_project_producer', $this->db->escape_str($params));
 		
+		// update detail
 		$PRJDQ_ID 	  = $this->input->post('PRJDQ_ID', TRUE);
 		$PRJPRD_PRICE = str_replace(".", "", $this->input->post('PRJPRD_PRICE', TRUE));
-		$update_detail = array();
-		foreach($PRJDQ_ID as $i => $val){
-            // update tb_order_vendor
-			$update_detail = array(
-				'PRJPRD_PRICE' 	=> $PRJPRD_PRICE[$i],
-			);
-			$this->db->where('PRJDQ_ID', $PRJDQ_ID[$i])->update('tb_project_producer_detail', $this->db->escape_str($update_detail));
+		if ( !empty( $PRJDQ_ID ) ) {
+			$update_detail = array();
+			foreach($PRJDQ_ID as $i => $val) {
+				$update_detail = array(
+					'PRJPRD_PRICE' 	=> $PRJPRD_PRICE[$i],
+				);
+				$this->db->where('PRJDQ_ID', $PRJDQ_ID[$i])->update('tb_project_producer_detail', $this->db->escape_str($update_detail));
+			}
 		}
 	}
 
-	public function delete($PRJPR_ID){
+	public function delete($PRJPR_ID) {
 		$row   = $this->db->get_where('tb_project_producer',['PRJPR_ID' => $PRJPR_ID])->row();
         $query = $this->db->delete('tb_project_producer',['PRJPR_ID'=>$PRJPR_ID]);
         if($query){
-        	if($row->PRJPR_IMG != null || $row->PRJPR_IMG != ''){
+        	if($row->PRJPR_IMG != null || $row->PRJPR_IMG != '') {
 	        	if(file_exists("./assets/images/project/offer/".$row->PRJPR_IMG)) {
 			        unlink("./assets/images/project/offer/".$row->PRJPR_IMG);
 	        	}
         	}
         }
+        
         // delete tb_project_producer_detail
-        $this->db->delete('tb_project_producer_detail',['PRJPR_ID'=>$PRJPR_ID]);
+        $detail = $this->db->get_where('tb_project_producer_detail', ['PRJPR_ID' => $PRJPR_ID]);
+        if( $detail->num_rows() > 0 ) {
+        	$this->db->delete('tb_project_producer_detail',['PRJPR_ID'=>$PRJPR_ID]);
+        }
 	}
 }

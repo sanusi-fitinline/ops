@@ -25,19 +25,18 @@ class Project_model_m extends CI_Model {
 	}
 
 	public function insert() {
-		$config['upload_path']          = './assets/images/project/detail/model/';
-	    $config['allowed_types']        = 'jpg|jpeg|png';
-	    $config['encrypt_name'] 		= FALSE;
-	    $config['remove_spaces'] 		= TRUE;
-	    $config['overwrite']			= FALSE;
-	    $config['max_size']             = 3024; // 3MB
-	    $config['max_width']            = 5000;
-	    $config['max_height']           = 5000;
+		$config['upload_path']	 = './assets/images/project/detail/model/';
+	    $config['allowed_types'] = 'jpg|jpeg|png';
+	    $config['encrypt_name']  = FALSE;
+	    $config['remove_spaces'] = TRUE;
+	    $config['overwrite']	 = FALSE;
+	    $config['max_size']		 = 3024; // 3MB
+	    $config['max_width']	 = 5000;
+	    $config['max_height']	 = 5000;
 	    $this->load->library('upload');
 	    $this->upload->initialize($config);
 
-	    if (!$this->upload->do_upload('PRJDM_IMG'))
-        {
+	    if (!$this->upload->do_upload('PRJDM_IMG')) {
             $gambar = '';
         } else {
             $gambar = $this->upload->data('file_name', TRUE);
@@ -55,23 +54,22 @@ class Project_model_m extends CI_Model {
 	}
 
 	public function update($PRJDM_ID) {
-		$config['upload_path']          = './assets/images/project/detail/model/';
-	    $config['allowed_types']        = 'jpg|jpeg|png';
-	    $config['encrypt_name'] 		= FALSE;
-	    $config['remove_spaces'] 		= TRUE;
-	    $config['overwrite']			= FALSE;
-	    $config['max_size']             = 3024; // 3MB
-	    $config['max_width']            = 5000;
-	    $config['max_height']           = 5000;
+		$config['upload_path']	 = './assets/images/project/detail/model/';
+	    $config['allowed_types'] = 'jpg|jpeg|png';
+	    $config['encrypt_name']  = FALSE;
+	    $config['remove_spaces'] = TRUE;
+	    $config['overwrite']	 = FALSE;
+	    $config['max_size']		 = 3024; // 3MB
+	    $config['max_width']	 = 5000;
+	    $config['max_height']	 = 5000;
 	    $this->load->library('upload');
 	    $this->upload->initialize($config);
 
-	    if (!$this->upload->do_upload('PRJDM_IMG'))
-        {
+	    if (!$this->upload->do_upload('PRJDM_IMG')) {
             $gambar = $this->input->post('OLD_IMG', TRUE);
         } else {
         	$query = $this->db->get_where('tb_project_detail_model',['PRJDM_ID' => $PRJDM_ID])->row();
-	        if($query->PRJDM_IMG != null || $query->PRJDM_IMG != ''){
+	        if($query->PRJDM_IMG != null || $query->PRJDM_IMG != '') {
 	        	if(file_exists("./assets/images/project/detail/model/".$query->PRJDM_IMG)) {
 			        unlink("./assets/images/project/detail/model/".$query->PRJDM_IMG);
 	        	}
@@ -94,7 +92,7 @@ class Project_model_m extends CI_Model {
 		$row   = $this->db->get_where('tb_project_detail_model',['PRJDM_ID' => $PRJDM_ID])->row();
         $query = $this->db->delete('tb_project_detail_model',['PRJDM_ID'=>$PRJDM_ID]);
         if($query){
-        	if($row->PRJDM_IMG != null || $row->PRJDM_IMG != ''){
+        	if($row->PRJDM_IMG != null || $row->PRJDM_IMG != '') {
 	        	if(file_exists("./assets/images/project/detail/model/".$row->PRJDM_IMG)) {
 			        unlink("./assets/images/project/detail/model/".$row->PRJDM_IMG);
 	        	}

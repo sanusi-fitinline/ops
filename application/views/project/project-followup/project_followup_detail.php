@@ -173,8 +173,8 @@
 						                		<?php $span = $field->SPAN + 1 ?>
 						                		<tr>
 						                			<td rowspan="<?php echo $span?>" align="center" style="width: 70px;">
-				                						<a href="<?php echo site_url('project_followup/delete_offer/'.$row->PRJ_ID.'/'.$detail->PRJD_ID.'/'.$field->PRJPR_ID)?>" class="DELETE-OFFER" style="color: #dc3545; float: left;" onclick="return confirm('Delete Data?')" title="Delete"><i class="fa fa-trash"></i></a>
-				                						<a href="<?php echo site_url('project_followup/edit_offer/'.$detail->PRJD_ID.'/'.$field->PRJPR_ID)?>" class="UBAH-OFFER" style="color: #007bff; float: right;" title="Edit"><i class="fa fa-edit"></i></a>
+				                						<a href="<?php echo site_url('project_followup/delete_offer/'.$row->PRJ_ID.'/'.$detail->PRJD_ID.'/'.$field->PRJPR_ID)?>" class="DELETE-OFFER mb-1" style="color: #dc3545; float: left;" onclick="return confirm('Delete Data?')" title="Delete"><i class="fa fa-trash"></i></a>
+				                						<a href="<?php echo site_url('project_followup/edit_offer/'.$detail->PRJD_ID.'/'.$field->PRJPR_ID)?>" class="UBAH-OFFER mb-1" style="color: #007bff; float: right;" title="Edit"><i class="fa fa-edit"></i></a>
 													</td>
 						                			<td rowspan="<?php echo $span?>" align="center"><?php echo $n++ ?></td>
 						                			<td rowspan="<?php echo $span?>"><?php echo $field->PRDU_NAME ?></td>

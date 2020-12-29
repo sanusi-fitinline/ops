@@ -11,8 +11,7 @@ class Payment_producer_m extends CI_Model {
         $this->load->database();
     }
 
-    private function _get_datatables_query($STATUS_FILTER = null)
-    {
+    private function _get_datatables_query($STATUS_FILTER = null) {
         
         $this->db->select('tb_project_detail.*, tb_project.PRJ_STATUS, tb_project.PRJ_DATE, tb_producer.PRDU_NAME, tb_project_payment_to_producer.PRJP2P_ID, tb_project_payment_to_producer.PRJP2P_STATUS');
 		$this->db->from($this->table);    
@@ -34,25 +33,16 @@ class Payment_producer_m extends CI_Model {
             }
             $this->db->group_end();
         }
-
-        $this->db->group_by('tb_project_detail.PRJD_ID');
-        $this->db->order_by('tb_project_detail.PRJ_ID', 'DESC');
-        $this->db->order_by('tb_producer.PRDU_NAME', 'ASC');
         
         $i = 0;
     
-        foreach ($this->column_search as $item) // loop column 
-        {
-            if($_POST['search']['value']) // if datatable send POST for search
-            {
+        foreach ($this->column_search as $item) { // loop column 
+            if($_POST['search']['value']) { // if datatable send POST for search
                 
-                if($i===0) // first loop
-                {
+                if($i===0) { // first loop
                     $this->db->group_start(); // open bracket. query Where with OR clause better with bracket. because maybe can combine with other WHERE with AND.
                     $this->db->like($item, $_POST['search']['value']);
-                }
-                else
-                {
+                } else {
                     $this->db->or_like($item, $_POST['search']['value']);
                 }
 
@@ -62,10 +52,12 @@ class Payment_producer_m extends CI_Model {
             $i++;
         }
         
+        $this->db->group_by('tb_project_detail.PRJD_ID');
+        $this->db->order_by('tb_project_detail.PRJ_ID', 'DESC');
+        $this->db->order_by('tb_producer.PRDU_NAME', 'ASC');
     }
 
-    function get_datatables($STATUS_FILTER = null)
-    {
+    function get_datatables($STATUS_FILTER = null) {
         $this->_get_datatables_query($STATUS_FILTER);
         if($_POST['length'] != -1)
         $this->db->limit($_POST['length'], $_POST['start']);
@@ -73,15 +65,13 @@ class Payment_producer_m extends CI_Model {
         return $query->result();
     }
 
-    function count_filtered($STATUS_FILTER = null)
-    {
+    function count_filtered($STATUS_FILTER = null) {
         $this->_get_datatables_query($STATUS_FILTER);
         $query = $this->db->get();
         return $query->num_rows();
     }
 
-    public function count_all($STATUS_FILTER = null)
-    {
+    public function count_all($STATUS_FILTER = null) {
         $this->_get_datatables_query($STATUS_FILTER);
         return $this->db->count_all_results();
     }
@@ -187,7 +177,7 @@ class Payment_producer_m extends CI_Model {
         $this->db->update('tb_project_payment_to_producer', $this->db->escape_str($status));
     }
 
-    public function delete($PRJD_ID, $PRJP2P_ID){
+    public function delete($PRJD_ID, $PRJP2P_ID) {
     	// delete payment
     	$this->db->where('PRJP2P_ID', $PRJP2P_ID);
 		$this->db->delete('tb_project_payment_to_producer');

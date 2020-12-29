@@ -44,10 +44,10 @@
 	                	<tr>
 							<th style="vertical-align: middle; text-align: center; width: 50px;">NO</th>
 							<th style="vertical-align: middle; text-align: center; width: 250px;">DATE</th>
-							<th style="vertical-align: middle; text-align: center; width: 100px;">ORDER ID</th>
+							<th style="vertical-align: middle; text-align: center; width: 200px;">ORDER ID</th>
 							<th style="vertical-align: middle; text-align: center; width: 250px;">GRAND TOTAL (CUSTOMER)</th>
 	                    	<th style="vertical-align: middle; text-align: center; width: 250px;">GRAND TOTAL (VENDOR)</th>
-	                    	<th style="vertical-align: middle; text-align: center; width: 300px;">PROFIT/LOSS</th>
+	                    	<th style="vertical-align: middle; text-align: center; width: 200px;">PROFIT/LOSS</th>
 	                  	</tr>
 	                </thead>
 	                <tbody style="font-size: 14px;" id="loading">
@@ -114,7 +114,7 @@
 		          	$("#BODY_REPORT").show();
 		   			$("#FOOTER_REPORT").hide();
 		          	$("#loading").hide();
-		          	$("#BODY_REPORT").html("<tr><td align='center' colspan='5'>No data available in table</td></tr>");
+		          	$("#BODY_REPORT").html("<tr><td align='center' colspan='6'>No data available in table</td></tr>");
 		        }
 		    });
 		});

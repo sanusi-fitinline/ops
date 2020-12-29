@@ -3,18 +3,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Product_m extends CI_Model {
 	var $table = 'tb_product'; //nama tabel dari database
-    var $column_order = array(null, 'PRO_NAME'); //field yang ada di table user
     var $column_search = array('PRO_NAME'); //field yang diizin untuk pencarian 
     var $order = array('PRO_NAME' => 'ASC'); // default order 
 
-    public function __construct()
-    {
+    public function __construct() {
         parent::__construct();
         $this->load->database();
     }
 
-    private function _get_datatables_query()
-    {
+    private function _get_datatables_query() {
         
         $this->db->select('tb_product.*, umea_a.UMEA_NAME AS PRO_UMEA, umea_b.UMEA_NAME AS PRO_VOL_UMEA');
         $this->db->from($this->table);
@@ -23,18 +20,13 @@ class Product_m extends CI_Model {
 
         $i = 0;
     
-        foreach ($this->column_search as $item) // loop column 
-        {
-            if($_POST['search']['value']) // if datatable send POST for search
-            {
+        foreach ($this->column_search as $item) { // loop column 
+            if($_POST['search']['value']) { // if datatable send POST for search
                 
-                if($i===0) // first loop
-                {
+                if($i===0) { // first loop
                     $this->db->group_start(); // open bracket. query Where with OR clause better with bracket. because maybe can combine with other WHERE with AND.
                     $this->db->like($item, $_POST['search']['value']);
-                }
-                else
-                {
+                } else {
                     $this->db->or_like($item, $_POST['search']['value']);
                 }
 
@@ -44,19 +36,13 @@ class Product_m extends CI_Model {
             $i++;
         }
         
-        if(isset($_POST['order'])) // here order processing
-        {
-            $this->db->order_by($this->column_order[$_POST['order']['0']['column']], $_POST['order']['0']['dir']);
-        } 
-        else if(isset($this->order))
-        {
+        if(isset($this->order)) {
             $order = $this->order;
             $this->db->order_by(key($order), $order[key($order)]);
         }
     }
 
-    function get_datatables()
-    {
+    function get_datatables() {
         $this->_get_datatables_query();
         if($_POST['length'] != -1)
         $this->db->limit($_POST['length'], $_POST['start']);
@@ -64,16 +50,14 @@ class Product_m extends CI_Model {
         return $query->result();
     }
 
-    function count_filtered()
-    {
+    function count_filtered() {
         $this->_get_datatables_query();
         $query = $this->db->get();
         return $query->num_rows();
     }
 
-    public function count_all()
-    {
-        $this->db->from($this->table);
+    public function count_all() {
+        $this->_get_datatables_query();
         return $this->db->count_all_results();
     }
 
@@ -128,7 +112,7 @@ class Product_m extends CI_Model {
     	$STYPE_ID = $this->input->post('STYPE_ID', TRUE);
     	$SUBTYPE = array();
     	if ($STYPE_ID != null) {
-	    	foreach($STYPE_ID as $i => $val){
+	    	foreach($STYPE_ID as $i => $val) {
 				$SUBTYPE[] = $STYPE_ID[$i];
 			}
     	}
@@ -151,7 +135,7 @@ class Product_m extends CI_Model {
     	$STYPE_ID = $this->input->post('STYPE_ID', TRUE);
     	$SUBTYPE = array();
     	if ($STYPE_ID != null) {
-	    	foreach($STYPE_ID as $i => $val){
+	    	foreach($STYPE_ID as $i => $val) {
 				$SUBTYPE[] = $STYPE_ID[$i];
 			}
 		}
@@ -173,23 +157,20 @@ class Product_m extends CI_Model {
 		return $query;
     }
 
-	public function insert(){
+	public function insert() {
 		date_default_timezone_set('Asia/Jakarta');
-		$config['upload_path']          = './assets/images/product/';
-	    $config['allowed_types']        = 'jpg|jpeg|png';
-	    $config['encrypt_name'] 		= FALSE;
-	    $config['remove_spaces'] 		= TRUE;
-	    $config['overwrite']			= FALSE;
-	    $config['max_size']             = 3024; // 3MB
-	    $config['max_width']            = 5000;
-	    $config['max_height']           = 5000;
+		$config['upload_path']   = './assets/images/product/';
+	    $config['allowed_types'] = 'jpg|jpeg|png';
+	    $config['encrypt_name']  = FALSE;
+	    $config['remove_spaces'] = TRUE;
+	    $config['overwrite']	 = FALSE;
+	    $config['max_size']		 = 3024; // 3MB
+	    $config['max_width']	 = 5000;
+	    $config['max_height']	 = 5000;
 	    $this->load->library('upload');
 	    $this->upload->initialize($config);
 
-	    if (!$this->upload->do_upload('PRO_PICTURE'))
-        {
-            // $error = array('error' => $this->upload->display_errors());
-            // $this->template->load('template', 'product/product_data', $error);
+	    if (!$this->upload->do_upload('PRO_PICTURE')) {
             $gambar = '';
         } else {
         	$gambar = $this->upload->data('file_name', TRUE);
@@ -224,25 +205,24 @@ class Product_m extends CI_Model {
 		
 	}
 
-	public function update($PRO_ID){
+	public function update($PRO_ID) {
 		date_default_timezone_set('Asia/Jakarta');
-		$config['upload_path']          = './assets/images/product/';
-	    $config['allowed_types']        = 'jpg|jpeg|png';
-	    $config['encrypt_name'] 		= FALSE;
-	    $config['remove_spaces'] 		= TRUE;
-	    $config['overwrite']			= FALSE;
-	    $config['max_size']             = 3024; // 3MB
-	    $config['max_width']            = 5000;
-	    $config['max_height']           = 5000;
+		$config['upload_path']   = './assets/images/product/';
+	    $config['allowed_types'] = 'jpg|jpeg|png';
+	    $config['encrypt_name']  = FALSE;
+	    $config['remove_spaces'] = TRUE;
+	    $config['overwrite']	 = FALSE;
+	    $config['max_size']      = 3024; // 3MB
+	    $config['max_width']     = 5000;
+	    $config['max_height']    = 5000;
 	    $this->load->library('upload');
 	    $this->upload->initialize($config);
 
-	    if (!$this->upload->do_upload('PRO_PICTURE'))
-        {
+	    if (!$this->upload->do_upload('PRO_PICTURE')) {
         	$gambar = $this->input->post('OLD_PICTURE', TRUE);
         } else {
 	        $query = $this->db->get_where('tb_product',['PRO_ID' => $PRO_ID])->row();
-	        if($query->PRO_PICTURE != null || $query->PRO_PICTURE != ''){
+	        if($query->PRO_PICTURE != null || $query->PRO_PICTURE != '') {
 	        	if(file_exists("./assets/images/product/".$query->PRO_PICTURE)) {
 			        unlink("./assets/images/product/".$query->PRO_PICTURE);
 	        	}
@@ -292,7 +272,7 @@ class Product_m extends CI_Model {
 		$pro = $this->db->get_where('tb_product',['PRO_ID' => $PRO_ID])->row();
         $query2 = $this->db->delete('tb_product',['PRO_ID'=>$PRO_ID]);
         if($query2){
-        	if($pro->PRO_PICTURE != null || $pro->PRO_PICTURE != ''){
+        	if($pro->PRO_PICTURE != null || $pro->PRO_PICTURE != '') {
 	        	if(file_exists("./assets/images/product/".$pro->PRO_PICTURE)) {
 			        unlink("./assets/images/product/".$pro->PRO_PICTURE);
 	        	}

@@ -6,14 +6,12 @@ class Clog_m extends CI_Model {
     var $column_search = array('CLOG_ID','CACT_NAME','CUST_NAME','USER_NAME','CHA_NAME', 'FLWS_NAME'); //field yang diizin untuk pencarian 
     var $order = array('CLOG_DATE' => 'DESC'); // default order 
 
-    public function __construct()
-    {
+    public function __construct() {
         parent::__construct();
         $this->load->database();
     }
 
-    private function _get_datatables_query($CUST_NAME = null, $FROM = null, $TO = null, $STATUS_FILTER = null, $SEGMENT = null)
-    {
+    private function _get_datatables_query($CUST_NAME = null, $FROM = null, $TO = null, $STATUS_FILTER = null, $SEGMENT = null) {
         $this->load->model('access_m');
         $modl = "Follow Up";
         $view = 1;    
@@ -51,18 +49,13 @@ class Clog_m extends CI_Model {
 
         $i = 0;
     
-        foreach ($this->column_search as $item) // loop column 
-        {
-            if($_POST['search']['value']) // if datatable send POST for search
-            {
+        foreach ($this->column_search as $item) { // loop column 
+            if($_POST['search']['value']) { // if datatable send POST for search
                 
-                if($i===0) // first loop
-                {
+                if($i===0) { // first loop
                     $this->db->group_start(); // open bracket. query Where with OR clause better with bracket. because maybe can combine with other WHERE with AND.
                     $this->db->like($item, $_POST['search']['value']);
-                }
-                else
-                {
+                } else {
                     $this->db->or_like($item, $_POST['search']['value']);
                 }
 
@@ -72,15 +65,13 @@ class Clog_m extends CI_Model {
             $i++;
         }
         
-       	if(isset($this->order))
-        {
+       	if(isset($this->order)) {
             $order = $this->order;
             $this->db->order_by(key($order), $order[key($order)]);
         }
     }
 
-    function get_datatables($CUST_NAME = null, $FROM = null, $TO = null, $STATUS_FILTER = null, $SEGMENT = null)
-    {
+    function get_datatables($CUST_NAME = null, $FROM = null, $TO = null, $STATUS_FILTER = null, $SEGMENT = null) {
         $this->_get_datatables_query($CUST_NAME, $FROM, $TO, $STATUS_FILTER, $SEGMENT);
         if($_POST['length'] != -1)
         $this->db->limit($_POST['length'], $_POST['start']);
@@ -101,7 +92,7 @@ class Clog_m extends CI_Model {
         return $this->db->count_all_results();
     }
 
-	public function get($CLOG_ID = null){
+	public function get($CLOG_ID = null) {
 		$this->db->select('tb_customer_log.*, tb_customer_activity.CACT_NAME, tb_customer.CUST_NAME, tb_user.USER_NAME, tb_channel.CHA_NAME, tb_followup_status.FLWS_NAME');
 		$this->db->from('tb_customer_log');
 		$this->db->join('tb_customer_activity', 'tb_customer_activity.CACT_ID=tb_customer_log.CACT_ID', 'left');

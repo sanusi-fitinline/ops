@@ -94,7 +94,7 @@
                         Performance Chart
                 </div>
                 <div class="card-body">
-                   <?php
+                    <?php
                         foreach($performance_chart as $row){
                             $user_name[] = $row->USER_NAME;
                             $day_act[] = $row->total_day_act;
@@ -126,10 +126,10 @@
     var chart = new Chart(ctx, {
         type: 'line',
         data: {
-            labels: <?php echo json_encode($date) ?>,
+            labels: <?php echo !empty($date) ? json_encode($date) : json_encode(0); ?>,
             datasets: [{
                 label: ['Activity'],
-                data: <?php echo json_encode($day_act) ?>,
+                data: <?php echo !empty($day_act) ? json_encode($day_act) : json_encode(0); ?>,
                 datalabels: {
                     align: 'start',
                     anchor: 'end'
@@ -142,7 +142,7 @@
             },
             {
                 label: ['Sample'],
-                data: <?php echo json_encode($sampling) ?>,
+                data: <?php echo !empty($sampling) ? json_encode($sampling) : json_encode(0); ?>,
                 datalabels: {
                     align: 'start',
                     anchor: 'end'
@@ -155,7 +155,7 @@
             },
             {
                 label: ['Check Stock'],
-                data: <?php echo json_encode($check_stock) ?>,
+                data: <?php echo !empty($check_stock) ? json_encode($check_stock) : json_encode(0); ?>,
                 datalabels: {
                     align: 'start',
                     anchor: 'end'
@@ -168,7 +168,7 @@
             },
             {
                 label: ['Order'],
-                data: <?php echo json_encode($order) ?>,
+                data: <?php echo !empty($order) ? json_encode($order) : json_encode(0); ?>,
                 datalabels: {
                     align: 'start',
                     anchor: 'end'

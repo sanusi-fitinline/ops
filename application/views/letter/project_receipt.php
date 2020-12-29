@@ -60,7 +60,7 @@
 	    	<a href="<?php echo site_url('dashboard') ?>">Dashboard</a>
 	  	</li>
 	  	<li class="breadcrumb-item">
-	    	<a href="<?php echo site_url('project') ?>">Project</a>
+	    	<a href="<?php echo site_url('prospect') ?>">Prospect</a>
 	  	</li>
 	  	<li class="breadcrumb-item active">Print Receipt</li>
 	</ol>
@@ -80,7 +80,7 @@
 									<div class="col-md-3">
 										<div class="form-group">
 											<input type="hidden" name="ORDL_TYPE" value="3">
-											<input type="hidden" name="ORDL_DOC" value="3">
+											<input type="hidden" name="ORDL_DOC" value="4">
 											<input type="hidden" name="ORDL_NO" value="<?php echo $no_urut ?>">
 											<input type="hidden" name="ORDL_LNO" value="<?php echo $format_nomor ?>">
 											<label>Date</label>
@@ -94,14 +94,16 @@
 									</div>
 									<div class="col-md-9">
 										<div class="form-group">
+											<?php
+												if ($project->PRJ_PAYMENT_METHOD == 1) {
+													$method = "cicilan";
+												} else {$method = "lunas";}
+												if ($project->PRJ_TAX != 0) {
+													$tax = "dengan pajak";
+												} else {$tax = "tanpa pajak";}
+											?>
 											<label>Note</label>
-											<?php if($project->PRJ_PAYMENT_METHOD != 1): ?>
-												<textarea class="form-control" cols="100%" rows="7" name="ORDL_NOTES">1. Proses order max 2 hari setelah pembayaran dilakukan.&#13;&#10;2. Info Pengiriman : menggunakan kurir <?php echo $project->COURIER_NAME." ".$project->PRJ_SERVICE_TYPE." estimasi ".$project->PRJ_ETD ?>&#13;&#10;3. Telah diterima pembayaran melalui <?php echo $project->BANK_NAME." pada ".date('d-m-Y', strtotime($project->PRJ_PAYMENT_DATE))." sebesar Rp. ".number_format($project->PRJ_GRAND_TOTAL,0,',','.').",-"?></textarea>
-											<?php else: ?>
-												<textarea class="form-control" cols="100%" rows="7" name="ORDL_NOTES">1. Proses order max 2 hari setelah pembayaran dilakukan.&#13;&#10;2. Info Pengiriman : menggunakan kurir <?php echo $project->COURIER_NAME." ".$project->PRJ_SERVICE_TYPE." estimasi ".$project->PRJ_ETD ?>&#13;&#10;3. Telah diterima total pembayaran sebesar Rp. <?php echo number_format($project->PRJ_GRAND_TOTAL,0,',','.')?>, dengan rincian:&#13;&#10;<?php foreach ($payment as $key) {
-												echo "-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Melalui ".$key->BANK_NAME." pada".date('d-m-Y', strtotime($key->PRJP_PAYMENT_DATE)).", sebesar Rp. ".number_format($key->PRJP_AMOUNT,0,',','.')."&#13;&#10;";
-											} ?></textarea>
-											<?php endif ?>
+											<textarea class="form-control" cols="100%" rows="7" name="ORDL_NOTES" readonly></textarea>
 										</div>
 										<div align="center">
 											<button type="submit" class="btn btn-info"><i class="fa fa-print"></i> Print</button>

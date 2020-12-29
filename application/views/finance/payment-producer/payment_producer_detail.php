@@ -131,9 +131,9 @@
 							                				<input type="hidden" name="PRJ_ID" value="<?php echo $row->PRJ_ID ?>">
 							                				<input type="hidden" name="PRJD_ID" value="<?php echo $data['PRJD_ID'] ?>">
 							                				<input type="hidden" name="PRJP2P_ID" value="<?php echo $data['PRJP2P_ID'] ?>">
-							                				<a id="DELETE-PAYMENT<?php echo $data['PRJP2P_ID'] ?>" class="DELETE-PAYMENT" style="color: #dc3545; float: left; cursor: pointer;" title="Delete"><i class="fa fa-trash"></i></a>
+							                				<a id="DELETE-PAYMENT<?php echo $data['PRJP2P_ID'] ?>" class="DELETE-PAYMENT  mb-1" style="color: #dc3545; float: left; cursor: pointer;" title="Delete"><i class="fa fa-trash"></i></a>
 							                			</form>
-							                			<a href="#" class="UBAH-PAYMENT" id="UBAH-PAYMENT<?php echo $data['PRJP2P_ID'] ?>" data-toggle="modal" data-target="#edit-payment<?php echo $data['PRJP2P_ID'] ?>" style="color: #007bff; float: right;" title="Edit"><i class="fa fa-edit"></i></a>
+							                			<a href="#" class="UBAH-PAYMENT mb-1" id="UBAH-PAYMENT<?php echo $data['PRJP2P_ID'] ?>" data-toggle="modal" data-target="#edit-payment<?php echo $data['PRJP2P_ID'] ?>" style="color: #007bff; float: right;" title="Edit"><i class="fa fa-edit"></i></a>
 							                		</td>
 							                		<td align="center" style="vertical-align: middle; width: 10px;"><?php echo $n++ ?></td>
 							                		<td align="center"><?php echo date('d-m-Y H:i:s', strtotime($data['PRJP2P_DATE'])) ?></td>

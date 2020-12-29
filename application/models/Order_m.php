@@ -6,14 +6,12 @@ class Order_m extends CI_Model {
     var $column_search = array('ORDER_ID','CUST_NAME', 'USER_NAME'); //field yang diizin untuk pencarian 
     var $order = array('ORDER_DATE' => 'DESC'); // default order 
 
-    public function __construct()
-    {
+    public function __construct() {
         parent::__construct();
         $this->load->database();
     }
 
-    private function _get_datatables_query($STATUS_FILTER = null)
-    {
+    private function _get_datatables_query($FROM = null, $TO = null, $STATUS_FILTER = null) {
         $this->load->model('access_m');
         $modul 	  = "Order";
         $modul2   = "Order SS";
@@ -37,6 +35,13 @@ class Order_m extends CI_Model {
 			$this->db->group_end();
 		}
 
+		if ($FROM != null) { // filter by date range
+			$this->db->group_start();
+			$this->db->where('tb_order.ORDER_DATE >=', date('Y-m-d', strtotime($FROM)));
+        	$this->db->where('tb_order.ORDER_DATE <=', date('Y-m-d', strtotime('+1 days', strtotime($TO))));
+        	$this->db->group_end();
+        }
+
 		if ($STATUS_FILTER != null) { // filter by status
 			$this->db->group_start();
 			if ($STATUS_FILTER == 1) { // filter status half paid
@@ -57,18 +62,14 @@ class Order_m extends CI_Model {
 
         $i = 0;
     
-        foreach ($this->column_search as $item) // loop column 
-        {
+        foreach ($this->column_search as $item) { // loop column 
             if($_POST['search']['value']) // if datatable send POST for search
             {
                 
-                if($i===0) // first loop
-                {
+                if($i===0) { // first loop
                     $this->db->group_start(); // open bracket. query Where with OR clause better with bracket. because maybe can combine with other WHERE with AND.
                     $this->db->like($item, $_POST['search']['value']);
-                }
-                else
-                {
+                } else {
                     $this->db->or_like($item, $_POST['search']['value']);
                 }
 
@@ -78,32 +79,28 @@ class Order_m extends CI_Model {
             $i++;
         }
         
-        if(isset($this->order))
-        {
+        if(isset($this->order)) {
             $order = $this->order;
             $this->db->order_by(key($order), $order[key($order)]);
         }
     }
 
-    function get_datatables($STATUS_FILTER = null)
-    {
-        $this->_get_datatables_query($STATUS_FILTER);
+    function get_datatables($FROM = null, $TO = null, $STATUS_FILTER = null) {
+        $this->_get_datatables_query($FROM, $TO, $STATUS_FILTER);
         if($_POST['length'] != -1)
         $this->db->limit($_POST['length'], $_POST['start']);
         $query = $this->db->get();
         return $query->result();
     }
 
-    function count_filtered($STATUS_FILTER = null)
-    {
-        $this->_get_datatables_query($STATUS_FILTER);
+    function count_filtered($FROM = null, $TO = null, $STATUS_FILTER = null) {
+        $this->_get_datatables_query($FROM, $TO, $STATUS_FILTER);
         $query = $this->db->get();
         return $query->num_rows();
     }
 
-    public function count_all($STATUS_FILTER = null)
-    {
-        $this->_get_datatables_query($STATUS_FILTER);
+    public function count_all($FROM = null, $TO = null, $STATUS_FILTER = null) {
+        $this->_get_datatables_query($FROM, $TO, $STATUS_FILTER);
         return $this->db->count_all_results();
     }
 
@@ -182,7 +179,7 @@ class Order_m extends CI_Model {
 		return $query;
 	}
 
-	public function get_order_channel($ORDER_ID){
+	public function get_order_channel($ORDER_ID) {
 		$this->db->select('tb_order.CHA_ID, tb_channel.CHA_NAME');
 		$this->db->from('tb_order');
 		$this->db->join('tb_channel', 'tb_channel.CHA_ID=tb_order.CHA_ID', 'left');
@@ -193,8 +190,8 @@ class Order_m extends CI_Model {
 
 	public function add() {
 		date_default_timezone_set('Asia/Jakarta');
-		$date 			   = date('Y-m-d', strtotime($this->input->post('ORDER_DATE', TRUE)));
-		$time 			   = date('H:i:s');
+		$date = date('Y-m-d', strtotime($this->input->post('ORDER_DATE', TRUE)));
+		$time = date('H:i:s');
 		$params['CUST_ID'] = $this->input->post('CUST_ID', TRUE);
 		if(!empty($this->input->post('URI_ORDER_DATE'))) {
 			$params['ORDER_DATE'] = date('Y-m-d H:i:s', strtotime($this->input->post('URI_ORDER_DATE', TRUE)));
@@ -242,8 +239,8 @@ class Order_m extends CI_Model {
 			} else {
 				// insert tb_order_vendor
 				$order_vendor = array(
-					'ORDER_ID'			=> $this->input->post('ORDER_ID', TRUE),
-					'VEND_ID'			=> $this->input->post('VEND_ID', TRUE),
+					'ORDER_ID' => $this->input->post('ORDER_ID', TRUE),
+					'VEND_ID'  => $this->input->post('VEND_ID', TRUE),
 				);
 				$this->db->insert('tb_order_vendor', $this->db->escape_str($order_vendor));
 				//
@@ -382,7 +379,7 @@ class Order_m extends CI_Model {
 
 			// update pada tb_order_vendor
 			$update_by_vendor = array();
-			foreach($COURIER_ID as $i => $val){
+			foreach($COURIER_ID as $i => $val) {
 				$ORDV_TOTAL[$i]			= $TOTAL_ORDV[$i];
 				$ORDV_TOTAL_VENDOR[$i]	= $TOTAL_ORDV_VENDOR[$i];
 
@@ -444,7 +441,7 @@ class Order_m extends CI_Model {
 		// delete tb_order_detail
 		$this->load->model('orderdetail_m');
 		$check_detail = $this->orderdetail_m->get($ORDER_ID);
-		if($check_detail->num_rows() > 0){
+		if($check_detail->num_rows() > 0) {
 			$this->db->where('ORDER_ID', $ORDER_ID);
 			$this->db->delete('tb_order_detail');
 		}
@@ -472,7 +469,7 @@ class Order_m extends CI_Model {
         return $query;
     }
 
-    public function get_ordv_total_vendor($PAYTOV_ID){
+    public function get_ordv_total_vendor($PAYTOV_ID) {
     	$this->db->select('SUM(tb_order_vendor.ORDV_TOTAL_VENDOR) AS GRAND_TOTAL_VENDOR');
     	$this->db->from('tb_order_vendor');
         $this->db->join('tb_order', 'tb_order.ORDER_ID=tb_order_vendor.ORDER_ID', 'left');
@@ -483,7 +480,7 @@ class Order_m extends CI_Model {
         return $query;
     }
 
-    public function get_paytov_total($PAYTOV_ID){
+    public function get_paytov_total($PAYTOV_ID) {
     	$this->db->select('PAYTOV_TOTAL');
     	$this->db->from('tb_payment_to_vendor');
         $this->db->where('tb_payment_to_vendor.PAYTOV_ID', $PAYTOV_ID);
@@ -510,13 +507,13 @@ class Order_m extends CI_Model {
         	$ORDER_TAX 			= str_replace(".", "", $this->input->post('ORDER_TAX', TRUE));
         	$ORDER_DEPOSIT_FIX 	= str_replace(".", "", $this->input->post('ORDER_DEPOSIT_FIX', TRUE));
 
-			if($ORDER_GRAND_TOTAL !=0){
+			if($ORDER_GRAND_TOTAL !=0) {
 				$CUSTD_DEPOSIT = $ORDER_GRAND_TOTAL;
 			} else {
 				$CUSTD_DEPOSIT = (($ORDER_TOTAL + $ORDER_SHIPCOST + $ORDER_TAX) - $ORDER_DISCOUNT) + $ORDER_DEPOSIT_FIX;
 			}
 			// insert customer deposit baru
-			if($CUSTD_DEPOSIT != 0){
+			if($CUSTD_DEPOSIT != 0) {
 				$deposit['CUSTD_DATE'] 		  	 = date('Y-m-d H:i:s');
 				$deposit['ORDER_ID'] 		  	 = $ORDER_ID;
 				$deposit['CUSTD_DEPOSIT'] 	  	 = $CUSTD_DEPOSIT;
@@ -532,18 +529,13 @@ class Order_m extends CI_Model {
 		$ORDV_ID   = $this->input->post('ORDV_ID', TRUE);
 		$VEND_ID   = $this->input->post('VENDOR', TRUE);
 		$PAYTOV_ID = $this->input->post('PAYTOV_ID', TRUE);
-		if(!empty($this->input->post('ORDV_ADDCOST_VENDOR'))) {
-			$ADDCOST = str_replace(".", "", $this->input->post('ORDV_ADDCOST_VENDOR', TRUE));
-		} else {
-			$ADDCOST = 0;
-		}
 		$TOTAL_ORDV_VENDOR = str_replace(".", "", $this->input->post('TOTAL_ORDV_VENDOR', TRUE));
 
 		$vend_deposit = array();
 		foreach ($VEND_ID as $i => $value) {
 			$check[$i] = $this->check_payment_vendor($ORDV_ID[$i]);
 			if($check[$i]->num_rows() > 0) {
-				$DEPOSIT[$i] = floatval($ADDCOST[$i]) + floatval($TOTAL_ORDV_VENDOR[$i]);
+				$DEPOSIT[$i] = floatval($TOTAL_ORDV_VENDOR[$i]);
 				$vend_deposit = array(
 					'VENDD_DATE' 			=> date('Y-m-d H:i:s'),
 					'ORDER_ID' 				=> $ORDER_ID,
@@ -637,7 +629,7 @@ class Order_m extends CI_Model {
         }
 		// delete tb_order_letter
 		$letter = $this->db->get_where('tb_order_letter',['ORDER_ID' => $ORDER_ID]);
-        if($cust_depo->num_rows() > 0){
+        if($letter->num_rows() > 0){
             $this->db->delete('tb_order_letter',['ORDER_ID'=>$ORDER_ID]);
         }
 

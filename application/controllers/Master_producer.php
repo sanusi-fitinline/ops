@@ -53,12 +53,12 @@ class Master_producer extends CI_Controller {
 			$row[] = '<div style="vertical-align: middle; text-align: center;">'.$no.'</div>';
 			$row[] = stripslashes($field->PRDUC_NAME);
 			if((!$this->access_m->isDelete('Producer Category', 1)->row()) && ($this->session->GRP_SESSION !=3)){
-				$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-category'.$field->PRDUC_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a></div>';
+				$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-category'.$field->PRDUC_ID.'" class="btn btn-primary btn-sm mb-1"><i class="fa fa-pen"></i></a></div>';
 			} else {
-				$row[] = '<form action="'.$url.'master_producer/del_producer_category" method="post"><div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-category'.$field->PRDUC_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i>
+				$row[] = '<form action="'.$url.'master_producer/del_producer_category" method="post"><div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-category'.$field->PRDUC_ID.'" class="btn btn-primary btn-sm mb-1"><i class="fa fa-pen"></i>
 						</a>
 					<input type="hidden" name="PRDUC_ID" value="'.$field->PRDUC_ID.'">
-					<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button></div></form>';
+					<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm mb-1"><i class="fa fa-trash"></i></button></div></form>';
 			}
 			$data[] = $row;
 		
@@ -132,12 +132,12 @@ class Master_producer extends CI_Controller {
 			$row[] = '<div style="vertical-align: middle; text-align: center;">'.$no.'</div>';
 			$row[] = stripslashes($field->PRDUT_NAME);
 			if((!$this->access_m->isDelete('Producer Type', 1)->row()) && ($this->session->GRP_SESSION !=3)){
-				$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-type'.$field->PRDUT_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a></div>';
+				$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-type'.$field->PRDUT_ID.'" class="btn btn-primary btn-sm mb-1"><i class="fa fa-pen"></i></a></div>';
 			} else {
-				$row[] = '<form action="'.$url.'master_producer/del_producer_type" method="post"><div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-type'.$field->PRDUT_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i>
+				$row[] = '<form action="'.$url.'master_producer/del_producer_type" method="post"><div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-type'.$field->PRDUT_ID.'" class="btn btn-primary btn-sm mb-1"><i class="fa fa-pen"></i>
 						</a>
 					<input type="hidden" name="PRDUT_ID" value="'.$field->PRDUT_ID.'">
-					<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button></div></form>';
+					<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm mb-1"><i class="fa fa-trash"></i></button></div></form>';
 			}
 			$data[] = $row;
 		
@@ -213,15 +213,15 @@ class Master_producer extends CI_Controller {
 			$row[] = stripslashes($field->PRDUP_NAME);
 			$row[] = stripslashes($field->PRDUC_NAME);
 			if((!$this->access_m->isDelete('Producer Product', 1)->row()) && ($this->session->GRP_SESSION !=3)){
-				$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-producer-product'.$field->PRDUP_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
-					<a  href="'.$url.'master_producer/product_property/'.$field->PRDUP_ID.'" class="btn btn-default btn-sm" style="color: #fff; background-color:#4269c1; border-color:#4269c1;"><i class="fa fa-plus-square"></i> Property</a>
+				$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-producer-product'.$field->PRDUP_ID.'" class="btn btn-primary btn-sm mb-1"><i class="fa fa-pen"></i></a>
+					<a  href="'.$url.'master_producer/product_property/'.$field->PRDUP_ID.'" class="btn btn-default btn-sm mb-1" style="color: #fff; background-color:#4269c1; border-color:#4269c1;"><i class="fa fa-plus-square"></i> Property</a>
 				</div>';
 			} else {
-				$row[] = '<form action="'.$url.'master_producer/del_producer_product" method="post"><div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-producer-product'.$field->PRDUP_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i>
+				$row[] = '<form action="'.$url.'master_producer/del_producer_product" method="post"><div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-producer-product'.$field->PRDUP_ID.'" class="btn btn-primary btn-sm mb-1"><i class="fa fa-pen"></i>
 						</a>
 					<input type="hidden" name="PRDUP_ID" value="'.$field->PRDUP_ID.'">
-					<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
-					<a  href="'.$url.'master_producer/product_property/'.$field->PRDUP_ID.'" class="btn btn-default btn-sm" style="color: #fff; background-color:#4269c1; border-color:#4269c1;"><i class="fa fa-plus-square"></i> Property</a>
+					<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm mb-1"><i class="fa fa-trash"></i></button>
+					<a  href="'.$url.'master_producer/product_property/'.$field->PRDUP_ID.'" class="btn btn-default btn-sm mb-1" style="color: #fff; background-color:#4269c1; border-color:#4269c1;"><i class="fa fa-plus-square"></i> Property</a>
 				</div></form>';
 			}
 			$data[] = $row;
@@ -325,13 +325,13 @@ class Master_producer extends CI_Controller {
 			$row[] = stripslashes($field->PRDUP_NAME);
 			$row[] = stripslashes($field->PRDPP_NAME);
 			if((!$this->access_m->isDelete('Producer Product', 1)->row()) && ($this->session->GRP_SESSION !=3)){
-				$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-product-property'.$field->PRDPP_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a></div>';
+				$row[] = '<div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-product-property'.$field->PRDPP_ID.'" class="btn btn-primary btn-sm mb-1"><i class="fa fa-pen"></i></a></div>';
 			} else {
-				$row[] = '<form action="'.$url.'master_producer/del_product_property" method="post"><div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-product-property'.$field->PRDPP_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i>
+				$row[] = '<form action="'.$url.'master_producer/del_product_property" method="post"><div style="vertical-align: middle; text-align: center;"><a href="#" data-toggle="modal" data-target="#edit-product-property'.$field->PRDPP_ID.'" class="btn btn-primary btn-sm mb-1"><i class="fa fa-pen"></i>
 						</a>
 					<input type="hidden" name="PRDPP_ID" value="'.$field->PRDPP_ID.'">
 					<input type="hidden" name="PRDUP_ID" value="'.$field->PRDUP_ID.'">
-					<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button></div></form>';
+					<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm mb-1"><i class="fa fa-trash"></i></button></div></form>';
 			}
 			$data[] = $row;
 		
@@ -408,12 +408,12 @@ class Master_producer extends CI_Controller {
 			$row[] = stripslashes($field->SIZG_NAME);
 			if((!$this->access_m->isDelete('Size', 1)->row()) && ($this->session->GRP_SESSION !=3)){
 				$row[] = '<div style="vertical-align: middle; text-align: center;">
-						<a href="#" data-toggle="modal" data-target="#edit-size-group'.$field->SIZG_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></div>';
+						<a href="#" data-toggle="modal" data-target="#edit-size-group'.$field->SIZG_ID.'" class="btn btn-primary btn-sm mb-1"><i class="fa fa-pen"></i></div>';
 			} else {
 				$row[] = '<form action="'.$url.'master_producer/del_size_group" method="post"><div style="vertical-align: middle; text-align: center;">
-						<a href="#" data-toggle="modal" data-target="#edit-size-group'.$field->SIZG_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
+						<a href="#" data-toggle="modal" data-target="#edit-size-group'.$field->SIZG_ID.'" class="btn btn-primary btn-sm mb-1"><i class="fa fa-pen"></i></a>
 						<input type="hidden" name="SIZG_ID" value="'.$field->SIZG_ID.'">
-						<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button></div></form>';
+						<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm mb-1"><i class="fa fa-trash"></i></button></div></form>';
 			}
 			$data[] = $row;
 		
@@ -489,12 +489,12 @@ class Master_producer extends CI_Controller {
 			$row[] = stripslashes($field->SIZE_NAME);
 			if((!$this->access_m->isDelete('Size', 1)->row()) && ($this->session->GRP_SESSION !=3)){
 				$row[] = '<div style="vertical-align: middle; text-align: center;">
-						<a href="#" data-toggle="modal" data-target="#edit-size'.$field->SIZE_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a></div>';
+						<a href="#" data-toggle="modal" data-target="#edit-size'.$field->SIZE_ID.'" class="btn btn-primary btn-sm mb-1"><i class="fa fa-pen"></i></a></div>';
 			} else {
 				$row[] = '<form action="'.$url.'master_producer/del_size" method="post"><div style="vertical-align: middle; text-align: center;">
-						<a href="#" data-toggle="modal" data-target="#edit-size'.$field->SIZE_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
+						<a href="#" data-toggle="modal" data-target="#edit-size'.$field->SIZE_ID.'" class="btn btn-primary btn-sm mb-1"><i class="fa fa-pen"></i></a>
 						<input type="hidden" name="SIZE_ID" value="'.$field->SIZE_ID.'">
-						<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button></div></form>';
+						<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm mb-1"><i class="fa fa-trash"></i></button></div></form>';
 			}
 			$data[] = $row;
 		
@@ -602,12 +602,12 @@ class Master_producer extends CI_Controller {
 			$row[] = stripslashes($field->SIZP_NAME);
 			if((!$this->access_m->isDelete('Size', 1)->row()) && ($this->session->GRP_SESSION !=3)){
 				$row[] = '<div style="vertical-align: middle; text-align: center;">
-						<a href="#" data-toggle="modal" data-target="#edit-size-product'.$field->SIZP_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a></div>';
+						<a href="#" data-toggle="modal" data-target="#edit-size-product'.$field->SIZP_ID.'" class="btn btn-primary btn-sm mb-1"><i class="fa fa-pen"></i></a></div>';
 			} else {
 				$row[] = '<form action="'.$url.'master_producer/del_size_product" method="post"><div style="vertical-align: middle; text-align: center;">
-						<a href="#" data-toggle="modal" data-target="#edit-size-product'.$field->SIZP_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
+						<a href="#" data-toggle="modal" data-target="#edit-size-product'.$field->SIZP_ID.'" class="btn btn-primary btn-sm mb-1"><i class="fa fa-pen"></i></a>
 						<input type="hidden" name="SIZP_ID" value="'.$field->SIZP_ID.'">
-						<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button></div></form>';
+						<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm mb-1"><i class="fa fa-trash"></i></button></div></form>';
 			}
 			$data[] = $row;
 		
@@ -706,12 +706,12 @@ class Master_producer extends CI_Controller {
 			$row[] = '<div align="center">'.$field->SIZV_VALUE.'</div>';
 			if((!$this->access_m->isDelete('Size', 1)->row()) && ($this->session->GRP_SESSION !=3)){
 				$row[] = '<div style="vertical-align: middle; text-align: center;">
-						<a href="#" data-toggle="modal" data-target="#edit-size-value'.$field->SIZV_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a></div>';
+						<a href="#" data-toggle="modal" data-target="#edit-size-value'.$field->SIZV_ID.'" class="btn btn-primary btn-sm mb-1"><i class="fa fa-pen"></i></a></div>';
 			} else {
 				$row[] = '<form action="'.$url.'master_producer/del_size_value" method="post"><div style="vertical-align: middle; text-align: center;">
-						<a href="#" data-toggle="modal" data-target="#edit-size-value'.$field->SIZV_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
+						<a href="#" data-toggle="modal" data-target="#edit-size-value'.$field->SIZV_ID.'" class="btn btn-primary btn-sm mb-1"><i class="fa fa-pen"></i></a>
 						<input type="hidden" name="SIZV_ID" value="'.$field->SIZV_ID.'">
-						<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button></div></form>';
+						<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm mb-1"><i class="fa fa-trash"></i></button></div></form>';
 			}
 			$data[] = $row;
 		
@@ -785,12 +785,12 @@ class Master_producer extends CI_Controller {
 			$row[] = stripslashes($field->PRJT_NAME);
 			if((!$this->access_m->isDelete('Project Type', 1)->row()) && ($this->session->GRP_SESSION !=3)){
 				$row[] = '<div style="vertical-align: middle; text-align: center;">
-						<a href="#" data-toggle="modal" data-target="#edit-project-type'.$field->PRJT_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a></div>';
+						<a href="#" data-toggle="modal" data-target="#edit-project-type'.$field->PRJT_ID.'" class="btn btn-primary btn-sm mb-1"><i class="fa fa-pen"></i></a></div>';
 			} else {
 				$row[] = '<form action="'.$url.'master_producer/del_project_type" method="post"><div style="vertical-align: middle; text-align: center;">
-						<a href="#" data-toggle="modal" data-target="#edit-project-type'.$field->PRJT_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
+						<a href="#" data-toggle="modal" data-target="#edit-project-type'.$field->PRJT_ID.'" class="btn btn-primary btn-sm mb-1"><i class="fa fa-pen"></i></a>
 						<input type="hidden" name="PRJT_ID" value="'.$field->PRJT_ID.'">
-						<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button></div></form>';
+						<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm mb-1"><i class="fa fa-trash"></i></button></div></form>';
 			}
 			$data[] = $row;
 		
@@ -866,12 +866,12 @@ class Master_producer extends CI_Controller {
 			$row[] = "(".$field->PRJA_ORDER.") ".stripslashes($field->PRJA_NAME);
 			if((!$this->access_m->isDelete('Project Activity', 1)->row()) && ($this->session->GRP_SESSION !=3)){
 				$row[] = '<div style="vertical-align: middle; text-align: center;">
-						<a href="#" data-toggle="modal" data-target="#edit-project-activity'.$field->PRJA_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a></div>';
+						<a href="#" data-toggle="modal" data-target="#edit-project-activity'.$field->PRJA_ID.'" class="btn btn-primary btn-sm mb-1"><i class="fa fa-pen"></i></a></div>';
 			} else {
 				$row[] = '<form action="'.$url.'master_producer/del_project_activity" method="post"><div style="vertical-align: middle; text-align: center;">
-						<a href="#" data-toggle="modal" data-target="#edit-project-activity'.$field->PRJA_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
+						<a href="#" data-toggle="modal" data-target="#edit-project-activity'.$field->PRJA_ID.'" class="btn btn-primary btn-sm mb-1"><i class="fa fa-pen"></i></a>
 						<input type="hidden" name="PRJA_ID" value="'.$field->PRJA_ID.'">
-						<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button></div></form>';
+						<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm mb-1"><i class="fa fa-trash"></i></button></div></form>';
 			}
 			$data[] = $row;
 		
@@ -945,12 +945,12 @@ class Master_producer extends CI_Controller {
 			$row[] = stripslashes($field->PRJC_NAME);
 			if((!$this->access_m->isDelete('Project Criteria', 1)->row()) && ($this->session->GRP_SESSION !=3)){
 				$row[] = '<div style="vertical-align: middle; text-align: center;">
-						<a href="#" data-toggle="modal" data-target="#edit-project-criteria'.$field->PRJC_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a></div>';
+						<a href="#" data-toggle="modal" data-target="#edit-project-criteria'.$field->PRJC_ID.'" class="btn btn-primary btn-sm mb-1"><i class="fa fa-pen"></i></a></div>';
 			} else {
 				$row[] = '<form action="'.$url.'master_producer/del_project_criteria" method="post"><div style="vertical-align: middle; text-align: center;">
-						<a href="#" data-toggle="modal" data-target="#edit-project-criteria'.$field->PRJC_ID.'" class="btn btn-primary btn-sm"><i class="fa fa-pen"></i></a>
+						<a href="#" data-toggle="modal" data-target="#edit-project-criteria'.$field->PRJC_ID.'" class="btn btn-primary btn-sm mb-1"><i class="fa fa-pen"></i></a>
 						<input type="hidden" name="PRJC_ID" value="'.$field->PRJC_ID.'">
-						<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button></div></form>';
+						<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-danger btn-sm mb-1"><i class="fa fa-trash"></i></button></div></form>';
 			}
 			$data[] = $row;
 		
