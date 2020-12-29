@@ -134,9 +134,9 @@
 									<a href="<?php echo base_url('order/receipt/'.$row->ORDER_ID)?>" target="_blank" class="btn btn-sm btn-primary mb-1" id="RECEIPT"><i class="fa fa-print"></i> RECEIPT</a>
 									<!-- <input type="hidden" name="ORDER_STATUS_ID" value="<?php echo $row->ORDER_STATUS ?>"> -->
 									<input type="submit" name="CANCEL" <?php if((!$this->access_m->isEdit('Order', 1)->row()) && ($this->session->GRP_SESSION !=3)) {echo "class='btn btn-sm btn-secondary mb-1' disabled";} else {echo "class='btn btn-sm btn-warning mb-1'";} if($row->ORDER_STATUS >= 2) {echo "hidden";} ?> onclick="return confirm('Cancel order?')" value="CANCEL ORDER">
-									<a <?php if((!$this->access_m->isEdit('Order', 1)->row()) && ($this->session->GRP_SESSION !=3)) {echo "class='btn btn-sm btn-secondary mb-1' disabled";} else {echo "class='btn btn-sm btn-warning mb-1'";} if($row->ORDER_STATUS < 2) {echo "hidden";} ?> href="#" data-toggle="modal" data-target="#cancel-order"></i> CANCEL ORDER</a>
+									<a <?php if((!$this->access_m->isEdit('Order', 1)->row()) && ($this->session->GRP_SESSION !=3)) {echo "class='btn btn-sm btn-secondary mb-1' disabled";} else {echo "class='btn btn-sm btn-warning mb-1'";} if($row->ORDER_STATUS < 2) {echo "hidden";} ?> href="#" data-toggle="modal" data-target="#cancel-order" id="BTN_CANCEL"></i> CANCEL ORDER</a>
 									<!-- The Modal Cancel Order -->
-									<div class="modal fade" id="cancel-order">
+									<div class="modal fade" id="cancel-order" <?php if($row->ORDER_STATUS < 2) {echo "hidden";} ?> >
 										<div class="modal-dialog">
 									    	<div class="modal-content">
 											    <!-- Modal Header -->
@@ -149,7 +149,7 @@
 														<div class="col-md-12">
 															<div class="form-group">
 																<label>Input Reason <small>*</small></label>
-																<select class="form-control selectpicker" name="ORDER_STATUS_CANCEL" title="-- Select One --" required>
+																<select class="form-control selectpicker" id="ORDER_STATUS_CANCEL" name="ORDER_STATUS_CANCEL" title="-- Select One --">
 														    		<option value="1">Salah Input</option>
 														    		<option value="2">Order Berubah</option>
 														    		<option value="3">Order Batal</option>
@@ -161,7 +161,7 @@
 									      		<!-- Modal footer -->
 										      	<div class="modal-footer">
 										      		<input class="btn btn-primary" type="submit" name="CANCEL" value="Save">
-									                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+									                <button type="button" class="btn btn-danger cancel" data-dismiss="modal">Cancel</button>
 										      	</div>
 									    	</div>
 									  	</div>
@@ -1480,6 +1480,14 @@
 		$("#UPDATE_DATA").click(function(){
 			$("#INPUT_BANK").removeAttr('required', 'true');
 			$("#INPUT_PAYMENT_DATE").removeAttr('required', 'true');
+		});
+
+		$("#BTN_CANCEL").click(function(){
+			$("#ORDER_STATUS_CANCEL").attr('required', 'true');
+		});
+
+		$(".close, .cancel").click(function(){
+			$("#ORDER_STATUS_CANCEL").removeAttr('required', 'true');
 		});
 	});
 </script>
