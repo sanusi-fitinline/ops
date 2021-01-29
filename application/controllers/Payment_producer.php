@@ -33,31 +33,32 @@ class Payment_producer extends CI_Controller {
 		$data 			= array();
 		$no 			= $_POST['start'];
 		foreach ($list as $field) {
-			if ($field->PRJP2P_ID != null) {
-				if($field->PRJ_STATUS !=9) {
-					if ($field->PRJP2P_STATUS != 1) {
-						$STATUS = "<div class='btn btn-default btn-sm' style='font-size: 12px; color: #fff; background-color:#17a2b8; border-color:#17a2b8; border-radius: 6px; padding: 2px 5px 5px 3px; width:80px;'><i class='fa fa-check-circle'></i><span><b> Complete</b></span></div>";
-					} else {
-						$STATUS = "<div class='btn btn-default btn-sm' style='font-size: 12px; color: #fff; background-color:#20c997; border-color:#20c997; border-radius: 6px; padding: 2px 5px 5px 3px; width:80px;'><i class='fa fa-minus-circle'></i><span><b> Partial</b></span></div>";
-					}
+			if($field->PRJ_STATUS !=9) {
+				if ($field->BANK_ID != null) {
+					// $STATUS = "<div class='btn btn-default btn-sm' style='font-size: 12px; color: #fff; background-color:#17a2b8; border-color:#17a2b8; border-radius: 6px; padding: 2px 5px 5px 3px; width:80px;'><i class='fa fa-check-circle'></i><span><b> Complete</b></span></div>";
+					$STATUS = "<div class='btn btn-default btn-sm' style='font-size: 12px; color: #fff; background-color:#20c997; border-color:#20c997; border-radius: 6px; padding: 2px 5px 5px 3px; width:80px;'><i class='fa fa-minus-circle'></i><span><b> Paid</b></span></div>";
 				} else {
-					$STATUS = "<div class='btn btn-default btn-sm' style='font-size: 12px; color: #fff; background-color:#e83e8c; border-color:#e83e8c; border-radius: 6px; padding: 2px 5px 5px 3px; width:80px;'><i class='fa fa-ban'></i><span><b> Cancel</b></span></div>";
+					$STATUS = "<div class='btn btn-default btn-sm' style='font-size: 12px; color: #fff; background-color:#6c757d; border-color:#6c757d; border-radius: 6px; padding: 2px 5px 5px 3px; width:80px;'><i class='fa fa-exclamation-circle'></i><span><b> Not Paid</b></span></div>";
 				}
 			} else {
-				$STATUS = "<div class='btn btn-default btn-sm' style='font-size: 12px; color: #fff; background-color:#6c757d; border-color:#6c757d; border-radius: 6px; padding: 2px 5px 5px 3px; width:80px;'><i class='fa fa-exclamation-circle'></i><span><b> Not Paid</b></span></div>";
+				$STATUS = "<div class='btn btn-default btn-sm' style='font-size: 12px; color: #fff; background-color:#e83e8c; border-color:#e83e8c; border-radius: 6px; padding: 2px 5px 5px 3px; width:80px;'><i class='fa fa-ban'></i><span><b> Cancel</b></span></div>";
 			}
 
 			if($field->PRJ_STATUS != 9) {
-				$link = $url.'payment_producer/detail/'.$field->PRJ_ID.'/'.$field->PRJD_ID;
+				$link = $url.'payment_producer/detail/'.$field->PRJP2P_ID.'/'.$field->PRJD_ID;
 			} else {
-				$link = $url.'payment_producer/cancel/'.$field->PRJ_ID.'/'.$field->PRJD_ID;
+				$link = $url.'payment_producer/cancel/'.$field->PRJP2P_ID.'/'.$field->PRJD_ID;
 			}
+
+			$termin = $this->payment_producer_m->get_termin($field->PRJD_ID)->row();
 
 			$row   = array();
 			$row[] = "<div align='center'>$STATUS</div>";
 			$row[] = "<div align='center'>$field->PRJ_ID</div>";
-			$row[] = stripslashes($field->PRDU_NAME);
 			$row[] = "<div align='center'>".date('d-m-Y / H:i:s', strtotime($field->PRJ_DATE))."</div>";
+			$row[] = stripslashes($field->PRDU_NAME);
+			$row[] = "<div align='right'>".number_format($field->PRJP2P_AMOUNT,0,',','.')."</div>";
+			$row[] = "<div align='center'>".$field->PRJP2P_NO."/".$termin->TERMIN."</div>";
 			$row[] = '<div style="vertical-align: middle; text-align: center;">
 				<a href="'.$link.'" class="btn btn-sm btn-primary mb-1" style="color: #ffffff;" title="detail"><i class="fas fa-search-plus"></i></a></div>';
 			$data[] = $row;
@@ -73,16 +74,13 @@ class Payment_producer extends CI_Controller {
 		echo json_encode($output);
 	}
 
-	public function detail($PRJ_ID, $PRJD_ID) {
-		$query = $this->project_m->get($PRJ_ID);
+	public function detail($PRJP2P_ID, $PRJD_ID) {
+		$query = $this->payment_producer_m->get($PRJP2P_ID, $PRJD_ID);
 		if ($query->num_rows() > 0) {
-			$field = $this->project_detail_m->get($PRJ_ID, $PRJD_ID)->row();
-			$PRDU_ID = $field->PRDU_ID;
-			$data['row'] 		   = $query->row();
-			$data['detail'] 	   = $this->project_detail_m->get($PRJ_ID, $PRJD_ID)->row();
-			$data['quantity'] 	   = $this->project_quantity_m->get($PRJD_ID)->result_array();
-			$data['producer_bank'] = $this->producer_bank_m->get(null, $PRDU_ID)->result();
-			$data['payment'] 	   = $this->payment_producer_m->get(null, $PRJD_ID)->result_array();
+			$PRDU_ID = $query->row()->PRDU_ID;
+			$data['payment'] = $query->row();
+			$data['detail']  = $this->project_detail_m->get(null, $PRJD_ID)->row();
+			$data['bank'] 	 = $this->producer_bank_m->get(null, $PRDU_ID)->result();
 			$this->template->load('template', 'finance/payment-producer/payment_producer_detail', $data);
 		} else {
 			echo "<script>alert('Data tidak ditemukan.')</script>";
@@ -102,44 +100,53 @@ class Payment_producer extends CI_Controller {
 	    echo json_encode($callback);
 	}
 
-	public function add_payment(){
-		$PRJ_ID 	 = $this->input->post('PRJ_ID', TRUE);
+	public function add_installment() {
 		$PRJD_ID 	 = $this->input->post('PRJD_ID', TRUE);
-		$data['row'] =	$this->payment_producer_m->insert();
-		if ($data) {
+		$PRJPR_ID 	 = $this->input->post('PRJPR_ID', TRUE);
+		$data['row'] =	$this->payment_producer_m->insert_installment();
+		if($data) {
 			echo "<script>alert('Data berhasil ditambah.')</script>";
-			echo "<script>window.location='".site_url('payment_producer/detail/'.$PRJ_ID.'/'.$PRJD_ID)."'</script>";
-		} else{
-			echo "<script>alert('Data gagal ditambah.')</script>";
-			echo "<script>window.location='".site_url('payment_producer/detail/'.$PRJ_ID.'/'.$PRJD_ID)."'</script>";
+            echo "<script>window.location='".site_url('prospect_followup/edit_offer/'.$PRJD_ID.'/'.$PRJPR_ID)."'</script>";
+        } else {
+            echo "<script>alert('Data gagal ditambah.')</script>";
+            echo "<script>window.location='".site_url('prospect_followup/edit_offer/'.$PRJD_ID.'/'.$PRJPR_ID)."'</script>";
+        }	
+	}
+
+	public function edit_installment() {
+		$PRJD_ID 	 = $this->input->post('PRJD_ID', TRUE);
+		$PRJPR_ID 	 = $this->input->post('PRJPR_ID', TRUE);
+		$data['row'] =	$this->payment_producer_m->update_installment();
+		if($data) {
+			echo "<script>alert('Data berhasil diubah.')</script>";
+            echo "<script>window.location='".site_url('prospect_followup/edit_offer/'.$PRJD_ID.'/'.$PRJPR_ID)."'</script>";
+        } else {
+            echo "<script>alert('Tidak ada perubahan data.')</script>";
+            echo "<script>window.location='".site_url('prospect_followup/edit_offer/'.$PRJD_ID.'/'.$PRJPR_ID)."'</script>";
+        }	
+	}
+
+	public function del_installment($PRJD_ID, $PRJPR_ID, $PRJP2P_ID) {
+		$this->payment_producer_m->delete_installment($PRJP2P_ID);
+		if($this->db->affected_rows() > 0) {
+			echo "<script>alert('Data berhasil dihapus.')</script>";
+			echo "<script>window.location='".site_url('prospect_followup/edit_offer/'.$PRJD_ID.'/'.$PRJPR_ID)."'</script>";
+		} else {
+			echo "<script>alert('Data gagal dihapus.')</script>";
+			echo "<script>window.location='".site_url('prospect_followup/edit_offer/'.$PRJD_ID.'/'.$PRJPR_ID)."'</script>";
 		}
 	}
 
 	public function edit_payment(){
-		$PRJ_ID 	 = $this->input->post('PRJ_ID', TRUE);
 		$PRJD_ID 	 = $this->input->post('PRJD_ID', TRUE);
 		$PRJP2P_ID   = $this->input->post('PRJP2P_ID', TRUE);
 		$data['row'] =	$this->payment_producer_m->update($PRJP2P_ID);
 		if ($data) {
 			echo "<script>alert('Data berhasil diubah.')</script>";
-			echo "<script>window.location='".site_url('payment_producer/detail/'.$PRJ_ID.'/'.$PRJD_ID)."'</script>";
+			echo "<script>window.location='".site_url('payment_producer/detail/'.$PRJP2P_ID.'/'.$PRJD_ID)."'</script>";
 		} else{
 			echo "<script>alert('Data gagal diubah.')</script>";
-			echo "<script>window.location='".site_url('payment_producer/detail/'.$PRJ_ID.'/'.$PRJD_ID)."'</script>";
-		}
-	}
-
-	public function del_payment(){
-		$PRJ_ID 	 = $this->input->post('PRJ_ID', TRUE);
-		$PRJD_ID 	 = $this->input->post('PRJD_ID', TRUE);
-		$PRJP2P_ID   = $this->input->post('PRJP2P_ID', TRUE);
-		$data['row'] =	$this->payment_producer_m->delete($PRJD_ID, $PRJP2P_ID);
-		if ($data) {
-			echo "<script>alert('Data berhasil dihapus.')</script>";
-			echo "<script>window.location='".site_url('payment_producer/detail/'.$PRJ_ID.'/'.$PRJD_ID)."'</script>";
-		} else{
-			echo "<script>alert('Data gagal dihapus.')</script>";
-			echo "<script>window.location='".site_url('payment_producer/detail/'.$PRJ_ID.'/'.$PRJD_ID)."'</script>";
+			echo "<script>window.location='".site_url('payment_producer/detail/'.$PRJP2P_ID.'/'.$PRJD_ID)."'</script>";
 		}
 	}
 }

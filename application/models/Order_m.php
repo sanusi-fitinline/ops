@@ -508,7 +508,7 @@ class Order_m extends CI_Model {
         	$ORDER_DEPOSIT_FIX 	= str_replace(".", "", $this->input->post('ORDER_DEPOSIT_FIX', TRUE));
 
 			if($ORDER_GRAND_TOTAL !=0) {
-				$CUSTD_DEPOSIT = $ORDER_GRAND_TOTAL;
+				$CUSTD_DEPOSIT = $ORDER_GRAND_TOTAL + $ORDER_DEPOSIT_FIX;
 			} else {
 				$CUSTD_DEPOSIT = (($ORDER_TOTAL + $ORDER_SHIPCOST + $ORDER_TAX) - $ORDER_DISCOUNT) + $ORDER_DEPOSIT_FIX;
 			}
@@ -570,7 +570,7 @@ class Order_m extends CI_Model {
         return $this->db->get('tb_order_detail');
 	}
 
-	public function delete_item($ORDER_ID, $ORDD_ID, $ORDV_ID, $VEND_ID, $NEW_ORDV_TOTAL, $NEW_ORDV_TOTAL_VENDOR, $NEW_GRAND_TOTAL) {
+	public function delete_item($ORDER_ID, $ORDD_ID, $VEND_ID, $NEW_ORDV_TOTAL, $NEW_ORDV_TOTAL_VENDOR, $NEW_GRAND_TOTAL) {
 		// delete item pada order_detail
 		$this->db->where('ORDD_ID', $ORDD_ID);
 		$this->db->delete('tb_order_detail');

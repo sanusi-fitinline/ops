@@ -25,9 +25,8 @@
 					<div class="form-group">
 						<select class="form-control form-control-sm selectpicker" title="--Select Status--" name="status" id="STATUS">
 				    		<option class="form-control-sm" value="0">Not Paid</option>
-				    		<option class="form-control-sm" value="1">Partial</option>
-				    		<option class="form-control-sm" value="2">Complete</option>
-				    		<option class="form-control-sm" value="3">Cancel</option>
+				    		<option class="form-control-sm" value="1">Paid</option>
+				    		<option class="form-control-sm" value="2">Cancel</option>
 					    </select>
 					</div>
 				</div>
@@ -37,9 +36,11 @@
             		<thead style="font-size: 14px">
 	                	<tr>
 							<th style="vertical-align: middle; text-align: center; width: 100px;">STATUS</th>
-							<th style="vertical-align: middle; text-align: center;width: 100px;">PROJECT ID</th>
-	                    	<th style="vertical-align: middle; text-align: center;width: 150px;">PRODUCER</th>
-	                    	<th style="vertical-align: middle; text-align: center; width: 200px;">PROJECT DATE</th>
+							<th style="vertical-align: middle; text-align: center;width: 80px;">PROJECT ID</th>
+	                    	<th style="vertical-align: middle; text-align: center; width: 120px;">PROJECT DATE</th>
+	                    	<th style="vertical-align: middle; text-align: center;width: 200px;">PRODUCER</th>
+	                    	<th style="vertical-align: middle; text-align: center; width: 150px;">AMOUNT</th>
+	                    	<th style="vertical-align: middle; text-align: center; width: 50px;">TERMIN</th>
 							<th style="vertical-align: middle; text-align: center;  width: 50px;">ACTION</th>
 	                  	</tr>
 	                </thead>

@@ -96,10 +96,17 @@ class Project_progress_m extends CI_Model {
 	        	$PRJ_DURATION_ACT = null;
 	        }
 
-            $update_duration = array(
-				'PRJ_DURATION_ACT' => $PRJ_DURATION_ACT,
+            $duration = array(
+				'PRJ_DURATION_ACT' => $PRJ_DURATION_ACT, // durasi aktual
 			);
-			$this->db->where('PRJ_ID', $PRJ_ID)->update('tb_project', $update_duration);
+			$this->db->where('PRJ_ID', $PRJ_ID)->update('tb_project', $duration);
+	        
+	        $act = $this->get_max_progress($PRJD_ID)->row(); // aktivitas terbaru
+
+	        $activity = array(
+				'PRJA_ID' => $act->MAX_PRJA_ID, // aktivitas
+			);
+			$this->db->where('PRJD_ID', $PRJD_ID)->update('tb_project_detail', $activity);
 		}
 	}
 
@@ -128,6 +135,7 @@ class Project_progress_m extends CI_Model {
         }
 
         $PRJ_ID  = $this->input->post('PRJ_ID', TRUE);
+        $PRJD_ID = $this->input->post('PRJD_ID', TRUE);
 		$PRJA_ID = $this->input->post('PRJA_ID', TRUE);
 		$date 	 = date('Y-m-d', strtotime($this->input->post('PRJPG_DATE', TRUE)));
 		$dataUpdate = array(
@@ -153,14 +161,21 @@ class Project_progress_m extends CI_Model {
 	        	$PRJ_DURATION_ACT = null;
 	        }
 
-            $update_duration = array(
-				'PRJ_DURATION_ACT' => $PRJ_DURATION_ACT,
+            $duration = array(
+				'PRJ_DURATION_ACT' => $PRJ_DURATION_ACT, // durasi aktual
 			);
-			$this->db->where('PRJ_ID', $PRJ_ID)->update('tb_project', $update_duration);
+			$this->db->where('PRJ_ID', $PRJ_ID)->update('tb_project', $duration);
+
+			$act = $this->get_max_progress($PRJD_ID)->row(); // aktivitas terbaru
+
+	        $activity = array(
+				'PRJA_ID' => $act->MAX_PRJA_ID, // aktivitas
+			);
+			$this->db->where('PRJD_ID', $PRJD_ID)->update('tb_project_detail', $activity);
 		}
 	}
 
-	public function delete($PRJPG_ID) {
+	public function delete($PRJPG_ID, $PRJD_ID) {
 		$row   = $this->db->get_where('tb_project_progress',['PRJPG_ID' => $PRJPG_ID])->row();
         $query = $this->db->delete('tb_project_progress',['PRJPG_ID'=>$PRJPG_ID]);
         if($query){
@@ -168,6 +183,20 @@ class Project_progress_m extends CI_Model {
 	        	if(file_exists("./assets/images/project/progress/".$row->PRJPG_IMG)) {
 			        unlink("./assets/images/project/progress/".$row->PRJPG_IMG);
 	        	}
+        	}
+        	// cek apakah ada data progress berdasar project detail
+        	$check = $this->db->get_where('tb_project_progress',['PRJD_ID' => $PRJD_ID]);
+        	if ($check->num_rows() > 0) {
+        		$act = $this->get_max_progress($PRJD_ID)->row(); // aktivitas terbaru
+        		$activity = array(
+					'PRJA_ID' => $act->MAX_PRJA_ID
+				);
+				$this->db->where('PRJD_ID', $PRJD_ID)->update('tb_project_detail', $activity);
+        	} else {
+        		$activity = array(
+					'PRJA_ID' => null
+				);
+				$this->db->where('PRJD_ID', $PRJD_ID)->update('tb_project_detail', $activity);
         	}
         }
 	}

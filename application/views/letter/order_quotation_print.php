@@ -164,8 +164,7 @@
     } else {
     	$html.='<p></p><p></p>';
     }
-    $a = str_replace('https:', 'http:', base_url('assets/images/ttd.jpg'));
-    $img = str_replace(':4433', ':8080', $a);
+    $img = './assets/images/ttd.jpg';
 	$html.= '<p style="font-size: 10px">Tertanda,</p>
 		<img src="'.$img.'" alt="test alt attribute" width="55" height="55" border="0" />
 		<p style="font-size: 10px">(Istofani)</p>

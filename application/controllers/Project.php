@@ -23,6 +23,7 @@ class Project extends CI_Controller {
 		$this->load->model('project_progress_m');
 		$this->load->model('project_review_m');
 		$this->load->model('project_criteria_m');
+		$this->load->model('project_shipment_m');
 		$this->load->model('size_group_m');
 		$this->load->model('size_m');
 		$this->load->model('size_value_m');
@@ -54,32 +55,6 @@ class Project extends CI_Controller {
 		$data 			= array();
 		$no 			= $_POST['start'];
 		foreach ($list as $field) {
-			if ($field->PRJ_NOTES!=null) {
-				$PRJ_NOTES = $field->PRJ_NOTES;
-			} else {$PRJ_NOTES = "<div align='center'>-</div>";}
-
-			if ($field->PRJ_STATUS == 0) { // Pre-Order
-				$PRJ_STATUS = "<div class='btn btn-light btn-sm' style='font-size: 12px; color: #6c757d; background-color:#f8f9fa; border-color:#6c757d; border-radius: 6px; padding: 2px 5px 5px 3px; width:100px;'><i class='fas fa-exclamation-circle'></i><span><b> Pre Order</b></span></div>";
-			} else if ($field->PRJ_STATUS == 1) { // Offered
-				$PRJ_STATUS = "<div class='btn btn-default btn-sm' style='font-size: 12px; color: #fff; background-color:#795548; border-color:#795548; border-radius: 6px; padding: 2px 5px 5px 3px; width:100px;'><i class='fas fa-user-check'></i><span><b> Offered</b></span></div>";
-			} else if ($field->PRJ_STATUS == 2) { // Invoiced
-				$PRJ_STATUS = "<div class='btn btn-default btn-sm' style='font-size: 12px; color: #fff; background-color:#6f7948; border-color:#6f7948; border-radius: 6px; padding: 2px 5px 5px 3px; width:100px;'><i class='fas fa-print'></i><span><b> Invoiced</b></span></div>";
-			} else if ($field->PRJ_STATUS == 3) { // Confirmed
-				$PRJ_STATUS = "<div class='btn btn-default btn-sm' style='font-size: 12px; color: #fff; background-color:#6c757d; border-color:#6c757d; border-radius: 6px; padding: 2px 5px 5px 3px; width:100px;'><i class='fa fa-bell'></i><span><b> Confirmed</b></span></div>";
-			} else if ($field->PRJ_STATUS == 4) { // In Progress
-				$PRJ_STATUS = "<div class='btn btn-default btn-sm' style='font-size: 12px; color: #fff; background-color:#6f42c1; border-color:#6f42c1; border-radius: 6px; padding: 2px 5px 5px 3px; width:100px;'><i class='fas fa-drafting-compass'></i><span><b> In Progress</b></span></div>";			
-			} else if ($field->PRJ_STATUS == 5) { // Half Paid
-				$PRJ_STATUS = "<div class='btn btn-default btn-sm' style='font-size: 12px; color: #fff; background-color:orange; border-color:orange; border-radius: 6px; padding: 2px 5px 5px 3px; width:100px;'><i class='fa fa-hourglass-half'></i><span><b> Half Paid</b></span></div>";
-			} else if ($field->PRJ_STATUS == 6) { // Paid
-				$PRJ_STATUS = "<div class='btn btn-default btn-sm' style='font-size: 12px; color: #fff; background-color:#20c997; border-color:#20c997; border-radius: 6px; padding: 2px 5px 5px 3px; width:100px;'><i class='fa fa-minus-circle'></i><span><b> Paid</b></span></div>";		
-			} else if ($field->PRJ_STATUS == 7) { // Half Delivered
-				$PRJ_STATUS = "<div class='btn btn-default btn-sm' style='font-size: 12px; color: #fff; background-color:#4269c1; border-color:#4269c1; border-radius: 6px; padding: 2px 5px 5px 3px; width:100px;'><i class='fa fa-truck'></i><span><b> Half Delivered</b></span></div>";
-			} else if ($field->PRJ_STATUS == 8) { // Delivered
-				$PRJ_STATUS = "<div class='btn btn-default btn-sm' style='font-size: 12px; color: #fff; background-color:#17a2b8; border-color:#17a2b8; border-radius: 6px; padding: 2px 5px 5px 3px; width:100px;'><i class='fa fa-check-circle'></i><span><b> Delivered</b></span></div>";
-			} else {
-				$PRJ_STATUS = "<div class='btn btn-default btn-sm' style='font-size: 12px; color: #fff; background-color:#e83e8c; border-color:#e83e8c; border-radius: 6px; padding: 2px 5px 5px 3px; width:100px;'><i class='fa fa-ban'></i><span><b> Cancel</b></span></div>";
-			}
-
 			if ($field->PRJA_ID != null) {
 				$progress = $field->PRJA_NAME;
 			} else {
@@ -100,14 +75,20 @@ class Project extends CI_Controller {
 				$detail = "detail";
 			}
 
-			// tombol review muncul ketika project status delivered
+			// tombol review dan shipment to customer
 			if($field->PRJA_ID != 5 && $field->PRJA_ID != 8 && $field->PRJA_ID != 11) {
-				$REVIEW = "class='btn btn-sm btn-secondary mb-1' style='opacity: 0.5; pointer-events: none;'";
-			} else {$REVIEW = "class='btn btn-sm btn-warning mb-1'";}
+				$REVIEW   = "class='btn btn-sm btn-secondary mb-1' style='opacity: 0.5; pointer-events: none;'";
+				$SHIPMENT = "class='btn btn-sm btn-secondary mb-1' style='opacity: 0.5; pointer-events: none;'";
+			} else {
+				$REVIEW   = "class='btn btn-sm btn-warning mb-1'";
+				$SHIPMENT   = "class='btn btn-sm btn-info mb-1'";
+				// $SHIPMENT = "class='btn btn-default btn-sm mb-1' style='color: #fff; background-color:#4269c1; border-color:#4269c1;'";
+			}
 
 			$row[] = '<div style="vertical-align: middle; text-align: center;">
 				<a href="'.$url.'project/'.$detail.'/'.$field->PRJ_ID.'/'.$field->PRJD_ID.'" class="btn btn-sm btn-primary mb-1" title="Detail"><i class="fa fa-search-plus"></i></a>
 				<a href="'.$url.'project/review/'.$field->PRJ_ID.'/'.$field->PRJD_ID.'" '.$REVIEW.' title="Review"><i class="fa fa-star"></i></a>
+				<a href="'.$url.'project/shipment/'.$field->PRJ_ID.'/'.$field->PRJD_ID.'" '.$SHIPMENT.' title="Shipment to Customer"><i class="fa fa-truck"></i></a>
 				</div>';
 			$data[] = $row;
 		}
@@ -194,7 +175,7 @@ class Project extends CI_Controller {
 		$PRJ_ID   = $this->input->post('PRJ_ID', TRUE);
 		$PRJD_ID  = $this->input->post('PRJD_ID', TRUE);
 		$PRJPG_ID = $this->input->post('PRJPG_ID', TRUE);
-		$this->project_progress_m->delete($PRJPG_ID);
+		$this->project_progress_m->delete($PRJPG_ID, $PRJD_ID);
 		if($this->db->affected_rows() > 0) {
 			echo "<script>alert('Data berhasil dihapus.')</script>";
 			echo "<script>window.location='".site_url('project/detail/'.$PRJ_ID.'/'.$PRJD_ID)."'</script>";
@@ -209,7 +190,6 @@ class Project extends CI_Controller {
 		if ($query->num_rows() > 0) {
 			$data['row'] 		  = $query->row();
 			$data['progress'] 	  = $this->project_progress_m->get($PRJD_ID)->result();
-			$data['max_progress'] = $this->project_progress_m->get_max_progress($PRJD_ID)->row();
 			$data['payment']  	  = $this->project_payment_m->get($PRJ_ID)->row();
 			$data['review'] 	  = $this->project_review_m->get(null, $PRJD_ID)->result();
 			$data['criteria'] 	  = $this->project_criteria_m->get()->result();
@@ -223,7 +203,7 @@ class Project extends CI_Controller {
 	public function add_review() {
 		$PRJ_ID  	 = $this->input->post('PRJ_ID', TRUE);
 		$PRJD_ID 	 = $this->input->post('PRJD_ID', TRUE);
-		$data['row'] =	$this->project_review_m->insert();
+		$data['row'] = $this->project_review_m->insert();
 		if($data) {
 			echo "<script>alert('Data berhasil ditambah.')</script>";
             echo "<script>window.location='".site_url('project/review/'.$PRJ_ID.'/'.$PRJD_ID)."'</script>";
@@ -255,6 +235,98 @@ class Project extends CI_Controller {
 		} else {
 			echo "<script>alert('Data gagal dihapus.')</script>";
 			echo "<script>window.location='".site_url('project/review/'.$PRJ_ID.'/'.$PRJD_ID)."'</script>";
+		}
+	}
+
+	public function shipment($PRJ_ID, $PRJD_ID) {
+		$query = $this->project_detail_m->get(null, $PRJD_ID);
+		if ($query->num_rows() > 0) {
+			$data['row'] 	  = $query->row();
+			$data['project']  = $this->project_m->get($PRJ_ID)->row();
+			$data['shipment'] = $this->project_shipment_m->get(null, $PRJD_ID)->result();
+			$data['courier']  = $this->courier_m->getCourier()->result();
+			$this->template->load('template', 'order-custom/project/project_shipment', $data);
+		} else {
+			echo "<script>alert('Data tidak ditemukan.')</script>";
+			echo "<script>window.location='".site_url('project')."'</script>";
+		}
+	}
+
+	public function getService(){
+		$CUST_ID 	  = $this->input->post('CUST_ID', TRUE);
+		$COURIER_ID   = $this->input->post('COURIER_ID', TRUE);
+		$COURIER_NAME = $this->input->post('COURIER_NAME', TRUE);
+		$customer 	  = $this->customer_m->get($CUST_ID)->row();
+		$origin 	  = $this->city_m->getAreaCity(269)->row();
+		$key 		  = $this->courier_m->getCourier($COURIER_ID)->row();
+		if($customer->CITY_ID!=0){
+		    if($key->COURIER_API == 1){
+		    	$WEIGHT = 1000;
+				$lists  = "";
+		    	if($customer->SUBD_ID!=0){
+		    		$dataCost = $this->rajaongkir->cost($origin->RO_CITY_ID, $customer->SUBD_ID, $WEIGHT, strtolower($key->COURIER_NAME), 'subdistrict');
+		    	} else{
+		    		$dataCost = $this->rajaongkir->cost($origin->RO_CITY_ID, $customer->CITY_ID, $WEIGHT, strtolower($key->COURIER_NAME), 'city');
+		    	}
+				$detailCost = json_decode($dataCost, true);
+				if ( ($detailCost['rajaongkir']['results'][0]['costs']) == null) {
+					$dataCost = $this->rajaongkir->cost($origin->RO_CITY_ID, $customer->CITY_ID, $WEIGHT, strtolower($key->COURIER_NAME), 'city');
+					$detailCost = json_decode($dataCost, true);
+				}
+				$status = $detailCost['rajaongkir']['status']['code'];
+				if ($status == 200) {
+					for ($i=0; $i < count($detailCost['rajaongkir']['results']); $i++) {
+						for ($j=0; $j < count($detailCost['rajaongkir']['results'][$i]['costs']); $j++) {
+							$service = $detailCost['rajaongkir']['results'][$i]['costs'][$j]['service'];
+							$lists .= "<option value='$service'>";
+						}
+					}
+				}
+			} else {
+				$lists  = "";
+				$status = "";
+			}
+			$callback = array('list_service'=>$lists, 'list_status'=>$status); 
+		    echo json_encode($callback);
+		} else {
+			echo "Alamat customer belum lengkap.";
+		}
+	}
+
+	public function add_shipment() {
+		$PRJ_ID  	 = $this->input->post('PRJ_ID', TRUE);
+		$PRJD_ID 	 = $this->input->post('PRJD_ID', TRUE);
+		$data['row'] = $this->project_shipment_m->insert();
+		if($data) {
+			echo "<script>alert('Data berhasil ditambah.')</script>";
+            echo "<script>window.location='".site_url('project/shipment/'.$PRJ_ID.'/'.$PRJD_ID)."'</script>";
+        } else {
+            echo "<script>alert('Data gagal ditambah.')</script>";
+            echo "<script>window.location='".site_url('project/shipment/'.$PRJ_ID.'/'.$PRJD_ID)."'</script>";
+        }	
+	}
+
+	public function edit_shipment() {
+		$PRJ_ID  		= $this->input->post('PRJ_ID', TRUE);
+		$PRJD_ID 		= $this->input->post('PRJD_ID', TRUE);
+		$data['update'] = $this->project_shipment_m->update();
+		if($data) {
+			echo "<script>alert('Data berhasil diubah.')</script>";
+			echo "<script>window.location='".site_url('project/shipment/'.$PRJ_ID.'/'.$PRJD_ID)."'</script>";
+		} else {
+			echo "<script>alert('Tidak ada perubahan data.')</script>";
+			echo "<script>window.location='".site_url('project/shipment/'.$PRJ_ID.'/'.$PRJD_ID)."'</script>";
+		}
+	}
+
+	public function del_shipment($PRJ_ID, $PRJD_ID, $PRJS_ID) {
+		$this->project_shipment_m->delete($PRJ_ID, $PRJS_ID);
+		if($this->db->affected_rows() > 0) {
+			echo "<script>alert('Data berhasil dihapus.')</script>";
+			echo "<script>window.location='".site_url('project/shipment/'.$PRJ_ID.'/'.$PRJD_ID)."'</script>";
+		} else {
+			echo "<script>alert('Data gagal dihapus.')</script>";
+			echo "<script>window.location='".site_url('project/shipment/'.$PRJ_ID.'/'.$PRJD_ID)."'</script>";
 		}
 	}
 }

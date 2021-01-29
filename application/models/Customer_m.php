@@ -65,12 +65,12 @@ class Customer_m extends CI_Model {
         return $this->db->count_all_results();
     }
 
-	public function get($CUST_ID = null) {    
+	public function get($CUST_ID = null) {
 		$this->load->model('access_m');
 		$modl = "Customer";
 		$view = 1;    
 		$viewall =  $this->access_m->isViewAll($modl, $view)->row();
-		$this->db->select('tb_customer.*, tb_country.CNTR_NAME, tb_state.STATE_NAME, tb_city.CITY_NAME, tb_subdistrict.SUBD_NAME, tb_bank.BANK_NAME, tb_channel.CHA_NAME');
+		$this->db->select('tb_customer.*, tb_country.CNTR_NAME, tb_state.STATE_NAME, tb_city.RO_CITY_ID, tb_city.CITY_NAME, tb_subdistrict.SUBD_NAME, tb_bank.BANK_NAME, tb_channel.CHA_NAME');
 		$this->db->from('tb_customer');
 		$this->db->join('tb_country', 'tb_country.CNTR_ID=tb_customer.CNTR_ID', 'left');
 		$this->db->join('tb_state', 'tb_state.STATE_ID=tb_customer.STATE_ID', 'left');

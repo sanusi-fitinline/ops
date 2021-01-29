@@ -28,7 +28,7 @@
 								<div class="row">
 									<div class="col-md-4 offset-md-2">
 										<div class="form-group">
-										    <label>Date</label>
+										    <label>Date <small>*</small></label>
 											<div class="input-group">
 												<div class="input-group-prepend">
 										          	<span class="input-group-text"><i class="fa fa-calendar"></i></span>
@@ -49,7 +49,7 @@
 											<input class="form-control" type="text" name="" readonly="" value="<?php echo $row->CACT_NAME ?>">
 										</div>
 										<div class="form-group">
-											<label>Status</label>
+											<label>Status <small>*</small></label>
 											<select class="form-control selectpicker" name="FLWS_ID" id="FLWSTATUS_EDIT" title="-- Select One --" required>
 												<?php foreach($flws as $data): ?>
 										    		<option value="<?php echo $data->FLWS_ID?>" <?php if($row->FLWS_ID == $data->FLWS_ID) {echo "selected";} ?>>

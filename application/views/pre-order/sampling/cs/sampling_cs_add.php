@@ -26,7 +26,7 @@
 								<div class="row">
 									<div class="col-md-3">
 										<div class="form-group">
-										    <label>Customer</label>
+										    <label>Customer <small>*</small></label>
 										    <select class="form-control selectpicker" name="CUST_ID" id="CUST_ID" title="-- Select One --" data-live-search="true" required>
 										    	<?php foreach($customer as $cust): ?>
 											    	<option value="<?php echo $cust->CUST_ID?>"
@@ -43,7 +43,7 @@
 									</div>
 									<div class="col-md-3">
 										<div class="form-group">
-											<label>Date</label>
+											<label>Date <small>*</small></label>
 											<div class="input-group">
 												<div class="input-group-prepend">
 										          	<span class="input-group-text"><i class="fa fa-calendar"></i></span>
@@ -57,7 +57,7 @@
 											<input class="form-control" type="text" name="CACT_NAME" value="Product Sampling" readonly>
 										</div>
 										<div class="form-group">
-											<label>Channel</label>
+											<label>Channel <small>*</small></label>
 											<select class="form-control selectpicker" name="CHA_ID" id="cha-result" title="-- Select One --" required>
 												<option value="" selected disabled></option>
 										    </select>
@@ -69,14 +69,14 @@
 									</div>
 									<div class="col-md-3">
 										<div class="form-group">
-											<label>Origin</label>
+											<label>Origin <small>*</small></label>
 											<select class="form-control selectpicker" name="CITY_ID" id="ORIGIN_CITY" title="-- Select One --" required>
 												<option value="177">Kota Bandung</option>
 												<option value="269" selected>Kota Yogyakarta</option>
 										    </select>
 										</div>
 										<div class="form-group" id="COURIER_SAMPLING2">
-											<label>Courier</label>
+											<label>Courier <small>*</small></label>
 											<select class="form-control selectpicker" data-live-search="true" name="COURIER_ID" id="COURIER_SAMPLING" title="-- Select One --" required>
 												<?php foreach($courier as $data): ?>
 										    		<option value="<?php echo $data->COURIER_ID.','.$data->COURIER_API.','.$data->COURIER_NAME?>">

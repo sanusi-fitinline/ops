@@ -121,7 +121,7 @@
 		      	</li>
 		      	<?php 
 		      		if($this->session->GRP_SESSION !=3) {
-		      			if ( ( !$this->access_m->isAccess($this->session->GRP_SESSION, 'Prospect')->row() ) && ( !$this->access_m->isAccess($this->session->GRP_SESSION, 'Follow Up VR')->row() ) && ( !$this->access_m->isAccess($this->session->GRP_SESSION, 'Assign Producer')->row() ) && ( !$this->access_m->isAccess($this->session->GRP_SESSION, 'Payment From Customer')->row() ) && ( !$this->access_m->isAccess($this->session->GRP_SESSION, 'Project')->row() ) ) {
+		      			if ( ( !$this->access_m->isAccess($this->session->GRP_SESSION, 'Prospect')->row() ) && ( !$this->access_m->isAccess($this->session->GRP_SESSION, 'Follow Up VR')->row() ) && ( !$this->access_m->isAccess($this->session->GRP_SESSION, 'Assign Producer')->row() ) && ( !$this->access_m->isAccess($this->session->GRP_SESSION, 'Project')->row() ) ) {
 		      				$visible_order_custom = "hidden";
 		      			} else {
 		      				$visible_order_custom = "";
@@ -130,21 +130,7 @@
 		      			$visible_order_custom = "";
 		      		}
 		      	?>
-		      	<li hidden <?php echo $visible_order_custom; ?> class="nav-item dropdown <?php if($this->uri->segment(1)=="project" || $this->uri->segment(1)=="project_followup" || $this->uri->segment(1)=="assign_producer"){echo "active";}?>">
-		        	<a class="nav-link dropdown-toggle" href="#" id="pagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-		          		<i class="fas fa-fw fa-pencil-ruler"></i>
-		          		<span>Order-Custom</span>
-		        	</a>
-			        <div class="dropdown-menu" aria-labelledby="pagesDropdown">
-			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Order Custom')->row()) && ($this->session->GRP_SESSION !=3) ){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('project') ?>">Order (CS)<hr style="margin: 0;"></a>
-			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Follow Up VR')->row()) && ($this->session->GRP_SESSION !=3) ){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('project_followup') ?>">Follow Up (VR)<hr style="margin: 0;"></a>
-			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Assign Producer')->row()) && ($this->session->GRP_SESSION !=3) ){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('assign_producer') ?>">Assign Producer<hr style="margin: 0;"></a>
-			        </div>
-		      	</li>
-
-
-		      	<!-- new order-custom -->
-		      	<li <?php echo $visible_order_custom; ?> class="nav-item dropdown <?php if($this->uri->segment(1)=="prospect" || $this->uri->segment(1)=="prospect_followup" || $this->uri->segment(1)=="assign_producer" || $this->uri->segment(1)=="payment_customer" || $this->uri->segment(1)=="project"){echo "active";}?>">
+		      	<li <?php echo $visible_order_custom; ?> class="nav-item dropdown <?php if($this->uri->segment(1)=="prospect" || $this->uri->segment(1)=="prospect_followup" || $this->uri->segment(1)=="assign_producer" || $this->uri->segment(1)=="project"){echo "active";}?>">
 		        	<a class="nav-link dropdown-toggle" href="#" id="pagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 		          		<i class="fas fa-fw fa-pencil-ruler"></i>
 		          		<span>Order-Custom</span>
@@ -153,14 +139,13 @@
 			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Prospect')->row()) && ($this->session->GRP_SESSION !=3) ){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('prospect') ?>">Prospect<hr style="margin: 0;"></a>
 			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Follow Up VR')->row()) && ($this->session->GRP_SESSION !=3) ){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('prospect_followup') ?>">Follow Up<hr style="margin: 0;"></a>
 			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Assign Producer')->row()) && ($this->session->GRP_SESSION !=3) ){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('assign_producer') ?>">Assign Producer<hr style="margin: 0;"></a>
-			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Payment From Customer')->row()) && ($this->session->GRP_SESSION !=3) ){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('payment_customer') ?>">Payment From<br>Customer<hr style="margin: 0;"></a>
 			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Project')->row()) && ($this->session->GRP_SESSION !=3) ){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('project') ?>">Project<hr style="margin: 0;"></a>
 			        </div>
 		      	</li>
 
 		      	<?php
 		      		if($this->session->GRP_SESSION !=3) {
-		      			if ((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Payment To Producer')->row()) && (!$this->access_m->isAccess($this->session->GRP_SESSION, 'Payment To Vendor')->row()) && (!$this->access_m->isAccess($this->session->GRP_SESSION, 'Customer Deposit')->row()) && (!$this->access_m->isAccess($this->session->GRP_SESSION, 'Vendor Deposit')->row())) {
+		      			if ( (!$this->access_m->isAccess($this->session->GRP_SESSION, 'Payment From Customer')->row()) && (!$this->access_m->isAccess($this->session->GRP_SESSION, 'Payment To Producer')->row()) && (!$this->access_m->isAccess($this->session->GRP_SESSION, 'Payment To Vendor')->row()) && (!$this->access_m->isAccess($this->session->GRP_SESSION, 'Customer Deposit')->row()) && (!$this->access_m->isAccess($this->session->GRP_SESSION, 'Vendor Deposit')->row()) ) {
 		      				$visible_finance = "hidden";
 		      			} else {
 		      				$visible_finance = "";
@@ -169,12 +154,13 @@
 		      			$visible_finance = "";
 		      		}
 		      	?>
-		      	<li <?php echo $visible_finance ?> class="nav-item dropdown <?php if($this->uri->segment(1)=="payment_vendor" || $this->uri->segment(1)=="payment_producer" || $this->uri->segment(1)=="customer_deposit" || $this->uri->segment(1)=="vendor_deposit"){echo "active";}?>">
+		      	<li <?php echo $visible_finance ?> class="nav-item dropdown <?php if($this->uri->segment(1)=="payment_customer" || $this->uri->segment(1)=="payment_vendor" || $this->uri->segment(1)=="payment_producer" || $this->uri->segment(1)=="customer_deposit" || $this->uri->segment(1)=="vendor_deposit"){echo "active";}?>">
 		        	<a class="nav-link dropdown-toggle" href="#" id="pagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 		          		<i class="fas fa-fw fa-donate"></i>
 		          		<span>Finance</span>
 		        	</a>
 			        <div class="dropdown-menu" aria-labelledby="pagesDropdown">
+			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Payment From Customer')->row()) && ($this->session->GRP_SESSION !=3) ){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('payment_customer') ?>">Payment From<br>Customer<hr style="margin: 0;"></a>
 			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Payment To Producer')->row()) && ($this->session->GRP_SESSION !=3) ){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('payment_producer') ?>">Payment To Producer<hr style="margin: 0;"></a>
 			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Payment To Vendor')->row()) && ($this->session->GRP_SESSION !=3) ){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('payment_vendor') ?>">Payment To Vendor<hr style="margin: 0;"></a>
 			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Customer Deposit')->row()) && ($this->session->GRP_SESSION !=3) ){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('customer_deposit') ?>">Customer Deposit<hr style="margin: 0;"></a>

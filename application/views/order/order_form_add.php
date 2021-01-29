@@ -26,7 +26,7 @@
 						<div class="row">
 							<div class="col-md-3">
 								<div class="form-group">
-								    <label>Customer</label>
+								    <label>Customer <small>*</small></label>
 								    <select class="form-control selectpicker" name="CUST_ID" id="CUST_SELECT" title="-- Select One --" data-live-search="true" required>
 								    	<?php foreach($customer as $cust): ?>
 									    	<option value="<?php echo $cust->CUST_ID?>"
@@ -43,7 +43,7 @@
 							</div>
 							<div class="col-md-3">
 								<div class="form-group">
-									<label>Date</label>
+									<label>Date <small>*</small></label>
 									<div class="input-group">
 										<div class="input-group-prepend">
 								          	<span class="input-group-text"><i class="fa fa-calendar"></i></span>
@@ -56,7 +56,7 @@
 								    </div>
 								</div>
 								<div class="form-group">
-									<label>Channel</label>
+									<label>Channel <small>*</small></label>
 									<select class="form-control selectpicker" name="CHA_ID" id="cha-result" title="-- Select One --" required>
 										<option value="" selected disabled></option>
 								    </select>

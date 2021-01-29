@@ -47,7 +47,7 @@
 							</div>
 						</div>
 						<div class="col-md-12">
-							<a href="#" id="tambah-model" data-toggle="modal" data-target="#add-model" class="btn btn-success btn-sm"><i class="fas fa-plus-circle"></i> Model</a>
+							<a href="#" id="tambah-model" data-toggle="modal" data-target="#add-model" class="btn btn-success btn-sm" <?php if((!$this->access_m->isEdit('Prospect', 1)->row()) && ($this->session->GRP_SESSION !=3)) {echo "hidden";} ?>><i class="fas fa-plus-circle"></i> Model</a>
 			        		<p></p>
 							<div class="table-responsive">
 				          		<table class="table table-bordered" width="100%" cellspacing="0">

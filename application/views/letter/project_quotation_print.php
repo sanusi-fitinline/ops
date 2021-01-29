@@ -121,7 +121,7 @@
         </tr>';
 	}
     $html.='<tr bgcolor="#ffffff">
-    			<td style="font-weight: bold;" colspan="4" align="right">Subtotal</td>
+    			<td style="font-weight: bold;" colspan="4" align="right">Total</td>
 				<td align="right">'.number_format($row->PRJ_SUBTOTAL,0,',','.').'</td>
 			</tr>';
 	if ($row->PRJ_DISCOUNT != null && $row->PRJ_DISCOUNT != 0) {
@@ -148,10 +148,6 @@
 					<td align="right">'.number_format($row->PRJ_DEPOSIT,0,',','.').'</td>
 				</tr>';
 	}
-	// $html.='<tr bgcolor="#ffffff">
-	// 			<td style="font-weight: bold;" colspan="4" align="right">Total</td>
-	// 			<td align="right">'.number_format($row->PRJ_TOTAL,0,',','.').'</td>
-	// 		</tr>';
 	$html.='<tr bgcolor="#ffffff">
 				<td style="font-weight: bold;" colspan="4" align="right">Ongkos Kirim</td>
 				<td align="right">'.number_format($row->PRJ_SHIPCOST,0,',','.').'</td>
@@ -200,8 +196,7 @@
     } else {
     	$html.='<p></p><p></p>';
     }
-    $a = str_replace('https:', 'http:', base_url('assets/images/ttd.jpg'));
-    $img = str_replace(':4433', ':8080', $a);
+    $img = './assets/images/ttd.jpg';
 	$html.= '<p style="font-size: 10px">Tertanda,</p>
 		<img src="'.$img.'" alt="test alt attribute" width="55" height="55" border="0" />
 		<p style="font-size: 10px">(Istofani)</p>

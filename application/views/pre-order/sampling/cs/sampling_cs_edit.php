@@ -34,7 +34,7 @@
 										<div class="form-group">
 											<input class="form-control" type="hidden" name="CLOG_ID" value="<?php echo $row->CLOG_ID ?>">
 											<input class="form-control" type="hidden" name="LSAM_ID" value="<?php echo $row->LSAM_ID ?>">
-										    <label>Customer</label>
+										    <label>Customer <small>*</small></label>
 										    <select class="form-control selectpicker" name="CUST_ID" id="CUST_ID" title="-- Select One --" data-live-search="true" required>
 										    	<?php foreach($customer as $cust): ?>
 											    	<option <?php echo $row->CUST_ID == $cust->CUST_ID ? "selected" : ""; ?> value="<?php echo $cust->CUST_ID?>">
@@ -68,7 +68,7 @@
 											<input class="form-control" type="text" name="CACT_NAME" value="Product Sampling" readonly>
 										</div>
 										<div class="form-group">
-											<label>Channel</label>
+											<label>Channel <small>*</small></label>
 											<select class="form-control selectpicker" name="CHA_ID" id="cha-result" title="-- Select One --" required>
 												<?php foreach($channel as $cha): ?>
 										    		<option <?php echo $clog->CHA_ID == $cha->CHA_ID ? "selected" : ""; ?> value="<?php echo $cha->CHA_ID?>"><?php echo stripslashes($cha->CHA_NAME) ?></option>
@@ -82,14 +82,14 @@
 									</div>
 									<div class="col-md-3">
 										<div class="form-group">
-											<label>Origin</label>
+											<label>Origin <small>*</small></label>
 											<select class="form-control selectpicker" name="CITY_ID" id="ORIGIN_CITY" title="-- Select One --" required>
 												<option value="177" <?php if($row->ORIGIN_CITY_ID == 177) {echo "selected";} ?>>Kota Bandung</option>
 												<option value="269" <?php if($row->ORIGIN_CITY_ID == 269) {echo "selected";} ?>>Kota Yogyakarta</option>
 										    </select>
 										</div>
-										<div class="form-group">
-											<label>Courier</label>
+										<div class="form-group" id="COURIER_SAMPLING2">
+											<label>Courier <small>*</small></label>
 											<select class="form-control selectpicker" data-live-search="true" name="COURIER_ID" id="COURIER_SAMPLING" title="-- Select One --" required>
 												<?php foreach($courier as $data): ?>
 										    		<option value="<?php echo $data->COURIER_ID.','.$data->COURIER_API.','.$data->COURIER_NAME?>" <?php if($row->COURIER_ID == $data->COURIER_ID) {echo "selected";} ?>>
@@ -161,7 +161,7 @@
 									</div>
 									<div class="col-md-3">
 										<div class="form-group">
-											<label>Bank</label>
+											<label>Bank <small>*</small></label>
 											<select class="form-control selectpicker" name="BANK_ID" id="INPUT_BANK" title="-- Select One --" required>
 												<?php foreach($bank as $b): ?>
 										    		<option value="<?php echo $b->BANK_ID?>" <?php if($row->BANK_ID == $b->BANK_ID) {echo "selected";} ?>>
@@ -171,7 +171,7 @@
 										    </select>
 										</div>
 										<div class="form-group">
-											<label>Payment Date</label>
+											<label>Payment Date <small>*</small></label>
 											<div class="input-group">
 												<div class="input-group-prepend">
 										          	<span class="input-group-text"><i class="fa fa-calendar"></i></span>
@@ -194,7 +194,7 @@
 										</div>
 										<br>
 										<div align="center">
-											<?php if((!$this->access_m->isEdit('Product Sampling CS', 1)->row()) && ($this->session->GRP_SESSION !=3)) : ?>
+											<?php if((!$this->access_m->isEdit('Product Sampling CS', 1)->row()) && ($this->session->GRP_ID !=3)) : ?>
 												<a href="<?php echo site_url('cs/sampling') ?>" class="btn btn-warning" name="batal"><i class="fa fa-arrow-left"></i> Back</a>
 											<?php else: ?>
 												<button type="submit" class="btn btn-primary" name="simpan"><i class="fa fa-save"></i> Save</button>

@@ -170,7 +170,7 @@
 								<textarea class="form-control" cols="100%" rows="5" name="FLWP_NOTES"></textarea>
 							</div>
 							<div class="form-group">
-								<label>Status</label>
+								<label>Status <small>*</small></label>
 								<select class="form-control selectpicker" name="FLWS_ID" id="FLWS_ID" title="-- Select One --" required>
 									<option disabled>-- Select One--</option>
 									<?php foreach($flws as $data): ?>

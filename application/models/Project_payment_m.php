@@ -91,6 +91,14 @@ class Project_payment_m extends CI_Model {
 		return $query;
     }
 
+    public function get_termin($PRJ_ID) {
+        $this->db->select('MAX(PRJP_NO) AS TERMIN');
+        $this->db->from('tb_project_payment');
+        $this->db->where('PRJ_ID', $PRJ_ID);
+        $query = $this->db->get();
+        return $query;
+    }
+
     public function get_user_id($CUST_ID) {
         $this->db->select('USER_ID');
         $this->db->from('tb_customer');

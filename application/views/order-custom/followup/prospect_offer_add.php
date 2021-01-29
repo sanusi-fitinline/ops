@@ -81,6 +81,13 @@
 							</div>
 							<div class="col-md-4">
 								<div class="form-group">
+									<label>Payment Method <small>*</small></label>
+									<select class="form-control selectpicker" id="inputPayMethod" name="PRJPR_PAYMENT_METHOD" title="-- Select One --" required>
+							    		<option value="0">Full</option>
+							    		<option value="1">Installment</option>
+								    </select>
+								</div>
+								<div class="form-group">
 									<label>Notes</label>
 									<textarea class="form-control" cols="100%" rows="5" name="PRJPR_NOTES" autocomplete="off"></textarea>
 								</div>
@@ -101,7 +108,7 @@
 									<div class="col-md-4">
 										<div class="form-group">
 											<label>Quantity</label>
-											<input class="form-control" type="text" value="<?php echo $field->PRJDQ_QTY ?>" readonly>
+											<input class="form-control" type="text" name="PRJDQ_QTY[]"  value="<?php echo $field->PRJDQ_QTY ?>" readonly>
 										</div>
 									</div>
 									<div class="col-md-4">
@@ -135,11 +142,12 @@
 		if($("#PRDUP_ID").val() != null) {
 			$("#PRDUP_ID").ready(function(){
 				$.ajax({
-			        url: "<?php echo site_url('project_followup/list_producer_product'); ?>",
+			        url: "<?php echo site_url('prospect_followup/list_producer_product'); ?>",
 			        type: "POST", 
 			        data: {
 			        	PRJPR_ID : null,
 			        	PRDUP_ID : $("#PRDUP_ID").val(),
+			        	PRJD_ID  : $("#PRJD_ID").val(),
 			        },
 			        dataType: "json",
 			        beforeSend: function(e) {

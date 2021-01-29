@@ -28,7 +28,7 @@
 										<div class="form-group">
 											<input class="form-control" type="hidden" name="CLOG_ID" value="<?php echo $row->CLOG_ID ?>">
 											<input class="form-control" type="hidden" name="LSTOCK_ID" value="<?php echo $row->LSTOCK_ID ?>">
-										    <label>Customer</label>
+										    <label>Customer <small>*</small></label>
 										    <select class="form-control selectpicker" name="CUST_ID" id="CUST_ID" title="-- Select One --" data-live-search="true" required>
 										    	<?php foreach($customer as $cust): ?>
 											    	<option <?php echo $row->CUST_ID == $cust->CUST_ID ? "selected" : ""; ?> value="<?php echo $cust->CUST_ID?>"><?php echo stripslashes($cust->CUST_NAME) ?></option>
@@ -60,7 +60,7 @@
 											<input class="form-control" type="text" name="CACT_NAME" value="Check Stock" readonly>
 										</div>
 										<div class="form-group">
-											<label>Channel</label>
+											<label>Channel <small>*</small></label>
 											<select class="form-control selectpicker" name="CHA_ID" id="cha-result" title="-- Select One --" required>
 												<?php foreach($channel as $cha): ?>
 										    		<option <?php echo $clog->CHA_ID == $cha->CHA_ID ? "selected" : ""; ?> value="<?php echo $cha->CHA_ID?>"><?php echo stripslashes($cha->CHA_NAME) ?></option>
@@ -68,7 +68,7 @@
 										    </select>
 										</div>
 										<div class="form-group">
-											<label>Product</label>
+											<label>Product <small>*</small></label>
 											<select class="form-control selectpicker" name="PRO_ID" title="-- Select One --" data-live-search="true" required>
 												<?php foreach($product as $pro): ?>
 										    		<option <?php echo $row->PRO_ID == $pro->PRO_ID ? "selected" : ""; ?> value="<?php echo $pro->PRO_ID?>">
@@ -78,17 +78,17 @@
 										    </select>
 										</div>
 										<div class="form-group">
-											<label>Color</label>
+											<label>Color <small>*</small></label>
 											<input class="form-control" type="text" name="LSTOCK_COLOR" value="<?php echo $row->LSTOCK_COLOR ?>" autocomplete="off" required>
 										</div>
 									</div>
 									<div class="col-md-3">
 										<div class="form-group">
-											<label>Amount</label>
+											<label>Amount <small>*</small></label>
 											<input class="form-control" step="0.01" min="1" type="number" name="LSTOCK_AMOUNT" value="<?php echo $row->LSTOCK_AMOUNT?>" required>
 										</div>
 										<div class="form-group">
-											<label>Unit Measure</label>
+											<label>Unit Measure <small>*</small></label>
 											<select class="form-control selectpicker" name="UMEA_ID" title="-- Select One --" required>
 												<?php foreach($umea as $um): ?>
 										    		<option <?php echo $row->UMEA_ID == $um->UMEA_ID ? "selected" : ""; ?> value="<?php echo $um->UMEA_ID?>">

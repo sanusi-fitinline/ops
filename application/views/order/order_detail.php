@@ -223,7 +223,7 @@
 												<tr>
 													<td style="font-weight: bold;" colspan="7" align="right">SHIPMENT COST (+)</td>
 													<td style="padding-right: 25px;" align="right" id="CETAK_ORDER_SHIPCOST"><?php echo number_format($row->ORDER_SHIPCOST,0,',','.') ?></td>
-													<input type="hidden" id="ORDER_SHIPCOST" name="ORDER_SHIPCOST" value="<?php echo $row->ORDER_SHIPCOST ?>">
+													<input type="hidden" id="ORDER_SHIPCOST" name="ORDER_SHIPCOST" value="<?php echo $row->ORDER_SHIPCOST != null ? $row->ORDER_SHIPCOST : "0"  ?>">
 												</tr>
 												<tr>
 													<td style="vertical-align: middle; font-weight: bold;" colspan="7" align="right">TAX (+)</td>
@@ -393,9 +393,8 @@
 								</div>
 						        <div align="center">
 						        	<?php if((!$this->access_m->isEdit('Order', 1)->row()) && ($this->session->GRP_SESSION !=3)) : ?>
-						        		<a href="<?php echo site_url('order') ?>" class="btn btn-warning" name="batal"><i class="fa fa-arrow-left"></i> Back</a>
+						        		<a href="<?php echo site_url('order') ?>" class="btn btn-warning" name="batal"><i class="fa fa-arrow-left"></i> BACK</a>
 							        <?php else: ?>
-							        	<!-- <button type="submit" name="UPDATE_DATA" id="UPDATE_DATA" <?php if(($row->ORDER_STATUS != null) || ($row->ORDER_STATUS != 0)) {echo 'class="btn btn-secondary" disabled';} else{ echo 'class="btn btn-primary"';} ?>><i class="fa fa-save"></i> UPDATE</button> -->
 							        	<button type="submit" class="btn btn-primary" name="UPDATE_DATA" id="UPDATE_DATA"><i class="fa fa-save"></i> UPDATE</button>
 							        <?php endif ?>
 						        </div>

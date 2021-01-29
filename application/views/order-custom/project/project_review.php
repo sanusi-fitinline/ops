@@ -38,7 +38,7 @@
 									$CNTR = $row->CNTR_NAME.'.';
 								} else {$CNTR = '';}
 							?>
-							<!-- data prospect & customer -->
+							<!-- data prospect & vendor -->
 				            <div class="row">
 				            	<div class="col-md-4">
 		            				<div class="form-group">
@@ -183,11 +183,31 @@
 					    <!-- review -->
 						<div class="col-md-12">
 					        <h4>Review</h4>
-							<?php if($max_progress->MAX_PRJA_ID != 5 && $max_progress->MAX_PRJA_ID != 8 && $max_progress->MAX_PRJA_ID != 11) {
-								$ADD_REVIEW = "class='btn btn-sm btn-secondary' style='opacity: 0.5; pointer-events: none;'";
-								} else {$ADD_REVIEW = "class='btn btn-sm btn-success'";
-							}?>
-							<a href="#" id="tambah-review" data-toggle="modal" data-target="#add-review" <?php echo $ADD_REVIEW ?> ><i class="fas fa-plus-circle"></i> Add</a>
+							<?php
+							// check add access
+							if( ($this->access_m->isAdd('Project', 1)->row()) || ($this->session->GRP_SESSION == 3) ) {
+								if($row->PRJA_ID != 5 && $row->PRJA_ID != 8 && $row->PRJA_ID != 11) {
+									$add = "class='btn btn-sm btn-secondary' style='opacity: 0.5; pointer-events: none;'";
+								} else {
+									$add = "class='btn btn-sm btn-success'";
+								}
+							} else {
+								$add = "class='btn btn-sm btn-secondary' style='opacity: 0.5; pointer-events: none;'";
+							}
+							// check edit access
+							if( ($this->access_m->isEdit('Project', 1)->row()) || ($this->session->GRP_SESSION == 3) ) {
+								$edit = 'style="color: #007bff; float: right;"';
+							} else {
+								$edit = 'style="opacity : 0.5; pointer-events: none; color : #6c757d; float: right;"';
+							}
+							// check delete access
+							if( ($this->access_m->isDelete('Project', 1)->row()) || ($this->session->GRP_SESSION == 3) ) {
+								$delete = 'style="color: #dc3545; float: left;"';
+							} else {
+								$delete = 'style="opacity : 0.5; pointer-events: none; color : #6c757d; float: left;"';
+							}
+							?>
+							<a href="#" id="tambah-review" data-toggle="modal" data-target="#add-review" <?php echo $add ?> ><i class="fas fa-plus-circle"></i> Add</a>
 			        		<p></p>
 							<div class="table-responsive">
 				          		<table class="table table-bordered" width="100%" cellspacing="0">
@@ -205,8 +225,8 @@
 						                	<?php foreach($review as $data): ?>
 							                	<tr>
 							                		<td align="center" style="width: 10px;">
-							                			<a href="<?php echo site_url('project/del_review/'.$row->PRJ_ID.'/'.$row->PRJD_ID.'/'.$data->PRJR_ID) ?>" class="DELETE-REVIEW mb-1" style="color: #dc3545; float: left;" onclick="return confirm('Delete Item?')" title="Delete"><i class="fa fa-trash"></i></a>
-							                			<a href="#" class="UBAH-REVIEW mb-1" id="UBAH-REVIEW<?php echo $data->PRJR_ID ?>" data-toggle="modal" data-target="#edit-review<?php echo $data->PRJR_ID ?>" style="color: #007bff; float: right;" title="Edit"><i class="fa fa-edit"></i></a>
+							                			<a href="<?php echo site_url('project/del_review/'.$row->PRJ_ID.'/'.$row->PRJD_ID.'/'.$data->PRJR_ID) ?>" class="DELETE-REVIEW mb-1" <?php echo $delete ?> onclick="return confirm('Delete Item?')" title="Delete"><i class="fa fa-trash"></i></a>
+							                			<a href="#" class="UBAH-REVIEW mb-1" id="UBAH-REVIEW<?php echo $data->PRJR_ID ?>" data-toggle="modal" data-target="#edit-review<?php echo $data->PRJR_ID ?>" <?php echo $edit ?> title="Edit"><i class="fa fa-edit"></i></a>
 							                		</td>
 							                		<td align="center" style="width: 10px;"><?php echo $i++ ?></td>
 							                		<td><?php echo $data->PRJC_NAME ?></td>

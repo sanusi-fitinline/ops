@@ -160,18 +160,51 @@
 							<!-- Producer Offer -->
 							<h4>Producer Offer</h4>
 				            <div>
-					            <a <?php echo $row->PRJ_STATUS == 4 ? "hidden" : "" ?> href="<?php echo site_url('prospect_followup/add_offer/'.$detail->PRJD_ID) ?>" id="tambah-offer" class="btn btn-success btn-sm"><i class="fas fa-plus-circle"></i> Add</a>
-								<a href="<?php echo site_url('prospect_followup/producer_list/'.$detail->PRJD_ID) ?>" class="btn btn-sm btn-info" title="Progress"><i class="fas fa-comment-dollar"></i> Show Producer</a>
+				            	<?php
+				            	// check add access
+				            	if( ($this->access_m->isAdd('Follow Up VR', 1)->row()) || ($this->session->GRP_SESSION == 3) ) {
+					            	if($row->PRJ_STATUS >= 4) {
+				            			$add = 'class="btn btn-sm btn-secondary mb-1" style="opacity : 0.5; pointer-events: none; color : #ffffff;"';
+				            		} else {
+				            			$add = 'class="btn btn-sm btn-success mb-1" ';
+				            		}
+				            	} else {
+				            		$add = 'class="btn btn-sm btn-secondary mb-1" style="opacity : 0.5; pointer-events: none; color : #ffffff;"';
+				            	}
+				            	// check edit access
+				            	if( ($this->access_m->isEdit('Follow Up VR', 1)->row()) || ($this->session->GRP_SESSION == 3) ) {
+					            	if($row->PRJ_STATUS >= 4) {
+				            			$edit = 'style="opacity : 0.5; pointer-events: none; color: #6c757d; float: right;"';
+				            		} else {
+				            			$edit = 'style="color: #007bff; float: right;"';
+				            		}
+				            	} else {
+				            		$edit = 'style="opacity : 0.5; pointer-events: none; color: #6c757d; float: right;"';
+				            	}
+				            	// check delete access
+				            	if( ($this->access_m->isDelete('Follow Up VR', 1)->row()) || ($this->session->GRP_SESSION == 3) ) {
+					            	if($row->PRJ_STATUS >= 4) {
+				            			$delete = 'style="opacity : 0.5; pointer-events: none; color: #6c757d; float: left;"';
+				            		} else {
+				            			$delete = 'style="color: #dc3545; float: left;"';
+				            		}
+				            	} else {
+				            		$delete = 'style="opacity : 0.5; pointer-events: none; color: #6c757d; float: left;"';
+				            	}
+			            		?>
+					            <a <?php echo $add ?> href="<?php echo site_url('prospect_followup/add_offer/'.$detail->PRJD_ID) ?>" id="tambah-offer"><i class="fas fa-plus-circle"></i> Add</a>
+								<a href="<?php echo site_url('prospect_followup/producer_list/'.$detail->PRJD_ID) ?>" class="btn btn-sm btn-info mb-1" title="Progress"><i class="fas fa-comment-dollar"></i> Show Producer</a>
 							</div><p></p>
 							<div class="table-responsive">
 				          		<table class="table table-bordered" width="100%" cellspacing="0">
 				            		<thead style="font-size: 14px;">
 					                	<tr>
 											<th rowspan="2" style="vertical-align: middle; text-align: center; width: 50px" colspan="2">#</th>
-											<th rowspan="2" style="vertical-align: middle; text-align: center; width: 250px">PRODUCER</th>
-											<th rowspan="2" style="vertical-align: middle; text-align: center; width: 300px">NOTES</th>
+											<th rowspan="2" style="vertical-align: middle; text-align: center; width: 150px">PRODUCER</th>
+											<th hidden rowspan="2" style="vertical-align: middle; text-align: center; width: 300px">NOTES</th>
 											<th rowspan="2" style="vertical-align: middle; text-align: center; width: 225px">PICTURE</th>
 											<th rowspan="2" style="vertical-align: middle; text-align: center; width: 50px">DURATION</th>
+											<th rowspan="2" style="vertical-align: middle; text-align: center; width: 250px">PAYMENT METHOD</th>
 											<th rowspan="2" style="vertical-align: middle; text-align: center; width: 100px">PRICE</th>
 											<th colspan="3" style="vertical-align: middle; text-align: center; width: 100px">DETAIL</th>
 										</tr>
@@ -187,19 +220,28 @@
 						                	<?php foreach($offer as $field): ?>
 						                		<?php $span = $field->SPAN > 1 ?  $field->SPAN + 1 : 1 ?>
 						                		<tr>
-						                			<td rowspan="<?php echo $span?>" align="center" style="width: 70px;">
-				                						<a href="<?php echo site_url('prospect_followup/delete_offer/'.$row->PRJ_ID.'/'.$detail->PRJD_ID.'/'.$field->PRJPR_ID)?>" class="DELETE-OFFER mb-1" style="color: #dc3545; float: left;" onclick="return confirm('Delete Data?')" title="Delete"><i class="fa fa-trash"></i></a>
-				                						<a href="<?php echo site_url('prospect_followup/edit_offer/'.$detail->PRJD_ID.'/'.$field->PRJPR_ID)?>" class="UBAH-OFFER mb-1" style="color: #007bff; float: right;" title="Edit"><i class="fa fa-edit"></i></a>
+						                			<td rowspan="<?php echo $span?>" align="center" style="width: 100px;">
+				                						<a <?php echo $delete ?> href="<?php echo site_url('prospect_followup/delete_offer/'.$row->PRJ_ID.'/'.$detail->PRJD_ID.'/'.$field->PRJPR_ID)?>" class="DELETE-OFFER mb-1" onclick="return confirm('Delete Data?')" title="Delete"><i class="fa fa-trash"></i></a>
+				                						<a <?php echo $edit ?> href="<?php echo site_url('prospect_followup/edit_offer/'.$detail->PRJD_ID.'/'.$field->PRJPR_ID)?>" class="UBAH-OFFER mb-1" title="Edit"><i class="fa fa-edit"></i></a>
 													</td>
 						                			<td rowspan="<?php echo $span?>" align="center"><?php echo $y++ ?></td>
 						                			<td rowspan="<?php echo $span?>"><?php echo $field->PRDU_NAME ?></td>
-						                			<td rowspan="<?php echo $span?>"><?php echo $field->PRJPR_NOTES ?></td>
+						                			<td hidden rowspan="<?php echo $span?>"><?php echo $field->PRJPR_NOTES ?></td>
 						                			<td rowspan="<?php echo $span?>" align="center">
 							                			<?php if($field->PRJPR_IMG != null): ?>
 							                				<img style="height: 100px;" class="img-fluid" src="<?php echo base_url('assets/images/project/offer/'.$field->PRJPR_IMG) ?>">
 							                			<?php endif ?>
 							                		</td>
 						                			<td rowspan="<?php echo $span?>" align="center"><?php echo $field->PRJPR_DURATION ?> days</td>
+						                			<td rowspan="<?php echo $span?>" <?php echo $field->PRJPR_PAYMENT_METHOD == 1 ? "align='left'" : "align='center'" ?>>
+						                				<?php echo $field->PRJPR_PAYMENT_METHOD == 1 ? "Installment :" : "Full" ?>
+						                				<?php $pay_rules = $this->payment_producer_m->get(null, $detail->PRJD_ID, $field->PRDU_ID)->result(); ?>
+						                				<?php if ($field->PRJPR_PAYMENT_METHOD == 1):?>
+														<?php foreach($pay_rules as $rules): ?>
+							                				<?php echo "<br><br>".$rules->PRJP2P_NO.". ".$rules->PRJP2P_NOTES." sejumlah ".$rules->PRJP2P_PCNT."% dari total harga" ?>
+							                			<?php endforeach ?>
+							                			<?php endif ?>
+						                			</td>
 						                			<td rowspan="<?php echo $span?>" align="right"><?php echo number_format($field->PRJPR_PRICE,0,',','.') ?></td>
 						                			<td <?php echo $quantity != null ? "hidden" : "" ?> align="center">-</td>
 						                			<td <?php echo $quantity != null ? "hidden" : "" ?> align="center">-</td>
@@ -219,7 +261,7 @@
 						                	<?php endforeach ?>
 						                <?php else: ?>
 						                	<tr>
-						                		<td colspan="10" align="center">No data available in table</td>
+						                		<td colspan="11" align="center">No data available in table</td>
 						                	</tr>
 						                <?php endif ?>
 									</tbody>

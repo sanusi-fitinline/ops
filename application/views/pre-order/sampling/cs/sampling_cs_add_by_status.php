@@ -26,7 +26,7 @@
 								<div class="row">
 									<div class="col-md-3">
 										<div class="form-group">
-										    <label>Customer</label>
+										    <label>Customer <small>*</small></label>
 										    <input class="form-control" type="hidden" name="CUST_ID" id="CUST_ID" value="<?php echo $row->CUST_ID ?>" readonly>
 										    <input class="form-control" type="text" value="<?php echo $row->CUST_NAME ?>" readonly>
 										</div>
@@ -50,7 +50,7 @@
 									</div>
 									<div class="col-md-3">
 										<div class="form-group">
-											<label>Date</label>
+											<label>Date <small>*</small></label>
 											<div class="input-group">
 												<div class="input-group-prepend">
 										          	<span class="input-group-text"><i class="fa fa-calendar"></i></span>
@@ -64,7 +64,7 @@
 											<input class="form-control" type="text" name="CACT_NAME" value="Product Sampling" readonly>
 										</div>
 										<div class="form-group">
-											<label>Channel</label>
+											<label>Channel <small>*</small></label>
 											<select class="form-control selectpicker" name="CHA_ID" id="cha-result" title="-- Select One --" required>
 												<?php foreach($channel as $cha): ?>
 										    		<option value="<?php echo $cha->CHA_ID?>" <?php echo $row->CHA_ID == $cha->CHA_ID ? "selected" : "" ?>>
@@ -80,14 +80,14 @@
 									</div>
 									<div class="col-md-3">
 										<div class="form-group">
-											<label>Origin</label>
+											<label>Origin <small>*</small></label>
 											<select class="form-control selectpicker" name="CITY_ID" id="ORIGIN_CITY" title="-- Select One --" required>
 												<option value="177">Kota Bandung</option>
 												<option value="269" selected>Kota Yogyakarta</option>
 										    </select>
 										</div>
 										<div class="form-group" id="COURIER_SAMPLING2">
-											<label>Courier</label>
+											<label>Courier <small>*</small></label>
 											<select class="form-control selectpicker" data-live-search="true" name="COURIER_ID" id="COURIER_SAMPLING" title="-- Select One --" required>
 												<?php foreach($courier as $data): ?>
 										    		<option value="<?php echo $data->COURIER_ID.','.$data->COURIER_API.','.$data->COURIER_NAME?>">

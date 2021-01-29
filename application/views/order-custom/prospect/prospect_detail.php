@@ -146,13 +146,19 @@
 										</div>
 					            	</div>
 					            	<div class="col-md-12">
-					            		<?php if($row->PRJ_PAYMENT_METHOD != null) {
-					            			$letter = ' class="btn btn-sm btn-primary mb-1" ';
+					            		<?php
+					            		if( ($this->access_m->isEdit('Prospect', 1)->row()) || ($this->session->GRP_SESSION == 3) ) {
+						            		if($row->PRJ_PAYMENT_METHOD != null) {
+						            			$letter = 'class="btn btn-sm btn-primary mb-1"';
+						            		} else {
+						            			$letter = 'class="btn btn-sm btn-secondary mb-1" style="opacity : 0.5; pointer-events: none; color : #ffffff;"';
+						            		}
 					            		} else {
-					            			$letter = ' class="btn btn-sm btn-secondary mb-1" style="opacity : 0.5; pointer-events: none; color : #ffffff;" ';
-					            		} ?>
+						            		$letter = 'class="btn btn-sm btn-secondary mb-1" style="opacity : 0.5; pointer-events: none; color : #ffffff;" ';
+					            		}
+					            		?>
 										<a href="<?php echo base_url('prospect/quotation/'.$row->PRJ_ID)?>" target="_blank" <?php echo $letter ?> ><i class="fa fa-print"></i> QUOTATION</a>
-										<input hidden type="submit" name="CANCEL" <?php if((!$this->access_m->isEdit('Order Custom', 1)->row()) && ($this->session->GRP_SESSION !=3)) {echo "class='btn btn-sm btn-secondary mb-1' disabled";} else {echo "class='btn btn-sm btn-warning mb-1'";}?> onclick="return confirm('Cancel order?')" value="CANCEL ORDER">
+										<input hidden type="submit" name="CANCEL" <?php if((!$this->access_m->isEdit('Prospect', 1)->row()) && ($this->session->GRP_SESSION !=3)) {echo "class='btn btn-sm btn-secondary mb-1' disabled";} else {echo "class='btn btn-sm btn-warning mb-1'";}?> onclick="return confirm('Cancel order?')" value="CANCEL ORDER">
 									</div>
 					            </div>
 					            <hr>
@@ -160,11 +166,17 @@
 								<h4>Detail</h4>
 								<div class="row">
 									<div class="col-md-12">
-										<?php if($row->PRJ_STATUS >= 2) {
-					            			$add_detail = ' class="btn btn-sm btn-secondary" style="opacity : 0.5; pointer-events: none; color : #ffffff;" ';
-					            		} else {
-					            			$add_detail = ' class="btn btn-sm btn-success" ';
-					            		} ?>
+										<?php
+										if( ($this->access_m->isAdd('Prospect', 1)->row()) || ($this->session->GRP_SESSION == 3) ) {
+											if($row->PRJ_STATUS >= 2) {
+						            			$add_detail = 'class="btn btn-sm btn-secondary" style="opacity : 0.5; pointer-events: none; color : #ffffff;"';
+						            		} else {
+						            			$add_detail = 'class="btn btn-sm btn-success"';
+						            		}
+										} else {
+											$add_detail = 'class="btn btn-sm btn-secondary" style="opacity : 0.5; pointer-events: none; color : #ffffff;"';
+					            		}
+					            		?>
 										<a href="<?php echo site_url('prospect/add_detail/'.$row->PRJ_ID) ?>" id="ADD_DETAIL" <?php echo $add_detail ?> ><i class="fas fa-plus-circle"></i> Add</a>
 						        		<p></p>
 										<div class="table-responsive">
@@ -264,7 +276,11 @@
 									                	<input type="hidden" class="PRJD_SHIPCOST" id="PRJD_SHIPCOST<?php echo $data->PRJD_ID ?>" name="PRJD_SHIPCOST[]" value="<?php echo $data->PRJD_SHIPCOST ?>">
 									                	<input type="hidden" id="PRJD_ETD<?php echo $data->PRJD_ID ?>" name="PRJD_ETD[]" value="<?php echo $data->PRJD_ETD ?>">
 									                	<?php if($data->PRJD_PRICE != null){
-															$UPDATE = 'class="btn btn-sm btn-primary"';
+									                		if($row->PRJ_STATUS >= 4) {
+									                			$UPDATE = 'class="btn btn-sm btn-secondary" style="opacity: 0.5" disabled';
+									                		} else {
+																$UPDATE = 'class="btn btn-sm btn-primary"';
+															}
 														} else {
 															$UPDATE = 'class="btn btn-sm btn-secondary" style="opacity: 0.5" disabled';
 														} ?>
@@ -417,7 +433,11 @@
 												</div>
 												<!-- button update -->
 												<div class="form-group" align="right">
-													<button <?php echo $UPDATE ?> type="submit" name="UPDATE"><i class="fa fa-save"></i> UPDATE</button>
+													<?php if((!$this->access_m->isEdit('Prospect', 1)->row()) && ($this->session->GRP_SESSION !=3)) : ?>
+														<a href="<?php echo site_url('prospect') ?>" class="btn btn-warning btn-sm" name="BACK"><i class="fa fa-arrow-left"></i> Back</a>
+													<?php else: ?>
+														<button <?php echo $UPDATE ?> type="submit" name="UPDATE"><i class="fa fa-save"></i> UPDATE</button>
+													<?php endif ?>
 												</div>
 											</div>
 										</div>
@@ -440,7 +460,6 @@
 					                  	</tr>
 					                </thead>
 				                	<?php $p = 1;?>
-				                	<input class="form-control" type="hidden" id="INSTALLMENT" value="<?php echo $installment->num_rows()  ?>">
 			                		<?php if($installment->num_rows() > 0):?>
 					                	<tbody style="font-size: 14px;">
 						                	<?php foreach($payment as $key => $data): ?>
@@ -940,14 +959,14 @@
 
 			$("#PRJP_AMOUNT").val(amount);
 
-			var percent = $("#PERCENTAGE").val();
+			var current_percent = $("#PERCENTAGE").val();
 			if($("#PRJP_PCNT").val() != "") {
 	    		var input_percent = $(this).val();
 	    	} else {
 	    		var input_percent = 0;
 	    	}
 
-	    	var total_percent = parseInt(input_percent) + parseInt(percent);
+	    	var total_percent = parseInt(input_percent) + parseInt(current_percent);
 
 			if(total_percent > 100){
           		$("#PRJP_PCNT").addClass("is-invalid");

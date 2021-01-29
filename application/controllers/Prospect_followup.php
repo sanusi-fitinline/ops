@@ -24,6 +24,7 @@ class Prospect_followup extends CI_Controller {
 		$this->load->model('project_review_m');
 		$this->load->model('project_followup_m');
 		$this->load->model('project_shipment_m');
+		$this->load->model('payment_producer_m');
 		$this->load->library('pdf');
 		$this->load->library('rajaongkir');
 		$this->load->library('form_validation');
@@ -61,7 +62,7 @@ class Prospect_followup extends CI_Controller {
 			$row   = array();
 			$row[] = "<div align='center'>$STATUS</div>";
 			$row[] = "<div align='center'>$field->PRJ_ID</div>";
-			$row[] = date('d-m-Y / H:i:s', strtotime($field->PRJ_DATE));
+			$row[] = "<div align='center'>".date('d-m-Y / H:i:s', strtotime($field->PRJ_DATE))."</div>";
 			$row[] = stripslashes($field->CUST_NAME);
 			$row[] = stripslashes($field->PRDUP_NAME);
 			$row[] = stripslashes($PRDU_NAME);
@@ -127,7 +128,7 @@ class Prospect_followup extends CI_Controller {
 			$this->template->load('template', 'order-custom/followup/prospect_followup_detail', $data);
 		} else {
 			echo "<script>alert('Data tidak ditemukan.')</script>";
-			echo "<script>window.location='".site_url('prospectfollowup')."'</script>";
+			echo "<script>window.location='".site_url('prospect_followup')."'</script>";
 		}
 	}
 
@@ -170,9 +171,11 @@ class Prospect_followup extends CI_Controller {
 	}
 
 	public function list_producer_product() {
+		$PRJD_ID 	= $this->input->post('PRJD_ID', TRUE);
 		$PRJPR_ID 	= $this->input->post('PRJPR_ID', TRUE);
 		$PRDUP_ID 	= $this->input->post('PRDUP_ID', TRUE);
 		$detail 	= $this->project_producer_m->get($PRJPR_ID, null)->row();
+		$check 		= $this->project_producer_m->get(null, $PRJD_ID)->row();
 		$producer 	= $this->producer_x_product_m->get_by_product($PRDUP_ID)->result();
 		$lists 		= "";
 		foreach($producer as $field) {
@@ -180,10 +183,45 @@ class Prospect_followup extends CI_Controller {
 				if($detail->PRDU_ID == $field->PRDU_ID) {
 		    		$lists .= "<option value='".$field->PRDU_ID."' selected>".$field->PRDU_NAME."</option>";
 				} else {
+			    	$lists .= "<option value='".$field->PRDU_ID."'>".$field->PRDU_NAME."</option>";
+				}
+			} else {
+		    	$lists .= "<option value='".$field->PRDU_ID."'>".$field->PRDU_NAME."</option>";
+			}
+		}
+	    $callback = array('list_producer'=>$lists);
+	    echo json_encode($callback);
+	}
+
+	public function list_producer_product_new() {
+		$PRJD_ID 	= $this->input->post('PRJD_ID', TRUE);
+		$PRJPR_ID 	= $this->input->post('PRJPR_ID', TRUE);
+		$PRDUP_ID 	= $this->input->post('PRDUP_ID', TRUE);
+		$detail 	= $this->project_producer_m->get($PRJPR_ID, null)->row();
+		$producer 	= $this->producer_x_product_m->get_by_product($PRDUP_ID)->result();
+		$lists 		= "";
+		foreach($producer as $field) {
+			$check = $this->project_producer_m->get(null, $PRJD_ID, $field->PRDU_ID)->row();
+			if ($PRJPR_ID != null) {
+		    	if( ($check->PRDU_ID == $field->PRDU_ID) ) {
+					if($detail->PRDU_ID == $field->PRDU_ID) {
+			    		$lists .= "<option value='".$field->PRDU_ID."' selected>".$field->PRDU_NAME."</option>";
+					} else {
+				    		$lists .= "<option value='".$field->PRDU_ID."' disabled>".$field->PRDU_NAME."</option>";
+					}
+				} else {
 		    		$lists .= "<option value='".$field->PRDU_ID."'>".$field->PRDU_NAME."</option>";
 				}
 			} else {
-	    		$lists .= "<option value='".$field->PRDU_ID."'>".$field->PRDU_NAME."</option>";
+	    		if( !empty($check) ) {
+	    			if ($check->PRDU_ID == $field->PRDU_ID) {
+		    			$lists .= "<option value='".$field->PRDU_ID."' disabled>".$field->PRDU_NAME."</option>";
+	    			} else {
+		    			$lists .= "<option value='".$field->PRDU_ID."'>".$field->PRDU_NAME."</option>";
+	    			}
+				} else {
+		    		$lists .= "<option value='".$field->PRDU_ID."'>".$field->PRDU_NAME."</option>";
+				}
 			}
 		}
 	    $callback = array('list_producer'=>$lists);

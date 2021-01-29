@@ -28,7 +28,7 @@
 										<div class="form-group">
 											<input class="form-control" type="hidden" name="CLOG_ID" value="<?php echo $row->CLOG_ID ?>">
 											<input class="form-control" type="hidden" name="FLWP_ID" value="<?php echo $row->FLWP_ID ?>">
-										    <label>Customer</label>
+										    <label>Customer <small>*</small></label>
 										    <select class="form-control selectpicker" name="CUST_ID" id="CUST_ID" data-live-search="true" required>
 										    	<?php foreach($customer as $cust): ?>
 											    	<option <?php echo $row->CUST_ID == $cust->CUST_ID ? "selected" : ""; ?> value="<?php echo $cust->CUST_ID?>"><?php echo stripslashes($cust->CUST_NAME) ?></option>
@@ -55,7 +55,7 @@
 									</div>
 									<div class="col-md-3">
 										<div class="form-group">
-											<label>Activity</label>
+											<label>Activity <small>*</small></label>
 											<select class="form-control selectpicker" name="CACT_ID" title="-- Select One --" required>
 												<?php foreach($activity as $act): ?>
 										    		<option value="<?php echo $act->CACT_ID?>" <?php if($clog->CACT_ID == $act->CACT_ID){echo "selected";} ?>><?php echo stripslashes($act->CACT_NAME) ?></option>
@@ -63,7 +63,7 @@
 										    </select>
 										</div>
 										<div class="form-group">
-											<label>Customer Service</label>
+											<label>Customer Service <small>*</small></label>
 											<select class="form-control selectpicker" name="USER_ID" title="-- Select One --" required>
 												<?php foreach($user as $field): ?>
 										    		<option value="<?php echo $field->USER_ID?>" <?php if($clog->USER_ID == $field->USER_ID) {echo "selected";} ?>>
@@ -73,7 +73,7 @@
 										    </select>
 										</div>
 										<div class="form-group">
-											<label>Channel</label>
+											<label>Channel <small>*</small></label>
 											<select class="form-control selectpicker" name="CHA_ID" id="cha-result" title="-- Select One --" required>
 												<?php foreach($channel as $cha): ?>
 										    		<option value="<?php echo $cha->CHA_ID?>" <?php if($clog->CHA_ID == $cha->CHA_ID) {echo "selected";} ?>>
@@ -82,16 +82,16 @@
 											    <?php endforeach ?>
 										    </select>
 										</div>
-										<div class="form-group">
-											<label>Note</label>
-											<textarea class="form-control" cols="100%" rows="5" name="FLWP_NOTES"><?php echo $row->FLWP_NOTES ?></textarea>
-										</div>
 									</div>
 									<div class="col-md-3">
 										<div class="form-group">
 											<label>Status</label>
 										    <input class="form-control" type="hidden" name="FLWS_ID" value="0">
 										    <input class="form-control" type="text" name="" value="Open" readonly>
+										</div>
+										<div class="form-group">
+											<label>Note</label>
+											<textarea class="form-control" cols="100%" rows="5" name="FLWP_NOTES"><?php echo $row->FLWP_NOTES ?></textarea>
 										</div>
 										<br>
 										<div align="center">

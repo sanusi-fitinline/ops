@@ -16,7 +16,7 @@
 		    <div class="card mb-3">
 		    	<div class="card-header">
 		        	<i class="fas fa-table"></i>
-		        	Project Details
+		        	Project Detail
 		        </div>
 		      	<div class="card-body">
 		      		<div class="row">

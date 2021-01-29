@@ -179,7 +179,7 @@
 													<?php if($row->ORDER_GRAND_TOTAL == 0): ?>
 														<td align="right" style="color: green; font-weight: bold;"><?php echo number_format($row->ORDER_DEPOSIT,0,',','.') ?></td>
 													<?php else: ?>
-														<td align="right" style="color: green; font-weight: bold;"><?php echo number_format($row->ORDER_GRAND_TOTAL,0,',','.') ?></td>
+														<td align="right" style="color: green; font-weight: bold;"><?php echo number_format($row->ORDER_GRAND_TOTAL + $row->ORDER_DEPOSIT,0,',','.') ?></td>
 													<?php endif ?>
 												</tr>
 											<?php endif ?>

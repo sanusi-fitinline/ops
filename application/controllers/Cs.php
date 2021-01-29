@@ -359,7 +359,8 @@ class Cs extends CI_Controller {
 								<div class='input-group-prepend'>
 						          	<span class='input-group-text'>Rp.</span>
 						        </div>
-								<input class='form-control' type='text' name='' id='CETAK_TOTAL' value='".number_format($tarif,0,',','.')."' readonly>";
+								<input class='form-control' type='text' name='' id='CETAK_TOTAL' value='".number_format($tarif,0,',','.')."' readonly>
+							</div>";
 					}
 				}
 				$callback = array('list_courier'=>$lists, 'list_deposit'=>$deposit, 'list_total'=>$total);
@@ -453,7 +454,8 @@ class Cs extends CI_Controller {
 				<div class='input-group-prepend'>
 		          	<span class='input-group-text'>Rp.</span>
 		        </div>
-				<input class='form-control' type='text' name='' id='CETAK_TOTAL' value='".number_format($tarif,0,',','.')."' readonly>";
+				<input class='form-control' type='text' name='' id='CETAK_TOTAL' value='".number_format($tarif,0,',','.')."' readonly>
+			</div>";
 
 		$callback = array('list_tarif'=>$lists, 'list_deposit'=>$deposit, 'list_total'=>$total); 
 	    echo json_encode($callback);

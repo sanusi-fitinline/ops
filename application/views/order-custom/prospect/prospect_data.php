@@ -16,7 +16,7 @@
       	<div class="card-body">
 			<div class="row">
 	      		<div class="col-md-6">
-					<a <?php if((!$this->access_m->isAdd('Order Custom', 1)->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> href="<?php echo site_url('prospect/add') ?>" class="btn btn-success btn-sm">
+					<a <?php if((!$this->access_m->isAdd('Prospect', 1)->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> href="<?php echo site_url('prospect/add') ?>" class="btn btn-success btn-sm">
 						<i class="fas fa-plus-circle"></i> Add</a>
 				</div>
 				<div class="col-md-3">			
@@ -42,12 +42,12 @@
             		<thead style="font-size: 14px">
 	                	<tr>
 							<th style="vertical-align: middle; text-align: center; width: 100px;">STATUS</th>
-	                    	<th style="vertical-align: middle; text-align: center; width: 50px;">PROJECT ID</th>
+	                    	<th style="vertical-align: middle; text-align: center; width: 80px;">PROJECT ID</th>
 	                    	<th style="vertical-align: middle; text-align: center; width: 80px;">DATE</th>
 	                    	<th style="vertical-align: middle; text-align: center; width: 180px;">CUSTOMER</th>
 							<th style="vertical-align: middle; text-align: center;">NOTES</th>
 							<th style="vertical-align: middle; text-align: center; width: 100px;">CS</th>
-							<th style="vertical-align: middle; text-align: center; width: 110px;">ACTION</th>
+							<th style="vertical-align: middle; text-align: center; width: 70px;">ACTION</th>
 	                  	</tr>
 	                </thead>
 	                <tbody style="font-size: 14px;">

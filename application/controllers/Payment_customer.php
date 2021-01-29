@@ -28,7 +28,7 @@ class Payment_customer extends CI_Controller {
 			echo "<script>alert('Anda tidak punya akses ke $modul.')</script>";
 			echo "<script>window.location='".site_url('dashboard')."'</script>";
 		} else {
-			$this->template->load('template', 'order-custom/payment-from-customer/payment_customer_data');
+			$this->template->load('template', 'finance/payment-customer/payment_customer_data');
 		}
 	}
 
@@ -39,7 +39,6 @@ class Payment_customer extends CI_Controller {
 		$data 			= array();
 		$no 			= $_POST['start'];
 		foreach ($list as $field) {
-
 			if ($field->PRJP_PAYMENT_DATE != "0000-00-00") {
 				$STATUS = "<div class='btn btn-default btn-sm' style='font-size: 11px; color: #fff; background-color:#20c997; border-color:#20c997; border-radius: 6px; padding: 2px 5px 5px 3px; width:90px;'><i class='fa fa-check-circle'></i><span><b> Paid</b></span></div>";
 			} else {
@@ -49,6 +48,8 @@ class Payment_customer extends CI_Controller {
 			$INVOICE_DATE = !empty($field->PRJP_DATE) ? date('d-m-Y / H:i:s', strtotime($field->PRJP_DATE)) : "-";
 			$PAYMENT_DATE = $field->PRJP_PAYMENT_DATE != "0000-00-00" ? date('d-m-Y', strtotime($field->PRJP_PAYMENT_DATE)) : "-";
 
+			$termin = $this->project_payment_m->get_termin($field->PRJ_ID)->row();
+
 			$row   = array();
 			$row[] = "<div align='center'>$STATUS</div>";
 			$row[] = "<div align='center'>$field->PRJ_ID</div>";
@@ -56,6 +57,7 @@ class Payment_customer extends CI_Controller {
 			$row[] = "<div align='center'>$INVOICE_DATE</div>";
 			$row[] = "<div align='right'>".number_format($field->PRJP_AMOUNT,0,',','.')."</div>";
 			$row[] = "<div align='center'>$PAYMENT_DATE</div>";
+			$row[] = "<div align='center'>".$field->PRJP_NO."/".$termin->TERMIN."</div>";
 			$row[] = '<div style="vertical-align: middle; text-align: center;">
 					<a href="'.$url.'payment_customer/detail/'.$field->PRJP_ID.'" class="btn btn-sm btn-primary" title="Detail"><i class="fa fa-search-plus"></i></a>
 				</div>';
@@ -77,7 +79,7 @@ class Payment_customer extends CI_Controller {
 		if ($query->num_rows() > 0) {
 			$data['row']  = $query->row();
 			$data['bank'] = $this->bank_m->getBank()->result();
-			$this->template->load('template', 'order-custom/payment-from-customer/payment_customer_detail', $data);
+			$this->template->load('template', 'finance/payment-customer/payment_customer_detail', $data);
 		} else {
 			echo "<script>alert('Data tidak ditemukan.')</script>";
 			echo "<script>window.location='".site_url('payment_customer')."'</script>";

@@ -158,7 +158,14 @@
 					          		</table>
 					        	</div>
 					        	<div class="form-group" align="right">
-							        <button class="btn btn-primary btn-sm" type="submit" name="UPDATE_PRODUCER"><i class="fa fa-save"></i> UPDATE</button>
+					        		<?php
+					        		if( (!$this->access_m->isEdit('Assign Producer', 1)->row()) && ($this->session->GRP_SESSION != 3) ) {
+				            			$update = 'class="btn btn-sm btn-secondary" style="opacity : 0.5; pointer-events: none; color : #ffffff;"';
+				            		} else {
+				            			$update = 'class="btn btn-sm btn-primary"';
+				            		}
+					        		?>
+							        <button <?php echo $update ?> type="submit" name="UPDATE_PRODUCER"><i class="fa fa-save"></i> UPDATE</button>
 						        </div>
 								<hr>
 				        	</div>
@@ -171,10 +178,11 @@
 				            		<thead style="font-size: 14px;">
 					                	<tr>
 											<th rowspan="2" style="vertical-align: middle; text-align: center; width: 50px">#</th>
-											<th rowspan="2" style="vertical-align: middle; text-align: center; width: 250px">PRODUCER</th>
-											<th rowspan="2" style="vertical-align: middle; text-align: center; width: 300px">NOTES</th>
+											<th rowspan="2" style="vertical-align: middle; text-align: center; width: 150px">PRODUCER</th>
+											<th hidden rowspan="2" style="vertical-align: middle; text-align: center; width: 300px">NOTES</th>
 											<th rowspan="2" style="vertical-align: middle; text-align: center; width: 225px">PICTURE</th>
 											<th rowspan="2" style="vertical-align: middle; text-align: center; width: 50px">DURATION</th>
+											<th rowspan="2" style="vertical-align: middle; text-align: center; width: 250px">PAYMENT METHOD</th>
 											<th rowspan="2" style="vertical-align: middle; text-align: center; width: 100px">PRICE</th>
 											<th colspan="3" style="vertical-align: middle; text-align: center; width: 100px">DETAIL</th>
 										</tr>
@@ -192,13 +200,22 @@
 						                		<tr>
 						                			<td rowspan="<?php echo $span?>" align="center"><?php echo $n++ ?></td>
 						                			<td rowspan="<?php echo $span?>"><?php echo $field->PRDU_NAME ?></td>
-						                			<td rowspan="<?php echo $span?>"><?php echo $field->PRJPR_NOTES ?></td>
+						                			<td hidden rowspan="<?php echo $span?>"><?php echo $field->PRJPR_NOTES ?></td>
 						                			<td rowspan="<?php echo $span?>" align="center">
 							                			<?php if($field->PRJPR_IMG != null): ?>
 							                				<img style="height: 100px;" class="img-fluid" src="<?php echo base_url('assets/images/project/offer/'.$field->PRJPR_IMG) ?>">
 							                			<?php endif ?>
 							                		</td>
 						                			<td rowspan="<?php echo $span?>" align="center"><?php echo $field->PRJPR_DURATION ?> days</td>
+						                			<td rowspan="<?php echo $span?>" <?php echo $field->PRJPR_PAYMENT_METHOD == 1 ? "align='left'" : "align='center'" ?>>
+						                				<?php echo $field->PRJPR_PAYMENT_METHOD == 1 ? "Installment :" : "Full" ?>
+						                				<?php $pay_rules = $this->payment_producer_m->get(null, $detail->PRJD_ID, $field->PRDU_ID)->result(); ?>
+						                				<?php if ($field->PRJPR_PAYMENT_METHOD == 1):?>
+														<?php foreach($pay_rules as $rules): ?>
+							                				<?php echo "<br><br>".$rules->PRJP2P_NO.". ".$rules->PRJP2P_NOTES." sejumlah ".$rules->PRJP2P_PCNT."% dari total harga" ?>
+							                			<?php endforeach ?>
+							                			<?php endif ?>
+						                			</td>
 						                			<td rowspan="<?php echo $span?>" align="right"><?php echo number_format($field->PRJPR_PRICE,0,',','.') ?></td>
 						                			<td <?php echo $quantity != null ? "hidden" : "" ?> align="center">-</td>
 						                			<td <?php echo $quantity != null ? "hidden" : "" ?> align="center">-</td>

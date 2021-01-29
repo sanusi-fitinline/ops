@@ -9,76 +9,7 @@ class Project_detail_m extends CI_Model {
         parent::__construct();
         $this->load->database();
     }
-
-    private function _get_datatables_query_old($STATUS_FILTER = null) {
-        $this->load->model('access_m');
-        $modul = "Project";
-        $view = 1;
-        $viewall =  $this->access_m->isViewAll($modul, $view)->row();
-        $this->db->select('tb_project_detail.*, tb_project.PRJT_ID, tb_project.PRJ_DATE, tb_project.PRJ_STATUS, tb_project.PRJ_NOTES, MAX(tb_project_progress.PRJA_ID) AS PRJA_ID, tb_project_activity.PRJA_NAME, tb_customer.CUST_NAME, tb_producer_product.PRDUP_NAME, tb_user.USER_NAME');
-        $this->db->from($this->table);
-        $this->db->join('tb_project', 'tb_project.PRJ_ID=tb_project_detail.PRJ_ID', 'left');
-        $this->db->join('tb_producer_product', 'tb_producer_product.PRDUP_ID=tb_project_detail.PRDUP_ID', 'left');
-        $this->db->join('tb_project_progress', 'tb_project_progress.PRJD_ID=tb_project_detail.PRJD_ID', 'left');
-        $this->db->join('tb_project_activity', 'tb_project_activity.PRJA_ID=(SELECT MAX(PRJA_ID) FROM tb_project_progress AS progress WHERE progress.PRJD_ID = tb_project_detail.PRJD_ID)', 'left');
-        $this->db->join('tb_customer', 'tb_customer.CUST_ID=tb_project.CUST_ID', 'left');
-        $this->db->join('tb_user', 'tb_user.USER_ID=tb_project.USER_ID', 'left');
-        if ($this->session->GRP_SESSION !=3) {
-            if (!($viewall)) { // filter sesuai hak akses
-                $this->db->where('tb_project.USER_ID', $this->session->USER_SESSION);
-            }
-        }
-
-        $this->db->where('tb_project.PRJ_STATUS', 4);
-
-        if ($STATUS_FILTER != null) { // filter by status progress
-            $this->db->group_start();
-            if ($STATUS_FILTER == 1) { // filter progress cutting
-                $this->db->where('tb_project_progress.PRJA_ID', 1);
-            } elseif ($STATUS_FILTER == 2) { // filter progress making
-                $this->db->where('tb_project_progress.PRJA_ID', 2);
-            } elseif ($STATUS_FILTER == 3) { // filter progress trimming
-                $this->db->where('tb_project_progress.PRJA_ID', 3);
-            } elseif ($STATUS_FILTER == 4) { // filter progress finishing
-                $this->db->where('tb_project_progress.PRJA_ID', 4);
-            } elseif ($STATUS_FILTER == 5) { // filter progress sent
-                $this->db->where('tb_project_progress.PRJA_ID', 5);
-                $this->db->or_where('tb_project_progress.PRJA_ID', 8);
-                $this->db->or_where('tb_project_progress.PRJA_ID', 11);
-            } elseif ($STATUS_FILTER == 6) { // filter progress in progress
-                $this->db->where('tb_project_progress.PRJA_ID', 6);
-                $this->db->or_where('tb_project_progress.PRJA_ID', 9);
-            } elseif ($STATUS_FILTER == 7) { // filter progress complete
-                $this->db->where('tb_project_progress.PRJA_ID', 7);
-                $this->db->or_where('tb_project_progress.PRJA_ID', 10);
-            } else { // filter status cancel
-                $this->db->where('tb_project_progress.PRJA_ID', null);
-            }
-            $this->db->group_end();
-        }
-
-        $i = 0;
     
-        foreach ($this->column_search as $item) {// loop column
-            if($_POST['search']['value']) {// if datatable send POST for search
-                if($i===0) {// first loop
-                    $this->db->group_start(); // open bracket. query Where with OR clause better with bracket. because maybe can combine with other WHERE with AND.
-                    $this->db->like($item, $_POST['search']['value']);
-                } else {
-                    $this->db->or_like($item, $_POST['search']['value']);
-                }
-
-                if(count($this->column_search) - 1 == $i) //last loop
-                    $this->db->group_end(); //close bracket
-            }
-            $i++;
-        }
-
-        $this->db->order_by('tb_project.PRJ_DATE', 'DESC');
-        $this->db->order_by('tb_project_detail.PRJD_ID', 'DESC');
-        $this->db->group_by('tb_project_detail.PRJD_ID');
-    }
-
     private function _get_datatables_query($STATUS_FILTER = null) {
         $this->load->model('access_m');
         $modul = "Project";
@@ -98,7 +29,8 @@ class Project_detail_m extends CI_Model {
             }
         }
 
-        $this->db->where('tb_project.PRJ_STATUS', 4);
+        $this->db->where('tb_project.PRJ_STATUS >=', 4);
+        $this->db->where('tb_project.PRJ_STATUS !=', 9);
 
         if ($STATUS_FILTER != null) { // filter by status progress
             $this->db->group_start();

@@ -24,7 +24,7 @@
 				<div class="col-md-3">			
 					<div class="form-group">
 						<select class="form-control form-control-sm selectpicker" title="-- Select Status --" name="status" id="STATUS">
-				    		<option class="form-control-sm" value="">-</option>
+				    		<option class="form-control-sm" value="0">-</option>
 				    		<option class="form-control-sm" value="1">Cutting</option>
 				    		<option class="form-control-sm" value="2">Making</option>
 				    		<option class="form-control-sm" value="3">Trimming</option>

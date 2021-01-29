@@ -117,7 +117,7 @@
 								<h4>Detail</h4>
 								<?php $nomor = 1; ?>
 								<?php foreach($get_by_vendor as $key => $data): ?>
-									<p ><?php echo $nomor++.". Dikirim Dari: ".$data['CITY_NAME'] ?></p>
+									<p><?php echo $nomor++.". Dikirim Dari: ".$data['CITY_NAME'] ?></p>
 									<?php if(((@$get_by_vendor[$key+1]['COURIER_ID'] == $data['COURIER_ID']) && (@$get_by_vendor[$key+1]['ORDV_SERVICE_TYPE'] == $data['ORDV_SERVICE_TYPE'])) || ((@$get_by_vendor[$key-1]['COURIER_ID'] == $data['COURIER_ID']) && (@$get_by_vendor[$key-1]['ORDV_SERVICE_TYPE'] == $data['ORDV_SERVICE_TYPE']))): ?>
 										<form action="<?php echo site_url('order_support/change_vendor/'.$row->ORDER_ID)?>" method="POST" enctype="multipart/form-data">
 											<div class="row">
@@ -304,16 +304,16 @@
 														<div class="form-group">
 															<label>Weight</label>
 															<div class="input-group">
-																<input class="form-control" type="text" value="<?php echo str_replace(".", ",", $data['ORDV_WEIGHT'])?>" autocomplete="off" readonly required>
+																<input class="form-control" type="text" value="<?php echo str_replace(".", ",", $data['ORDV_WEIGHT'])?>" autocomplete="off" readonly>
 																<div class="input-group-prepend">
 														          	<span class="input-group-text">Kg</span>
 														        </div>
 														    </div>
 														</div>
 														<div class="form-group">
-															<label>Actual Weight</label>
+															<label>Actual Weight <small>*</small></label>
 															<div class="input-group">
-																<input class="form-control" type="number" step="0.01" name="ORDV_WEIGHT_VENDOR" value="<?php echo $data['ORDV_WEIGHT_VENDOR'] ?>" autocomplete="off">
+																<input class="form-control" type="number" step="0.01" name="ORDV_WEIGHT_VENDOR" value="<?php echo $data['ORDV_WEIGHT_VENDOR'] ?>" autocomplete="off" required>
 																<div class="input-group-prepend">
 														          	<span class="input-group-text">Kg</span>
 														        </div>
@@ -322,7 +322,7 @@
 													</div>
 													<div class="col-md-6">
 														<div class="form-group">
-															<label>Delivery Date</label>
+															<label>Delivery Date <small>*</small></label>
 															<div class="input-group">
 																<div class="input-group-prepend">
 														          	<span class="input-group-text"><i class="fa fa-calendar"></i></span>
@@ -331,11 +331,11 @@
 														    </div>
 														</div>
 														<div class="form-group">
-															<label>Receipt No</label>
+															<label>Receipt No <small>*</small></label>
 															<input class="form-control" type="text" name="ORDV_RECEIPT_NO" autocomplete="off" value="<?php echo $data['ORDV_RECEIPT_NO'] ?>" required>
 														</div>
 														<div class="form-group">
-															<label>Actual Shipcost</label>
+															<label>Actual Shipcost <small>*</small></label>
 															<input class="form-control uang" type="text" name="ORDV_SHIPCOST_VENDOR" autocomplete="off" value="<?php echo $data['ORDV_SHIPCOST_VENDOR'] ?>" required>
 														</div>
 													</div>

@@ -16,6 +16,7 @@ class Assign_producer extends CI_Controller {
 		$this->load->model('project_progress_m');
 		$this->load->model('project_review_m');
 		$this->load->model('project_criteria_m');
+		$this->load->model('payment_producer_m');
 		$this->load->library('pdf');
 		$this->load->library('rajaongkir');
 		$this->load->library('form_validation');
@@ -52,7 +53,7 @@ class Assign_producer extends CI_Controller {
 			$row   = array();
 			$row[] = "<div align='center'>$STATUS</div>";
 			$row[] = "<div align='center'>$field->PRJ_ID</div>";
-			$row[] = date('d-m-Y / H:i:s', strtotime($field->PRJ_DATE));
+			$row[] = "<div align='center'>".date('d-m-Y / H:i:s', strtotime($field->PRJ_DATE))."</div>";
 			$row[] = stripslashes($field->CUST_NAME);
 			$row[] = stripslashes($field->PRDUP_NAME);
 			$row[] = stripslashes($PRDU_NAME);

@@ -59,15 +59,6 @@
 											<input class="form-control" type="text" name="PRO_NAME" value="<?php echo $row->PRO_NAME ?>" readonly>
 										</div>
 										<div class="form-group">
-											<label>Price</label>
-											<div class="input-group">
-												<div class="input-group-prepend">
-										          	<span class="input-group-text">Rp.</span>
-										        </div>
-												<input class="form-control" type="text" name="PRO_PRICE" value="<?php echo number_format($row->PRO_PRICE_VENDOR,0,',','.') ?>" autocomplete="off" required readonly>
-										    </div>											
-										</div>
-										<div class="form-group">
 											<label>Color</label>
 											<input class="form-control" type="text" name="LSTOCK_COLOR" value="<?php echo $row->LSTOCK_COLOR ?>" autocomplete="off" required readonly>
 										</div>
@@ -77,6 +68,15 @@
 										</div>
 									</div>
 									<div class="col-md-3">
+										<div class="form-group">
+											<label>Price</label>
+											<div class="input-group">
+												<div class="input-group-prepend">
+										          	<span class="input-group-text">Rp.</span>
+										        </div>
+												<input class="form-control" type="text" name="PRO_PRICE" value="<?php echo number_format($row->PRO_PRICE_VENDOR,0,',','.') ?>" autocomplete="off" required readonly>
+										    </div>											
+										</div>
 										<div class="form-group">
 											<label>Amount</label>
 											<input class="form-control" type="number" name="LSTOCK_AMOUNT" value="<?php echo $row->LSTOCK_AMOUNT?>" required readonly>
@@ -100,7 +100,7 @@
 											<input class="form-control" type="text" name="VEND_PHONE" value="<?php echo $row->VEND_PHONE ?>" readonly>
 										</div>									
 										<div class="form-group">
-											<label>Stock Status</label>
+											<label>Stock Status <small>*</small></label>
 											<select class="form-control selectpicker" name="LSTOCK_STATUS" title="-- Select One --" required>
 									    		<option value="0" <?php if($row->LSTOCK_STATUS!=null){echo "selected";} ?> >Not Available</option>
 									    		<option value="1" <?php if($row->LSTOCK_STATUS==1){echo "selected";} ?>>Available</option>

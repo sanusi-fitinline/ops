@@ -46,7 +46,7 @@
 									</div>
 					        	</div>
 							</div>
-			        		<a href="#" data-toggle="modal" id="tambah-quantity" data-target="#add-quantity" class="btn btn-success btn-sm"><i class="fas fa-plus-circle"></i> Quantity</a>
+			        		<a href="#" data-toggle="modal" id="tambah-quantity" data-target="#add-quantity" class="btn btn-success btn-sm"><i class="fas fa-plus-circle" <?php if((!$this->access_m->isEdit('Prospect', 1)->row()) && ($this->session->GRP_SESSION !=3)) {echo "hidden";} ?>></i> Quantity</a>
 			        		<p></p>
 							<div class="table-responsive">
 				          		<table class="table table-bordered" width="100%" cellspacing="0">

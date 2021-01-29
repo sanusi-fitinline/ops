@@ -36,11 +36,11 @@
 	                	<tr>
 							<th style="vertical-align: middle; text-align: center; width: 80px;">STATUS</th>
 	                    	<th style="vertical-align: middle; text-align: center; width: 80px;">PROJECT ID</th>
-	                    	<th style="vertical-align: middle; text-align: center; width: 100px;">DATE</th>
+	                    	<th style="vertical-align: middle; text-align: center; width: 80px;">DATE</th>
 	                    	<th style="vertical-align: middle; text-align: center; width: 150px;">CUSTOMER</th>
 	                    	<th style="vertical-align: middle; text-align: center; width: 200px;">PRODUCT</th>
 							<th style="vertical-align: middle; text-align: center;">PRODUCER</th>
-							<th style="vertical-align: middle; text-align: center; width: 70px;">ACTION</th>
+							<th style="vertical-align: middle; text-align: center; width: 50px;">ACTION</th>
 	                  	</tr>
 	                </thead>
 	                <tbody style="font-size: 14px;">

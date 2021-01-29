@@ -24,7 +24,7 @@
 						<div class="row">
 							<div class="col-md-3">
 								<div class="form-group">
-								    <label>Customer</label>
+								    <label>Customer <small>*</small></label>
 								    <select class="form-control selectpicker" name="CUST_ID" id="CUST_ID" title="-- Select One --" data-live-search="true" required>
 								    	<?php foreach($customer as $cust): ?>
 									    	<option value="<?php echo $cust->CUST_ID?>">
@@ -54,7 +54,7 @@
 									<input class="form-control" type="text" name="CACT_NAME" value="Assign to CS" readonly>
 								</div>
 								<div class="form-group">
-									<label>Customer Service</label>
+									<label>Customer Service <small>*</small></label>
 									<select class="form-control selectpicker" name="USER_ID" title="-- Select One --" required>
 										<?php foreach($user as $field): ?>
 								    		<option value="<?php echo $field->USER_ID?>">
@@ -64,7 +64,7 @@
 								    </select>
 								</div>
 								<div class="form-group">
-									<label>Channel</label>
+									<label>Channel <small>*</small></label>
 									<select class="form-control selectpicker" name="CHA_ID" id="cha-result" title="-- Select One --" required>
 										<option value="" selected disabled>-- Select One --</option>
 										<?php foreach($channel as $cha): ?>
@@ -77,16 +77,16 @@
 							</div>
 							<div class="col-md-3">
 								<div class="form-group">
-									<label>Note</label>
-									<textarea class="form-control" cols="100%" rows="4" name="FLWP_NOTES"></textarea>
-								</div>
-								<div class="form-group" style="margin-top: 30px;">
 									<label>Status</label>
 								    <input class="form-control" type="hidden" name="FLWS_ID" value="0">
 								    <input class="form-control" type="text" name="" value="Open" readonly>
 								</div>
+								<div class="form-group">
+									<label>Note</label>
+									<textarea class="form-control" cols="100%" rows="5" name="FLWP_NOTES"></textarea>
+								</div>
 								<br>
-								<div style="margin-top: 10px;" align="center">
+								<div align="center">
 									<button type="submit" class="btn btn-primary" name="simpan"><i class="fa fa-save"></i> Save</button>
 									<a href="<?php echo site_url('followup') ?>" class="btn btn-danger" name="batal"><i class="fa fa-times"></i> Cancel</a>
 								</div>

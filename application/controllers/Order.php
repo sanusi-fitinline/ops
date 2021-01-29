@@ -139,73 +139,59 @@ class Order extends CI_Controller {
 		$GROSIR_VENDOR 			= $PRO_VOL_PRICE_VENDOR * $PRO_TOTAL_COUNT;
 
 		if($JENIS == 1) {
-			$lists = "
-				<div class='form-group'>
-					<input class='form-control' type='hidden' name='VEND_ID' value='$VEND_ID'>
-				</div>
-				<div class='form-group'>
-					<label>Price</label>
-					<div class='input-group'>
-						<div class='input-group-prepend'>
-				          	<span class='input-group-text'>$product->CURR_NAME</span>
-				        </div>
-						<input class='form-control' type='text' value='$PRO_PRICE' readonly>
-						<input class='form-control' type='hidden' id='HARGA' name='ORDD_PRICE' value='$PRICE'>
-						<input class='form-control' type='hidden' id='HARGA_VENDOR' name='ORDD_PRICE_VENDOR' value='$PRO_PRICE_VENDOR'>
-						<input class='form-control' type='hidden' name='UMEA_ID' value='$product->PRO_UNIT'>
-						<input class='form-control' type='hidden' name='QTY' value='1'>
-				    </div>
-				</div>
-				<div class='form-group'>
-					<label>Weight</label>
-					<div class='input-group'>
-						<input class='form-control' type='text' id='PRO_WEIGHT' value='".str_replace(".", ",", $product->PRO_WEIGHT)."' readonly>
-						<div class='input-group-prepend'>
-				          	<span class='input-group-text'>Kg</i></span>
-				        </div>
-					</div>
-				</div>";
-			
-			$umea = $product->UMEA_NAME_A;
-			$option ="";
-			foreach ($product_option as $key) {
-				$option .= "<option value='$key->POPT_NAME'>";
-			}
+			$READONLY 		   = $PRO_PRICE;
+			$HARGA 			   = $PRICE;
+			$HARGA_VENDOR 	   = $PRO_PRICE_VENDOR;
+			$ORDD_PRICE 	   = $PRICE;
+			$ORDD_PRICE_VENDOR = $PRO_PRICE_VENDOR;
+			$PRO_WEIGHT 	   = str_replace(".", ",", $product->PRO_WEIGHT);
+			$UMEA_ID 		   = $product->PRO_UNIT;
+			$QTY 			   = 1;
+			$MEASURE 		   = $product->UMEA_NAME_A;
 		} else {
-			$lists = "
-				<div class='form-group'>
-					<input class='form-control' type='hidden' name='VEND_ID' value='$VEND_ID'>
-				</div>
-				<div class='form-group'>
-					<label>Price</label>
-					<div class='input-group'>
-						<div class='input-group-prepend'>
-				          	<span class='input-group-text'>$product->CURR_NAME</span>
-				        </div>
-						<input class='form-control' type='text' value='$GROSIR_PRICE' readonly>
-						<input class='form-control' type='hidden' id='HARGA' value='$GROSIR'>
-						<input class='form-control' type='hidden' id='HARGA_VENDOR' value='$GROSIR_VENDOR'>
-						<input class='form-control' type='hidden' name='UMEA_ID' value='$product->PRO_VOL_UNIT'>
-						<input class='form-control' type='hidden' name='ORDD_PRICE' value='$PRO_VOL_PRICE'>
-						<input class='form-control' type='hidden' name='ORDD_PRICE_VENDOR' value='$PRO_VOL_PRICE_VENDOR'>
-						<input class='form-control' type='hidden' name='QTY' value='$product->PRO_TOTAL_COUNT'>
-				    </div>
-				</div>
-				<div class='form-group'>
-					<label>Weight</label>
-					<div class='input-group'>
-						<input class='form-control' type='text' id='PRO_WEIGHT' value='".str_replace(".", ",", $product->PRO_TOTAL_WEIGHT)."' readonly>
-						<div class='input-group-prepend'>
-				          	<span class='input-group-text'>Kg</i></span>
-				        </div>
-					</div>
-				</div>";
-			$umea = $product->UMEA_NAME_C;
-			$option ="";
-			foreach ($product_option as $key) {
-				$option .= "<option value='$key->POPT_NAME'>";
-			}
+			$READONLY 		   = $GROSIR_PRICE;
+			$HARGA 			   = $GROSIR;
+			$HARGA_VENDOR 	   = $GROSIR_VENDOR;
+			$ORDD_PRICE 	   = $PRO_VOL_PRICE;
+			$ORDD_PRICE_VENDOR = $PRO_VOL_PRICE_VENDOR;
+			$PRO_WEIGHT 	   = str_replace(".", ",", $product->PRO_TOTAL_WEIGHT);
+			$UMEA_ID 		   = $product->PRO_VOL_UNIT;
+			$QTY 			   = $product->PRO_TOTAL_COUNT;
+			$MEASURE 		   = $product->UMEA_NAME_C;
 		}
+
+		$lists = "
+			<div class='form-group'>
+				<label>Weight</label>
+				<div class='input-group'>
+					<input class='form-control' type='text' id='PRO_WEIGHT' value='$PRO_WEIGHT' readonly>
+					<div class='input-group-prepend'>
+			          	<span class='input-group-text'>Kg</i></span>
+			        </div>
+				</div>
+			</div>
+			<div class='form-group'>
+				<input class='form-control' type='hidden' name='VEND_ID' value='$VEND_ID'>
+				<label>Price</label>
+				<div class='input-group'>
+					<div class='input-group-prepend'>
+			          	<span class='input-group-text'>$product->CURR_NAME</span>
+			        </div>
+					<input class='form-control' type='text' value='$READONLY' readonly>
+					<input class='form-control' type='hidden' id='HARGA' value='$HARGA'>
+					<input class='form-control' type='hidden' id='HARGA_VENDOR' value='$HARGA_VENDOR'>
+					<input class='form-control' type='hidden' name='ORDD_PRICE' value='$ORDD_PRICE'>
+					<input class='form-control' type='hidden' name='ORDD_PRICE_VENDOR' value='$ORDD_PRICE_VENDOR'>
+					<input class='form-control' type='hidden' name='UMEA_ID' value='$UMEA_ID'>
+					<input class='form-control' type='hidden' name='QTY' value='$QTY'>
+			    </div>
+			</div>";
+		$umea = $MEASURE;
+		$option ="";
+		foreach ($product_option as $key) {
+			$option .= "<option value='$key->POPT_NAME'>";
+		}
+
 		$callback = array('list_data_product'=>$lists, 'list_umea'=>$umea, 'list_option'=>$option); 
 	    echo json_encode($callback);
 	}
@@ -434,7 +420,6 @@ class Order extends CI_Controller {
 		$DETAIL_PRICE 	 		= $detail->ORDD_PRICE * $detail->ORDD_QUANTITY;
 		$DETAIL_PRICE_VENDOR 	= $detail->ORDD_PRICE_VENDOR * $detail->ORDD_QUANTITY;
 		$SHIPCOST 				= $order_vendor->ORDV_SHIPCOST;
-		$ORDV_ID 	 			= $order_vendor->ORDV_ID;
 		$ORDV_TOTAL 	 		= $order_vendor->ORDV_TOTAL;
 		$ORDV_TOTAL_VENDOR 		= $order_vendor->ORDV_TOTAL_VENDOR;
 		// update data baru
@@ -445,7 +430,7 @@ class Order extends CI_Controller {
 		} else {
 			$NEW_GRAND_TOTAL 	= 0;
 		}
-		$this->order_m->delete_item($ORDER_ID, $ORDD_ID, $ORDV_ID, $VEND_ID, $NEW_ORDV_TOTAL, $NEW_ORDV_TOTAL_VENDOR, $NEW_GRAND_TOTAL);
+		$this->order_m->delete_item($ORDER_ID, $ORDD_ID, $VEND_ID, $NEW_ORDV_TOTAL, $NEW_ORDV_TOTAL_VENDOR, $NEW_GRAND_TOTAL);
 		if($this->db->affected_rows() > 0) {
 			echo "<script>window.location='".site_url('order/detail/'.$ORDER_ID)."'</script>";
 		}

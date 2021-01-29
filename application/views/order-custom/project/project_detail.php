@@ -166,15 +166,32 @@
 
 				       	<!-- progress -->
 				       	<div class="col-md-12">
-				       		<?php if($row->PRJ_STATUS >= 4) {
-		            			$add_progress = ' class="btn btn-success btn-sm"';
-		            			$delete = ' class="btn btn-success btn-sm"style="opacity : 0.5; pointer-events: none; color : #6c757d;" ';
-		            		} else {
-		            			$add_progress = ' class="btn btn-secondary btn-sm" style="opacity : 0.5; pointer-events: none;" ';
-		            			$delete = ' style="color: #dc3545;"';
-		            		} ?>
+				       		<?php
+				       		// check add access
+				       		if( ($this->access_m->isAdd('Project', 1)->row()) || ($this->session->GRP_SESSION == 3) ) {
+					       		if($row->PRJ_STATUS >= 4) {
+			            			$add = 'class="btn btn-success btn-sm"';
+			            		} else {
+			            			$add = 'class="btn btn-secondary btn-sm" style="opacity : 0.5; pointer-events: none;" ';
+			            		}
+				       		} else {
+				       			$add = ' class="btn btn-secondary btn-sm" style="opacity : 0.5; pointer-events: none;" ';
+		            		}
+							// check edit access
+		            		if( ($this->access_m->isEdit('Project', 1)->row()) || ($this->session->GRP_SESSION == 3) ) {
+			            		$edit = 'style="color: #007bff; float: right;"';
+				       		} else {
+				       			$edit = 'style="opacity : 0.5; pointer-events: none; color : #6c757d; float: right;"';
+		            		}
+							// check delete access
+		            		if( ($this->access_m->isDelete('Project', 1)->row()) || ($this->session->GRP_SESSION == 3) ) {
+			            		$delete = 'style="color : #dc3545; float: left;"';
+				       		} else {
+				       			$delete = 'style="opacity : 0.5; pointer-events: none; color : #6c757d; float: left;"';
+		            		}
+		            		?>
 				       		<h4>Progress</h4>
-				       		<a href="#" <?php echo $add_progress ?> id="tambah-progress" data-toggle="modal" data-target="#add-progress" ><i class="fas fa-plus-circle"></i> Add</a>
+				       		<a href="#" <?php echo $add ?> id="tambah-progress" data-toggle="modal" data-target="#add-progress" ><i class="fas fa-plus-circle"></i> Add</a>
 			            	<p></p>
 				       		<div class="table-responsive">
 				          		<table class="table table-bordered" id="myTableProjectProgress" width="100%" cellspacing="0">
@@ -197,9 +214,9 @@
 									                		<input type="hidden" name="PRJ_ID" value="<?php echo $row->PRJ_ID ?>">
 									                		<input type="hidden" name="PRJD_ID" value="<?php echo $row->PRJD_ID ?>">
 						                					<input type="hidden" name="PRJPG_ID" value="<?php echo $key->PRJPG_ID ?>">
-					                						<a id="DELETE-PROGRESS<?php echo $key->PRJPG_ID ?>" class="DELETE-PROGRESS mb-1" style="color: #dc3545; float: left; cursor: pointer;" title="Delete"><i class="fa fa-trash"></i></a>
+					                						<a id="DELETE-PROGRESS<?php echo $key->PRJPG_ID ?>" class="DELETE-PROGRESS mb-1" <?php echo $delete ?> title="Delete"><i class="fa fa-trash"></i></a>
 					                					</form>
-												        <a href="#" class="UBAH-PROGRESS mb-1" data-toggle="modal" data-target="#edit-progress<?php echo $key->PRJPG_ID ?>" style="color: #007bff; float: right;" title="Edit"><i class="fa fa-edit"></i></a>
+												        <a href="#" class="UBAH-PROGRESS mb-1" data-toggle="modal" data-target="#edit-progress<?php echo $key->PRJPG_ID ?>" <?php echo $edit ?> title="Edit"><i class="fa fa-edit"></i></a>
 													</td>
 						                			<td align="center"><?php echo $n++ ?></td>
 						                			<td align="center"><?php echo date('d-m-Y / H:i:s', strtotime($key->PRJPG_DATE)) ?></td>

@@ -81,6 +81,7 @@ class Producer_x_product_m extends CI_Model {
         $this->db->from('tb_producer_x_product');
         $this->db->join('tb_producer', 'tb_producer.PRDU_ID=tb_producer_x_product.PRDU_ID', 'inner');
         $this->db->where('tb_producer_x_product.PRDUP_ID', $PRDUP_ID);
+        $this->db->order_by('tb_producer.PRDU_NAME', 'ASC');
         $query = $this->db->get();
         return $query;
     }

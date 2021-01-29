@@ -101,7 +101,7 @@
 											<input class="form-control" type="text" name="KURIR" value="<?php echo $row->COURIER_NAME." ".$row->LSAM_SERVICE_TYPE ?>" readonly>
 										</div>
 										<div class="form-group">
-											<label>Actual Cost</label>
+											<label>Actual Cost <small>*</small></label>
 											<div class='input-group'>
 												<div class="input-group-prepend">
 										          	<span class="input-group-text">Rp</span>
@@ -110,7 +110,7 @@
 											</div>
 										</div>
 										<div class="form-group">
-											<label>Delivery Date</label>
+											<label>Delivery Date <small>*</small></label>
 											<div class="input-group">
 												<div class="input-group-prepend">
 										          	<span class="input-group-text"><i class="fa fa-calendar"></i></span>
@@ -119,7 +119,7 @@
 										    </div>
 										</div>
 										<div class="form-group">
-											<label>Receipt No</label>
+											<label>Receipt No <small>*</small></label>
 											<input class="form-control" type="text" name="LSAM_RCPNO" autocomplete="off" value="<?php echo $row->LSAM_RCPNO ?>" required>
 										</div>
 										<div align="center">

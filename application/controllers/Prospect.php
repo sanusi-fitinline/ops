@@ -37,11 +37,6 @@ class Prospect extends CI_Controller {
 		$data 			= array();
 		$no 			= $_POST['start'];
 		foreach ($list as $field) {
-
-			if ($field->PRJ_NOTES!=null) {
-				$PRJ_NOTES = $field->PRJ_NOTES;
-			} else {$PRJ_NOTES = "<div align='center'>-</div>";}
-
 			// Status
 			if ( $field->PRJ_STATUS == 0 ) {
 				//Prospect
@@ -58,10 +53,20 @@ class Prospect extends CI_Controller {
 			} elseif ( $field->PRJ_STATUS == 4) {
 				// Project
 				$PRJ_STATUS = "<div class='btn btn-default btn-sm' style='font-size: 12px; color: #fff; background-color:#20c997; border-color:#20c997; border-radius: 6px; padding: 2px 5px 5px 3px; width:90px;'><i class='fas fa-drafting-compass'></i><span><b> Project</b></span></div>";
+			} elseif ( $field->PRJ_STATUS == 5) {
+				// Half Delivered
+				$PRJ_STATUS = "<div class='btn btn-default btn-sm' style='font-size: 12px; color: #fff; background-color:#4269c1; border-color:#4269c1; border-radius: 6px; padding: 2px 5px 5px 3px; width:90px;'><i class='fa fa-truck'></i><span><b> Half Delivered</b></span></div>";
+			} elseif ( $field->PRJ_STATUS == 6) {
+				// Delivered
+				$PRJ_STATUS = "<div class='btn btn-default btn-sm' style='font-size: 12px; color: #fff; background-color:#17a2b8; border-color:#17a2b8; border-radius: 6px; padding: 2px 5px 5px 3px; width:90px;'><i class='fa fa-check-circle'></i><span><b> Delivered</b></span></div>";
 			} else {
 				// Cancel
 				$PRJ_STATUS = "<div class='btn btn-default btn-sm' style='font-size: 12px; color: #fff; background-color:#e83e8c; border-color:#e83e8c; border-radius: 6px; padding: 2px 5px 5px 3px; width:90px;'><i class='fa fa-ban'></i><span><b> Cancel</b></span></div>";
 			}
+
+			if ($field->PRJ_NOTES!=null) {
+				$PRJ_NOTES = $field->PRJ_NOTES;
+			} else {$PRJ_NOTES = "<div align='center'>-</div>";}
 
 			$row   = array();
 			$row[] = "<div align='center'>$PRJ_STATUS</div>";
@@ -77,7 +82,7 @@ class Prospect extends CI_Controller {
 				$detail = "detail";
 			}
 
-			if((!$this->access_m->isDelete('Order Custom', 1)->row()) && ($this->session->GRP_SESSION !=3))
+			if((!$this->access_m->isDelete('Prospect', 1)->row()) && ($this->session->GRP_SESSION !=3))
 			{
 				$row[] = '<div style="vertical-align: middle; text-align: center;">
 					<a href="'.$url.'prospect/'.$detail.'/'.$field->PRJ_ID.'" class="btn btn-sm btn-primary mb-1" title="Detail"><i class="fa fa-search-plus"></i></a></div>';
