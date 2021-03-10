@@ -5,7 +5,10 @@
 		<li class="breadcrumb-item">
 	    	<a href="<?php echo site_url('dashboard') ?>">Dashboard</a>
 	  	</li>
-	  	<li class="breadcrumb-item active">Product</li>
+	  	<li class="breadcrumb-item">
+	    	<a href="<?php echo site_url('product') ?>">Product</a>
+	  	</li>
+	  	<li class="breadcrumb-item active">Add</li>
 	</ol>
     <!-- DataTables Example -->
     <div class="card mb-3">
@@ -43,6 +46,7 @@
 							    		<option value="3">Sample</option>
 							    		<option value="4">Booked</option>
 							    		<option value="5">Unapproved</option>
+							    		<option value="6">Discontinue</option>
 								    </select>
 								</div>
 								<div class="form-group">
@@ -176,8 +180,8 @@
 							</div>
 						</div>
 						<div align="center">
-							<button type="submit" class="btn btn-primary" name="simpan"><i class="fa fa-save"></i> Save</button>
-							<a href="<?php echo site_url('product') ?>" class="btn btn-danger" name="batal"><i class="fa fa-times"></i> Cancel</a>
+							<button type="submit" class="btn btn-sm btn-primary" name="simpan"><i class="fa fa-save"></i> Save</button>
+							<a href="<?php echo site_url('product') ?>" class="btn btn-sm btn-danger" name="batal"><i class="fa fa-times"></i> Cancel</a>
 						</div>
 					</form>
 				</div>

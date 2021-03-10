@@ -41,9 +41,12 @@
         }
     }
     if ($check->num_rows() > 0) {
-    	$no_urut 	  = $pernah_dicetak->PANGGIL_NO_URUT;
+    	$letter  = $check->row();
+    	$no_urut = $pernah_dicetak->PANGGIL_NO_URUT;
+    	$date 	 = $letter->ORDL_DATE;
     } else {
-    	$no_urut 	  = $row->NO_URUT + 1;	
+    	$no_urut = $row->NO_URUT + 1;
+    	$date 	 = $sampling->LSAM_PAYDATE;	
     }
     $kode 		  = sprintf("%03s", $no_urut);
     $bulan 		  = date('n');
@@ -88,7 +91,7 @@
 												<div class="input-group-prepend">
 										          	<span class="input-group-text"><i class="fa fa-calendar"></i></span>
 										        </div>
-												<input class="form-control datepicker" type="text" name="ORDL_DATE" value="<?php echo date('d-m-Y') ?>" autocomplete="off" required>
+												<input class="form-control datepicker" type="text" name="ORDL_DATE" value="<?php echo date('d-m-Y', strtotime($date)) ?>" autocomplete="off" required>
 										    </div>
 										</div>
 									</div>
@@ -99,8 +102,8 @@
 												echo $sampling->ORIGIN_CITY_NAME.", menggunakan ".$sampling->COURIER_NAME." ".$sampling->LSAM_SERVICE_TYPE.".&#13;&#10;";?>2. Telah diterima pembayaran melalui <?php echo $sampling->BANK_NAME." pada ".date('d-m-Y', strtotime($sampling->LSAM_PAYDATE))." sebesar Rp. ".number_format($sampling->LSAM_COST,0,',','.').",-"?></textarea>
 										</div>
 										<div align="center">
-											<button type="submit" class="btn btn-info"><i class="fa fa-print"></i> Print</button>
-											<input type="submit" class="btn btn-danger" name="batal" value="Cancel" onClick="javascript:window.close();">
+											<button type="submit" class="btn btn-sm btn-info"><i class="fa fa-print"></i> Print</button>
+											<input type="submit" class="btn btn-sm btn-danger" name="batal" value="Cancel" onClick="javascript:window.close();">
 										</div>
 									</div>
 								</div>

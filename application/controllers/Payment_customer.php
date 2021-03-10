@@ -3,6 +3,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Payment_customer extends CI_Controller {
 
+	public $pageroot = "finance";
+
 	function __construct() {
 		parent::__construct();
 		// check status login
@@ -115,6 +117,7 @@ class Payment_customer extends CI_Controller {
 		$data['pernah_dicetak'] = $this->orderletter_m->get_pernah_dicetak($PRJ_ID, $ORDL_TYPE, $ORDL_DOC)->row();
 		$data['row'] 			= $this->orderletter_m->get()->row();
 		$data['project'] 		= $this->project_m->get($PRJ_ID)->row();
+		$data['payment'] 		= $this->project_payment_m->get(null, $PRJP_ID)->row();
     	$this->template->load('template', 'letter/project_receipt', $data);
     }
 }

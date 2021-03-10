@@ -50,7 +50,7 @@
 							<br>
 							<hr>
 							<div>
-								<a <?php if(($row->LSTOCK_STATUS==null) || ($row->FLWS_ID==4) || ($row->FLWS_ID==5) || (!$this->access_m->isAdd('Follow Up', 1)->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> href="#" data-toggle="modal" data-target="#add-followup" class="btn btn-success btn-sm"><i class="fas fa-plus-circle"></i> Add</a>
+								<a <?php if(($row->LSTOCK_STATUS==null) || ($row->FLWS_ID==4) || ($row->FLWS_ID==5) || (!$this->access_m->isAdd('Follow Up', 1)->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> href="#" data-toggle="modal" data-target="#add-followup" class="btn btn-sm btn-success"><i class="fas fa-plus-circle"></i> Add</a>
 							</div><br>
 							<div class="table-responsive">
 				          		<table class="table table-bordered" id="tableFollowUp" width="100%" cellspacing="0">
@@ -149,8 +149,8 @@
 			    </div>
 	      		<!-- Modal footer -->
 		      	<div class="modal-footer">
-		      		<button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;&nbsp;Save</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i>&nbsp;&nbsp;Cancel</button>
+		      		<button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-save"></i>&nbsp;&nbsp;Save</button>
+                    <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal"><i class="fa fa-times"></i>&nbsp;&nbsp;Cancel</button>
 		      	</div>
 			</form>
     	</div>

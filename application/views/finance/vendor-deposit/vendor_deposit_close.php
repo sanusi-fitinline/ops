@@ -46,7 +46,7 @@
 						<label>Address</label>
 						<?php 
 							if($row->VEND_ADDRESS !=null){
-								$ADDRESS = $row->VEND_ADDRESS.', ';
+								$ADDRESS = str_replace("<br>", "\r\n", $row->VEND_ADDRESS).', ';
 							} else {$ADDRESS ='';}
 							if($row->SUBD_ID !=0){
 								$SUBD = $row->SUBD_NAME.', ';
@@ -96,7 +96,7 @@
 					<form action="<?php echo site_url('vendor_deposit/close_deposit/'.$row->VENDD_ID)?>" method="POST" enctype="multipart/form-data">
 						<div class="form-group">
 						    <label>Notes</label>
-							<textarea class="form-control" cols="100%" rows="5" name="VENDD_NOTES"><?php echo $row->VENDD_NOTES ?></textarea>
+							<textarea class="form-control" cols="100%" rows="5" name="VENDD_NOTES"><?php echo str_replace("<br>", "\r\n", $row->VENDD_NOTES) ?></textarea>
 						</div>
 						<div class="form-group">
 							<label>Close Date</label>

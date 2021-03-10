@@ -46,7 +46,7 @@
 									</div>
 					        	</div>
 							</div>
-			        		<a href="#" data-toggle="modal" id="tambah-quantity" data-target="#add-quantity" class="btn btn-success btn-sm"><i class="fas fa-plus-circle" <?php if((!$this->access_m->isEdit('Prospect', 1)->row()) && ($this->session->GRP_SESSION !=3)) {echo "hidden";} ?>></i> Quantity</a>
+			        		<a href="#" data-toggle="modal" id="tambah-quantity" data-target="#add-quantity" class="btn btn-sm btn-success"><i class="fas fa-plus-circle" <?php if((!$this->access_m->isEdit('Prospect', 1)->row()) && ($this->session->GRP_SESSION !=3)) {echo "hidden";} ?>></i> Quantity</a>
 			        		<p></p>
 							<div class="table-responsive">
 				          		<table class="table table-bordered" width="100%" cellspacing="0">
@@ -129,8 +129,8 @@
 			    </div>
 	      		<!-- Modal footer -->
 		      	<div class="modal-footer">
-		      		<button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;&nbsp;Save</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i>&nbsp;&nbsp;Cancel</button>
+		      		<button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-save"></i>&nbsp;&nbsp;Save</button>
+                    <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal"><i class="fa fa-times"></i>&nbsp;&nbsp;Cancel</button>
 		      	</div>
 			</form>
     	</div>

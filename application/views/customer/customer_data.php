@@ -15,7 +15,7 @@
         </div>
       	<div class="card-body">
       		<div>
-				<a <?php if((!$this->access_m->isAdd('Customer', 1)->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> href="<?php echo site_url('customer/add') ?>" class="btn btn-success btn-sm"><i class="fa fa-user-plus"></i> Add</a>
+				<a <?php if((!$this->access_m->isAdd('Customer', 1)->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> href="<?php echo site_url('customer/add') ?>" class="btn btn-sm btn-success"><i class="fa fa-user-plus"></i> Add</a>
 			</div><br>
         	<div class="table-responsive">
           		<table class="table table-bordered" id="myTableCustomer" width="100%" cellspacing="0">

@@ -21,7 +21,7 @@
         </div>
       	<div class="card-body">
       		<div>
-				<a <?php if((!$this->access_m->isAdd('Producer Product', 1)->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> href="#" data-toggle="modal" data-target="#add-product-property" class="btn btn-success btn-sm"><i class="fas fa-plus-circle"></i> Add</a>
+				<a <?php if((!$this->access_m->isAdd('Producer Product', 1)->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> href="#" data-toggle="modal" data-target="#add-product-property" class="btn btn-sm btn-success"><i class="fas fa-plus-circle"></i> Add</a>
 			</div><br>
         	<div class="table-responsive">
           		<table class="table table-bordered" id="myTableProducerProductProperty" width="100%" cellspacing="0">
@@ -72,8 +72,8 @@
 			    </div>
 	      		<!-- Modal footer -->
 		      	<div class="modal-footer">
-		      		<button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;&nbsp;Save</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i>&nbsp;&nbsp;Cancel</button>
+		      		<button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-save"></i>&nbsp;&nbsp;Save</button>
+                    <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal"><i class="fa fa-times"></i>&nbsp;&nbsp;Cancel</button>
 		      	</div>
 			</form>
     	</div>
@@ -111,8 +111,8 @@
 			    </div>
 	      		<!-- Modal footer -->
 		      	<div class="modal-footer">
-		      		<button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;&nbsp;Save</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i>&nbsp;&nbsp;Cancel</button>
+		      		<button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-save"></i>&nbsp;&nbsp;Save</button>
+                    <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal"><i class="fa fa-times"></i>&nbsp;&nbsp;Cancel</button>
 		      	</div>
 			</form>
     	</div>

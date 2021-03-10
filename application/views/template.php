@@ -121,7 +121,7 @@
 		      	</li>
 		      	<?php 
 		      		if($this->session->GRP_SESSION !=3) {
-		      			if ( ( !$this->access_m->isAccess($this->session->GRP_SESSION, 'Prospect')->row() ) && ( !$this->access_m->isAccess($this->session->GRP_SESSION, 'Follow Up VR')->row() ) && ( !$this->access_m->isAccess($this->session->GRP_SESSION, 'Assign Producer')->row() ) && ( !$this->access_m->isAccess($this->session->GRP_SESSION, 'Project')->row() ) ) {
+		      			if ( ( !$this->access_m->isAccess($this->session->GRP_SESSION, 'Prospect')->row() ) && ( !$this->access_m->isAccess($this->session->GRP_SESSION, 'Follow Up (VR)')->row() ) && ( !$this->access_m->isAccess($this->session->GRP_SESSION, 'Assign Producer')->row() ) && ( !$this->access_m->isAccess($this->session->GRP_SESSION, 'Project')->row() ) ) {
 		      				$visible_order_custom = "hidden";
 		      			} else {
 		      				$visible_order_custom = "";
@@ -130,16 +130,17 @@
 		      			$visible_order_custom = "";
 		      		}
 		      	?>
-		      	<li <?php echo $visible_order_custom; ?> class="nav-item dropdown <?php if($this->uri->segment(1)=="prospect" || $this->uri->segment(1)=="prospect_followup" || $this->uri->segment(1)=="assign_producer" || $this->uri->segment(1)=="project"){echo "active";}?>">
+		      	<li <?php echo $visible_order_custom; ?> class="nav-item dropdown <?php if($this->uri->segment(1)=="prospect" || $this->uri->segment(1)=="prospect_followup" || $this->uri->segment(1)=="assign_producer" || $this->uri->segment(1)=="project" || $this->uri->segment(1)=="change_request"){echo "active";}?>">
 		        	<a class="nav-link dropdown-toggle" href="#" id="pagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 		          		<i class="fas fa-fw fa-pencil-ruler"></i>
 		          		<span>Order-Custom</span>
 		        	</a>
 			        <div class="dropdown-menu" aria-labelledby="pagesDropdown">
 			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Prospect')->row()) && ($this->session->GRP_SESSION !=3) ){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('prospect') ?>">Prospect<hr style="margin: 0;"></a>
-			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Follow Up VR')->row()) && ($this->session->GRP_SESSION !=3) ){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('prospect_followup') ?>">Follow Up<hr style="margin: 0;"></a>
+			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Follow Up (VR)')->row()) && ($this->session->GRP_SESSION !=3) ){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('prospect_followup') ?>">Follow Up (VR)<hr style="margin: 0;"></a>
 			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Assign Producer')->row()) && ($this->session->GRP_SESSION !=3) ){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('assign_producer') ?>">Assign Producer<hr style="margin: 0;"></a>
 			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Project')->row()) && ($this->session->GRP_SESSION !=3) ){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('project') ?>">Project<hr style="margin: 0;"></a>
+			        	<a <?php if((!$this->access_m->isAccess($this->session->GRP_SESSION, 'Change Request')->row()) && ($this->session->GRP_SESSION !=3) ){echo "hidden";}?> class="dropdown-item" href="<?php echo site_url('change_request') ?>">Change Request<hr style="margin: 0;"></a>
 			        </div>
 		      	</li>
 
@@ -360,6 +361,10 @@
 		<!-- Custom scripts for all pages-->
 		<script src="<?php echo base_url()?>assets/js/sb-admin.min.js"></script>
 		
-		<?php $this->load->view('script');?>
+		<?php $this->load->view('script/script');?>
+
+		<?php if (isset($this->pageroot)) {
+			$this->load->view('script/'.$this->pageroot);
+		} ?>
 	</body>
 </html>

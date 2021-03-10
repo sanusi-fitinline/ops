@@ -3,6 +3,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Assign_producer extends CI_Controller {
 
+	public $pageroot = "order-custom";
+
 	function __construct() {
 		parent::__construct();
 		check_not_login();
@@ -109,6 +111,24 @@ class Assign_producer extends CI_Controller {
 		$PRJD_ID = $this->input->post('PRJD_ID', TRUE);
 		$query['update'] = $this->assign_producer_m->update_producer($PRJ_ID);
 		if($query) {
+			// send push notification to id customer service
+			require_once(APPPATH.'third_party/pusher/vendor/autoload.php');
+			$options = array(
+				'cluster' => 'ap1',
+				'useTLS' => true
+			);
+			$pusher = new Pusher\Pusher(
+				'3de920bf0bfb448a7809',
+				'0799716e5d66b96f5b61',
+				'845132',
+				$options
+			);
+
+			$data['message'] = "\nNew Assign Producer for Prospect!";
+			$data['url'] 	 = site_url('prospect/detail/'.$PRJ_ID);
+			$data['user'] 	 = $this->input->post('USER_ID', TRUE);
+			$pusher->trigger('channel-cs', 'event-cs', $data);
+
 			echo "<script>alert('Data berhasil diubah.')</script>";
 			echo "<script>window.location='".site_url('assign_producer/detail/'.$PRJ_ID.'/'.$PRJD_ID)."'</script>";
 		} else {

@@ -27,6 +27,7 @@
 								<div class="row">
 									<div class="col-md-4">
 										<div class="form-group">
+											<input class="form-control" type="hidden" name="USER_ID" value="<?php echo $row->USER_ID ?>">
 											<input class="form-control" type="hidden" id="PRJD_ID" name="PRJD_ID" value="<?php echo $detail->PRJD_ID ?>">
 											<input class="form-control" type="hidden" id="PRDUP_ID" value="<?php echo $detail->PRDUP_ID ?>" readonly>
 											<label>Product</label>
@@ -34,9 +35,15 @@
 										</div>
 										<div class="form-group">
 											<label>Producer <small>*</small></label>
+											<?php if($row->PRJT_ID !=1): ?>
+											<select class="form-control selectpicker" id="PRODUCER" name="PRDU_ID" data-live-search="true" title="-- Select One --" required>
+												<option selected></option>
+										    </select>
+										    <?php else: ?>
 											<select class="form-control selectpicker" id="inputProducer" name="PRDU_ID" data-live-search="true" title="-- Select One --" required>
 												<option selected></option>
 										    </select>
+											<?php endif ?>
 										</div>
 										<div class="form-group">
 											<label>Quantity</label>
@@ -98,11 +105,11 @@
 									<div class="col-md-4">
 										<div class="form-group">
 											<label>Material</label>
-											<textarea class="form-control" cols="100%" rows="4" name="PRJD_MATERIAL" readonly><?php echo $detail->PRJD_MATERIAL ?></textarea>
+											<textarea class="form-control" cols="100%" rows="4" name="PRJD_MATERIAL" readonly><?php echo str_replace("<br>", "\r\n", $detail->PRJD_MATERIAL) ?></textarea>
 										</div>
 										<div class="form-group">
 											<label>Notes</label>
-											<textarea class="form-control" cols="100%" rows="5" name="PRJD_NOTES" readonly><?php echo $detail->PRJD_NOTES ?></textarea>
+											<textarea class="form-control" cols="100%" rows="5" name="PRJD_NOTES" readonly><?php echo str_replace("<br>", "\r\n", $detail->PRJD_NOTES) ?></textarea>
 										</div>
 									</div>
 								</div>
@@ -203,7 +210,11 @@
 						                			<td hidden rowspan="<?php echo $span?>"><?php echo $field->PRJPR_NOTES ?></td>
 						                			<td rowspan="<?php echo $span?>" align="center">
 							                			<?php if($field->PRJPR_IMG != null): ?>
-							                				<img style="height: 100px;" class="img-fluid" src="<?php echo base_url('assets/images/project/offer/'.$field->PRJPR_IMG) ?>">
+							                				<div class="img-group-zoom">
+																<a href="<?php echo base_url('assets/images/project/offer/'.$field->PRJPR_IMG) ?>">
+																	<img style="height: 100px;" src="<?php echo base_url('assets/images/project/offer/'.$field->PRJPR_IMG) ?>">
+																</a>
+															</div>
 							                			<?php endif ?>
 							                		</td>
 						                			<td rowspan="<?php echo $span?>" align="center"><?php echo $field->PRJPR_DURATION ?> days</td>
@@ -292,6 +303,33 @@
 				}
 			}
 		});
+
+		if($("#PRDUP_ID").val() != null) {
+			$("#PRDUP_ID").ready(function(){
+				$.ajax({
+			        url: "<?php echo site_url('prospect_followup/list_producer_product'); ?>",
+			        type: "POST", 
+			        data: {
+			        	PRJPR_ID : null,
+			        	PRDUP_ID : $("#PRDUP_ID").val(),
+			        	PRJD_ID  : $("#PRJD_ID").val(),
+			        },
+			        dataType: "json",
+			        beforeSend: function(e) {
+			        	if(e && e.overrideMimeType) {
+			            	e.overrideMimeType("application/json;charset=UTF-8");
+			          	}
+			        },
+			        success: function(response){
+						$("#PRODUCER").html(response.list_producer).show();
+						$("#PRODUCER").selectpicker('refresh');
+			        },
+			        error: function (xhr, ajaxOptions, thrownError) { 
+			          	alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+			        }
+			    });
+			});
+		};
 
 		$("#PRJD_ID").ready(function(){
 			$.ajax({

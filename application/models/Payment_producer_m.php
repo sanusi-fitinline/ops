@@ -107,7 +107,7 @@ class Payment_producer_m extends CI_Model {
             'PRJP2P_DATE'   => date('Y-m-d H:i:s'),
             'PRJP2P_NO'     => $this->input->post('PRJP2P_NO', TRUE),
             'PRJP2P_PCNT'   => $this->input->post('PRJP2P_PCNT', TRUE),
-            'PRJP2P_NOTES'  => $this->input->post('PRJP2P_NOTES', TRUE),
+            'PRJP2P_NOTES'  => str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n"), "<br>", $this->input->post('PRJP2P_NOTES', TRUE)),
             'PRJP2P_AMOUNT' => str_replace(".", "", $this->input->post('PRJP2P_AMOUNT', TRUE)),
         );
         $this->db->insert('tb_project_payment_to_producer', $this->db->escape_str($insert));

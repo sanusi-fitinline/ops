@@ -61,7 +61,7 @@ class Product_m extends CI_Model {
         return $this->db->count_all_results();
     }
 
-	public function get($PRO_ID = null) {
+	public function get($PRO_ID = null, $PRO_STATUS = null) {
 		$this->db->select('tb_product.*, umea_a.UMEA_NAME AS UMEA_NAME_A, umea_b.UMEA_NAME AS UMEA_NAME_B, umea_c.UMEA_NAME AS UMEA_NAME_C, tb_vendor.VEND_NAME, tb_currency.CURR_NAME, tb_city.CITY_NAME, tb_type.TYPE_NAME, user_created.USER_NAME AS CREATED_NAME, user_edited.USER_NAME AS EDITED_NAME');
 		$this->db->from('tb_product');
 		$this->db->join('tb_unit_measure AS umea_a', 'umea_a.UMEA_ID=tb_product.PRO_UNIT', 'left');
@@ -75,6 +75,9 @@ class Product_m extends CI_Model {
 		$this->db->join('tb_user AS user_edited', 'user_edited.USER_ID=tb_product.PRO_EDITEDBY', 'left');
 		if($PRO_ID != null) {
 			$this->db->where('tb_product.PRO_ID', $PRO_ID);
+		}
+		if($PRO_STATUS != null) {
+			$this->db->where('tb_product.PRO_STATUS', $PRO_STATUS);
 		}
 		$this->db->order_by('tb_product.PRO_NAME', 'ASC');
 		$query = $this->db->get();
@@ -178,7 +181,7 @@ class Product_m extends CI_Model {
 
 		$dataInsert = array(
 			'PRO_NAME'				=> $this->input->post('PRO_NAME', TRUE),
-			'PRO_DESC'				=> str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$this->input->post('PRO_DESC', TRUE)),
+			'PRO_DESC'				=> str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n"),"<br>",$this->input->post('PRO_DESC', TRUE)),
 			'PRO_WEIGHT'			=> $this->input->post('PRO_WEIGHT', TRUE),
 			'PRO_PICTURE'			=> $gambar,
 			'PRO_STATUS'			=> $this->input->post('PRO_STATUS', TRUE),
@@ -231,7 +234,7 @@ class Product_m extends CI_Model {
 		}
 		$dataUpdate = array(
 			'PRO_NAME'				=> $this->input->post('PRO_NAME', TRUE),
-			'PRO_DESC'				=> str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$this->input->post('PRO_DESC', TRUE)),
+			'PRO_DESC'				=> str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n"),"<br>",$this->input->post('PRO_DESC', TRUE)),
 			'PRO_WEIGHT'			=> $this->input->post('PRO_WEIGHT', TRUE),
 			'PRO_PICTURE'			=> $gambar,
 			'PRO_STATUS'			=> $this->input->post('PRO_STATUS', TRUE),

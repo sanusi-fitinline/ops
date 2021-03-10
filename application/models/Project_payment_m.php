@@ -117,7 +117,7 @@ class Project_payment_m extends CI_Model {
         $PRJP_NO     = $this->input->post('PRJP_NO', TRUE);
         $PRJP_PCNT   = $this->input->post('PRJP_PCNT', TRUE);
         $PRJP_AMOUNT = str_replace(".", "", $this->input->post('PRJP_AMOUNT', TRUE));
-        $PRJP_NOTES  = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$this->input->post('PRJP_NOTES', TRUE));
+        $PRJP_NOTES  = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n"),"<br>",$this->input->post('PRJP_NOTES', TRUE));
 
     	$insert_data['PRJ_ID']      = $PRJ_ID;
         $insert_data['PRJP_NO']     = $PRJP_NO;
@@ -155,7 +155,7 @@ class Project_payment_m extends CI_Model {
 
     public function update_notes() {
         $PRJP_ID    = $this->input->post('PRJP_ID', TRUE);
-        $PRJP_NOTES = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$this->input->post('PRJP_NOTES', TRUE));
+        $PRJP_NOTES = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n"),"<br>",$this->input->post('PRJP_NOTES', TRUE));
         $update_data['PRJP_NOTES'] = (!empty($PRJP_NOTES)) ? $PRJP_NOTES : Null;
         $this->db->where('PRJP_ID', $PRJP_ID)->update('tb_project_payment', $update_data);
     }

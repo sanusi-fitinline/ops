@@ -46,7 +46,7 @@
 						<label>Address</label>
 						<?php 
 							if($row->CUST_ADDRESS !=null){
-								$ADDRESS = $row->CUST_ADDRESS.', ';
+								$ADDRESS = str_replace("<br>", "\r\n", $row->CUST_ADDRESS).', ';
 							} else {$ADDRESS ='';}
 							if($row->SUBD_ID !=0){
 								$SUBD = $row->SUBD_NAME.', ';
@@ -94,7 +94,7 @@
 					<form action="<?php echo site_url('customer_deposit/refund/'.$row->CUSTD_ID)?>" method="POST" enctype="multipart/form-data">
 						<div class="form-group">
 							<label>Notes</label>
-							<textarea class="form-control" name="CUSTD_NOTES" cols="100%" rows="5"><?php echo $row->CUSTD_NOTES ?></textarea>
+							<textarea class="form-control" name="CUSTD_NOTES" cols="100%" rows="5"><?php echo str_replace("<br>", "\r\n", $row->CUSTD_NOTES) ?></textarea>
 						</div>
 						<div class="form-group">
 							<label>Payment Date</label>

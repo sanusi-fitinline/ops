@@ -18,7 +18,7 @@
 		        </div>
 		      	<div class="card-body">
 		      		<div>
-						<a <?php if((!$this->access_m->isAdd('Area', 1)->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> href="<?php echo site_url('master/addsubd')?>" class="btn btn-success btn-sm"><i class="fas fa-plus-circle"></i> Add</a>
+						<a <?php if((!$this->access_m->isAdd('Area', 1)->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> href="<?php echo site_url('master/addsubd')?>" class="btn btn-sm btn-success"><i class="fas fa-plus-circle"></i> Add</a>
 					</div><br>
 		        	<div class="table-responsive">
 

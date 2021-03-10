@@ -14,7 +14,7 @@
     <div class="card mb-3">
     	<div class="card-header">
         	<i class="fas fa-table"></i>
-        	Add Data <a href="<?php echo site_url('followup/newcust') ?>" class="btn btn-success btn-sm"><i class="fa fa-user-plus"></i> New Customer</a>
+        	Add Data <a href="<?php echo site_url('followup/newcust') ?>" class="btn btn-sm btn-success"><i class="fa fa-user-plus"></i> New Customer</a>
         </div>
       	<div class="card-body">
       		<div class="row">
@@ -87,8 +87,8 @@
 								</div>
 								<br>
 								<div align="center">
-									<button type="submit" class="btn btn-primary" name="simpan"><i class="fa fa-save"></i> Save</button>
-									<a href="<?php echo site_url('followup') ?>" class="btn btn-danger" name="batal"><i class="fa fa-times"></i> Cancel</a>
+									<button type="submit" class="btn btn-sm btn-primary" name="simpan"><i class="fa fa-save"></i> Save</button>
+									<a href="<?php echo site_url('followup') ?>" class="btn btn-sm btn-danger" name="batal"><i class="fa fa-times"></i> Cancel</a>
 								</div>
 							</div>
 						</div>

@@ -23,7 +23,7 @@
 						<div class="col-md-12">
 							<?php
 								if($row->PRDU_ADDRESS !=null){
-									$ADDRESS = $row->PRDU_ADDRESS.', ';
+									$ADDRESS = str_replace("<br>", "\r\n", stripslashes($row->PRDU_ADDRESS)).', ';
 								} else {$ADDRESS ='';}
 								if($row->SUBD_ID !=0){
 									$SUBD = $row->SUBD_NAME.', ';
@@ -111,11 +111,11 @@
 									</div>
 									<div class="form-group">
 										<label>Material</label>
-										<textarea class="form-control" cols="100%" rows="3" readonly><?php echo $row->PRJD_MATERIAL ?></textarea>
+										<textarea class="form-control" cols="100%" rows="3" readonly><?php echo str_replace("<br>", "\r\n", $row->PRJD_MATERIAL) ?></textarea>
 									</div>
 									<div class="form-group">
 										<label>Notes</label>
-										<textarea class="form-control" cols="100%" rows="5" name="PRJD_NOTES" readonly><?php echo $row->PRJD_NOTES?></textarea>
+										<textarea class="form-control" cols="100%" rows="5" name="PRJD_NOTES" readonly><?php echo str_replace("<br>", "\r\n", $row->PRJD_NOTES)?></textarea>
 									</div>
 				            	</div>
 				            	<div class="col-md-4">
@@ -296,8 +296,8 @@
 			    </div>
 	      		<!-- Modal footer -->
 		      	<div class="modal-footer">
-		      		<button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;&nbsp;Save</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i>&nbsp;&nbsp;Cancel</button>
+		      		<button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-save"></i>&nbsp;&nbsp;Save</button>
+                    <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal"><i class="fa fa-times"></i>&nbsp;&nbsp;Cancel</button>
 		      	</div>
 			</form>
     	</div>
@@ -342,15 +342,15 @@
 							<div class="col-md-12">
 								<div class="form-group">
 									<label>Notes</label>
-									<textarea class="form-control" cols="100%" rows="3" name="PRJR_NOTES" autocomplete="off"><?php echo $_rev->PRJR_NOTES ?></textarea>
+									<textarea class="form-control" cols="100%" rows="3" name="PRJR_NOTES" autocomplete="off"><?php echo str_replace("<br>", "\r\n", $_rev->PRJR_NOTES) ?></textarea>
 								</div>
 							</div>
 						</div>
 				    </div>
 		      		<!-- Modal footer -->
 			      	<div class="modal-footer">
-			      		<button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;&nbsp;Save</button>
-	                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i>&nbsp;&nbsp;Cancel</button>
+			      		<button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-save"></i>&nbsp;&nbsp;Save</button>
+	                    <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal"><i class="fa fa-times"></i>&nbsp;&nbsp;Cancel</button>
 			      	</div>
 				</form>
 	    	</div>

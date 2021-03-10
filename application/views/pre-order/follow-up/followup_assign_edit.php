@@ -39,7 +39,7 @@
 										</div>
 										<div class="form-group">
 											<label>Note</label>
-											<textarea class="form-control" cols="100%" rows="5" name="FLWP_NOTES"><?php echo $row->FLWP_NOTES ?></textarea>
+											<textarea class="form-control" cols="100%" rows="5" name="FLWP_NOTES"><?php echo str_replace("<br>", "\r\n", stripslashes($row->FLWP_NOTES)) ?></textarea>
 										</div>
 									</div>
 									<div class="col-md-3">
@@ -71,10 +71,10 @@
 										<br>
 										<div align="center">
 								      		<?php if((!$this->access_m->isEdit('Follow Up', 1)->row()) && ($this->session->GRP_SESSION !=3)) : ?>
-						                    	<a class="btn btn-warning" href="<?php echo site_url('followup/assign_followup/'.$row->CLOG_ID) ?>"><i class="fa fa-times"></i>&nbsp;&nbsp;Cancel</a>
+						                    	<a class="btn btn-sm btn-warning" href="<?php echo site_url('followup/assign_followup/'.$row->CLOG_ID) ?>"><i class="fa fa-times"></i>&nbsp;&nbsp;Cancel</a>
 						                	<?php else: ?>
-							      				<button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;&nbsp;Save</button>
-						                		<a class="btn btn-danger" href="<?php echo site_url('followup/assign_followup/'.$row->CLOG_ID) ?>"><i class="fa fa-times"></i>&nbsp;&nbsp;Cancel</a>
+							      				<button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-save"></i>&nbsp;&nbsp;Save</button>
+						                		<a class="btn btn-sm btn-danger" href="<?php echo site_url('followup/assign_followup/'.$row->CLOG_ID) ?>"><i class="fa fa-times"></i>&nbsp;&nbsp;Cancel</a>
 							      			<?php endif ?>
 								      	</div>
 									</div>

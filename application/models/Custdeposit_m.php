@@ -152,7 +152,7 @@ class Custdeposit_m extends CI_Model {
         $params['CUSTD_ORDER_ID']       = 0;
         $params['CUSTD_PAY_DATE']       = $DATE.' '.$TIME;
         if(!empty($this->input->post('CUSTD_NOTES', TRUE))) {
-            $params['CUSTD_NOTES']          = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$this->input->post('CUSTD_NOTES', TRUE));
+            $params['CUSTD_NOTES']          = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n"),"<br>",$this->input->post('CUSTD_NOTES', TRUE));
         }
         $this->db->where('CUSTD_ID', $CUSTD_ID);
         $this->db->update('tb_customer_deposit', $this->db->escape_str($params));

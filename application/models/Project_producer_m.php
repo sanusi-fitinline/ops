@@ -68,7 +68,7 @@ class Project_producer_m extends CI_Model {
 		if ( !empty( $this->input->post('PRJPR_PRICE') ) ) {
 			$params['PRJPR_PRICE'] = str_replace(".", "", $this->input->post('PRJPR_PRICE', TRUE));
 		}
-		$params['PRJPR_NOTES'] 	  = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$this->input->post('PRJPR_NOTES', TRUE));
+		$params['PRJPR_NOTES'] 	  = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n"),"<br>",$this->input->post('PRJPR_NOTES', TRUE));
 		$params['PRJPR_IMG'] 	  = $gambar;
 		$params['PRJPR_PAYMENT_METHOD'] = $this->input->post('PRJPR_PAYMENT_METHOD', TRUE);
 
@@ -156,7 +156,7 @@ class Project_producer_m extends CI_Model {
 		if ( !empty( $this->input->post('PRJPR_PRICE') ) ) {
 			$params['PRJPR_PRICE'] = str_replace(".", "", $this->input->post('PRJPR_PRICE', TRUE));
 		}
-		$params['PRJPR_NOTES'] 	  = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$this->input->post('PRJPR_NOTES', TRUE));
+		$params['PRJPR_NOTES'] 	  = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n"),"<br>",$this->input->post('PRJPR_NOTES', TRUE));
 		$params['PRJPR_IMG'] 	  = $gambar;
 		$params['PRJPR_PAYMENT_METHOD'] = $this->input->post('PRJPR_PAYMENT_METHOD', TRUE);
 

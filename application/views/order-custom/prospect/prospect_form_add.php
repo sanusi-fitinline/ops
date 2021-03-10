@@ -88,8 +88,8 @@
 								</div>
 								<br>
 								<div align="center">
-									<button type="submit" class="btn btn-primary" name="simpan"><i class="fa fa-arrow-circle-right"></i> Next</button>
-									<a href="<?php echo site_url('project') ?>" class="btn btn-danger" name="batal"><i class="fa fa-times"></i> Cancel</a>
+									<button type="submit" class="btn btn-sm btn-primary" name="simpan"><i class="fa fa-arrow-circle-right"></i> Next</button>
+									<a href="<?php echo site_url('project') ?>" class="btn btn-sm btn-danger" name="batal"><i class="fa fa-times"></i> Cancel</a>
 								</div>
 							</div>
 						</div>

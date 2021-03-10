@@ -26,7 +26,7 @@ class Project_shipment_m extends CI_Model {
     	$insert = array(
             'PRJD_ID'       	=> $PRJD_ID,
             'PRJS_DATE'     	=> $date.' '.$time,
-            'PRJS_NOTES'      	=> str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$this->input->post('PRJS_NOTES', TRUE)),
+            'PRJS_NOTES'      	=> str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n"),"<br>",$this->input->post('PRJS_NOTES', TRUE)),
             'PRJS_QTY'      	=> $this->input->post('PRJS_QTY', TRUE),
             'PRJS_SHIPCOST' 	=> str_replace(".", "", $this->input->post('PRJS_SHIPCOST', TRUE)),
             'COURIER_ID' 		=> $this->input->post('COURIER_ID', TRUE),
@@ -76,7 +76,7 @@ class Project_shipment_m extends CI_Model {
     	$PRJS_ID = $this->input->post('PRJS_ID', TRUE);
     	$update = array(
             'PRJS_DATE'     	=> $date.' '.$time,
-            'PRJS_NOTES'      	=> str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$this->input->post('PRJS_NOTES', TRUE)),
+            'PRJS_NOTES'      	=> str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n"),"<br>",$this->input->post('PRJS_NOTES', TRUE)),
             'PRJS_QTY'      	=> $this->input->post('PRJS_QTY', TRUE),
             'PRJS_SHIPCOST' 	=> str_replace(".", "", $this->input->post('PRJS_SHIPCOST', TRUE)),
             'COURIER_ID' 		=> $this->input->post('COURIER_ID', TRUE),

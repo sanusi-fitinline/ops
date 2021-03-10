@@ -196,10 +196,10 @@
 								</div>
 								<div align="center">
 									<?php if((!$this->access_m->isEdit('Courier', 1)->row()) && ($this->session->GRP_SESSION !=3)) : ?>
-										<a href="<?php echo site_url('courier/tariff/'.$row->COURIER_ID) ?>" class="btn btn-warning" name="batal"><i class="fa fa-arrow-left"></i> Back</a>
+										<a href="<?php echo site_url('courier/tariff/'.$row->COURIER_ID) ?>" class="btn btn-sm btn-warning" name="batal"><i class="fa fa-arrow-left"></i> Back</a>
 									<?php else: ?>
-										<button type="submit" class="btn btn-primary" name="simpan"><i class="fa fa-save"></i> Save</button>
-										<a href="<?php echo site_url('courier/tariff/'.$row->COURIER_ID) ?>" class="btn btn-danger" name="batal"><i class="fa fa-times"></i> Cancel</a>
+										<button type="submit" class="btn btn-sm btn-primary" name="simpan"><i class="fa fa-save"></i> Save</button>
+										<a href="<?php echo site_url('courier/tariff/'.$row->COURIER_ID) ?>" class="btn btn-sm btn-danger" name="batal"><i class="fa fa-times"></i> Cancel</a>
 									<?php endif ?>
 								</div>
 							</div>

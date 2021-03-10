@@ -189,6 +189,23 @@ class Ordervendor_m extends CI_Model {
         return $query;
     }
 
+    public function get_recent_courier($CUST_ID, $VEND_ID) {
+        $this->db->select('tb_order_vendor.ORDER_ID, tb_order_vendor.COURIER_ID, tb_order_vendor.ORDV_SERVICE_TYPE, tb_courier.COURIER_NAME');
+        $this->db->from('tb_order_vendor');
+        $this->db->join('tb_order', 'tb_order.ORDER_ID=tb_order_vendor.ORDER_ID', 'inner');
+        $this->db->join('tb_courier', 'tb_courier.COURIER_ID=tb_order_vendor.COURIER_ID', 'inner');
+        $this->db->group_start();
+        $this->db->where('tb_order.ORDER_STATUS', 3);
+        $this->db->or_where('tb_order.ORDER_STATUS', 4);
+        $this->db->group_end();
+        $this->db->where('tb_order.CUST_ID', $CUST_ID);
+        $this->db->where('tb_order_vendor.VEND_ID', $VEND_ID);
+        $this->db->order_by('tb_order_vendor.ORDV_ID', 'DESC');
+        $this->db->limit(10);
+        $query = $this->db->get();
+        return $query;
+    }
+
     public function change_vendor($ORDER_ID) {
         $VEND_ID    = $this->input->post('VEND_ID', TRUE);
         $COURIER_ID = $this->input->post('COURIER_ID', TRUE);
@@ -244,7 +261,7 @@ class Ordervendor_m extends CI_Model {
             $ORDD_PRICE           = str_replace(".", "", $this->input->post('ORDD_PRICE', TRUE));
             $ORDD_QUANTITY        = $this->input->post('ORDD_QUANTITY', TRUE);
             $ORDD_QUANTITY_VENDOR = $this->input->post('ORDD_QUANTITY_VENDOR', TRUE);
-            $ORDD_OPTION_VENDOR   = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$this->input->post('ORDD_OPTION_VENDOR', TRUE));
+            $ORDD_OPTION_VENDOR   = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n"),"<br>",$this->input->post('ORDD_OPTION_VENDOR', TRUE));
             
             $PRO_ID    = $this->input->post('PRO_ID', TRUE);
             $UMEA_ID   = $this->input->post('UMEA_ID', TRUE);

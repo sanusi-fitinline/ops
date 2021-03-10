@@ -250,7 +250,7 @@ class Sampling_m extends CI_Model {
 		if($dataLog){
 			$id_log 	= $this->db->insert_id();			
 			$params['LSAM_DATE']		= $date.' '.$time;
-			$params['LSAM_NOTES']		= str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$this->input->post('LSAM_NOTES', TRUE));
+			$params['LSAM_NOTES']		= str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n"),"<br>",$this->input->post('LSAM_NOTES', TRUE));
 			$params['LSAM_COST']		= str_replace(".", "", $this->input->post('LSAM_COST', TRUE));
 			if (!empty($this->input->post('LSAM_DEPOSIT', TRUE))) {
 				$params['LSAM_DEPOSIT'] = str_replace(".", "", $this->input->post('LSAM_DEPOSIT', TRUE));
@@ -307,7 +307,7 @@ class Sampling_m extends CI_Model {
 		$this->db->where('CLOG_ID', $CLOG_ID)->update('tb_customer_log', $this->db->escape_str($dataLog));	
 
 		$NOTES = $this->input->post('LSAM_NOTES', TRUE);
-		$params['LSAM_NOTES']   = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$NOTES);
+		$params['LSAM_NOTES']   = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n"),"<br>",$NOTES);
 		$params['LSAM_COST']	= str_replace(".", "", $this->input->post('LSAM_COST', TRUE));
 		if (!empty($this->input->post('LSAM_DEPOSIT', TRUE))) {
 			$params['LSAM_DEPOSIT'] = str_replace(".", "", $this->input->post('LSAM_DEPOSIT', TRUE));

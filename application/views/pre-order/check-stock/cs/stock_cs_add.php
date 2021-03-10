@@ -16,7 +16,8 @@
 		    <div class="card mb-3">
 		    	<div class="card-header">
 		        	<i class="fas fa-table"></i>
-		        	Add Data <a href="<?php echo site_url('cs/newcust_check') ?>" class="btn btn-success btn-sm"><i class="fa fa-user-plus"></i> New Customer</a>
+		        	Add Data <a href="<?php echo site_url('cs/newcust_check') ?>" class="btn btn-sm btn-success"><i class="fa fa-user-plus"></i> New Customer</a>
+		        	<a href="#" id="btn-recent" class="btn btn-sm btn-secondary" style="pointer-events: none; opacity: 0.5;" data-toggle="modal" data-target="#recent"><i class="fas fa-list-alt"></i> Recent Order</a>
 		        </div>
 		      	<div class="card-body">
 		      		<h3>Select Customer</h3>
@@ -25,7 +26,7 @@
 							<div class="col-md-3 offset-md-1">
 								<div class="form-group">
 								    <label>Customer <small>*</small></label>
-								    <select class="form-control selectpicker" name="CUST_ID" id="CUST_ID" title="-- Select One --" data-live-search="true" required>
+								    <select class="form-control selectpicker RECENT_CUST" name="CUST_ID" id="CUST_ID" title="-- Select One --" data-live-search="true" required>
 								    	<?php foreach($customer as $cust): ?>
 									    	<option value="<?php echo $cust->CUST_ID?>">
 									    		<?php echo stripslashes($cust->CUST_NAME) ?>
@@ -102,9 +103,9 @@
 						</div>
 						<br>
 						<div align="center">
-							<input class="btn btn-info" name="new" type="submit" value="Save &amp; New">
-							<button class="btn btn-primary" name="simpan" type="submit"><i class="fa fa-save"></i> Save</button>
-							<a href="<?php echo site_url('cs/check_stock') ?>" class="btn btn-danger" name="batal"><i class="fa fa-times"></i> Cancel</a>
+							<input class="btn btn-sm btn-info" name="new" type="submit" value="Save &amp; New">
+							<button class="btn btn-sm btn-primary" name="simpan" type="submit"><i class="fa fa-save"></i> Save</button>
+							<a href="<?php echo site_url('cs/check_stock') ?>" class="btn btn-sm btn-danger" name="batal"><i class="fa fa-times"></i> Cancel</a>
 						</div>
 					</form>
 		      	</div>
@@ -112,3 +113,72 @@
 		</div>
   	</div>
 </div>
+<!-- The Modal Recent Order -->
+<div class="modal fade" id="recent">
+	<div class="modal-dialog modal-lg">
+    	<div class="modal-content">
+		    <!-- Modal Header -->
+		    <div class="modal-header">
+		        <h4 class="modal-title">Recent Order</h4>
+		        <button type="button" class="close" data-dismiss="modal">&times;</button>
+		    </div>
+		    <!-- Modal body -->
+		    <div class="modal-body">
+		        <div class="row">
+					<div class="col-md-12">
+						<div class="table-responsive">
+			          		<table class="table table-bordered" id="tableRecentOrder" width="100%" cellspacing="0">
+			            		<thead style="font-size: 14px;">
+				                	<tr>
+				                    	<th style="vertical-align: middle; text-align: center; width: 10px;">#</th>
+				                    	<th style="vertical-align: middle; text-align: center; width: 300px;">PRODUCT</th>
+				                    	<th style="vertical-align: middle; text-align: center; width: 200px;">OPTION</th>
+				                    	<th style="vertical-align: middle; text-align: center; width: 10px;">QTY</th>
+				                  	</tr>
+				                </thead>
+				                <tbody style="font-size: 14px;">
+				                </tbody>
+			          		</table>
+			        	</div>
+					</div>
+				</div>
+		    </div>
+    	</div>
+  	</div>
+</div>
+<script src="<?php echo base_url()?>assets/vendor/jquery/jquery.min.js"></script>
+<script type="text/javascript">
+	$(document).ready(function(){
+
+		$(".RECENT_CUST").change(function(){
+			$("#btn-recent").removeClass('btn-secondary');
+			$("#btn-recent").addClass('btn-info');
+			$("#btn-recent").removeAttr('style');
+			// tabel recent order
+	        var tableRecentOrder = $('#tableRecentOrder').dataTable({ 
+	        	"destroy": true,
+	            "processing": true, 
+	            "serverSide": true, 
+	            "ordering": false,
+	            "info": false,
+	            "paging": false,
+	            "lengthMenu": [[10, 20, -1], [10, 20, "All"]],
+	            "order": [], 
+	            "ajax": {
+	                "url": "<?php echo site_url('order/recent_json')?>",
+	                "type": "POST",
+	                "data" : {
+	                	"cust_id" : $("#CUST_ID").val(),
+	                },
+	            },
+	            "deferRender": true, 
+	            "columnDefs": [
+		            { 
+		                "targets": [ 0 ], 
+		                "orderable": false, 
+		            },
+	            ],
+	        });
+	    });
+	});
+</script>

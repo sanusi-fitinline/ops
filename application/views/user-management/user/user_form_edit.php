@@ -56,8 +56,8 @@
 								    </select>
 								</div>
 								<div class="form-group" align="right">
-									<button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;&nbsp;Save</button>
-	                    			<a href="<?php echo site_url('management/user')?>" class="btn btn-danger"><i class="fa fa-times"></i>&nbsp;&nbsp;Cancel</a>
+									<button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-save"></i>&nbsp;&nbsp;Save</button>
+	                    			<a href="<?php echo site_url('management/user')?>" class="btn btn-sm btn-danger"><i class="fa fa-times"></i>&nbsp;&nbsp;Cancel</a>
 								</div>
 							</div>
 						</div>

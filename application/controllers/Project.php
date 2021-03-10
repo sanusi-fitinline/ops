@@ -3,6 +3,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Project extends CI_Controller {
 
+	public $pageroot = "order-custom";
+
 	function __construct() {
 		parent::__construct();
 		check_not_login();

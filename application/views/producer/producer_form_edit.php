@@ -6,7 +6,10 @@
 		<li class="breadcrumb-item">
 	    	<a href="<?php echo site_url('dashboard') ?>">Dashboard</a>
 	  	</li>
-	  	<li class="breadcrumb-item active">Producer</li>
+	  	<li class="breadcrumb-item">
+	    	<a href="<?php echo site_url('producer') ?>">Producer</a>
+	  	</li>
+	  	<li class="breadcrumb-item active">Edit</li>
 	</ol>
     <!-- DataTables Example -->
     <div class="card mb-3">
@@ -42,7 +45,7 @@
 							<div class="col-md-3">
 								<div class="form-group" style="margin-bottom: 5px;">
 									<label>Address</label>
-									<textarea class="form-control" rows="5" name="PRDU_ADDRESS" autocomplete="off"><?php echo $row->PRDU_ADDRESS?></textarea>
+									<textarea class="form-control" rows="5" name="PRDU_ADDRESS" autocomplete="off"><?php echo str_replace("<br>", "\r\n", $row->PRDU_ADDRESS)?></textarea>
 								</div>												
 								<div class="form-group">
 									<label>Country <small>*</small></label>
@@ -131,10 +134,10 @@
 								</div>
 								<br><div align="center">
 									<?php if((!$this->access_m->isEdit('Producer', 1)->row()) && ($this->session->GRP_SESSION !=3)) : ?>
-										<a href="<?php echo site_url('producer') ?>" class="btn btn-warning" name="batal"><i class="fa fa-arrow-left"></i> Back</a>
+										<a href="<?php echo site_url('producer') ?>" class="btn btn-sm btn-warning" name="batal"><i class="fa fa-arrow-left"></i> Back</a>
 									<?php else: ?>
-										<button type="submit" class="btn btn-primary" name="simpan"><i class="fa fa-save"></i> Save</button>
-										<a href="<?php echo site_url('producer') ?>" class="btn btn-danger" name="batal"><i class="fa fa-times"></i> Cancel</a>
+										<button type="submit" class="btn btn-sm btn-primary" name="simpan"><i class="fa fa-save"></i> Save</button>
+										<a href="<?php echo site_url('producer') ?>" class="btn btn-sm btn-danger" name="batal"><i class="fa fa-times"></i> Cancel</a>
 									<?php endif ?>
 								</div>
 							</div>

@@ -41,9 +41,12 @@
         }
     }
     if ($check->num_rows() > 0) {
-    	$no_urut 	  = $pernah_dicetak->PANGGIL_NO_URUT;
+    	$letter  = $check->row();
+    	$no_urut = $pernah_dicetak->PANGGIL_NO_URUT;
+    	$date 	 = $letter->ORDL_DATE;
     } else {
-    	$no_urut 	  = $row->NO_URUT + 1;	
+    	$no_urut = $row->NO_URUT + 1;
+    	$date 	 = $payment->PRJP_PAYMENT_DATE;	
     }
     $kode 		  = sprintf("%03s", $no_urut);
     $bulan 		  = date('n');
@@ -60,7 +63,7 @@
 	    	<a href="<?php echo site_url('dashboard') ?>">Dashboard</a>
 	  	</li>
 	  	<li class="breadcrumb-item">
-	    	<a href="<?php echo site_url('prospect') ?>">Prospect</a>
+	    	<a href="<?php echo site_url('payment_customer') ?>">Payment From Customer</a>
 	  	</li>
 	  	<li class="breadcrumb-item active">Print Receipt</li>
 	</ol>
@@ -88,7 +91,7 @@
 												<div class="input-group-prepend">
 										          	<span class="input-group-text"><i class="fa fa-calendar"></i></span>
 										        </div>
-												<input class="form-control datepicker" type="text" name="ORDL_DATE" value="<?php echo date('d-m-Y') ?>" autocomplete="off" required>
+												<input class="form-control datepicker" type="text" name="ORDL_DATE" value="<?php echo date('d-m-Y', strtotime($date)) ?>" autocomplete="off" required>
 										    </div>
 										</div>
 									</div>
@@ -106,8 +109,8 @@
 											<textarea class="form-control" cols="100%" rows="7" name="ORDL_NOTES" readonly></textarea>
 										</div>
 										<div align="center">
-											<button type="submit" class="btn btn-info"><i class="fa fa-print"></i> Print</button>
-											<input type="submit" class="btn btn-danger" name="batal" value="Cancel" onClick="javascript:window.close();">
+											<button type="submit" class="btn btn-sm btn-info"><i class="fa fa-print"></i> Print</button>
+											<input type="submit" class="btn btn-sm btn-danger" name="batal" value="Cancel" onClick="javascript:window.close();">
 										</div>
 									</div>
 								</div>

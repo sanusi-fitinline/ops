@@ -46,7 +46,7 @@ class Project_model_m extends CI_Model {
 			'PRJD_ID' 		 => $this->input->post('PRJD_ID', TRUE),
 			'PRDPP_ID' 		 => $this->input->post('PRDPP_ID', TRUE),
 			'PRJDM_IMG' 	 => $gambar,
-			'PRJDM_NOTES' 	 => str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$this->input->post('PRJDM_NOTES', TRUE)),
+			'PRJDM_NOTES' 	 => str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n"),"<br>",$this->input->post('PRJDM_NOTES', TRUE)),
 			'PRJDM_MATERIAL' => $this->input->post('PRJDM_MATERIAL', TRUE),
 			'PRJDM_COLOR' 	 => $this->input->post('PRJDM_COLOR', TRUE),
 		);
@@ -81,7 +81,7 @@ class Project_model_m extends CI_Model {
 			'PRJD_ID' 		 => $this->input->post('PRJD_ID', TRUE),
 			'PRDPP_ID' 		 => $this->input->post('PRDPP_ID', TRUE),
 			'PRJDM_IMG' 	 => $gambar,
-			'PRJDM_NOTES' 	 => str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$this->input->post('PRJDM_NOTES', TRUE)),
+			'PRJDM_NOTES' 	 => str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n"),"<br>",$this->input->post('PRJDM_NOTES', TRUE)),
 			'PRJDM_MATERIAL' => $this->input->post('PRJDM_MATERIAL', TRUE),
 			'PRJDM_COLOR' 	 => $this->input->post('PRJDM_COLOR', TRUE),
 		);

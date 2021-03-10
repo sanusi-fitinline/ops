@@ -101,7 +101,7 @@
 											<div class="form-group">
 												<label>Quantity</label>
 												<div class="input-group">
-													<input class="form-control" type="text" name="PRJD_QTY" value="<?php echo $row->PRJD_QTY ?>" autocomplete="off" readonly>
+													<input class="form-control" type="text" name="PRJD_QTY" value="<?php echo $row->PRJD_QTY2 != null ? $row->PRJD_QTY2 : $row->PRJD_QTY ?>" autocomplete="off" readonly>
 													<div class="input-group-prepend">
 											          	<span class="input-group-text">Pcs</span>
 											        </div>
@@ -111,11 +111,11 @@
 									</div>
 									<div class="form-group">
 										<label>Material</label>
-										<textarea class="form-control" cols="100%" rows="3" readonly><?php echo $row->PRJD_MATERIAL ?></textarea>
+										<textarea class="form-control" cols="100%" rows="3" readonly><?php echo str_replace("<br>", "\r\n", $row->PRJD_MATERIAL) ?></textarea>
 									</div>
 									<div class="form-group">
 										<label>Notes</label>
-										<textarea class="form-control" cols="100%" rows="5" name="PRJD_NOTES" readonly><?php echo $row->PRJD_NOTES?></textarea>
+										<textarea class="form-control" cols="100%" rows="5" name="PRJD_NOTES" readonly><?php echo str_replace("<br>", "\r\n", $row->PRJD_NOTES)?></textarea>
 									</div>
 				            	</div>
 				            	<div class="col-md-4">
@@ -170,12 +170,12 @@
 				       		// check add access
 				       		if( ($this->access_m->isAdd('Project', 1)->row()) || ($this->session->GRP_SESSION == 3) ) {
 					       		if($row->PRJ_STATUS >= 4) {
-			            			$add = 'class="btn btn-success btn-sm"';
+			            			$add = 'class="btn btn-sm btn-success"';
 			            		} else {
-			            			$add = 'class="btn btn-secondary btn-sm" style="opacity : 0.5; pointer-events: none;" ';
+			            			$add = 'class="btn btn-sm btn-secondary" style="opacity : 0.5; pointer-events: none;" ';
 			            		}
 				       		} else {
-				       			$add = ' class="btn btn-secondary btn-sm" style="opacity : 0.5; pointer-events: none;" ';
+				       			$add = ' class="btn btn-sm btn-secondary" style="opacity : 0.5; pointer-events: none;" ';
 		            		}
 							// check edit access
 		            		if( ($this->access_m->isEdit('Project', 1)->row()) || ($this->session->GRP_SESSION == 3) ) {
@@ -302,8 +302,8 @@
 			    </div>
 	      		<!-- Modal footer -->
 		      	<div class="modal-footer">
-		      		<button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;&nbsp;Save</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i>&nbsp;&nbsp;Cancel</button>
+		      		<button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-save"></i>&nbsp;&nbsp;Save</button>
+                    <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal"><i class="fa fa-times"></i>&nbsp;&nbsp;Cancel</button>
 		      	</div>
 			</form>
     	</div>
@@ -361,15 +361,15 @@
 								</div>
 								<div class="form-group">
 									<label>Notes</label>
-									<textarea class="form-control" cols="100%" rows="4" name="PRJPG_NOTES" autocomplete="off"><?php echo $data->PRJPG_NOTES ?></textarea>
+									<textarea class="form-control" cols="100%" rows="4" name="PRJPG_NOTES" autocomplete="off"><?php echo str_replace("<br>", "\r\n", $data->PRJPG_NOTES) ?></textarea>
 								</div>
 							</div>
 						</div>
 				    </div>
 		      		<!-- Modal footer -->
 			      	<div class="modal-footer">
-			      		<button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;&nbsp;Save</button>
-	                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i>&nbsp;&nbsp;Cancel</button>
+			      		<button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-save"></i>&nbsp;&nbsp;Save</button>
+	                    <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal"><i class="fa fa-times"></i>&nbsp;&nbsp;Cancel</button>
 			      	</div>
 				</form>
 	    	</div>

@@ -55,7 +55,7 @@
 						<div class="col-md-12">
 							<div class="form-group" align="center">
 								<br>
-								<button id="btn-check" class="btn btn-primary">Check</button>
+								<button id="btn-check" class="btn btn-sm btn-primary">Check</button>
 							</div>
 						</div>
 					</div>

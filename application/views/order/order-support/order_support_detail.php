@@ -66,7 +66,7 @@
 										<label>Address</label>
 										<?php 
 											if($row->CUST_ADDRESS !=null){
-												$ADDRESS = $row->CUST_ADDRESS.', ';
+												$ADDRESS = str_replace("<br>", "\r\n", stripslashes($row->CUST_ADDRESS)).', ';
 											} else {$ADDRESS ='';}
 											if($row->SUBD_ID !=0){
 												$SUBD = $row->SUBD_NAME.', ';
@@ -91,7 +91,7 @@
 									</div>
 									<div class="form-group">
 										<label>Note</label>
-										<textarea class="form-control" cols="100%" rows="5" name="LSAM_NOTES" readonly><?php echo $row->ORDER_NOTES ?></textarea>
+										<textarea class="form-control" cols="100%" rows="5" name="ORDER_NOTES" readonly><?php echo str_replace("<br>", "\r\n", $row->ORDER_NOTES) ?></textarea>
 									</div>
 								</div>
 								<div class="col-md-3">
@@ -168,7 +168,7 @@
 												<label>Address</label>
 												<?php 
 													if($data['VEND_ADDRESS'] !=null){
-														$VEND_ADDRESS = $data['VEND_ADDRESS'].', ';
+														$VEND_ADDRESS = str_replace("<br>", "\r\n", $data['VEND_ADDRESS']).', ';
 													} else {$VEND_ADDRESS ='';}
 													if($data['SUBD_NAME'] !=null){
 														$VEND_SUBD = $data['SUBD_NAME'].', ';

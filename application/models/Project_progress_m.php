@@ -76,7 +76,7 @@ class Project_progress_m extends CI_Model {
 			'PRJA_ID' 		=> $PRJA_ID,
 			'PRJPG_DATE' 	=> $date.' '.$time,
 			'PRJPG_IMG' 	=> $gambar,
-			'PRJPG_NOTES' 	=> str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$this->input->post('PRJPG_NOTES', TRUE)),
+			'PRJPG_NOTES' 	=> str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n"),"<br>",$this->input->post('PRJPG_NOTES', TRUE)),
 		);
 		$action = $this->db->insert('tb_project_progress', $this->db->escape_str($dataInsert));
 
@@ -141,7 +141,7 @@ class Project_progress_m extends CI_Model {
 		$dataUpdate = array(
 			'PRJA_ID' 		=> $PRJA_ID,
 			'PRJPG_IMG' 	=> $gambar,
-			'PRJPG_NOTES' 	=> str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$this->input->post('PRJPG_NOTES', TRUE)),
+			'PRJPG_NOTES' 	=> str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n"),"<br>",$this->input->post('PRJPG_NOTES', TRUE)),
 		);
 		$action = $this->db->where('PRJPG_ID', $PRJPG_ID)->update('tb_project_progress', $this->db->escape_str($dataUpdate));
 

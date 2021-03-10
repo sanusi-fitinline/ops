@@ -87,7 +87,7 @@
 										</div>
 										<div class="form-group">
 											<label>Customer Note</label>
-											<textarea class="form-control" cols="100%" rows="5" name="LSTOCK_CNOTES" readonly><?php echo $row->LSTOCK_CNOTES?></textarea>
+											<textarea class="form-control" cols="100%" rows="5" name="LSTOCK_CNOTES" readonly><?php echo str_replace("<br>", "\r\n", $row->LSTOCK_CNOTES)?></textarea>
 										</div>
 									</div>
 									<div class="col-md-3">
@@ -108,15 +108,15 @@
 										</div>
 										<div class="form-group">
 											<label>Vendor Note</label>
-											<textarea class="form-control" cols="100%" rows="5" name="LSTOCK_VNOTES"><?php echo $row->LSTOCK_VNOTES?></textarea>
+											<textarea class="form-control" cols="100%" rows="5" name="LSTOCK_VNOTES"><?php echo str_replace("<br>", "\r\n", stripslashes($row->LSTOCK_VNOTES))?></textarea>
 										</div>	
 										<br>
 										<div align="center">
 											<?php if((!$this->access_m->isEdit('Check Stock PM', 1)->row()) && ($this->session->GRP_SESSION !=3)) : ?>
-												<a href="<?php echo site_url('cs/check_stock') ?>" class="btn btn-warning" name="batal"><i class="fa fa-arrow-left"></i> Back</a>
+												<a href="<?php echo site_url('cs/check_stock') ?>" class="btn btn-sm btn-warning" name="batal"><i class="fa fa-arrow-left"></i> Back</a>
 											<?php else: ?>
-												<button type="submit" class="btn btn-primary" name="simpan"><i class="fa fa-save"></i> Save</button>
-												<a href="<?php echo site_url('pm/check_stock') ?>" class="btn btn-danger" name="batal"><i class="fa fa-times"></i> Cancel</a>
+												<button type="submit" class="btn btn-sm btn-primary" name="simpan"><i class="fa fa-save"></i> Save</button>
+												<a href="<?php echo site_url('pm/check_stock') ?>" class="btn btn-sm btn-danger" name="batal"><i class="fa fa-times"></i> Cancel</a>
 											<?php endif ?>
 										</div>
 									</div>

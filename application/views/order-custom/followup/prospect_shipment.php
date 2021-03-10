@@ -61,7 +61,7 @@
 									<div class="form-group row">
 										<label for="inputNotes" class="col-sm-2 col-form-label">Notes</label>
 										<div class="col-sm-10">
-											<textarea class="form-control" cols="100%" rows="3" id="inputNotes" name="PRJD_NOTES" readonly><?php echo $detail->PRJD_NOTES ?></textarea>
+											<textarea class="form-control" cols="100%" rows="3" id="inputNotes" name="PRJD_NOTES" readonly><?php echo str_replace("<br>", "\r\n", stripslashes($detail->PRJD_NOTES)) ?></textarea>
 										</div>
 									</div>
 								</div>
@@ -109,7 +109,7 @@
 							<hr>
 				        	<!-- shipment -->
 				        	<h4>Shipment</h4>
-				        	<a href="#" id="TAMBAH_SHIPMENT" data-toggle="modal" data-target="#add-shipment" class="btn btn-success btn-sm"><i class="fas fa-plus-circle"></i> Add</a>
+				        	<a href="#" id="TAMBAH_SHIPMENT" data-toggle="modal" data-target="#add-shipment" class="btn btn-sm btn-success"><i class="fas fa-plus-circle"></i> Add</a>
 						    <p></p>
 				        	<div class="table-responsive">
 				          		<table class="table table-bordered" width="100%" cellspacing="0">
@@ -244,8 +244,8 @@
 			    </div>
 	      		<!-- Modal footer -->
 		      	<div class="modal-footer">
-		      		<button id="SAVE_INPUT" type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;&nbsp;Save</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i>&nbsp;&nbsp;Cancel</button>
+		      		<button id="SAVE_INPUT" type="submit" class="btn btn-sm btn-primary"><i class="fa fa-save"></i>&nbsp;&nbsp;Save</button>
+                    <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal"><i class="fa fa-times"></i>&nbsp;&nbsp;Cancel</button>
 		      	</div>
 			</form>
     	</div>
@@ -332,15 +332,15 @@
 							<div class="col-md-12">
 								<div class="form-group">
 									<label>Notes</label>
-									<textarea class="form-control" cols="100%" rows="4" name="PRJS_NOTES" autocomplete="off"><?php echo $ship->PRJS_NOTES ?></textarea>
+									<textarea class="form-control" cols="100%" rows="4" name="PRJS_NOTES" autocomplete="off"><?php echo str_replace("<br>", "\r\n", stripslashes($ship->PRJS_NOTES)) ?></textarea>
 								</div>
 							</div>
 						</div>
 				    </div>
 		      		<!-- Modal footer -->
 			      	<div class="modal-footer">
-			      		<button id="SAVE_EDIT<?php echo $ship->PRJS_ID ?>" type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;&nbsp;Save</button>
-	                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i>&nbsp;&nbsp;Cancel</button>
+			      		<button id="SAVE_EDIT<?php echo $ship->PRJS_ID ?>" type="submit" class="btn btn-sm btn-primary"><i class="fa fa-save"></i>&nbsp;&nbsp;Save</button>
+	                    <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal"><i class="fa fa-times"></i>&nbsp;&nbsp;Cancel</button>
 			      	</div>
 				</form>
 	    	</div>

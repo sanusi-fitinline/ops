@@ -198,7 +198,7 @@ class Order_m extends CI_Model {
 		} else {
 			$params['ORDER_DATE'] = $date.' '.$time;
 		}
-		$params['ORDER_NOTES']	= str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$this->input->post('ORDER_NOTES', TRUE));
+		$params['ORDER_NOTES']	= str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n"),"<br>",$this->input->post('ORDER_NOTES', TRUE));
 		$params['USER_ID']		= $this->session->USER_SESSION;
 		$params['CHA_ID']		= $this->input->post('CHA_ID', TRUE);
 		
@@ -346,13 +346,13 @@ class Order_m extends CI_Model {
 		$check = $this->db->get_where('tb_order',['ORDER_ID' => $ORDER_ID])->row();
 		if($check->ORDER_STATUS >= 2) {
 			$update_notes = array(
-				'ORDER_NOTES' => str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$this->input->post('ORDER_NOTES', TRUE)),
+				'ORDER_NOTES' => str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n"),"<br>",$this->input->post('ORDER_NOTES', TRUE)),
 			);
 			$this->db->where('ORDER_ID', $ORDER_ID);
 			$this->db->update('tb_order', $update_notes);
 		} else {
 			// update pada tb_order
-			$ORDER_NOTES		= str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$this->input->post('ORDER_NOTES', TRUE));
+			$ORDER_NOTES		= str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n"),"<br>",$this->input->post('ORDER_NOTES', TRUE));
 			$ORDER_TOTAL		= str_replace(".", "", $this->input->post('ORDER_TOTAL', TRUE));
 			$ORDER_DISCOUNT		= str_replace(".", "", $this->input->post('ORDER_DISCOUNT', TRUE));
 			$ORDER_DEPOSIT		= str_replace(".", "", $this->input->post('ORDER_DEPOSIT', TRUE));

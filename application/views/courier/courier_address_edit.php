@@ -22,11 +22,11 @@
         </div>
       	<div class="card-body">
       		<div class="row">
-				<div class="col-md-12 offset-md-3">
+				<div class="col-md-12 offset-md-2">
 					<h3>Edit Address</h3>
 					<form action="<?php echo site_url('courier/editAddressProcess/'.$row->COUADD_ID)?>" method="POST" enctype="multipart/form-data">
 						<div class="row">
-							<div class="col-md-3">
+							<div class="col-md-4">
 								<div class="form-group">
 									<input class="form-control" type="hidden" name="COUADD_ID" value="<?php echo $row->COUADD_ID ?>">
 									<input class="form-control" type="hidden" name="COURIER_ID" value="<?php echo $row->COURIER_ID ?>">
@@ -43,10 +43,10 @@
 								</div>
 								<div class="form-group">
 									<label>Address</label>
-									<textarea class="form-control" cols="100%" rows="3" name="COUADD_ADDRESS" autocomplete="off"><?php echo stripslashes($row->COUADD_ADDRESS) ?></textarea>
+									<textarea class="form-control" cols="100%" rows="5" name="COUADD_ADDRESS" autocomplete="off"><?php echo str_replace("<br>", "\r\n", stripslashes($row->COUADD_ADDRESS)) ?></textarea>
 								</div>
 							</div>
-							<div class="col-md-3">
+							<div class="col-md-4">
 								<div class="form-group">
 									<label>Country</label>
 									<select class="form-control" name="CNTR_ID" id="CNTR_ID" data-live-search="true">
@@ -108,10 +108,10 @@
 								</div><br>
 								<div align="center">
 									<?php if((!$this->access_m->isEdit('Courier', 1)->row()) && ($this->session->GRP_SESSION !=3)) : ?>
-										<a href="<?php echo site_url('courier/address/'.$row->COURIER_ID) ?>" class="btn btn-warning" name="batal"><i class="fa fa-arrow-left"></i> Back</a>
+										<a href="<?php echo site_url('courier/address/'.$row->COURIER_ID) ?>" class="btn btn-sm btn-warning" name="batal"><i class="fa fa-arrow-left"></i> Back</a>
 									<?php else: ?>
-										<button type="submit" class="btn btn-primary" name="simpan"><i class="fa fa-save"></i> Save</button>
-										<a href="<?php echo site_url('courier/address/'.$row->COURIER_ID) ?>" class="btn btn-danger" name="batal"><i class="fa fa-times"></i> Cancel</a>
+										<button type="submit" class="btn btn-sm btn-primary" name="simpan"><i class="fa fa-save"></i> Save</button>
+										<a href="<?php echo site_url('courier/address/'.$row->COURIER_ID) ?>" class="btn btn-sm btn-danger" name="batal"><i class="fa fa-times"></i> Cancel</a>
 									<?php endif ?>
 								</div>
 							</div>

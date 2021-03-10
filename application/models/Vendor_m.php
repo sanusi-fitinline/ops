@@ -89,7 +89,7 @@ class Vendor_m extends CI_Model {
 		$params['VEND_CPERSON'] = $this->input->post('VEND_CPERSON', TRUE);
 		$params['VEND_PHONE'] 	= $this->input->post('VEND_PHONE', TRUE);
 		$params['VEND_EMAIL'] 	= $this->input->post('VEND_EMAIL', TRUE);
-		$params['VEND_ADDRESS'] = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$ADDRESS);
+		$params['VEND_ADDRESS'] = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n"),"<br>",$ADDRESS);
 		$params['CNTR_ID'] 		= $this->input->post('CNTR_ID', TRUE);
 		$params['STATE_ID'] 	= $this->input->post('STATE_ID', TRUE);
 		$params['CITY_ID'] 		= $this->input->post('CITY_ID', TRUE);
@@ -122,7 +122,7 @@ class Vendor_m extends CI_Model {
 		$params['VEND_CPERSON'] = $this->input->post('VEND_CPERSON', TRUE);
 		$params['VEND_PHONE'] 	= $this->input->post('VEND_PHONE', TRUE);
 		$params['VEND_EMAIL'] 	= $this->input->post('VEND_EMAIL', TRUE);
-		$params['VEND_ADDRESS'] = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$ADDRESS);
+		$params['VEND_ADDRESS'] = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n"),"<br>",$ADDRESS);
 		$params['CNTR_ID'] 		= $this->input->post('CNTR_ID', TRUE);
 		$params['STATE_ID'] 	= $this->input->post('STATE_ID', TRUE);
 		$params['CITY_ID'] 		= $this->input->post('CITY_ID', TRUE);

@@ -5,7 +5,10 @@
 		<li class="breadcrumb-item">
 	    	<a href="<?php echo site_url('dashboard') ?>">Dashboard</a>
 	  	</li>
-	  	<li class="breadcrumb-item active">Customer</li>
+	  	<li class="breadcrumb-item">
+	    	<a href="<?php echo site_url('customer') ?>">Customer</a>
+	  	</li>
+	  	<li class="breadcrumb-item active">Add</li>
 	</ol>
     <!-- DataTables Example -->
     <div class="card mb-3">
@@ -104,8 +107,8 @@
 								    </select>
 								</div>
 								<div align="center">
-									<button type="submit" class="btn btn-primary" name="simpan" id="SIMPAN"><i class="fa fa-save"></i> Save</button>
-									<a href="<?php echo site_url('customer') ?>" class="btn btn-danger" name="batal"><i class="fa fa-times"></i> Cancel</a>
+									<button type="submit" class="btn btn-sm btn-primary" name="simpan" id="SIMPAN"><i class="fa fa-save"></i> Save</button>
+									<a href="<?php echo site_url('customer') ?>" class="btn btn-sm btn-danger" name="batal"><i class="fa fa-times"></i> Cancel</a>
 								</div>
 							</div>
 						</div>
@@ -136,7 +139,7 @@
 					if(response.list_input_phone != ""){
 						if(response.list_validasi != ""){
 							$("#SIMPAN").attr("disabled", "disabled");
-							$("#SIMPAN").removeClass("btn btn-primary").addClass("btn btn-secondary");
+							$("#SIMPAN").removeClass("btn-primary").addClass("btn-secondary");
 							if(confirm('Customer sudah ada!\nApakah anda ingin mengubah datanya?')) {
 								window.location.href = "<?php echo site_url('customer/edit_by_phone/') ?>"+response.list_cust_id;
 							} else {
@@ -186,7 +189,7 @@
 					if(response.list_input_phone != ""){
 						if(response.list_validasi != ""){
 							$("#SIMPAN").attr("disabled", "disabled");
-							$("#SIMPAN").removeClass("btn btn-primary").addClass("btn btn-secondary");
+							$("#SIMPAN").removeClass("btn-primary").addClass("btn-secondary");
 							if(confirm('Customer sudah ada!\nApakah anda ingin mengubah datanya?')) {
 								window.location.href = "<?php echo site_url('customer/edit_by_phone/') ?>"+response.list_cust_id;
 							} else {

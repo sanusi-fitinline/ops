@@ -15,13 +15,16 @@ class Assign_producer_m extends CI_Model {
         $modul = "Assign Producer";
         $view = 1;
         $viewall =  $this->access_m->isViewAll($modul, $view)->row();
-        $this->db->select('tb_project_detail.*, tb_project.PRJ_STATUS, tb_project.PRJ_DATE, tb_customer.CUST_NAME, tb_producer_product.PRDUP_NAME, tb_producer.PRDU_NAME');
+        $this->db->select('tb_project_detail.*, tb_project.PRJ_STATUS, tb_project.PRJ_DATE, tb_project.PRJT_ID, tb_customer.CUST_NAME, tb_producer_product.PRDUP_NAME, tb_producer.PRDU_NAME');
         $this->db->from($this->table);
         $this->db->join('tb_project', 'tb_project.PRJ_ID=tb_project_detail.PRJ_ID', 'left');
         $this->db->join('tb_customer', 'tb_customer.CUST_ID=tb_project.CUST_ID', 'left');
         $this->db->join('tb_producer_product', 'tb_producer_product.PRDUP_ID=tb_project_detail.PRDUP_ID', 'left');
         $this->db->join('tb_producer', 'tb_producer.PRDU_ID=tb_project_detail.PRDU_ID', 'left');
-        $this->db->join('tb_project_producer', 'tb_project_producer.PRJD_ID=tb_project_detail.PRJD_ID', 'inner');
+        $this->db->join('tb_project_producer', 'tb_project_producer.PRJD_ID=tb_project_detail.PRJD_ID', 'left');
+        
+        $this->db->where('tb_project.PRJ_STATUS >=', 1);
+        $this->db->where('tb_project.PRJ_STATUS !=', 9);
         if ($this->session->GRP_SESSION !=3) {
             if (!($viewall)) { // filter sesuai hak akses
                 $this->db->where('tb_project.USER_ID', $this->session->USER_SESSION);
@@ -82,6 +85,7 @@ class Assign_producer_m extends CI_Model {
     public function update_producer($PRJ_ID) {
         $PRJD_ID         = $this->input->post('PRJD_ID', TRUE);
         $PRDU_ID         = $this->input->post('PRDU_ID', TRUE);
+        $PRJD_QTY        = $this->input->post('PRJD_QTY', TRUE);
         $PRJD_PRICE      = str_replace(".", "", $this->input->post('PRJD_PRICE', TRUE));
         $PRJD_DURATION   = $this->input->post('PRJD_DURATION', TRUE);
         $PRJD_WEIGHT_EST = str_replace(",", ".", $this->input->post('PRJD_WEIGHT_EST', TRUE));
@@ -90,8 +94,12 @@ class Assign_producer_m extends CI_Model {
         // update producer tb_project_detail
         $update_detail = array(
             'PRDU_ID'         => (!empty($PRDU_ID)) ? $PRDU_ID : Null,
+            'PRJD_QTY2'       => (!empty($PRJD_QTY)) ? $PRJD_QTY : Null,
             'PRJD_PRICE'      => (!empty($PRJD_PRICE)) ? $PRJD_PRICE : Null,
+            'PRJD_PRICE2'     => (!empty($PRJD_PRICE)) ? $PRJD_PRICE : Null,
             'PRJD_DURATION'   => (!empty($PRJD_DURATION)) ? $PRJD_DURATION : Null,
+            'PRJD_DURATION2'  => (!empty($PRJD_DURATION)) ? $PRJD_DURATION : Null,
+            'PRJD_FLAG2'      => 0,
             'PRJD_WEIGHT_EST' => (!empty($PRJD_WEIGHT_EST)) ? $PRJD_WEIGHT_EST : Null,
         );
         $this->db->where('PRJD_ID', $PRJD_ID)->update('tb_project_detail', $update_detail);
@@ -100,8 +108,8 @@ class Assign_producer_m extends CI_Model {
         // get tb_project_detail
         $det = $this->db->get_where('tb_project_detail', ['PRJ_ID'=>$PRJ_ID])->result();
         foreach ($det as $field) {
-            $sub_total[] = $field->PRJD_PRICE * $field->PRJD_QTY; // subtotal
-            $duration[] = $field->PRJD_DURATION; // duration
+            $sub_total[] = $field->PRJD_PRICE2 * $field->PRJD_QTY2; // subtotal
+            $duration[] = $field->PRJD_DURATION2; // duration
         }
         $SUBTOTAL = array_sum($sub_total);
         $PRJ_DURATION_EST = max($duration);

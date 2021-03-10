@@ -3,6 +3,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Customer_deposit extends CI_Controller {
 
+	public $pageroot = "finance";
+
 	function __construct() {
 		parent::__construct();
 		check_not_login();

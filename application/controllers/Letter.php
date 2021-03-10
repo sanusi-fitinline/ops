@@ -13,6 +13,7 @@ class Letter extends CI_Controller {
 		$this->load->model('project_detail_m');
 		$this->load->model('project_quantity_m');
 		$this->load->model('project_payment_m');
+		$this->load->model('producer_m');
 		$this->load->model('vendor_m');
         $this->load->library('pdf');
     }
@@ -146,6 +147,22 @@ class Letter extends CI_Controller {
 		} else {
 			echo "<script>alert('Data tidak ditemukan.')</script>";
 			echo "<script>window.location='".site_url('payment_customer')."'</script>";
+		}
+    }
+
+    public function project_purchase($PRJ_ID, $PRJD_ID) {
+    	$query = $this->orderletter_m->get_purchase($PRJ_ID, 4);
+    	if ($query->num_rows() > 0) {
+			$data['letter']   = $query->row();
+			$data['project']  = $this->project_m->get($PRJ_ID)->row();
+			$data['detail']   = $this->project_detail_m->get($PRJ_ID, $PRJD_ID)->row();
+			$PRDU_ID 		  = $data['detail']->PRDU_ID;
+			$data['row'] 	  = $this->producer_m->get($PRDU_ID)->row();
+			$data['quantity'] = $this->project_quantity_m->get($PRJD_ID)->result();
+			$this->load->view('letter/project_purchase_print', $data);
+		} else {
+			echo "<script>alert('Data tidak ditemukan.')</script>";
+			echo "<script>window.location='".site_url('prospect_followup')."'</script>";
 		}
     }
 }

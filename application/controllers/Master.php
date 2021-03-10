@@ -3,6 +3,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Master extends CI_Controller {
 
+	public $pageroot = "master-ops";
+
 	function __construct() {
 		parent::__construct();
 		check_not_login();

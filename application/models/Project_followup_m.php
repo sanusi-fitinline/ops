@@ -11,13 +11,15 @@ class Project_followup_m extends CI_Model {
     }
 
     private function _get_datatables_query($STATUS_FILTER = null) {
-        $this->db->select('tb_project_detail.*, tb_project.PRJ_STATUS, tb_project.PRJ_PAYMENT_METHOD, tb_project.PRJ_DATE, tb_customer.CUST_NAME, tb_producer_product.PRDUP_NAME, tb_producer.PRDU_NAME, tb_project_producer.PRJPR_ID');
+        $this->db->select('tb_project_detail.*, tb_project.PRJ_STATUS, tb_project.PRJ_PAYMENT_METHOD, tb_project.PRJ_DATE, tb_project.PRJT_ID, tb_customer.CUST_NAME, tb_producer_product.PRDUP_NAME, tb_producer.PRDU_NAME, tb_project_producer.PRJPR_ID');
         $this->db->from($this->table);
         $this->db->join('tb_project', 'tb_project.PRJ_ID=tb_project_detail.PRJ_ID', 'left');
         $this->db->join('tb_customer', 'tb_customer.CUST_ID=tb_project.CUST_ID', 'left');
         $this->db->join('tb_producer', 'tb_producer.PRDU_ID=tb_project_detail.PRDU_ID', 'left');
         $this->db->join('tb_producer_product', 'tb_producer_product.PRDUP_ID=tb_project_detail.PRDUP_ID', 'left');
         $this->db->join('tb_project_producer', 'tb_project_producer.PRJD_ID=tb_project_detail.PRJD_ID', 'left');
+
+        $this->db->where('tb_project.PRJ_STATUS !=', 9);
 
 		if ($STATUS_FILTER != null) { // filter by status
 			$this->db->group_start();

@@ -83,12 +83,12 @@ class Orderletter_m extends CI_Model {
 
 	public function insert($ORDER_ID, $SUB_ID) {
 		date_default_timezone_set('Asia/Jakarta');
-		$params['ORDL_DATE']	= date('Y-m-d', strtotime($this->input->post('ORDL_DATE', TRUE)));
-		$params['ORDER_ID']		= $ORDER_ID;
-		$params['ORDL_TYPE']	= $this->input->post('ORDL_TYPE', TRUE);
-		$params['ORDL_NO']		= $this->input->post('ORDL_NO', TRUE);
-		$params['ORDL_LNO']		= $this->input->post('ORDL_LNO', TRUE);
-		$params['ORDL_NOTES']	= $this->input->post('ORDL_NOTES', TRUE);	
+		$params['ORDL_DATE']  = date('Y-m-d', strtotime($this->input->post('ORDL_DATE', TRUE)));
+		$params['ORDER_ID']   = $ORDER_ID;
+		$params['ORDL_TYPE']  = $this->input->post('ORDL_TYPE', TRUE);
+		$params['ORDL_NO']    = $this->input->post('ORDL_NO', TRUE);
+		$params['ORDL_LNO']	  = $this->input->post('ORDL_LNO', TRUE);
+		$params['ORDL_NOTES'] = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n"), "<br>", $this->input->post('ORDL_NOTES', TRUE));	
 		$params['ORDL_DOC']		= $this->input->post('ORDL_DOC', TRUE);	
 		$insert = $this->db->insert('tb_order_letter', $this->db->escape_str($params));
 		if($insert) {
@@ -111,21 +111,23 @@ class Orderletter_m extends CI_Model {
 					echo "<script>window.location='".site_url('letter/order_purchase/'.$ORDER_ID.'/'.$SUB_ID)."'</script>";
 				}
 			} else {
-				// update status
-		        $row = $this->db->get_where('tb_project',['PRJ_ID'=>$ORDER_ID])->row();
-		        if($row->PRJ_STATUS < 3){
-		            $update_status = array(
-		                'PRJ_STATUS' => 3, // status invoiced
-		            );
-		            $this->db->where('PRJ_ID', $ORDER_ID)->update('tb_project', $update_status);
-		        }
-		        //
 				if($this->input->post('ORDL_TYPE') == 1) {
+					// update status
+			        $row = $this->db->get_where('tb_project',['PRJ_ID'=>$ORDER_ID])->row();
+			        if($row->PRJ_STATUS < 3){
+			            $update_status = array(
+			                'PRJ_STATUS' => 3, // status quoted
+			            );
+			            $this->db->where('PRJ_ID', $ORDER_ID)->update('tb_project', $update_status);
+			        }
+			        //
 					echo "<script>window.location='".site_url('letter/project_quotation/'.$ORDER_ID)."'</script>";
 				} else if($this->input->post('ORDL_TYPE') == 2) {
 					echo "<script>window.location='".site_url('letter/project_invoice/'.$ORDER_ID.'/'.$SUB_ID)."'</script>";
-				} else {
+				} else if($this->input->post('ORDL_TYPE') == 3) {
 					echo "<script>window.location='".site_url('letter/project_receipt/'.$ORDER_ID)."'</script>";
+				} else {
+					echo "<script>window.location='".site_url('letter/project_purchase/'.$ORDER_ID.'/'.$SUB_ID)."'</script>";
 				}
 			}
 		} else {
@@ -136,8 +138,8 @@ class Orderletter_m extends CI_Model {
 
 	public function update($ORDER_ID, $ORDL_DOC, $SUB_ID) {
 		date_default_timezone_set('Asia/Jakarta');
-		$params['ORDL_DATE']	= date('Y-m-d', strtotime($this->input->post('ORDL_DATE', TRUE)));
-		$params['ORDL_NOTES']	= $this->input->post('ORDL_NOTES', TRUE);
+		$params['ORDL_DATE']  = date('Y-m-d', strtotime($this->input->post('ORDL_DATE', TRUE)));
+		$params['ORDL_NOTES'] = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n"), "<br>", $this->input->post('ORDL_NOTES', TRUE));
 		$update = $this->db->where('ORDER_ID', $ORDER_ID)->where('ORDL_DOC', $ORDL_DOC)->update('tb_order_letter', $this->db->escape_str($params));
 		if($update) {
 			if($this->input->post('ORDL_DOC') == 1) {
@@ -159,21 +161,23 @@ class Orderletter_m extends CI_Model {
 					echo "<script>window.location='".site_url('letter/order_purchase/'.$ORDER_ID.'/'.$SUB_ID)."'</script>";
 				}
 			} else {
-				// update status
-		        $row = $this->db->get_where('tb_project',['PRJ_ID'=>$ORDER_ID])->row();
-		        if($row->PRJ_STATUS < 2){
-		            $update_status = array(
-		                'PRJ_STATUS' => 2, // status invoiced
-		            );
-		            $this->db->where('PRJ_ID', $ORDER_ID)->update('tb_project', $update_status);
-		        }
-		        //
 				if($this->input->post('ORDL_TYPE') == 1) {
+					// update status
+			        $row = $this->db->get_where('tb_project',['PRJ_ID'=>$ORDER_ID])->row();
+			        if($row->PRJ_STATUS < 3){
+			            $update_status = array(
+			                'PRJ_STATUS' => 3, // status quoted
+			            );
+			            $this->db->where('PRJ_ID', $ORDER_ID)->update('tb_project', $update_status);
+			        }
+			        //
 					echo "<script>window.location='".site_url('letter/project_quotation/'.$ORDER_ID)."'</script>";
 				} else if($this->input->post('ORDL_TYPE') == 2) {
 					echo "<script>window.location='".site_url('letter/project_invoice/'.$ORDER_ID.'/'.$SUB_ID)."'</script>";
-				} else {
+				} else if($this->input->post('ORDL_TYPE') == 3) {
 					echo "<script>window.location='".site_url('letter/project_receipt/'.$ORDER_ID)."'</script>";
+				} else {
+					echo "<script>window.location='".site_url('letter/project_purchase/'.$ORDER_ID.'/'.$SUB_ID)."'</script>";
 				}
 			}
 		} else {

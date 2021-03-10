@@ -85,8 +85,8 @@
 									       				<tr>
 											       			<td style="vertical-align: middle;"><?php echo $no++ ?></td>
 											       			<td style="vertical-align: middle;"><?php echo $data->PRO_NAME ?></td>
-											       			<td style="vertical-align: middle;" align="center">
-											       				<textarea class="form-control" style="font-size: 14px;width: 150px;" name="ORDD_OPTION_VENDOR[]"><?php echo $ORDER_OPTION ?></textarea>	
+											       			<td style="vertical-align: middle;" align="center">	
+											       				<input style="font-size: 14px;width: 150px;" class="form-control" type="text" name="ORDD_OPTION_VENDOR[]" value="<?php echo $ORDER_OPTION ?>">
 											       			</td>
 											       			<td align="center" style="vertical-align: middle;" align="center">
 											       				<input class="form-control" style="text-align: center; font-size: 14px; width: 85px;" type="number" step="0.01" min="0" name="ORDD_QUANTITY_VENDOR[]" id="QUANTITY<?php echo $data->ORDD_ID ?>" value="<?php echo  $QTY?>">

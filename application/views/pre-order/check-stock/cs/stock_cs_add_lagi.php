@@ -103,9 +103,9 @@
 						</div>
 						<br>
 						<div align="center">
-							<input class="btn btn-info" name="new" type="submit" value="Save &amp; New">
-							<button class="btn btn-primary" name="simpan" type="submit"><i class="fa fa-save"></i> Save</button>
-							<a href="<?php echo site_url('cs/check_stock') ?>" class="btn btn-danger" name="batal"><i class="fa fa-times"></i> Cancel</a>
+							<input class="btn btn-sm btn-info" name="new" type="submit" value="Save &amp; New">
+							<button class="btn btn-sm btn-primary" name="simpan" type="submit"><i class="fa fa-save"></i> Save</button>
+							<a href="<?php echo site_url('cs/check_stock') ?>" class="btn btn-sm btn-danger" name="batal"><i class="fa fa-times"></i> Cancel</a>
 						</div>
 					</form>
 		      	</div>

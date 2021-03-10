@@ -76,9 +76,9 @@
 											</div>
 										</div>
 										<div class="form-group" align="center">
-											<input class="btn btn-info" type="submit" name="new" value="Save &amp; New">
-											<button class="btn btn-primary" type="submit" name="simpan"><i class="fa fa-arrow-circle-right"></i> Next</button>
-											<a href="<?php echo site_url('prospect/cancel_prospect/'.$this->uri->segment(3)) ?>" class="btn btn-danger" name="batal"><i class="fa fa-times"></i> Cancel</a>
+											<input class="btn btn-sm btn-info" type="submit" name="new" value="Save &amp; New">
+											<button class="btn btn-sm btn-primary" type="submit" name="simpan"><i class="fa fa-arrow-circle-right"></i> Next</button>
+											<a href="<?php echo site_url('prospect/cancel_prospect/'.$this->uri->segment(3)) ?>" class="btn btn-sm btn-danger" name="batal"><i class="fa fa-times"></i> Cancel</a>
 										</div>
 									</div>
 								</div>

@@ -188,10 +188,10 @@ class Project_detail_m extends CI_Model {
         }
         $params['SIZG_ID']       = 1;
         if ( !empty( $this->input->post('PRJD_MATERIAL') ) ) {
-            $params['PRJD_MATERIAL'] = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$this->input->post('PRJD_MATERIAL', TRUE));
+            $params['PRJD_MATERIAL'] = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n"),"<br>",$this->input->post('PRJD_MATERIAL', TRUE));
         };
         if ( !empty( $this->input->post('PRJD_NOTES') ) ) {
-            $params['PRJD_NOTES'] = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$this->input->post('PRJD_NOTES', TRUE));
+            $params['PRJD_NOTES'] = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n"),"<br>",$this->input->post('PRJD_NOTES', TRUE));
         };
         if( !empty( $data['filenames'] ) ){
             $gambar = implode(", ", $data['filenames']);
@@ -252,8 +252,8 @@ class Project_detail_m extends CI_Model {
         } else {
             $PRJD_IMG = $this->input->post('OLD_IMG', TRUE);
         }
-        $PRJD_MATERIAL   = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$this->input->post('PRJD_MATERIAL', TRUE));
-        $PRJD_NOTES      = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$this->input->post('PRJD_NOTES', TRUE));
+        $PRJD_MATERIAL   = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n"),"<br>",$this->input->post('PRJD_MATERIAL', TRUE));
+        $PRJD_NOTES      = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n"),"<br>",$this->input->post('PRJD_NOTES', TRUE));
         //
         $update_detail['PRJD_IMG']      = $PRJD_IMG;
         $update_detail['PRJD_MATERIAL'] = $PRJD_MATERIAL;
@@ -265,5 +265,61 @@ class Project_detail_m extends CI_Model {
         $update_detail['SIZG_ID']       = $this->input->post('SIZG_ID', TRUE);
         $this->db->where('PRJD_ID', $PRJD_ID)->update('tb_project_detail', $update_detail);
         //
+    }
+
+    public function update_actual_qty($PRJ_ID) {
+        $PRJD_ID = $this->input->post('PRJD_ID', TRUE);
+        // update detail
+        $update_detail = array(
+            'PRJD_QTY2'      => $this->input->post('PRJD_QTY2', TRUE),
+            'PRJD_DURATION2' => 0,
+            'PRJD_PRICE2'    => 0,
+            'PRJD_FLAG2'     => 1,
+        );
+        $this->db->where('PRJD_ID', $PRJD_ID)->update('tb_project_detail', $update_detail);
+        //
+
+        // update prospect data
+        $update = array(
+            'PRJ_SUBTOTAL'       => NULL,
+            'PRJ_DISCOUNT'       => NULL,
+            'PRJ_DEPOSIT'        => NULL,
+            'PRJ_ADDCOST'        => NULL,
+            'PRJ_TAX'            => NULL,
+            'PRJ_TOTAL'          => NULL,
+            // 'PRJ_SHIPCOST'       => NULL,
+            'PRJ_GRAND_TOTAL'    => NULL,
+            'PRJ_DURATION_EST'   => NULL,
+            // 'PRJ_PAYMENT_METHOD' => NULL,
+            // 'COURIER_ID'         => NULL,
+            // 'PRJ_SERVICE_TYPE'   => NULL,
+            // 'PRJ_ETD'            => NULL,
+        );
+        $this->db->where('PRJ_ID', $PRJ_ID)->update('tb_project', $update);
+
+        // update payment
+        $check_payment = $this->db->get_where('tb_project_payment',['PRJ_ID' => $PRJ_ID, 'PRJP_PAYMENT_DATE' => "0000-00-00"]);
+        if ($check_payment->num_rows() > 0) {
+            $amount = array(
+                'PRJP_AMOUNT' => 0
+            );
+            $this->db->where('PRJ_ID', $PRJ_ID)->update('tb_project_payment', $amount);
+        }
+
+    }
+
+    public function delete($PRJD_ID){
+        $detail = $this->db->get_where('tb_project_detail',['PRJD_ID' => $PRJD_ID])->row();
+        // delete gambar project detail
+        if($detail->PRJD_IMG != null || $detail->PRJD_IMG != ''){
+            $img = explode(", ",$detail->PRJD_IMG);
+            foreach ($img as $i => $value) {
+                $image[$i] = $img[$i];
+                if(file_exists("./assets/images/project/detail/".$image[$i])) {
+                    unlink("./assets/images/project/detail/".$image[$i]);
+                }
+            }
+        }
+        $this->db->delete('tb_project_detail',['PRJD_ID'=>$PRJD_ID]);
     }
 }

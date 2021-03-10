@@ -5,7 +5,10 @@
 		<li class="breadcrumb-item">
 	    	<a href="<?php echo site_url('dashboard') ?>">Dashboard</a>
 	  	</li>
-	  	<li class="breadcrumb-item active">Product</li>
+	  	<li class="breadcrumb-item">
+	    	<a href="<?php echo site_url('product') ?>">Product</a>
+	  	</li>
+	  	<li class="breadcrumb-item active">Edit</li>
 	</ol>
     <!-- DataTables Example -->
     <div class="card mb-3">
@@ -45,7 +48,7 @@
 								</div>
 								<div class="form-group" style="margin-bottom: 7px;">
 									<label>Description</label>
-									<textarea class="form-control" rows="5" name="PRO_DESC" autocomplete="off"><?php echo $row->PRO_DESC != null ? "".stripslashes($row->PRO_DESC) : "-" ?></textarea>
+									<textarea class="form-control" rows="5" name="PRO_DESC" autocomplete="off"><?php echo stripslashes(str_replace("<br>", "\r\n", $row->PRO_DESC)) ?></textarea>
 								</div>	
 							</div>
 							<div class="col-md-3">
@@ -57,6 +60,7 @@
 							    		<option <?php echo $row->PRO_STATUS == 3 ? "selected" : "" ?> value="3">Sample</option>
 							    		<option <?php echo $row->PRO_STATUS == 4 ? "selected" : "" ?> value="4">Booked</option>
 							    		<option <?php echo $row->PRO_STATUS == 5 ? "selected" : "" ?> value="5">Unapproved</option>
+							    		<option <?php echo $row->PRO_STATUS == 6 ? "selected" : "" ?> value="6">Discontinue</option>
 								    </select>
 								</div>
 								<div class="form-group">
@@ -213,10 +217,10 @@
 						</div>
 						<br><div align="center">
 							<?php if((!$this->access_m->isEdit('Product', 1)->row()) && ($this->session->GRP_SESSION !=3)) : ?>
-								<a href="<?php echo site_url('product') ?>" class="btn btn-warning" name="batal"><i class="fa fa-arrow-left"></i> Back</a>
+								<a href="<?php echo site_url('product') ?>" class="btn btn-sm btn-warning" name="batal"><i class="fa fa-arrow-left"></i> Back</a>
 							<?php else: ?>
-								<button type="submit" class="btn btn-primary" name="simpan"><i class="fa fa-save"></i> Save</button>
-								<a href="<?php echo site_url('product') ?>" class="btn btn-danger" name="batal"><i class="fa fa-times"></i> Cancel</a>
+								<button type="submit" class="btn btn-sm btn-primary" name="simpan"><i class="fa fa-save"></i> Save</button>
+								<a href="<?php echo site_url('product') ?>" class="btn btn-sm btn-danger" name="batal"><i class="fa fa-times"></i> Cancel</a>
 							<?php endif ?>
 						</div>
 					</form>

@@ -23,7 +23,7 @@ class Project_review_m extends CI_Model {
 			'PRJD_ID'    => $this->input->post('PRJD_ID', TRUE),
             'PRJC_ID'    => $this->input->post('PRJC_ID', TRUE),
             'PRJR_POINT' => $this->input->post('PRJR_POINT', TRUE),
-            'PRJR_NOTES' => str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$this->input->post('PRJR_NOTES', TRUE)),
+            'PRJR_NOTES' => str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n"),"<br>",$this->input->post('PRJR_NOTES', TRUE)),
 		);
 		$this->db->insert('tb_project_review', $this->db->escape_str($dataInsert));
 	}
@@ -32,7 +32,7 @@ class Project_review_m extends CI_Model {
 		$dataUpdate = array(
             'PRJC_ID'    => $this->input->post('PRJC_ID', TRUE),
 			'PRJR_POINT' => $this->input->post('PRJR_POINT', TRUE),
-            'PRJR_NOTES' => str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$this->input->post('PRJR_NOTES', TRUE)),
+            'PRJR_NOTES' => str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n"),"<br>",$this->input->post('PRJR_NOTES', TRUE)),
 		);
 		$this->db->where('PRJR_ID', $PRJR_ID)->update('tb_project_review', $this->db->escape_str($dataUpdate));
 	}

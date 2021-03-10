@@ -7,7 +7,7 @@
 	    	<a href="<?php echo site_url('dashboard') ?>">Dashboard</a>
 	  	</li>
 	  	<li class="breadcrumb-item">
-	    	<a href="<?php echo site_url('prospect_followup') ?>">Prospect Follow Up</a>
+	    	<a href="<?php echo site_url('prospect_followup') ?>">Follow Up (VR)</a>
 	  	</li>
 	  	<li class="breadcrumb-item">
 	    	<a href="<?php echo site_url('prospect_followup/detail/'.$detail->PRJ_ID.'/'.$detail->PRJD_ID) ?>">Detail</a>

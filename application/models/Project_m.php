@@ -12,7 +12,7 @@ class Project_m extends CI_Model {
 
     private function _get_datatables_query($STATUS_FILTER = null) {
         $this->load->model('access_m');
-        $modul = "Project";
+        $modul = "Prospect";
         $view = 1;
         $viewall =  $this->access_m->isViewAll($modul, $view)->row();
         $this->db->select('tb_project.*, tb_customer.CUST_NAME, tb_user.USER_NAME');
@@ -93,7 +93,7 @@ class Project_m extends CI_Model {
 
     public function get($PRJ_ID = null) {
         $this->load->model('access_m');
-        $modul = "Project";
+        $modul = "Prospect";
         $modul2 = "Follow Up (VR)";
         $view = 1;
         $viewall =  $this->access_m->isViewAll($modul, $view)->row();
@@ -135,9 +135,13 @@ class Project_m extends CI_Model {
         $params['CUST_ID']  = $this->input->post('CUST_ID', TRUE);
         $params['PRJ_DATE'] = $date.' '.$time;
         if (!empty($this->input->post('PRJ_NOTES'))) {
-            $params['PRJ_NOTES'] = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$this->input->post('PRJ_NOTES', TRUE));
+            $params['PRJ_NOTES'] = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n"),"<br>",$this->input->post('PRJ_NOTES', TRUE));
         }
-        $params['PRJ_STATUS'] = 0;
+        if($this->input->post('PRJT_ID') != 1) {
+            $params['PRJ_STATUS'] = 1;
+        } else {
+            $params['PRJ_STATUS'] = 0;
+        }
         if (!empty($this->input->post('PRJ_DURATION_EXP'))) {
             $params['PRJ_DURATION_EXP'] = $this->input->post('PRJ_DURATION_EXP', TRUE);
         }
@@ -149,6 +153,10 @@ class Project_m extends CI_Model {
     }
 
     public function update($PRJ_ID) {
+        // get old data project, before update data
+        $old = $this->db->get_where('tb_project',['PRJ_ID' => $PRJ_ID])->row();
+        $OLD_PAYMENT_METHOD = $old->PRJ_PAYMENT_METHOD;
+        //
         $PRJ_PAYMENT_METHOD = $this->input->post('PRJ_PAYMENT_METHOD', TRUE);
         $PRJ_DURATION_EST   = $this->input->post('PRJ_DURATION_EST', TRUE);
         $COURIER_ID         = $this->input->post('COURIER_ID', TRUE);
@@ -213,19 +221,53 @@ class Project_m extends CI_Model {
         //
 
         if ($PRJ_PAYMENT_METHOD != null) {
-            $payment = $this->db->get_where('tb_project_payment',['PRJ_ID' => $PRJ_ID, 'PRJP_PAYMENT_DATE' => "0000-00-00"]);
-            if ($payment->num_rows() > 0) {
-                $this->db->delete('tb_project_payment',['PRJ_ID' => $PRJ_ID]);
-            }
+            $check_payment = $this->db->get_where('tb_project_payment',['PRJ_ID' => $PRJ_ID, 'PRJP_PAYMENT_DATE' => "0000-00-00"]);
+            if ($OLD_PAYMENT_METHOD != null) {
+                if ($PRJ_PAYMENT_METHOD == 1) { // installment
+                    if ($check_payment->num_rows() > 0) {
+                        if ($PRJ_PAYMENT_METHOD == $OLD_PAYMENT_METHOD) {
+                            $payments = $check_payment->result();
+                            foreach ($payments as $pay) {
+                                $AMOUNT = ($pay->PRJP_PCNT / 100) * $PRJ_GRAND_TOTAL;
+                                $update_installment['PRJP_AMOUNT'] = $AMOUNT;
+                                $this->db->where('PRJP_ID', $pay->PRJP_ID)->update('tb_project_payment', $update_installment);
+                            }
+                        } else {
+                            $this->db->delete('tb_project_payment',['PRJ_ID' => $PRJ_ID]);
+                        }
+                    }
+                } else if ($PRJ_PAYMENT_METHOD == 0) { // full
+                    if ($check_payment->num_rows() > 0) {
+                        if ($PRJ_PAYMENT_METHOD == $OLD_PAYMENT_METHOD) {
+                            $payment = $check_payment->row();
+                            $update_payment['PRJP_AMOUNT'] = $PRJ_GRAND_TOTAL;
+                            $this->db->where('PRJP_ID', $payment->PRJP_ID)->update('tb_project_payment', $update_payment);
+                        } else {
+                            $this->db->delete('tb_project_payment',['PRJ_ID' => $PRJ_ID]);
+                            $params['PRJ_ID']      = $PRJ_ID;
+                            $params['PRJP_NO']     = 1;
+                            $params['PRJP_PCNT']   = 100;
+                            $params['PRJP_AMOUNT'] = $PRJ_GRAND_TOTAL;
+                            $this->db->insert('tb_project_payment', $this->db->escape_str($params));
+                        }
+                    } else {
+                        $params['PRJ_ID']      = $PRJ_ID;
+                        $params['PRJP_NO']     = 1;
+                        $params['PRJP_PCNT']   = 100;
+                        $params['PRJP_AMOUNT'] = $PRJ_GRAND_TOTAL;
+                        $this->db->insert('tb_project_payment', $this->db->escape_str($params));
+                    }
 
-            if ($PRJ_PAYMENT_METHOD != 1) {
-                $params['PRJ_ID']      = $this->input->post('PRJ_ID', TRUE);
-                $params['PRJP_NO']     = 1;
-                $params['PRJP_PCNT']   = 100;
-                $params['PRJP_AMOUNT'] = $PRJ_GRAND_TOTAL;
-                $this->db->insert('tb_project_payment', $this->db->escape_str($params));
+                }
+            } else {
+                if ($PRJ_PAYMENT_METHOD == 0) {
+                    $params['PRJ_ID']      = $PRJ_ID;
+                    $params['PRJP_NO']     = 1;
+                    $params['PRJP_PCNT']   = 100;
+                    $params['PRJP_AMOUNT'] = $PRJ_GRAND_TOTAL;
+                    $this->db->insert('tb_project_payment', $this->db->escape_str($params));
+                }
             }
-
         }
     }
 
@@ -312,29 +354,6 @@ class Project_m extends CI_Model {
             'PRJ_STATUS' => 9,
         );
         $this->db->where('PRJ_ID', $PRJ_ID)->update('tb_project', $this->db->escape_str($cancel_project));
-
-        // if($PRJ_STATUS >= 3 && $PRJ_STATUS <= 6) {
-        //     if($PRJ_PAYMENT_METHOD != 1) {
-        //         if($PRJ_GRAND_TOTAL !=0){
-        //             $TOTAL_DEPOSIT = $PRJ_GRAND_TOTAL;
-        //         } else {
-        //             $TOTAL_DEPOSIT = $TANPA_DEPOSIT;
-        //         }
-        //     } else {
-        //         $row = $this->db->select('SUM(PRJP_AMOUNT) AS TOTAL_AMOUNT')->where('PRJ_ID', $PRJ_ID)->where('BANK_ID IS NOT NULL', null, false)->get('tb_project_payment')->row();
-        //         $TOTAL_DEPOSIT = $row->TOTAL_AMOUNT;
-        //     }
-        //     $get_user = $this->get_user_id($CUST_ID)->row();
-        //     $USER_ID  = $get_user->USER_ID;
-        //     $deposit['CUSTD_DATE']           = date('Y-m-d H:i:s');
-        //     $deposit['ORDER_ID']             = $PRJ_ID;
-        //     $deposit['CUSTD_DEPOSIT']        = $TOTAL_DEPOSIT;
-        //     $deposit['CUSTD_DEPOSIT_STATUS'] = 0;
-        //     $deposit['CUST_ID']              = $CUST_ID;
-        //     $deposit['USER_ID']              = $USER_ID;
-        //     $deposit['CUSTD_NOTES']          = "Order Custom : ".$PRJ_ID;
-        //     $this->db->insert('tb_customer_deposit', $this->db->escape_str($deposit));
-        // }
     }
 
     public function delete($PRJ_ID) {

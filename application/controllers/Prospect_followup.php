@@ -3,6 +3,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Prospect_followup extends CI_Controller {
 
+	public $pageroot = "order-custom";
+
 	function __construct() {
 		parent::__construct();
 		check_not_login();
@@ -13,6 +15,7 @@ class Prospect_followup extends CI_Controller {
 		$this->load->model('coutariff_m');
 		$this->load->model('project_producer_list_m');
 		$this->load->model('producer_x_product_m');
+		$this->load->model('orderletter_m');
 		$this->load->model('project_m');
 		$this->load->model('project_detail_m');
 		$this->load->model('project_quantity_m');
@@ -51,12 +54,20 @@ class Prospect_followup extends CI_Controller {
 
 			if ($field->PRDU_ID!=null) {
 				$PRDU_NAME = $field->PRDU_NAME;
-			} else {$PRDU_NAME = "<div align='center'>-</div>";}
-
-			if ($field->PRJPR_ID != null) {
-				$STATUS = "<div class='btn btn-default btn-sm' style='font-size: 11px; color: #fff; background-color:#20c997; border-color:#20c997; border-radius: 6px; padding: 2px 5px 5px 3px; width:90px;'><i class='fa fa-check-circle'></i><span><b> Followed Up</b></span></div>";
+				$PRINT 	   = 'class="btn btn-sm btn-primary mb-1"';
 			} else {
-				$STATUS = "<div class='btn btn-default btn-sm' style='font-size: 11px; color: #fff; background-color:#6c757d; border-color:#6c757d; border-radius: 6px; padding: 2px 5px 5px 3px; width:90px;'><i class='fa fa-minus-circle'></i><span><b> Not Followed Up</b></span></div>";
+				$PRDU_NAME = "-";
+				$PRINT     = 'class="btn btn-sm btn-secondary mb-1" style="opacity : 0.5; pointer-events: none; color : #ffffff;"';
+			}
+
+			if ($field->PRJT_ID == 1) {
+				if ($field->PRJPR_ID != null) {
+					$STATUS = "<div class='btn btn-default btn-sm' style='font-size: 11px; color: #fff; background-color:#20c997; border-color:#20c997; border-radius: 6px; padding: 2px 5px 5px 3px; width:90px;'><i class='fa fa-check-circle'></i><span><b> Followed Up</b></span></div>";
+				} else {
+					$STATUS = "<div class='btn btn-default btn-sm' style='font-size: 11px; color: #fff; background-color:#6c757d; border-color:#6c757d; border-radius: 6px; padding: 2px 5px 5px 3px; width:90px;'><i class='fa fa-minus-circle'></i><span><b> Not Followed Up</b></span></div>";
+				}
+			} else {
+				$STATUS = "<div class='btn btn-default btn-sm' style='font-size: 11px; color: #fff; background-color:#20c997; border-color:#20c997; border-radius: 6px; padding: 2px 5px 5px 3px; width:90px;'><i class='fa fa-check-circle'></i><span><b> Followed Up</b></span></div>";
 			}
 
 			$row   = array();
@@ -65,9 +76,10 @@ class Prospect_followup extends CI_Controller {
 			$row[] = "<div align='center'>".date('d-m-Y / H:i:s', strtotime($field->PRJ_DATE))."</div>";
 			$row[] = stripslashes($field->CUST_NAME);
 			$row[] = stripslashes($field->PRDUP_NAME);
-			$row[] = stripslashes($PRDU_NAME);
+			$row[] = "<div align='center'>".stripslashes($PRDU_NAME)."</div>";
 			$row[] = '<div style="vertical-align: middle; text-align: center;">
-					<a href="'.$url.'prospect_followup/detail/'.$field->PRJ_ID.'/'.$field->PRJD_ID.'" class="btn btn-sm btn-warning" title="Follow Up"><i class="fa fa-share"></i></a>
+					<a href="'.$url.'prospect_followup/detail/'.$field->PRJ_ID.'/'.$field->PRJD_ID.'" class="btn btn-sm btn-warning mb-1" title="Follow Up"><i class="fa fa-share"></i></a>
+					<a href="'.$url.'prospect_followup/purchase/'.$field->PRJ_ID.'/'.$field->PRJD_ID.'" '.$PRINT.' target="_blank" title="Print PO"><i class="fa fa-print"></i></a>
 				</div>';
 			$data[] = $row;
 		}
@@ -501,4 +513,15 @@ class Prospect_followup extends CI_Controller {
 			echo "<script>window.location='".site_url('project')."'</script>";
 		}
 	}
+
+	public function purchase($PRJ_ID, $PRJD_ID) {
+    	$ORDL_TYPE = 4;
+    	$ORDL_DOC  = 4;
+    	$data['check'] 			= $this->orderletter_m->check($PRJ_ID, $ORDL_TYPE, $ORDL_DOC);
+		$data['pernah_dicetak'] = $this->orderletter_m->get_pernah_dicetak($PRJ_ID, $ORDL_TYPE, $ORDL_DOC)->row();
+		$data['row'] 			= $this->orderletter_m->get()->row();
+		$data['project'] 		= $this->project_m->get($PRJ_ID)->row();
+		$data['detail'] 		= $this->project_detail_m->get($PRJ_ID, $PRJD_ID)->row();
+    	$this->template->load('template', 'letter/project_purchase', $data);
+    }
 }

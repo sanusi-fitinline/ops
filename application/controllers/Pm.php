@@ -3,6 +3,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Pm extends CI_Controller {
 
+	public $pageroot = "pre-order";
+
 	function __construct() {
 		parent::__construct();
 		check_not_login();
@@ -55,12 +57,12 @@ class Pm extends CI_Controller {
 		$no   = $_POST['start'];
 		foreach ($list as $field) {
 			if ($field->LSAM_DELDATE!=null) {
-				$STATUS = "<div class='btn btn-default btn-sm' style='font-size: 12px; color: #fff; background-color:#17a2b8; border-color:#17a2b8; border-radius: 6px; padding: 2px 5px 5px 3px; width:80px;'><i class='fa fa-check-circle'></i><span><b> Delivered</b></span></div>";
+				$STATUS = "<div class='btn btn-default btn-sm' style='font-size: 12px; color: #fff; background-color:#17a2b8; border-color:#17a2b8; border-radius: 6px; padding: 2px 5px 5px 3px; width:85px;'><i class='fa fa-check-circle'></i><span><b> Delivered</b></span></div>";
 			} else {
 				if ($field->LSAM_PAYDATE!=null || ($field->LSAM_COST==0 && $field->LSAM_DEPOSIT == null)) {
-				 	$STATUS = "<div class='btn btn-default btn-sm' style='font-size: 12px; color: #fff; background-color:#20c997; border-color:#20c997; border-radius: 6px; padding: 2px 5px 5px 3px; width:80px;'><i class='fa fa-minus-circle'></i><span><b> Paid</b></span></div>";
+				 	$STATUS = "<div class='btn btn-default btn-sm' style='font-size: 12px; color: #fff; background-color:#20c997; border-color:#20c997; border-radius: 6px; padding: 2px 5px 5px 3px; width:85px;'><i class='fa fa-minus-circle'></i><span><b> Paid</b></span></div>";
 				} else {
-					$STATUS = "<div class='btn btn-default btn-sm' style='font-size: 12px; color: #fff; background-color:#6c757d; border-color:#6c757d; border-radius: 6px; padding: 2px 5px 5px 3px; width:80px;'><b>Requested</b></div>";
+					$STATUS = "<div class='btn btn-default btn-sm' style='font-size: 12px; color: #fff; background-color:#6c757d; border-color:#6c757d; border-radius: 6px; padding: 2px 5px 5px 3px; width:85px;'><i class='fa fa-bell'></i><span><b> Requested</b></span></div>";
 				}
 			}
 			if ($field->LSAM_DELDATE!=null) {
@@ -196,12 +198,12 @@ class Pm extends CI_Controller {
 		foreach ($list as $field) {
 			if ($field->LSTOCK_STATUS!=null) {
 				if ($field->LSTOCK_STATUS!=0) {
-					$LSTOCK_STATUS = "<div class='btn btn-default btn-sm' style='font-size: 12px; color: #fff; background-color:#17a2b8; border-color:#17a2b8; border-radius: 6px; padding: 2px 5px 5px 3px; width:80px;'><i class='fa fa-check-circle'></i><span><b> Available</b></span></div>";
+					$LSTOCK_STATUS = "<div class='btn btn-default btn-sm' style='font-size: 12px; color: #fff; background-color:#17a2b8; border-color:#17a2b8; border-radius: 6px; padding: 2px 5px 5px 3px; width:90px;'><i class='fa fa-check-circle'></i><span><b> Available</b></span></div>";
 				} else {
-					$LSTOCK_STATUS = "<div class='btn btn-default btn-sm' style='font-size: 12px; color: #fff; background-color:orange; border-color:orange; border-radius: 6px; padding: 2px 5px 5px 3px; width:80px;'><i class='fa fa-ban'></i><span><b> Not Available</b></span></div>";
+					$LSTOCK_STATUS = "<div class='btn btn-default btn-sm' style='font-size: 12px; color: #fff; background-color:orange; border-color:orange; border-radius: 6px; padding: 2px 5px 5px 3px; width:90px;'><i class='fa fa-ban'></i><span><b> Not Available</b></span></div>";
 				}
 			} else {
-				$LSTOCK_STATUS = "<div class='btn btn-default btn-sm' style='font-size: 12px; color: #fff; background-color:#6c757d; border-color:#6c757d; border-radius: 6px; padding: 2px 5px 5px 3px; width:80px;'><b>Unchecked</b></div>";
+				$LSTOCK_STATUS = "<div class='btn btn-default btn-sm' style='font-size: 12px; color: #fff; background-color:#6c757d; border-color:#6c757d; border-radius: 6px; padding: 2px 5px 5px 3px; width:90px;'><i class='fa fa-bell'></i><span><b> Unchecked</b></span></div>";
 			}
 
 			$row   = array();

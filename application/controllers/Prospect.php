@@ -3,6 +3,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Prospect extends CI_Controller {
 
+	public $pageroot = "order-custom";
+
 	function __construct() {
 		parent::__construct();
 		// check status login
@@ -48,8 +50,11 @@ class Prospect extends CI_Controller {
 				// Assigned
 				$PRJ_STATUS = "<div class='btn btn-default btn-sm' style='font-size: 12px; color: #fff; background-color:#795548; border-color:#795548; border-radius: 6px; padding: 2px 5px 5px 3px; width:90px;'><i class='fas fa-user-check'></i><span><b> Assigned</span></div>";
 			} elseif ( $field->PRJ_STATUS == 3) {
+				// Quoted
+				$PRJ_STATUS = "<div class='btn btn-default btn-sm' style='font-size: 12px; color: #fff; background-color:#6f7948; border-color:#6f7948; border-radius: 6px; padding: 2px 5px 5px 3px; width:90px;'><i class='fas fa-print'></i><span><b> Quoted</b></span></div>";
+			} elseif ( $field->PRJ_STATUS == 33) {
 				// Invoiced
-				$PRJ_STATUS = "<div class='btn btn-default btn-sm' style='font-size: 12px; color: #fff; background-color:#6f7948; border-color:#6f7948; border-radius: 6px; padding: 2px 5px 5px 3px; width:90px;'><i class='fas fa-print'></i><span><b> Invoiced</b></span></div>";
+				$PRJ_STATUS = "<div class='btn btn-default btn-sm' style='font-size: 12px; color: #fff; background-color:#487279; border-color:#487279; border-radius: 6px; padding: 2px 5px 5px 3px; width:90px;'><i class='fas fa-print'></i><span><b> Invoiced</b></span></div>";
 			} elseif ( $field->PRJ_STATUS == 4) {
 				// Project
 				$PRJ_STATUS = "<div class='btn btn-default btn-sm' style='font-size: 12px; color: #fff; background-color:#20c997; border-color:#20c997; border-radius: 6px; padding: 2px 5px 5px 3px; width:90px;'><i class='fas fa-drafting-compass'></i><span><b> Project</b></span></div>";
@@ -82,6 +87,12 @@ class Prospect extends CI_Controller {
 				$detail = "detail";
 			}
 
+			if($field->PRJ_STATUS >= 4 && $field->PRJ_STATUS != 9) {
+				$delete = 'class="btn btn-sm btn-secondary mb-1" disabled';
+			} else {
+				$delete = 'class="btn btn-sm btn-danger mb-1"';
+			}
+
 			if((!$this->access_m->isDelete('Prospect', 1)->row()) && ($this->session->GRP_SESSION !=3))
 			{
 				$row[] = '<div style="vertical-align: middle; text-align: center;">
@@ -90,7 +101,7 @@ class Prospect extends CI_Controller {
 				$row[] = '<form action="'.$url.'prospect/del_prospect" method="post"><div style="vertical-align: middle; text-align: center;">
 					<a href="'.$url.'prospect/'.$detail.'/'.$field->PRJ_ID.'" class="btn btn-sm btn-primary mb-1" title="Detail"><i class="fa fa-search-plus"></i></a>
 					<input type="hidden" name="PRJ_ID" value="'.$field->PRJ_ID.'">
-					<button onclick="'."return confirm('Hapus data?')".'" type="submit" class="btn btn-sm btn-danger mb-1" title="Delete"><i class="fa fa-trash"></i></button>
+					<button onclick="'."return confirm('Hapus data?')".'" type="submit" title="Delete" '.$delete.'><i class="fa fa-trash"></i></button>
 					</div></form>';
 			}
 			$data[] = $row;
@@ -130,21 +141,42 @@ class Prospect extends CI_Controller {
 	}
 
 	public function add_detail_process() {
-		$PRJ_ID 	 = $this->input->post('PRJ_ID');
-		$data['row'] = $this->project_detail_m->insert();
+		$query['insert'] = $this->project_detail_m->insert();
+		$PRJD_ID = $this->db->insert_id();
+		$PRJ_ID  = $this->input->post('PRJ_ID');
+
         if(isset($_POST['new'])) {
-			if($data){
+			if($query){
 				echo "<script>alert('Data berhasil ditambah.')</script>";
 				echo "<script>window.location='".site_url('prospect/add_detail/'.$PRJ_ID)."'</script>";
 			}
 		} else {
-			if($data) {
+			if($query) {
 	            echo "<script>window.location='".site_url('prospect/detail/'.$PRJ_ID)."'</script>";
 	        } else {
 	            echo "<script>alert('Data gagal ditambah.')</script>";
 	            echo "<script>window.location='".site_url('prospect')."'</script>";
 	        }
-		}	
+		}
+
+		// send push notification to group custom
+		if ($query) {
+			require_once(APPPATH.'third_party/pusher/vendor/autoload.php');
+			$options = array(
+				'cluster' => 'ap1',
+				'useTLS' => true
+			);
+			$pusher = new Pusher\Pusher(
+				'3de920bf0bfb448a7809',
+				'0799716e5d66b96f5b61',
+				'845132',
+				$options
+			);
+
+			$data['message'] = "\nNew Prospect from Customer!";
+			$data['url'] 	 = site_url('prospect_followup/detail/'.$PRJ_ID.'/'.$PRJD_ID);
+			$pusher->trigger('channel-custom', 'event-custom', $data);
+		}
 	}
 
 	public function detail($PRJ_ID) {
@@ -164,41 +196,28 @@ class Prospect extends CI_Controller {
 		}
 	}
 
-	public function view($PRJ_ID, $PRJD_ID) {
-		$query = $this->project_m->get($PRJ_ID);
-		if ($query->num_rows() > 0) {
-			$data['row'] 		= $query->row();
-			$data['detail'] 	= $this->project_detail_m->get(null, $PRJD_ID)->row();
-			$data['size_group'] = $this->size_group_m->get()->result();
-			$this->template->load('template', 'order-custom/prospect/prospect_detail_view', $data);
+	public function del_detail($PRJ_ID, $PRJD_ID) {
+		$this->project_detail_m->delete($PRJD_ID);
+		if($this->db->affected_rows() > 0) {
+			echo "<script>alert('Data berhasil dihapus.')</script>";
+			echo "<script>window.location='".site_url('prospect/detail/'.$PRJ_ID)."'</script>";
 		} else {
-			echo "<script>alert('Data tidak ditemukan.')</script>";
-			echo "<script>window.location='".site_url('prospect')."'</script>";
+			echo "<script>alert('Data gagal dihapus.')</script>";
+			echo "<script>window.location='".site_url('prospect/detail/'.$PRJ_ID)."'</script>";
 		}
 	}
 
 	public function cancel_detail($PRJ_ID) {
 		$query = $this->project_m->get($PRJ_ID);
 		if ($query->num_rows() > 0) {
-			$data['row'] 		= $query->row();
-			$data['_detail'] 	= $this->project_detail_m->get($PRJ_ID)->result();
-			$data['quantity'] 	= $this->project_quantity_m->get()->result();
-			$data['model'] 		= $this->project_model_m->get()->result();
-			$data['payment'] 	= $this->project_payment_m->get($PRJ_ID)->result_array();
+			$data['row'] 		 = $query->row();
+			$data['bank'] 		 = $this->bank_m->getBank()->result();
+			$data['_detail'] 	 = $this->project_detail_m->get($PRJ_ID, null)->result();
+			$data['quantity'] 	 = $this->project_quantity_m->get()->result();
+			$data['installment'] = $this->project_payment_m->check_installment($PRJ_ID);
+			$data['courier'] 	 = $this->courier_m->getCourier()->result();
+			$data['payment'] 	 = $this->project_payment_m->get($PRJ_ID)->result_array();
 			$this->template->load('template', 'order-custom/prospect/prospect_cancel_detail', $data);
-		} else {
-			echo "<script>alert('Data tidak ditemukan.')</script>";
-			echo "<script>window.location='".site_url('prospect')."'</script>";
-		}
-	}
-
-	public function cancel_detail_view($PRJ_ID, $PRJD_ID) {
-		$query = $this->project_m->get($PRJ_ID);
-		if ($query->num_rows() > 0) {
-			$data['row'] 		= $query->row();
-			$data['detail'] 	= $this->project_detail_m->get(null, $PRJD_ID)->row();
-			$data['model'] 		= $this->project_model_m->get($PRJD_ID, null)->result();
-			$this->template->load('template', 'order-custom/prospect/prospect_cancel_detail_view', $data);
 		} else {
 			echo "<script>alert('Data tidak ditemukan.')</script>";
 			echo "<script>window.location='".site_url('prospect')."'</script>";
@@ -255,6 +274,18 @@ class Prospect extends CI_Controller {
 			echo "<script>alert('Data gagal dihapus.')</script>";
 			echo "<script>window.location='".site_url('prospect')."'</script>";
 		}
+	}
+
+	public function edit_actual_qty() {
+		$PRJ_ID = $this->input->post('PRJ_ID', true);
+		$update['update'] = $this->project_detail_m->update_actual_qty($PRJ_ID);
+		if($update) {
+            echo "<script>alert('Data berhasil diubah.')</script>";
+            echo "<script>window.location='".site_url('prospect/detail/'.$PRJ_ID)."'</script>";
+        } else {
+            echo "<script>alert('Data gagal diubah.')</script>";
+            echo "<script>window.location='".site_url('prospect/detail/'.$PRJ_ID)."'</script>";
+        }
 	}
 
 	public function quantity($PRJ_ID, $PRJD_ID) {
@@ -507,23 +538,6 @@ class Prospect extends CI_Controller {
 		}
 	}
 
-	public function prospect_quotation($PRJ_ID) {
-		$query = $this->project_m->get($PRJ_ID);
-		if ($query->num_rows() > 0) {
-			$data['row'] 		 = $query->row();
-			$data['bank'] 		 = $this->bank_m->getBank()->result();
-			$data['_detail'] 	 = $this->project_detail_m->get($PRJ_ID, null)->result();
-			$data['quantity'] 	 = $this->project_quantity_m->get()->result();
-			$data['installment'] = $this->project_payment_m->check_installment($PRJ_ID);
-			$data['courier'] 	 = $this->courier_m->getCourier()->result();
-			$data['payment'] 	 = $this->project_payment_m->get($PRJ_ID)->result_array();
-			$this->template->load('template', 'order-custom/prospect/prospect_quotation', $data);
-		} else {
-			echo "<script>alert('Data tidak ditemukan.')</script>";
-			echo "<script>window.location='".site_url('prospect')."'</script>";
-		}
-    }
-
 	public function quotation($PRJ_ID) {
 		$ORDL_TYPE 				= 1;
 		$ORDL_DOC 				= 4;
@@ -532,26 +546,5 @@ class Prospect extends CI_Controller {
 		$data['row'] 			= $this->orderletter_m->get()->row();
 		$data['project'] 		= $this->project_m->get($PRJ_ID)->row();
     	$this->template->load('template', 'letter/project_quotation', $data);
-    }
-
-    public function invoice($PRJ_ID) {
-		$ORDL_TYPE 				= 2;
-		$ORDL_DOC 				= 4;
-		$data['check'] 			= $this->orderletter_m->check($PRJ_ID, $ORDL_TYPE, $ORDL_DOC);
-		$data['pernah_dicetak'] = $this->orderletter_m->get_pernah_dicetak($PRJ_ID, $ORDL_TYPE, $ORDL_DOC)->row();
-		$data['row'] 			= $this->orderletter_m->get()->row();
-		$data['project'] 		= $this->project_m->get($PRJ_ID)->row();
-    	$this->template->load('template', 'letter/project_invoice', $data);
-    }
-
-    public function receipt($PRJ_ID) {
-		$ORDL_TYPE 				= 3;
-		$ORDL_DOC 				= 4;
-		$data['check'] 			= $this->orderletter_m->check($PRJ_ID, $ORDL_TYPE, $ORDL_DOC);
-		$data['pernah_dicetak'] = $this->orderletter_m->get_pernah_dicetak($PRJ_ID, $ORDL_TYPE, $ORDL_DOC)->row();
-		$data['row'] 			= $this->orderletter_m->get()->row();
-		$data['project'] 		= $this->project_m->get($PRJ_ID)->row();
-		$data['payment'] 		= $this->project_payment_m->get($PRJ_ID)->result();
-    	$this->template->load('template', 'letter/project_receipt', $data);
     }
 }

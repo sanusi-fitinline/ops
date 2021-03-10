@@ -23,7 +23,7 @@
 						<div class="col-md-12">
 							<?php
 								if($project->CUST_ADDRESS !=null){
-									$ADDRESS = $project->CUST_ADDRESS.', ';
+									$ADDRESS = str_replace("<br>", "\r\n", stripslashes($project->CUST_ADDRESS)).', ';
 								} else {$ADDRESS ='';}
 								if($project->SUBD_ID !=0){
 									$SUBD = $project->SUBD_NAME.', ';
@@ -239,8 +239,8 @@
 			    </div>
 	      		<!-- Modal footer -->
 		      	<div class="modal-footer">
-		      		<button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;&nbsp;Save</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i>&nbsp;&nbsp;Cancel</button>
+		      		<button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-save"></i>&nbsp;&nbsp;Save</button>
+                    <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal"><i class="fa fa-times"></i>&nbsp;&nbsp;Cancel</button>
 		      	</div>
 			</form>
     	</div>
@@ -317,15 +317,15 @@
 							<div class="col-md-12">
 								<div class="form-group">
 									<label>Notes</label>
-									<textarea class="form-control" cols="100%" rows="3" name="PRJS_NOTES" autocomplete="off"><?php echo $ship->PRJS_NOTES ?></textarea>
+									<textarea class="form-control" cols="100%" rows="3" name="PRJS_NOTES" autocomplete="off"><?php echo str_replace("<br>", "\r\n", stripslashes($ship->PRJS_NOTES)) ?></textarea>
 								</div>
 							</div>
 						</div>
 				    </div>
 		      		<!-- Modal footer -->
 			      	<div class="modal-footer">
-			      		<button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;&nbsp;Save</button>
-	                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i>&nbsp;&nbsp;Cancel</button>
+			      		<button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-save"></i>&nbsp;&nbsp;Save</button>
+	                    <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal"><i class="fa fa-times"></i>&nbsp;&nbsp;Cancel</button>
 			      	</div>
 				</form>
 	    	</div>

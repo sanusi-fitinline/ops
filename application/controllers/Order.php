@@ -3,6 +3,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Order extends CI_Controller {
 
+	public $pageroot = "order";
+
 	function __construct() {
 		parent::__construct();
 		check_not_login();
@@ -227,7 +229,8 @@ class Order extends CI_Controller {
 	}
 
 	public function add_detail() {
-		$data['product'] = $this->product_m->get()->result();
+		$data['row'] 	 = $this->order_m->get($this->uri->segment(3))->row();
+		$data['product'] = $this->product_m->get(null, 1)->result();
 		$data['umea'] 	 = $this->umea_m->get()->result();
 		$this->template->load('template', 'order/order_form_add_detail', $data);
 	}
@@ -246,6 +249,32 @@ class Order extends CI_Controller {
 				echo "<script>window.location='".site_url('order/detail/'.$this->input->post('ORDER_ID'))."'</script>";
 			}
 		}		
+	}
+
+	public function recent_json() {
+		$url 	 = $this->config->base_url();
+		$CUST_ID = $this->input->post('cust_id', true);
+		$list 	 = $this->orderdetail_m->get_datatables($CUST_ID);
+		$data 	 = array();
+		$no 	 = $_POST['start'] + 1;
+		foreach ($list as $field) {
+			$row   = array();
+			$row[] = '<div align="center">'.$no++.'</div>';
+			$row[] = stripslashes($field->PRO_NAME);
+			$row[] = stripslashes($field->ORDD_OPTION);
+			$row[] = $field->ORDD_QUANTITY.' '.$field->UMEA_NAME;
+			
+			$data[] = $row;
+		}
+
+		$output = array(
+			"draw" => $_POST['draw'],
+			"recordsTotal" => $this->orderdetail_m->count_all($CUST_ID),
+			"recordsFiltered" => $this->orderdetail_m->count_filtered($CUST_ID),
+			"data" => $data,
+		);
+		//output dalam format JSON
+		echo json_encode($output);
 	}
 
 	public function detail($ORDER_ID) {
@@ -462,6 +491,7 @@ class Order extends CI_Controller {
 		$data['check'] 			= $this->orderletter_m->check($ORDER_ID, $ORDL_TYPE, $ORDL_DOC);
 		$data['pernah_dicetak'] = $this->orderletter_m->get_pernah_dicetak($ORDER_ID, $ORDL_TYPE, $ORDL_DOC)->row();
 		$data['row'] 			= $this->orderletter_m->get()->row();
+		$data['order'] 			= $this->order_m->get($ORDER_ID)->row();
 		$data['courier_data'] 	= $this->ordervendor_m->get_by_vendor($ORDER_ID)->result();
     	$this->template->load('template', 'letter/order_quotation', $data);
     }
@@ -472,6 +502,7 @@ class Order extends CI_Controller {
     	$data['check'] 			= $this->orderletter_m->check($ORDER_ID, $ORDL_TYPE, $ORDL_DOC);
 		$data['pernah_dicetak'] = $this->orderletter_m->get_pernah_dicetak($ORDER_ID, $ORDL_TYPE, $ORDL_DOC)->row();
 		$data['row'] 			= $this->orderletter_m->get()->row();
+    	$data['order'] 			= $this->order_m->get($ORDER_ID)->row();
 		$data['courier_data'] 	= $this->ordervendor_m->get_by_vendor($ORDER_ID)->result();
     	$this->template->load('template', 'letter/order_invoice', $data);
     }

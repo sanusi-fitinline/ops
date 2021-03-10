@@ -3,62 +3,8 @@
 				// pusher js
 				$session = <?php echo $this->session->GRP_SESSION ?>;
 				$user 	 = <?php echo $this->session->USER_SESSION ?>;
-				if ($session == 2) {
-					// Enable pusher logging - don't include this in production
-				    Pusher.logToConsole = true;
 
-				    var pusher = new Pusher('3de920bf0bfb448a7809', {
-				     	cluster: 'ap1',
-				      	forceTLS: true
-				    });
-
-				    var channel = pusher.subscribe('channel-pm');
-				    channel.bind('event-pm', function(data) {
-						if (!("Notification" in window)) {
-								console.log("This browser does not support desktop notification");
-							}
-
-						// Let's check whether notification permissions have alredy been granted
-						else if (Notification.permission === "granted") {
-							// If it's okay let's create a notification
-							var notifikasi = new Notification('  Notification', {
-								icon: "<?php echo base_url('assets/images/notif.png') ?>",
-								body: data.message,
-								requireInteraction: true,
-							});
-							notifikasi.onclick = function () {
-								window.focus();
-								window.location.href = data.url;
-							};
-							// setTimeout(function() { 
-							// 	notifikasi.close() 
-							// }, 60000);
-						}
-
-						// Otherwise, we need to ask the user for permission
-						else if (Notification.permission !== 'denied' || Notification.permission === "default") {
-							Notification.requestPermission(function (permission) {
-								// If the user accepts, let's create a notification
-							  	if (permission === "granted") {
-							    	var notifikasi = new Notification('  Notification', {
-										icon: "<?php echo base_url('assets/images/notif.png') ?>",
-										body: data.message,
-										requireInteraction: true,
-									});
-									notifikasi.onclick = function () {
-										window.focus();
-										window.location.href = data.url;
-									};
-									// setTimeout(function() { 
-									// 	notifikasi.close() 
-									// }, 60000);
-							  	}
-							});
-						}
-					});
-				}
-
-				if ($session == 1) {
+				if ($session == 1) { // group customer service
 					// Enable pusher logging - don't include this in production
 				    Pusher.logToConsole = true;
 
@@ -114,6 +60,117 @@
 					    }
 					});
 				}
+
+				if ($session == 2) { // group product management
+					// Enable pusher logging - don't include this in production
+				    Pusher.logToConsole = true;
+
+				    var pusher = new Pusher('3de920bf0bfb448a7809', {
+				     	cluster: 'ap1',
+				      	forceTLS: true
+				    });
+
+				    var channel = pusher.subscribe('channel-pm');
+				    channel.bind('event-pm', function(data) {
+						if (!("Notification" in window)) {
+								console.log("This browser does not support desktop notification");
+							}
+
+						// Let's check whether notification permissions have alredy been granted
+						else if (Notification.permission === "granted") {
+							// If it's okay let's create a notification
+							var notifikasi = new Notification('  Notification', {
+								icon: "<?php echo base_url('assets/images/notif.png') ?>",
+								body: data.message,
+								requireInteraction: true,
+							});
+							notifikasi.onclick = function () {
+								window.focus();
+								window.location.href = data.url;
+							};
+							// setTimeout(function() { 
+							// 	notifikasi.close() 
+							// }, 60000);
+						}
+
+						// Otherwise, we need to ask the user for permission
+						else if (Notification.permission !== 'denied' || Notification.permission === "default") {
+							Notification.requestPermission(function (permission) {
+								// If the user accepts, let's create a notification
+							  	if (permission === "granted") {
+							    	var notifikasi = new Notification('  Notification', {
+										icon: "<?php echo base_url('assets/images/notif.png') ?>",
+										body: data.message,
+										requireInteraction: true,
+									});
+									notifikasi.onclick = function () {
+										window.focus();
+										window.location.href = data.url;
+									};
+									// setTimeout(function() { 
+									// 	notifikasi.close() 
+									// }, 60000);
+							  	}
+							});
+						}
+					});
+				}
+
+				if ($session == 15) { // group custom
+					// Enable pusher logging - don't include this in production
+				    Pusher.logToConsole = true;
+
+				    var pusher = new Pusher('3de920bf0bfb448a7809', {
+				     	cluster: 'ap1',
+				      	forceTLS: true
+				    });
+
+				    var channel = pusher.subscribe('channel-custom');
+				    channel.bind('event-custom', function(data) {
+						if (!("Notification" in window)) {
+								console.log("This browser does not support desktop notification");
+							}
+
+						// Let's check whether notification permissions have alredy been granted
+						else if (Notification.permission === "granted") {
+							// If it's okay let's create a notification
+							var notifikasi = new Notification('  Notification', {
+								icon: "<?php echo base_url('assets/images/notif.png') ?>",
+								body: data.message,
+								requireInteraction: true,
+							});
+							notifikasi.onclick = function () {
+								window.focus();
+								window.location.href = data.url;
+							};
+							// setTimeout(function() { 
+							// 	notifikasi.close() 
+							// }, 60000);
+						}
+
+						// Otherwise, we need to ask the user for permission
+						else if (Notification.permission !== 'denied' || Notification.permission === "default") {
+							Notification.requestPermission(function (permission) {
+								// If the user accepts, let's create a notification
+							  	if (permission === "granted") {
+							    	var notifikasi = new Notification('  Notification', {
+										icon: "<?php echo base_url('assets/images/notif.png') ?>",
+										body: data.message,
+										requireInteraction: true,
+									});
+									notifikasi.onclick = function () {
+										window.focus();
+										window.location.href = data.url;
+									};
+									// setTimeout(function() { 
+									// 	notifikasi.close() 
+									// }, 60000);
+							  	}
+							});
+						}
+					});
+				}
+				
 				//
 
 				// untuk pop up datepicker
@@ -487,7 +544,8 @@
 				    });
 			    });
 
-			    if($("#CUST_SELECT").val() != null) {
+			    var segment = "<?php echo $this->uri->segment(3) ?>";
+			    if(  (segment != "") && ($("#CUST_SELECT").val() != null) ) {
 				    $("#result").hide();
 				    $("#serv").hide();
 				    $("#tarf").hide();

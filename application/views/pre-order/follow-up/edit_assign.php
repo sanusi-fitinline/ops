@@ -49,7 +49,7 @@
 											</div>
 											<div class="form-group">
 												<label>Address</label>
-												<textarea class="form-control" cols="100%" rows="5" name="CUST_ADDRESS" readonly><?php echo $row->CUST_ADDRESS!=null ? $row->CUST_ADDRESS.', ':""?><?php echo $row->SUBD_ID!=0 ? $row->SUBD_NAME.', ':""?><?php echo $row->CITY_ID!=0 ? $row->CITY_NAME.', ':""?><?php echo $row->STATE_ID!=0 ? $row->STATE_NAME.', ':""?><?php echo $row->CNTR_ID!=0 ? $row->CNTR_NAME.', ':""?></textarea>
+												<textarea class="form-control" cols="100%" rows="5" name="CUST_ADDRESS" readonly><?php echo $row->CUST_ADDRESS!=null ? str_replace("<br>", "\r\n", stripslashes($row->CUST_ADDRESS)).', ':""?><?php echo $row->SUBD_ID!=0 ? $row->SUBD_NAME.', ':""?><?php echo $row->CITY_ID!=0 ? $row->CITY_NAME.', ':""?><?php echo $row->STATE_ID!=0 ? $row->STATE_NAME.', ':""?><?php echo $row->CNTR_ID!=0 ? $row->CNTR_NAME.', ':""?></textarea>
 											</div>
 										</div>
 									</div>
@@ -91,15 +91,15 @@
 										</div>
 										<div class="form-group">
 											<label>Note</label>
-											<textarea class="form-control" cols="100%" rows="5" name="FLWP_NOTES"><?php echo $row->FLWP_NOTES ?></textarea>
+											<textarea class="form-control" cols="100%" rows="5" name="FLWP_NOTES"><?php echo str_replace("<br>", "\r\n", stripslashes($row->FLWP_NOTES)) ?></textarea>
 										</div>
 										<br>
 										<div align="center">
 											<?php if((!$this->access_m->isEdit('Follow Up', 1)->row()) && ($this->session->GRP_SESSION !=3)) : ?>
-												<a href="<?php echo site_url('followup') ?>" class="btn btn-warning" name="batal"><i class="fa fa-arrow-left"></i> Back</a>
+												<a href="<?php echo site_url('followup') ?>" class="btn btn-sm btn-warning" name="batal"><i class="fa fa-arrow-left"></i> Back</a>
 											<?php else: ?>
-												<button type="submit" class="btn btn-primary" name="simpan"><i class="fa fa-save"></i> Save</button>
-												<a href="<?php echo site_url('followup') ?>" class="btn btn-danger" name="batal"><i class="fa fa-times"></i> Cancel</a>
+												<button type="submit" class="btn btn-sm btn-primary" name="simpan"><i class="fa fa-save"></i> Save</button>
+												<a href="<?php echo site_url('followup') ?>" class="btn btn-sm btn-danger" name="batal"><i class="fa fa-times"></i> Cancel</a>
 											<?php endif ?>
 										</div>
 									</div>

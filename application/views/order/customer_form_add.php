@@ -116,8 +116,8 @@
 								    </select>
 								</div>
 								<div align="center">
-									<button type="submit" class="btn btn-primary" name="simpan"><i class="fa fa-save"></i> Save</button>
-									<a href="<?php echo site_url('order') ?>" class="btn btn-danger" name="batal"><i class="fa fa-times"></i> Cancel</a>
+									<button type="submit" class="btn btn-sm btn-primary" name="simpan"><i class="fa fa-save"></i> Save</button>
+									<a href="<?php echo site_url('order') ?>" class="btn btn-sm btn-danger" name="batal"><i class="fa fa-times"></i> Cancel</a>
 								</div>
 							</div>
 						</div>

@@ -30,7 +30,7 @@
 									} else if ($row->PRJ_STATUS == 2) {
 										$STATUS = "Assigned";	
 									} else if ($row->PRJ_STATUS == 3) {
-										$STATUS = "Invoiced";
+										$STATUS = "Quoted";
 									} else if ($row->PRJ_STATUS == 4) {
 										$STATUS = "Project";
 									} else {
@@ -38,7 +38,7 @@
 									}
 
 									if($row->CUST_ADDRESS !=null){
-										$ADDRESS = $row->CUST_ADDRESS.', ';
+										$ADDRESS = str_replace("<br>", "\r\n", $row->CUST_ADDRESS).', ';
 									} else {$ADDRESS ='';}
 									if($row->SUBD_ID !=0){
 										$SUBD = $row->SUBD_NAME.', ';
@@ -142,7 +142,7 @@
 					            	<div class="col-md-4">
 										<div class="form-group">
 											<label>Notes</label>
-											<textarea class="form-control" cols="100%" rows="5" name="PRJ_NOTES" readonly><?php echo $row->PRJ_NOTES?></textarea>
+											<textarea class="form-control" cols="100%" rows="5" name="PRJ_NOTES" readonly><?php echo str_replace("<br>", "\r\n", $row->PRJ_NOTES)?></textarea>
 										</div>
 					            	</div>
 					            	<div class="col-md-12">
@@ -158,7 +158,48 @@
 					            		}
 					            		?>
 										<a href="<?php echo base_url('prospect/quotation/'.$row->PRJ_ID)?>" target="_blank" <?php echo $letter ?> ><i class="fa fa-print"></i> QUOTATION</a>
-										<input hidden type="submit" name="CANCEL" <?php if((!$this->access_m->isEdit('Prospect', 1)->row()) && ($this->session->GRP_SESSION !=3)) {echo "class='btn btn-sm btn-secondary mb-1' disabled";} else {echo "class='btn btn-sm btn-warning mb-1'";}?> onclick="return confirm('Cancel order?')" value="CANCEL ORDER">
+										<?php if(($this->access_m->isEdit('Prospect', 1)->row()) || ($this->session->GRP_SESSION ==3)) {
+											if ($row->PRJ_STATUS >= 4) {
+												$cancel = 'class="btn btn-sm btn-secondary mb-1" style="opacity : 0.5; pointer-events: none; color : #ffffff;"';
+											} else {
+												$cancel = 'class="btn btn-sm btn-warning mb-1"';
+											}
+										} else {
+											$cancel = 'class="btn btn-sm btn-warning mb-1"';
+										}?>
+										<a <?php echo $cancel ?> href="#" data-toggle="modal" data-target="#cancel-order" id="BTN_CANCEL"></i> CANCEL ORDER</a>
+										<!-- The Modal Cancel Order -->
+										<div class="modal fade" id="cancel-order">
+											<div class="modal-dialog">
+										    	<div class="modal-content">
+												    <!-- Modal Header -->
+												    <div class="modal-header">
+												        <h4 class="modal-title">Cancel Order</h4>
+												        <button type="button" class="close" data-dismiss="modal">&times;</button>
+												    </div>
+												    <div class="modal-body">
+												        <div class="row">
+															<div class="col-md-12">
+																<div class="form-group">
+																	<label>Input Reason <small>*</small></label>
+																	<select class="form-control selectpicker" id="PRJ_STATUS_CANCEL" name="PRJ_STATUS_CANCEL" title="-- Select One --">
+															    		<option value="" hidden></option>
+															    		<option value="1">Salah Input</option>
+															    		<option value="2">Order Berubah</option>
+															    		<option value="3">Order Batal</option>
+																    </select>
+																</div>
+															</div>
+														</div>
+												    </div>
+										      		<!-- Modal footer -->
+											      	<div class="modal-footer">
+											      		<input class="btn btn-sm btn-primary" type="submit" name="CANCEL" value="Save">
+										                <button type="button" class="btn btn-sm btn-danger cancel" data-dismiss="modal">Cancel</button>
+											      	</div>
+										    	</div>
+										  	</div>
+										</div>
 									</div>
 					            </div>
 					            <hr>
@@ -170,8 +211,10 @@
 										if( ($this->access_m->isAdd('Prospect', 1)->row()) || ($this->session->GRP_SESSION == 3) ) {
 											if($row->PRJ_STATUS >= 2) {
 						            			$add_detail = 'class="btn btn-sm btn-secondary" style="opacity : 0.5; pointer-events: none; color : #ffffff;"';
+						            			$delete_detail = 'class="btn btn-sm btn-secondary mb-1" style="opacity : 0.5; pointer-events: none; color : #ffffff;"';
 						            		} else {
 						            			$add_detail = 'class="btn btn-sm btn-success"';
+						            			$delete_detail = 'class="btn btn-sm btn-danger mb-1"';
 						            		}
 										} else {
 											$add_detail = 'class="btn btn-sm btn-secondary" style="opacity : 0.5; pointer-events: none; color : #ffffff;"';
@@ -183,16 +226,18 @@
 							          		<table class="table table-bordered" width="100%" cellspacing="0">
 							            		<thead style="font-size: 14px;">
 								                	<tr>
-								                    	<th style="vertical-align: middle; text-align: center; width: 1%;">#</th>
-								                    	<th style="vertical-align: middle; text-align: center;width: 15%;">PRODUCT</th>
-								                    	<th style="vertical-align: middle; text-align: center;width: 15%;">PICTURE</th>
-								                    	<th style="vertical-align: middle; text-align: center;width: 14%x;">MATERIAL</th>
-								                    	<th style="vertical-align: middle; text-align: center;width: 5%;">QUANTITY</th>
-								                    	<th style="vertical-align: middle; text-align: center;width: 15%;">BUDGET</th>
-								                    	<th style="vertical-align: middle; text-align: center;width: 15%;">OPSI</th>
+								                    	<th style="vertical-align: middle; text-align: center; width: 5px;">#</th>
+								                    	<th style="vertical-align: middle; text-align: center;width: 100px;">PRODUCT</th>
+								                    	<th style="vertical-align: middle; text-align: center;width: 50px;">PICTURE</th>
+								                    	<th style="vertical-align: middle; text-align: center;width: 100px;">MATERIAL</th>
+								                    	<th style="vertical-align: middle; text-align: center;width: 100px;">NOTES</th>
+								                    	<th style="vertical-align: middle; text-align: center;width: 50px;">QTY</th>
+								                    	<th style="vertical-align: middle; text-align: center;width: 50px;">BUDGET</th>
+								                    	<th style="vertical-align: middle; text-align: center;width: 5px;">OPSI</th>
 								                  	</tr>
 								                </thead>
 								                <tbody style="font-size: 14px;">
+								                	<?php if($_detail != null): ?>
 								                	<?php $no = 1; ?>
 									                <?php foreach($_detail as $data): ?>
 									                	<tr>
@@ -221,8 +266,11 @@
 									                		<td>
 									                			<?php echo $data->PRJD_MATERIAL != null ? $data->PRJD_MATERIAL : "<div align='center'>-</div>" ?>
 									                		</td>
+									                		<td>
+									                			<?php echo $data->PRJD_NOTES != null ? $data->PRJD_NOTES : "<div align='center'>-</div>" ?>
+									                		</td>
 									                		<td align="center">
-									                			<?php echo $data->PRJD_QTY != null ? $data->PRJD_QTY." pcs" : "-"?>	
+									                			<?php echo $data->PRJD_QTY2 != null ? $data->PRJD_QTY2." pcs" : "-"?>	
 									                		</td>
 									                		<td align="center">
 									                			<?php echo $data->PRJD_BUDGET != null ? "Rp. ".number_format($data->PRJD_BUDGET,0,',','.') : "-"?>	
@@ -231,11 +279,18 @@
 									                			<a hidden class="btn btn-sm btn-primary mb-1" href="<?php echo site_url('prospect/view/'.$row->PRJ_ID.'/'.$data->PRJD_ID) ?>" title="View"><i class="fas fa-eye"></i></a>
 									                			
 									                			<a class="btn btn-sm btn-primary mb-1" href="<?php echo site_url('prospect/quantity/'.$row->PRJ_ID.'/'.$data->PRJD_ID) ?>" title="Quantity"><i class="fas fa-box-open"></i></a>
-									                			
+									                			<br>
 									                			<a class="btn btn-sm btn-primary mb-1" href="<?php echo site_url('prospect/model/'.$row->PRJ_ID.'/'.$data->PRJD_ID) ?>" title="Model"><i class="fas fa-tshirt"></i></a>
+									                			<br>
+									                			<a <?php echo $delete_detail ?> href="<?php echo site_url('prospect/del_detail/'.$row->PRJ_ID.'/'.$data->PRJD_ID) ?>" title="Delete" onclick="return confirm('Delete detail?')"><i class="fas fa-trash"></i></a>
 									                		</td>
 									                	</tr>
 										            <?php endforeach ?>
+										            <?php else : ?>
+										            	<tr align="center">
+										            		<td colspan="7">Empty data</td>
+										            	</tr>
+										            <?php endif ?>
 								                </tbody>
 							          		</table>
 							        	</div>
@@ -252,30 +307,48 @@
 							          		<table class="table table-bordered" width="100%" cellspacing="0">
 							            		<thead style="font-size: 14px;">
 								                	<tr>
-								                    	<th style="vertical-align: middle; text-align: center; width: 50px;">#</th>
-								                    	<th style="vertical-align: middle; text-align: center; width: 100px;">PRODUCT</th>
-								                    	<th style="vertical-align: middle; text-align: center; width: 70px;">QTY</th>
-														<th style="vertical-align: middle; text-align: center; width: 60px;">PRICE</th>
+								                    	<th colspan="2" style="vertical-align: middle; text-align: center; width: 50px;">#</th>
+								                    	<th style="vertical-align: middle; text-align: center; width: 200px;">PRODUCT</th>
+								                    	<th style="vertical-align: middle; text-align: center; width: 50px;">DURATION</th>
+								                    	<th style="vertical-align: middle; text-align: center; width: 50px;">QTY</th>
+														<th style="vertical-align: middle; text-align: center; width: 70px;">PRICE</th>
 														<th style="vertical-align: middle; text-align: center; width: 60px;">TOTAL PRICE</th>
 								                  	</tr>
 								                </thead>
 								                <tbody style="font-size: 14px;">
+								                	<?php if($_detail != null): ?>
 							                		<?php $i= 1;?>
 								                	<?php foreach($_detail as $data): ?>
+								                		<?php 
+								                		if ($data->PRJD_PRICE2 != null) {
+								         					if ($row->PRJ_STATUS < 2 || $row->PRJ_STATUS >= 4) {
+										                		$edit_qty = 'style="pointer-events: none; color: #6c757d; opacity: 0.5;"';
+										                	} else {
+										                		$edit_qty = 'style="color: #007bff;"';
+										                	}
+										                } else {
+										                	$edit_qty = 'style="pointer-events: none; color: #6c757d; opacity: 0.5;"';
+										                }
+										                ?>
 									                	<tr>
+									                		<td align="center" style="vertical-align: middle; width: 10px;">
+									                			<a href="#" data-toggle="modal" data-target="#edit-qty-<?php echo $data->PRJD_ID ?>" class="mb-1" <?php echo $edit_qty; ?> title="Edit"><i class="fa fa-edit"></i></a>
+									                		</td>
 									                		<td align="center" style="vertical-align: middle; width: 10px;"><?php echo $i++ ?></td>
 									                		<td><?php echo $data->PRDUP_NAME ?></td>
-									                		<td align="center" style="vertical-align: middle;"><?php echo $data->PRJD_QTY ?></td>
-									                		<td align="right" style="vertical-align: middle;" id="PRJDQ_PRICE<?php echo $data->PRJD_ID ?>"><?php echo number_format($data->PRJD_PRICE,0,',','.') ?>
+									                		<td align="center" style="vertical-align: middle;"><?php echo $data->PRJD_DURATION2 ?></td>
+									                		<td align="center" style="vertical-align: middle;"><?php echo $data->PRJD_QTY2 ?></td>
+									                		<td align="right" style="vertical-align: middle;" id="PRJDQ_PRICE<?php echo $data->PRJD_ID ?>"><?php echo number_format($data->PRJD_PRICE2,0,',','.') ?>
 									                		</td>
-									                		<td align="right" style="vertical-align: middle; padding-right: 25px;" class="TOTAL_PRICE" id="TOTAL_PRICE<?php  echo $data->PRJD_ID?>"><?php echo number_format($data->PRJD_QTY * $data->PRJD_PRICE,0,',','.') ?></td>
+									                		<td align="right" style="vertical-align: middle; padding-right: 25px;" class="TOTAL_PRICE" id="TOTAL_PRICE<?php  echo $data->PRJD_ID?>"><?php echo number_format($data->PRJD_QTY2 * $data->PRJD_PRICE2,0,',','.') ?></td>
 									                	</tr>
 									                	<input type="hidden" class="PRJD_ID" id="PRJD_ID<?php echo $data->PRJD_ID ?>" name="PRJD_ID[]" value="<?php echo $data->PRJD_ID ?>">
 									                	<input type="hidden" id="PRODUCER<?php echo $data->PRJD_ID ?>" value="<?php echo $data->PRDU_ID ?>">
 									                	<input type="hidden" class="WEIGHT" id="WEIGHT<?php echo $data->PRJD_ID ?>" value="<?php echo $data->PRJD_WEIGHT_EST ?>">
 									                	<input type="hidden" class="PRJD_SHIPCOST" id="PRJD_SHIPCOST<?php echo $data->PRJD_ID ?>" name="PRJD_SHIPCOST[]" value="<?php echo $data->PRJD_SHIPCOST ?>">
 									                	<input type="hidden" id="PRJD_ETD<?php echo $data->PRJD_ID ?>" name="PRJD_ETD[]" value="<?php echo $data->PRJD_ETD ?>">
-									                	<?php if($data->PRJD_PRICE != null){
+									                	<?php 
+									                	if($row->PRJ_SUBTOTAL != null && $row->PRJ_SUBTOTAL != 0){
 									                		if($row->PRJ_STATUS >= 4) {
 									                			$UPDATE = 'class="btn btn-sm btn-secondary" style="opacity: 0.5" disabled';
 									                		} else {
@@ -285,28 +358,31 @@
 															$UPDATE = 'class="btn btn-sm btn-secondary" style="opacity: 0.5" disabled';
 														} ?>
 										        	<?php endforeach ?>
+										        	<?php else : ?>
+										            	<?php $UPDATE = 'class="btn btn-sm btn-secondary" style="opacity: 0.5" disabled'; ?>
+										            <?php endif ?>
 								                </tbody>
 								                <tfoot style="font-size: 14px;">
 								                	<input class="form-control" type="hidden" id="CUST_ID" name="CUST_ID" value="<?php echo $row->CUST_ID ?>">
 								                	<tr>
-								                		<td align="right" style="font-weight: bold; vertical-align: middle;" colspan="4">SUBTOTAL</td>
+								                		<td align="right" style="font-weight: bold; vertical-align: middle;" colspan="6">SUBTOTAL</td>
 								                		<td align="right" style="vertical-align: middle; padding-right: 25px;" id="SUBTOTAL"><?php echo $row->PRJ_SUBTOTAL !=null ? number_format($row->PRJ_SUBTOTAL,0,',','.') : "0" ?></td>
 								                		<input class="form-control" type="hidden" id="PRJ_SUBTOTAL" name="PRJ_SUBTOTAL" autocomplete="off" value="<?php echo $row->PRJ_SUBTOTAL ?>">
 								                	</tr>
 								                	<tr>
-								                		<td align="right" style="font-weight: bold; vertical-align: middle;" colspan="4">DISCOUNT (-)</td>
+								                		<td align="right" style="font-weight: bold; vertical-align: middle;" colspan="6">DISCOUNT (-)</td>
 								                		<td align="right" style="vertical-align: middle;">
 								                			<input style="text-align: right; font-size: 14px;" class="form-control uang" type="text" id="PRJ_DISCOUNT" name="PRJ_DISCOUNT" autocomplete="off" value="<?php echo $row->PRJ_DISCOUNT !=null ? $row->PRJ_DISCOUNT : "0" ?>">
 								                		</td>
 								                	</tr>
 								                	<tr>
-								                		<td align="right" style="font-weight: bold; vertical-align: middle;" colspan="4">ADDCOST (+)</td>
+								                		<td align="right" style="font-weight: bold; vertical-align: middle;" colspan="6">ADDCOST (+)</td>
 								                		<td align="right" style="vertical-align: middle;">
 								                			<input style="text-align: right; font-size: 14px;" class="form-control uang" type="text" id="PRJ_ADDCOST" name="PRJ_ADDCOST" autocomplete="off" value="<?php echo $row->PRJ_ADDCOST !=null ? $row->PRJ_ADDCOST : "0" ?>">
 								                		</td>
 								                	</tr>
 								                	<tr>
-								                		<td align="right" style="font-weight: bold; vertical-align: middle;" colspan="4">TAX (+)</td>
+								                		<td align="right" style="font-weight: bold; vertical-align: middle;" colspan="6">TAX (+)</td>
 								                		<td align="right" style="vertical-align: middle;">
 								                			<input style="text-align: right; font-size: 14px;" class="form-control uang" type="text" id="PRJ_TAX" name="PRJ_TAX" autocomplete="off" value="<?php echo $row->PRJ_TAX !=null ? $row->PRJ_TAX : "0" ?>">
 								                		</td>
@@ -338,7 +414,7 @@
 																$ALL_DEPOSIT = 0;
 															}
 														?>
-								                		<td align="right" style="font-weight: bold;" colspan="4">
+								                		<td align="right" style="font-weight: bold;" colspan="6">
 								                			<?php if($row->PRJ_PAYMENT_DATE != 0000-00-00): ?>
 														    	<label>DEPOSIT (-)</label>
 														    <?php else: ?>
@@ -353,18 +429,18 @@
 								                		<input class="form-control" type="hidden" name="ALL_DEPOSIT" autocomplete="off" value="<?php echo $ALL_DEPOSIT ?>">
 								                	</tr>
 								                	<tr>
-								                		<td align="right" style="font-weight: bold; vertical-align: middle;" colspan="4">TOTAL</td>
+								                		<td align="right" style="font-weight: bold; vertical-align: middle;" colspan="6">TOTAL</td>
 								                		<td align="right" style="vertical-align: middle; padding-right: 25px;" id="CETAK_PRJ_TOTAL"><?php echo $row->PRJ_TOTAL !=null ? number_format($row->PRJ_TOTAL,0,',','.') : "0" ?></td>
 								                		<input class="form-control" type="hidden" id="PRJ_TOTAL" name="PRJ_TOTAL" autocomplete="off" value="<?php echo $row->PRJ_TOTAL ?>">
 								                	</tr>
 								                	<tr>
-								                		<td align="right" style="font-weight: bold; vertical-align: middle;" colspan="4">SHIPMENT COST (+)</td>
+								                		<td align="right" style="font-weight: bold; vertical-align: middle;" colspan="6">SHIPMENT COST (+)</td>
 								                		<td align="right" style="vertical-align: middle;">
 								                			<input style="text-align: right; font-size: 14px;" class="form-control uang" type="text" name="PRJ_SHIPCOST" id="PRJ_SHIPCOST" autocomplete="off" value="<?php echo $row->PRJ_SHIPCOST !=null ? $row->PRJ_SHIPCOST : "0" ?>">
 								                		</td>
 								                	</tr>
 								                	<tr>
-								                		<td align="right" style="font-weight: bold; vertical-align: middle;" colspan="4">GRAND TOTAL</td>
+								                		<td align="right" style="font-weight: bold; vertical-align: middle;" colspan="6">GRAND TOTAL</td>
 								                		<td align="right" style="vertical-align: middle; font-weight: bold; color: blue; padding-right: 25px;" id="GRAND_TOTAL"><?php echo $row->PRJ_GRAND_TOTAL !=null ? number_format($row->PRJ_GRAND_TOTAL,0,',','.') : "0" ?></td>
 								                		<input class="form-control" type="hidden" id="PRJ_GRAND_TOTAL" name="PRJ_GRAND_TOTAL" autocomplete="off" value="<?php echo $row->PRJ_GRAND_TOTAL ?>">
 								                	</tr>
@@ -434,7 +510,7 @@
 												<!-- button update -->
 												<div class="form-group" align="right">
 													<?php if((!$this->access_m->isEdit('Prospect', 1)->row()) && ($this->session->GRP_SESSION !=3)) : ?>
-														<a href="<?php echo site_url('prospect') ?>" class="btn btn-warning btn-sm" name="BACK"><i class="fa fa-arrow-left"></i> Back</a>
+														<a href="<?php echo site_url('prospect') ?>" class="btn btn-sm btn-warning" name="BACK"><i class="fa fa-arrow-left"></i> Back</a>
 													<?php else: ?>
 														<button <?php echo $UPDATE ?> type="submit" name="UPDATE"><i class="fa fa-save"></i> UPDATE</button>
 													<?php endif ?>
@@ -447,7 +523,7 @@
 				       	</div>
 						<!-- installment -->
 						<div class="col-md-12" <?php echo $row->PRJ_PAYMENT_METHOD != 1 ? "hidden" : "" ?>>
-							<a href="#" class="btn btn-success btn-sm" id="tambah-installment" data-toggle="modal" data-target="#add-installment"><i class="fas fa-plus-circle"></i> Installment</a>
+							<a href="#" class="btn btn-sm btn-success" id="tambah-installment" data-toggle="modal" data-target="#add-installment"><i class="fas fa-plus-circle"></i> Installment</a>
 			        		<p></p>
 							<div class="table-responsive">
 				          		<table class="table table-bordered" width="100%" cellspacing="0">
@@ -490,11 +566,15 @@
 								        		$TOTAL_AMOUNT = array_sum($AMOUNT);
 								        		$GET_PAID = array_sum($PAID);
 								        		$REMAINING = $row->PRJ_GRAND_TOTAL - $GET_PAID;
-							        			if($REMAINING != 0) {
-								        			$FOOT_NOTE = "<span style='color: red; font-weight: bold;'>".number_format($REMAINING,0,',','.')."</span>";
+							        			if($row->PRJ_GRAND_TOTAL != null) {
+								        			if($REMAINING != 0) {
+									        			$FOOT_NOTE = "<span style='color: red; font-weight: bold;'>".number_format($REMAINING,0,',','.')."</span>";
+									        		} else {
+								        				$FOOT_NOTE = "<span style='color: green; font-weight: bold;'>PAID OFF</span>";
+								        			}
 								        		} else {
-							        				$FOOT_NOTE = "<span style='color: green; font-weight: bold;'>PAID OFF</span>";
-							        			}
+								        			$FOOT_NOTE = "<span style='color: red; font-weight: bold;'>".number_format($TOTAL_AMOUNT,0,',','.')."</span>";
+								        		}
 								        	?>
 								        	<input type="hidden" id="PERCENTAGE" value="<?php echo $TOTAL_PERCENTAGE ?>">
 						                	<tr>
@@ -513,7 +593,7 @@
 								    <?php else: ?>
 								        <tbody style="font-size: 14px;">
 							            	<tr>
-								                <td align="center" colspan="5" style="vertical-align: middle;">No data available in table</td>
+								                <td align="center" colspan="6" style="vertical-align: middle;">No data available in table</td>
 								            </tr>
 					                	</tbody>
 							        <?php endif ?>
@@ -526,6 +606,45 @@
 		</div>
   	</div>
 </div>
+
+<!-- The Modal Edit Quantity -->
+<?php foreach($_detail as $d): ?>
+	<div class="modal fade" id="edit-qty-<?php echo $d->PRJD_ID ?>">
+		<div class="modal-dialog">
+	    	<div class="modal-content">
+			    <!-- Modal Header -->
+			    <div class="modal-header">
+			        <h4 class="modal-title">Edit Quantity</h4>
+			        <button type="button" class="close" data-dismiss="modal">&times;</button>
+			    </div>
+				<form action="<?php echo site_url('prospect/edit_actual_qty')?>" method="POST" enctype="multipart/form-data">
+			    <!-- Modal body -->
+				    <div class="modal-body">
+				        <div class="row">
+							<div class="col-md-12">
+								<div class="form-group">
+									<label>Qty <small>*</small></label>
+									<input class="form-control" type="number" min="1" name="PRJD_QTY2" value="<?php echo $d->PRJD_QTY2 ?>" autocomplete="off" required>
+									<input type="hidden" name="PRJ_ID" value="<?php echo $row->PRJ_ID ?>">
+									<input type="hidden" name="PRJD_ID" value="<?php echo $d->PRJD_ID ?>">
+								</div>
+							</div>
+						</div>
+				    </div>
+		      		<!-- Modal footer -->
+			      	<div class="modal-footer">
+			      		<?php if((!$this->access_m->isEdit('Prospect', 1)->row()) && ($this->session->GRP_SESSION !=3)) : ?>
+	                    	<button type="button" class="btn btn-sm btn-warning" data-dismiss="modal"><i class="fa fa-times"></i>&nbsp;&nbsp;Close</button>
+	                	<?php else: ?>
+		      				<button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-save"></i>&nbsp;&nbsp;Save</button>
+	                		<button type="button" class="btn btn-sm btn-danger" data-dismiss="modal"><i class="fa fa-times"></i>&nbsp;&nbsp;Cancel</button>
+		      			<?php endif ?>
+			      	</div>
+				</form>
+	    	</div>
+	  	</div>
+	</div>
+<?php endforeach ?>
 
 <!-- The Modal Add Installment -->
 <div class="modal fade" id="add-installment">
@@ -570,8 +689,8 @@
 			    </div>
 	      		<!-- Modal footer -->
 		      	<div class="modal-footer">
-		      		<button type="submit" class="btn btn-primary" id="SAVE_INSTALLMENT"><i class="fa fa-save"></i>&nbsp;&nbsp;Save</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i>&nbsp;&nbsp;Cancel</button>
+		      		<button type="submit" class="btn btn-sm btn-primary" id="SAVE_INSTALLMENT"><i class="fa fa-save"></i>&nbsp;&nbsp;Save</button>
+                    <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal"><i class="fa fa-times"></i>&nbsp;&nbsp;Cancel</button>
 		      	</div>
 			</form>
     	</div>
@@ -612,15 +731,15 @@
 							<div class="col-md-12">
 								<div class="form-group">
 									<label>Notes</label>
-									<textarea class="form-control" cols="100%" rows="3" name="PRJP_NOTES" autocomplete="off"><?php echo $pay['PRJP_NOTES']?></textarea>
+									<textarea class="form-control" cols="100%" rows="3" name="PRJP_NOTES" autocomplete="off"><?php echo str_replace("<br>", "\r\n", $pay['PRJP_NOTES']) ?></textarea>
 								</div>
 							</div>
 						</div>
 				    </div>
 		      		<!-- Modal footer -->
 			      	<div class="modal-footer">
-			      		<button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;&nbsp;Save</button>
-	                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i>&nbsp;&nbsp;Cancel</button>
+			      		<button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-save"></i>&nbsp;&nbsp;Save</button>
+	                    <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal"><i class="fa fa-times"></i>&nbsp;&nbsp;Cancel</button>
 			      	</div>
 				</form>
 	    	</div>
@@ -981,6 +1100,16 @@
             	$("#SAVE_INSTALLMENT").addClass('btn-primary');
 				$("#SAVE_INSTALLMENT").css({'opacity' : '', 'pointer-events': '', 'color' : '#ffffff'});
           	}
+		});
+
+		$("#BTN_CANCEL").click(function(){
+			$("#PRJ_STATUS_CANCEL").attr('required', 'true');
+			$("#inputPayMethod").removeAttr('required', 'true');
+		});
+
+		$(".close, .cancel").click(function(){
+			$("#inputPayMethod").attr('required', 'true');
+			$("#PRJ_STATUS_CANCEL").removeAttr('required', 'true');
 		});
 
 	});

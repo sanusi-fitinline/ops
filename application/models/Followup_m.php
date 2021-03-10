@@ -371,7 +371,7 @@ class Followup_m extends CI_Model {
         $time                   = date('H:i:s');
         $flwp_status            = $this->input->post('FLWS_ID', TRUE);
         $params['FLWP_DATE']    = $date." ".$time;
-        $params['FLWP_NOTES']   = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$this->input->post('FLWP_NOTES', TRUE));
+        $params['FLWP_NOTES']   = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n"),"<br>",$this->input->post('FLWP_NOTES', TRUE));
         $params['FLWS_ID']      = $flwp_status;
         if (!empty($this->input->post('FLWC_ID', TRUE))) {
             $params['FLWC_ID']  = $this->input->post('FLWC_ID', TRUE); 
@@ -391,7 +391,7 @@ class Followup_m extends CI_Model {
         $time                   = date('H:i:s');
         $flwp_status            = $this->input->post('FLWS_ID', TRUE);
         $params['FLWP_DATE']    = $date." ".$time;
-        $params['FLWP_NOTES']   = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$this->input->post('FLWP_NOTES', TRUE));
+        $params['FLWP_NOTES']   = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n"),"<br>",$this->input->post('FLWP_NOTES', TRUE));
         $params['FLWS_ID']      = $flwp_status;
         if (!empty($this->input->post('FLWC_ID', TRUE))) {
             $params['FLWC_ID']  = $this->input->post('FLWC_ID', TRUE); 
@@ -414,7 +414,7 @@ class Followup_m extends CI_Model {
         $time                   = date('H:i:s');
         $flwp_status            = $this->input->post('FLWS_ID', TRUE);
         $params['FLWP_DATE']    = $date." ".$time;
-        $params['FLWP_NOTES']   = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$this->input->post('FLWP_NOTES', TRUE));
+        $params['FLWP_NOTES']   = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n"),"<br>",$this->input->post('FLWP_NOTES', TRUE));
         $params['FLWS_ID']      = $flwp_status;
         if (!empty($this->input->post('FLWC_ID', TRUE))) {
             $params['FLWC_ID']  = $this->input->post('FLWC_ID', TRUE); 
@@ -507,7 +507,7 @@ class Followup_m extends CI_Model {
         $time                   = date('H:i:s');
         $flwp_status            = $this->input->post('FLWS_ID', TRUE);
         $params['FLWP_DATE']    = $date." ".$time;
-        $params['FLWP_NOTES']   = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$this->input->post('FLWP_NOTES', TRUE));
+        $params['FLWP_NOTES']   = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n"),"<br>",$this->input->post('FLWP_NOTES', TRUE));
         $params['FLWS_ID']      = $flwp_status;
         if (!empty($this->input->post('FLWC_ID', TRUE))) {
             $params['FLWC_ID']  = $this->input->post('FLWC_ID', TRUE); 
@@ -666,7 +666,7 @@ class Followup_m extends CI_Model {
         $this->db->insert('tb_customer_log', $this->db->escape_str($dataLog));
         if($dataLog) {
             $params['FLWP_DATE']    = $date;
-            $params['FLWP_NOTES']   = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$this->input->post('FLWP_NOTES', TRUE));
+            $params['FLWP_NOTES']   = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n"),"<br>",$this->input->post('FLWP_NOTES', TRUE));
             $params['FLWS_ID']      = $this->input->post('FLWS_ID', TRUE);
             if (!empty($this->input->post('FLWC_ID', TRUE))) {
                 $params['FLWC_ID']  = $this->input->post('FLWC_ID', TRUE); 
@@ -685,7 +685,7 @@ class Followup_m extends CI_Model {
         $this->db->where('CLOG_ID', $CLOG_ID)->update('tb_customer_log', $this->db->escape_str($updateLog));
 
         $dataUpdate = array(
-            'FLWP_NOTES' => str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$this->input->post('FLWP_NOTES', TRUE)),
+            'FLWP_NOTES' => str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n"),"<br>",$this->input->post('FLWP_NOTES', TRUE)),
         );
         $this->db->where('CLOG_ID', $CLOG_ID)->where('FLWS_ID', 0)->update('tb_followup', $this->db->escape_str($dataUpdate));
     }

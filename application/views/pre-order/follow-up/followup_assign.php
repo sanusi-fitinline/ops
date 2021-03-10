@@ -39,7 +39,7 @@
 								<div class="col-md-3">
 									<div class="form-group">
 										<label>Address</label>
-										<textarea class="form-control" cols="100%" rows="7" name="CUST_ADDRESS" readonly><?php echo $row->CUST_ADDRESS!=null ? $row->CUST_ADDRESS.', ':""?><?php echo $row->SUBD_ID!=0 ? $row->SUBD_NAME.', ':""?><?php echo $row->CITY_ID!=0 ? $row->CITY_NAME.', ':""?><?php echo $row->STATE_ID!=0 ? $row->STATE_NAME.', ':""?><?php echo $row->CNTR_ID!=0 ? $row->CNTR_NAME.', ':""?></textarea>
+										<textarea class="form-control" cols="100%" rows="7" name="CUST_ADDRESS" readonly><?php echo $row->CUST_ADDRESS!=null ? str_replace("<br>", "\r\n", stripslashes($row->CUST_ADDRESS)).', ':""?><?php echo $row->SUBD_ID!=0 ? $row->SUBD_NAME.', ':""?><?php echo $row->CITY_ID!=0 ? $row->CITY_NAME.', ':""?><?php echo $row->STATE_ID!=0 ? $row->STATE_NAME.', ':""?><?php echo $row->CNTR_ID!=0 ? $row->CNTR_NAME.', ':""?></textarea>
 									</div>
 								</div>
 								<div class="col-md-3">
@@ -59,7 +59,7 @@
 								<div class="col-md-3">
 									<div class="form-group">
 										<label>Note</label>
-										<textarea class="form-control" cols="100%" rows="7" name="LSAM_NOTES" readonly><?php echo $row->FLWP_NOTES ?></textarea>
+										<textarea class="form-control" cols="100%" rows="7" name="FLWP_NOTES" readonly><?php echo str_replace("<br>", "\r\n", stripslashes($row->FLWP_NOTES)) ?></textarea>
 									</div>
 								</div>
 							</div>
@@ -68,7 +68,7 @@
 							<br>
 							<hr>
 							<div>
-								<a <?php if(($row->FLWS_ID==4) || ($row->FLWS_ID==5) || (!$this->access_m->isAdd('Follow Up', 1)->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> href="#" data-toggle="modal" data-target="#add-followup" class="btn btn-success btn-sm"><i class="fas fa-plus-circle"></i> Add</a>
+								<a <?php if(($row->FLWS_ID==4) || ($row->FLWS_ID==5) || (!$this->access_m->isAdd('Follow Up', 1)->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> href="#" data-toggle="modal" data-target="#add-followup" class="btn btn-sm btn-success"><i class="fas fa-plus-circle"></i> Add</a>
 							</div><br>
 							<div class="table-responsive">
 				          		<table class="table table-bordered" id="tableFollowUp" width="100%" cellspacing="0">
@@ -150,8 +150,8 @@
 			    </div>
 	      		<!-- Modal footer -->
 		      	<div class="modal-footer">
-		      		<button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;&nbsp;Save</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i>&nbsp;&nbsp;Cancel</button>
+		      		<button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-save"></i>&nbsp;&nbsp;Save</button>
+                    <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal"><i class="fa fa-times"></i>&nbsp;&nbsp;Cancel</button>
 		      	</div>
 			</form>
     	</div>

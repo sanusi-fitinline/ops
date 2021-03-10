@@ -231,7 +231,7 @@ class Ckstock_m extends CI_Model {
 				'LSTOCK_DATE'	=> $date.' '.$time,
 				'LSTOCK_COLOR'	=> $this->input->post('LSTOCK_COLOR', TRUE),
 				'LSTOCK_AMOUNT'	=> $this->input->post('LSTOCK_AMOUNT', TRUE),
-				'LSTOCK_CNOTES'	=> str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$this->input->post('LSTOCK_CNOTES', TRUE)),
+				'LSTOCK_CNOTES'	=> str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n"),"<br>",$this->input->post('LSTOCK_CNOTES', TRUE)),
 				'PRO_ID'		=> $this->input->post('PRO_ID', TRUE),
 				'UMEA_ID'		=> $this->input->post('UMEA_ID', TRUE),
 				'CUST_ID'		=> $this->input->post('CUST_ID', TRUE),
@@ -269,7 +269,7 @@ class Ckstock_m extends CI_Model {
 				'LSTOCK_DATE'	=> $date.' '.$time,
 				'LSTOCK_COLOR'	=> $this->input->post('LSTOCK_COLOR', TRUE),
 				'LSTOCK_AMOUNT'	=> $this->input->post('LSTOCK_AMOUNT', TRUE),
-				'LSTOCK_CNOTES'	=> str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$this->input->post('LSTOCK_CNOTES', TRUE)),
+				'LSTOCK_CNOTES'	=> str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n"),"<br>",$this->input->post('LSTOCK_CNOTES', TRUE)),
 				'PRO_ID'		=> $this->input->post('PRO_ID', TRUE),
 				'UMEA_ID'		=> $this->input->post('UMEA_ID', TRUE),
 				'CUST_ID'		=> $this->input->post('CUST_ID', TRUE),
@@ -297,7 +297,7 @@ class Ckstock_m extends CI_Model {
 		$dataUpdate = array(
 			'LSTOCK_COLOR'	=> $this->input->post('LSTOCK_COLOR', TRUE),
 			'LSTOCK_AMOUNT'	=> $this->input->post('LSTOCK_AMOUNT', TRUE),
-			'LSTOCK_CNOTES'	=> str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$this->input->post('LSTOCK_CNOTES', TRUE)),
+			'LSTOCK_CNOTES'	=> str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n"),"<br>",$this->input->post('LSTOCK_CNOTES', TRUE)),
 			'PRO_ID'		=> $this->input->post('PRO_ID', TRUE),
 			'UMEA_ID'		=> $this->input->post('UMEA_ID', TRUE),
 			'CUST_ID'		=> $this->input->post('CUST_ID', TRUE),
@@ -308,7 +308,7 @@ class Ckstock_m extends CI_Model {
 	public function pm_update($LSTOCK_ID) {
 		$dataUpdate = array(
 			'LSTOCK_STATUS' => $this->input->post('LSTOCK_STATUS', TRUE),
-			'LSTOCK_VNOTES' => str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$this->input->post('LSTOCK_VNOTES', TRUE)),
+			'LSTOCK_VNOTES' => str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n"),"<br>",$this->input->post('LSTOCK_VNOTES', TRUE)),
 		);
 		$this->db->where('LSTOCK_ID', $LSTOCK_ID)->update('tb_log_stock', $this->db->escape_str($dataUpdate));
 	}

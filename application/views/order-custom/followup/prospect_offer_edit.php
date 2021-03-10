@@ -7,7 +7,7 @@
 	    	<a href="<?php echo site_url('dashboard') ?>">Dashboard</a>
 	  	</li>
 	  	<li class="breadcrumb-item">
-	    	<a href="<?php echo site_url('prospect_followup') ?>">Prospect Follow Up</a>
+	    	<a href="<?php echo site_url('prospect_followup') ?>">Follow Up (VR)</a>
 	  	</li>
 	  	<li class="breadcrumb-item">
 	    	<a href="<?php echo site_url('prospect_followup/detail/'.$detail->PRJ_ID.'/'.$detail->PRJD_ID) ?>">Detail</a>
@@ -50,27 +50,6 @@
 								        </div>
 								    </div>
 								</div>
-							</div>
-							<div class="col-md-4">
-								<div class="form-group">
-									<label>Picture <small>(Fill to change)</small></label>
-									<div class="input-group">
-										<div class="custom-file">
-											<input type="file" class="custom-file-input" name="PRJPR_IMG" id="inputGroupFile01" accept="image/jpeg, image/png">
-										    <label class="custom-file-label text-truncate" style="padding-right: 100px;" for="inputGroupFile01">Choose file..</label>
-											<input class="form-control" type="hidden" name="OLD_IMG" value="<?php echo $offer->PRJPR_IMG?>">
-										</div>
-									</div>
-								</div>
-								<div class="form-group">
-									<label>Duration <small>*</small></label>
-									<div class="input-group">
-										<input class="form-control" type="number" min="1" name="PRJPR_DURATION" value="<?php echo $offer->PRJPR_DURATION ?>" autocomplete="off" required>
-										<div class="input-group-prepend">
-								          	<span class="input-group-text">Days</span>
-								        </div>
-								    </div>
-								</div>
 								<div class="form-group">
 									<label>Price <small>(/pcs) *</small></label>
 									<div class="input-group">
@@ -81,7 +60,17 @@
 								    </div>
 								</div>
 							</div>
+							
 							<div class="col-md-4">
+								<div class="form-group">
+									<label>Duration <small>*</small></label>
+									<div class="input-group">
+										<input class="form-control" type="number" min="1" name="PRJPR_DURATION" value="<?php echo $offer->PRJPR_DURATION ?>" autocomplete="off" required>
+										<div class="input-group-prepend">
+								          	<span class="input-group-text">Days</span>
+								        </div>
+								    </div>
+								</div>
 								<div class="form-group">
 									<label>Payment Method <small>*</small></label>
 									<select class="form-control selectpicker" id="inputPayMethod" name="PRJPR_PAYMENT_METHOD" title="-- Select One --" required>
@@ -91,13 +80,75 @@
 								</div>
 								<div class="form-group">
 									<label>Notes</label>
-									<textarea class="form-control" cols="100%" rows="5" name="PRJPR_NOTES" autocomplete="off"><?php echo $offer->PRJPR_NOTES ?></textarea>
+									<textarea class="form-control" cols="100%" rows="5" name="PRJPR_NOTES" autocomplete="off"><?php echo str_replace("<br>", "\r\n", $offer->PRJPR_NOTES) ?></textarea>
 								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="form-group">
+									<div class="form-group">
+										<div class="img-group-zoom">
+											<a id="img-preview1" href="<?php echo base_url('assets/images/project/offer/'.$offer->PRJPR_IMG) ?>">
+												<img id="img-preview2" style="height: 242px;" class="img-fluid img-thumbnail" src="<?php echo base_url('assets/images/project/offer/'.$offer->PRJPR_IMG) ?>">
+											</a>
+										</div>
+									</div>
+									<label>Picture <small>(Fill to change)</small></label>
+									<div class="input-group">
+										<div class="custom-file">
+											<input type="file" class="custom-file-input" name="PRJPR_IMG" id="inputGroupFile01" accept="image/jpeg, image/png">
+										    <label class="custom-file-label text-truncate" style="padding-right: 100px;" for="inputGroupFile01">Choose file..</label>
+											<input class="form-control" type="hidden" name="OLD_IMG" value="<?php echo $offer->PRJPR_IMG?>">
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<?php if ($quantity != null): ?>
+								<div class="col-md-12">
+									<hr>
+									<h4>Detail</h4>
+								</div>
+								<?php foreach($detail_qty as $field): ?>
+									<div class="col-md-4">
+										<div class="form-group">
+											<label>Size</label>
+											<input class="form-control" type="hidden" name="PRJDQ_ID[]" autocomplete="off" value="<?php echo $field->PRJDQ_ID ?>">
+											<input class="form-control" type="text" value="<?php echo $field->SIZE_NAME ?>" readonly>
+										</div>
+									</div>
+									<div class="col-md-4">
+										<div class="form-group">
+											<label>Quantity</label>
+											<input class="form-control" type="text" name="PRJDQ_QTY[]" value="<?php echo $field->PRJDQ_QTY ?>" readonly>
+										</div>
+									</div>
+									<div class="col-md-4">
+										<div class="form-group">
+											<label>Price <small>(/pcs) *</small></label>
+											<div class="input-group">
+												<div class="input-group-prepend">
+										          	<span class="input-group-text">Rp.</span>
+										        </div>
+												<input class="form-control uang" type="text" name="PRJPRD_PRICE[]" value="<?php echo $field->PRJPRD_PRICE ?>" autocomplete="off" <?php echo $quantity != null ? "required" : "" ?> >
+										    </div>
+										</div>
+									</div>
+									<?php $TOTAL[] = $field->PRJDQ_QTY * $field->PRJPRD_PRICE; ?>
+								<?php endforeach ?>
+								<?php $GRAND_TOTAL = array_sum($TOTAL); ?>
+								<input type="hidden" id="GRAND_TOTAL" value="<?php echo $GRAND_TOTAL ?>">
+							<?php endif ?>
+
+							<div class="col-md-12" align="right">
+								<button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-save"></i>&nbsp;&nbsp;Save</button>
+	                    		<a href="<?php echo site_url('prospect_followup/detail/'.$detail->PRJ_ID.'/'.$detail->PRJD_ID) ?>" class="btn btn-sm btn-danger"><i class="fa fa-times"></i>&nbsp;&nbsp;Cancel</a>
 							</div>
 
 							<!-- installment -->
 							<div class="col-md-12" <?php echo $offer->PRJPR_PAYMENT_METHOD != 1 ? "hidden" : "" ?>>
-								<a href="#" class="btn btn-success btn-sm" id="tambah-installment" data-toggle="modal" data-target="#add-installment"><i class="fas fa-plus-circle"></i> Installment</a>
+								<hr>
+								<h4>Installment</h4>
+								<a href="#" class="btn btn-sm btn-success" id="tambah-installment" data-toggle="modal" data-target="#add-installment"><i class="fas fa-plus-circle"></i> Add</a>
 				        		<p></p>
 								<div class="table-responsive">
 					          		<table class="table table-bordered" width="100%" cellspacing="0">
@@ -148,46 +199,6 @@
 					          		</table>
 					        	</div>
 				        	</div>
-
-							<?php if ($quantity != null): ?>
-								<div class="col-md-12">
-									<hr>
-									<h4>Detail</h4>
-								</div>
-								<?php foreach($detail_qty as $field): ?>
-									<div class="col-md-4">
-										<div class="form-group">
-											<label>Size</label>
-											<input class="form-control" type="hidden" name="PRJDQ_ID[]" autocomplete="off" value="<?php echo $field->PRJDQ_ID ?>">
-											<input class="form-control" type="text" value="<?php echo $field->SIZE_NAME ?>" readonly>
-										</div>
-									</div>
-									<div class="col-md-4">
-										<div class="form-group">
-											<label>Quantity</label>
-											<input class="form-control" type="text" name="PRJDQ_QTY[]" value="<?php echo $field->PRJDQ_QTY ?>" readonly>
-										</div>
-									</div>
-									<div class="col-md-4">
-										<div class="form-group">
-											<label>Price <small>(/pcs) *</small></label>
-											<div class="input-group">
-												<div class="input-group-prepend">
-										          	<span class="input-group-text">Rp.</span>
-										        </div>
-												<input class="form-control uang" type="text" name="PRJPRD_PRICE[]" value="<?php echo $field->PRJPRD_PRICE ?>" autocomplete="off" <?php echo $quantity != null ? "required" : "" ?> >
-										    </div>
-										</div>
-									</div>
-									<?php $TOTAL[] = $field->PRJDQ_QTY * $field->PRJPRD_PRICE; ?>
-								<?php endforeach ?>
-								<?php $GRAND_TOTAL = array_sum($TOTAL); ?>
-								<input type="hidden" id="GRAND_TOTAL" value="<?php echo $GRAND_TOTAL ?>">
-							<?php endif ?>
-							<div class="col-md-12" align="center">
-								<button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;&nbsp;Save</button>
-	                    		<a href="<?php echo site_url('prospect_followup/detail/'.$detail->PRJ_ID.'/'.$detail->PRJD_ID) ?>" class="btn btn-danger"><i class="fa fa-times"></i>&nbsp;&nbsp;Cancel</a>
-							</div>
 						</div>
 					</form>
 		      	</div>
@@ -241,8 +252,8 @@
 			    </div>
 	      		<!-- Modal footer -->
 		      	<div class="modal-footer">
-		      		<button type="submit" class="btn btn-primary" id="SAVE_INSTALLMENT"><i class="fa fa-save"></i>&nbsp;&nbsp;Save</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i>&nbsp;&nbsp;Cancel</button>
+		      		<button type="submit" class="btn btn-sm btn-primary" id="SAVE_INSTALLMENT"><i class="fa fa-save"></i>&nbsp;&nbsp;Save</button>
+                    <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal"><i class="fa fa-times"></i>&nbsp;&nbsp;Cancel</button>
 		      	</div>
 			</form>
     	</div>
@@ -252,6 +263,62 @@
 <script src="<?php echo base_url()?>assets/vendor/jquery/jquery.min.js"></script>
 <script type="text/javascript">
 	$(document).ready(function(){
+		// preview gambar
+		function previewIamge(input) {
+		   if (input.files && input.files[0]) {
+		      var reader = new FileReader();
+		      reader.onload = function (e) {
+		          $('#img-preview1').attr('href', e.target.result);
+		          $('#img-preview2').attr('src', e.target.result);
+		      }
+		      reader.readAsDataURL(input.files[0]);
+		   }
+		}
+		$("#inputGroupFile01").change(function(){
+		   previewIamge(this);
+		});
+
+		// image zoom
+		$('.img-group-zoom').magnificPopup({
+			delegate: 'a', // child items selector, by clicking on it popup will open
+			type: 'image',
+			// other options
+			mainClass: 'mfp-with-zoom', // this class is for CSS animation below
+			zoom: {
+			    enabled: true, // By default it's false, so don't forget to enable it
+
+			    duration: 300, // duration of the effect, in milliseconds
+			    easing: 'ease-in-out', // CSS transition easing function
+
+			    // The "opener" function should return the element from which popup will be zoomed in
+			    // and to which popup will be scaled down
+			    // By defailt it looks for an image tag:
+			    opener: function(openerElement) {
+				    // openerElement is the element on which popup was initialized, in this case its <a> tag
+				    // you don't need to add "opener" option if this code matches your needs, it's defailt one.
+				    return openerElement.is('img') ? openerElement : openerElement.find('img');
+			    }
+			},
+			closeMarkup: '<button title="%title%" type="button" class="mfp-close" style="position: absolute; top: 0; right: -10px">&#215;</button>',
+			gallery:{
+				enabled: true,
+				preload: [1,3], // read about this option in next Lazy-loading section
+				navigateByImgClick: true,
+				arrowMarkup: '<button title="%title%" type="button" class="mfp-arrow mfp-arrow-%dir%" style="border:none;"></button>', // markup of an arrow button
+				tPrev: 'Previous (Left arrow key)', // title for left button
+				tNext: 'Next (Right arrow key)', // title for right button
+			},
+			callbacks: {
+			    buildControls: function() {
+			     	// re-appends controls inside the main container
+			     	this.contentContainer.append(this.arrowLeft,this.arrowRight);
+			    },
+			    lazyLoad: function(item) {
+				    console.log(item); // Magnific Popup data object that should be loaded
+				}
+			}
+		});
+
 		if($("#PRDUP_ID").val() != null) {
 			$("#PRDUP_ID").ready(function(){
 				$.ajax({

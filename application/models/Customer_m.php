@@ -120,7 +120,7 @@ class Customer_m extends CI_Model {
 		$dataInsert = array(
 			'CUST_NAME'			=> $this->input->post('CUST_NAME', TRUE),
 			'CUST_EMAIL'		=> $this->input->post('CUST_EMAIL', TRUE),
-			'CUST_ADDRESS'		=> str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$this->input->post('CUST_ADDRESS', TRUE)),
+			'CUST_ADDRESS'		=> str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n"),"<br>",$this->input->post('CUST_ADDRESS', TRUE)),
 			'CUST_PHONE'		=> $this->input->post('CUST_PHONE', TRUE),
 			'CNTR_ID'			=> $this->input->post('CNTR_ID', TRUE),
 			'STATE_ID'			=> $this->input->post('STATE_ID', TRUE),
@@ -144,7 +144,7 @@ class Customer_m extends CI_Model {
 			$params['CUST_EMAIL'] = $this->input->post('CUST_EMAIL', TRUE);
 		}
 		if (!empty($this->input->post('CUST_ADDRESS'))) {
-			$params['CUST_ADDRESS'] = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$this->input->post('CUST_ADDRESS', TRUE));
+			$params['CUST_ADDRESS'] = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n"),"<br>",$this->input->post('CUST_ADDRESS', TRUE));
 		}
 		if (!empty($this->input->post('CUST_PHONE'))) {
 			$params['CUST_PHONE'] = $this->input->post('CUST_PHONE', TRUE);

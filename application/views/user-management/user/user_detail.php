@@ -59,8 +59,8 @@
 									<?php echo form_error('USER_PASSCONF') ?>
 								</div>
 								<div class="form-group" align="center">
-									<button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;&nbsp;Save</button>
-									<a href="<?php echo site_url('dashboard') ?>" class="btn btn-danger" name="batal"><i class="fa fa-times"></i> Cancel</a>
+									<button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-save"></i>&nbsp;&nbsp;Save</button>
+									<a href="<?php echo site_url('dashboard') ?>" class="btn btn-sm btn-danger" name="batal"><i class="fa fa-times"></i> Cancel</a>
 								</div>
 							</div>
 						</div>

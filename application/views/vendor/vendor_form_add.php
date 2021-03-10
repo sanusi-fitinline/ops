@@ -5,7 +5,10 @@
 		<li class="breadcrumb-item">
 	    	<a href="<?php echo site_url('dashboard') ?>">Dashboard</a>
 	  	</li>
-	  	<li class="breadcrumb-item active">Vendor</li>
+	  	<li class="breadcrumb-item">
+	    	<a href="<?php echo site_url('vendor') ?>">Vendor</a>
+	  	</li>
+	  	<li class="breadcrumb-item active">Add</li>
 	</ol>
     <!-- DataTables Example -->
     <div class="card mb-3">
@@ -124,8 +127,8 @@
 								    </div>
 								</div>
 								<div align="center">
-									<button type="submit" class="btn btn-primary" name="simpan"><i class="fa fa-save"></i> Save</button>
-									<a href="<?php echo site_url('vendor') ?>" class="btn btn-danger" name="batal"><i class="fa fa-times"></i> Cancel</a>
+									<button type="submit" class="btn btn-sm btn-primary" name="simpan"><i class="fa fa-save"></i> Save</button>
+									<a href="<?php echo site_url('vendor') ?>" class="btn btn-sm btn-danger" name="batal"><i class="fa fa-times"></i> Cancel</a>
 								</div>
 							</div>
 						</div>

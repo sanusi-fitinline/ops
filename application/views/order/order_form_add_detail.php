@@ -17,7 +17,7 @@
 		    <div class="card mb-3">
 		    	<div class="card-header">
 		        	<i class="fas fa-table"></i>
-		        	Add Detail
+		        	Add Detail <a href="#" class="btn btn-sm btn-info" data-toggle="modal" data-target="#recent"><i class="fas fa-list-alt"></i> Recent Order</a>
 		        </div>
 		      	<div class="card-body">
 					<form action="<?php echo site_url('order/add_detail_process')?>" method="POST" enctype="multipart/form-data">
@@ -30,7 +30,7 @@
 							    		<option value="2">Grosir</option>
 								    </select>
 								</div>
-								<div class="form-group" id="LIST-PRODUCT">
+								<div class="form-group" id="LIST-PRODUCT" style="display: none;">
 									<input class="form-control" type="hidden" name="ORDER_ID" value="<?php echo $this->uri->segment(3) ?>" required>
 									<label>Product <small>*</small></label>
 								    <select class="form-control selectpicker" name="PRO_ID" id="PRO_ID" title="-- Select Product --" data-live-search="true" required>
@@ -83,9 +83,9 @@
 							<div class="col-md-12">
 								<br>
 								<div class="form-group" align="center">
-									<input class="btn btn-info mb-1" name="new" type="submit" value="Save &amp; New">
-									<button class="btn btn-primary mb-1" name="simpan" type="submit"><i class="fa fa-save"></i> Save</button>
-									<a href="<?php echo site_url('order/cancel_order/'.$this->uri->segment(3)) ?>" class="btn btn-danger mb-1" name="batal"><i class="fa fa-times"></i> Cancel</a>
+									<input class="btn btn-sm btn-info mb-1" name="new" type="submit" value="Save &amp; New">
+									<button class="btn btn-sm btn-primary mb-1" name="simpan" type="submit"><i class="fa fa-save"></i> Save</button>
+									<a href="<?php echo site_url('order/cancel_order/'.$this->uri->segment(3)) ?>" class="btn btn-sm btn-danger mb-1" name="batal"><i class="fa fa-times"></i> Cancel</a>
 								</div>
 							</div>
 						</div>
@@ -95,10 +95,68 @@
 		</div>
   	</div>
 </div>
+<!-- The Modal Recent Order -->
+<div class="modal fade" id="recent">
+	<div class="modal-dialog modal-lg">
+    	<div class="modal-content">
+		    <!-- Modal Header -->
+		    <div class="modal-header">
+		        <h4 class="modal-title">Recent Order</h4>
+		        <button type="button" class="close" data-dismiss="modal">&times;</button>
+		    </div>
+		    <!-- Modal body -->
+		    <div class="modal-body">
+		        <div class="row">
+					<div class="col-md-12">
+						<div class="table-responsive">
+			          		<table class="table table-bordered" id="tableRecentOrder" width="100%" cellspacing="0">
+			            		<thead style="font-size: 14px;">
+				                	<tr>
+				                    	<th style="vertical-align: middle; text-align: center; width: 10px;">#</th>
+				                    	<th style="vertical-align: middle; text-align: center; width: 300px;">PRODUCT</th>
+				                    	<th style="vertical-align: middle; text-align: center; width: 200px;">OPTION</th>
+				                    	<th style="vertical-align: middle; text-align: center; width: 10px;">QTY</th>
+				                  	</tr>
+				                </thead>
+				                <tbody style="font-size: 14px;">
+				                </tbody>
+			          		</table>
+			        	</div>
+					</div>
+				</div>
+		    </div>
+    	</div>
+  	</div>
+</div>
+
 <script src="<?php echo base_url()?>assets/vendor/jquery/jquery.min.js"></script>
 <script type="text/javascript">
 	$(document).ready(function(){
-		$("#LIST-PRODUCT").hide();
+		// tabel recent order
+        var tableRecentOrder = $('#tableRecentOrder').dataTable({ 
+            "processing": true, 
+            "serverSide": true, 
+            "ordering": false,
+            "info": false,
+            "paging": false,
+            "lengthMenu": [[10, 20, -1], [10, 20, "All"]],
+            "order": [], 
+            "ajax": {
+                "url": "<?php echo site_url('order/recent_json')?>",
+                "type": "POST",
+                "data" : {
+                	"cust_id" : "<?php echo $row->CUST_ID ?>",
+                },
+            },
+            "deferRender": true, 
+            "columnDefs": [
+	            { 
+	                "targets": [ 0 ], 
+	                "orderable": false, 
+	            },
+            ],
+        });
+
 		$("#JENIS").change(function(){ 
 			$("#LIST-PRODUCT").show('slow');
 		    $("#PRO_ID").selectpicker('val','refresh');

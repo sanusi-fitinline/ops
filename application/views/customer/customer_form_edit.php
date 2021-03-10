@@ -6,7 +6,10 @@
 		<li class="breadcrumb-item">
 	    	<a href="<?php echo site_url('dashboard') ?>">Dashboard</a>
 	  	</li>
-	  	<li class="breadcrumb-item active">Customer</li>
+	  	<li class="breadcrumb-item">
+	    	<a href="<?php echo site_url('customer') ?>">Customer</a>
+	  	</li>
+	  	<li class="breadcrumb-item active">Edit</li>
 	</ol>
     <!-- DataTables Example -->
     <div class="card mb-3">
@@ -36,7 +39,7 @@
 								</div>
 								<div class="form-group" style="margin-bottom: 5px;">
 									<label>Address</label>
-									<textarea class="form-control" cols="100%" rows="5" name="CUST_ADDRESS" autocomplete="off"><?php echo stripslashes($row->CUST_ADDRESS) ?></textarea>
+									<textarea class="form-control" cols="100%" rows="5" name="CUST_ADDRESS" autocomplete="off"><?php echo stripslashes(str_replace("<br>", "\r\n", $row->CUST_ADDRESS)) ?></textarea>
 								</div>
 							</div>
 							<div class="col-md-3">
@@ -131,10 +134,10 @@
 								</div>
 								<div align="center">
 									<?php if((!$this->access_m->isEdit('Customer', 1)->row()) && ($this->session->GRP_SESSION !=3)) : ?>
-										<a href="<?php echo site_url('customer') ?>" class="btn btn-warning" name="batal"><i class="fa fa-arrow-left"></i> Back</a>
+										<a href="<?php echo site_url('customer') ?>" class="btn btn-sm btn-warning" name="batal"><i class="fa fa-arrow-left"></i> Back</a>
 									<?php else: ?>
-										<button type="submit" class="btn btn-primary" name="simpan"><i class="fa fa-save"></i> Save</button>
-										<a href="<?php echo site_url('customer') ?>" class="btn btn-danger" name="batal"><i class="fa fa-times"></i> Cancel</a>
+										<button type="submit" class="btn btn-sm btn-primary" name="simpan"><i class="fa fa-save"></i> Save</button>
+										<a href="<?php echo site_url('customer') ?>" class="btn btn-sm btn-danger" name="batal"><i class="fa fa-times"></i> Cancel</a>
 									<?php endif ?>
 								</div>
 								<br>

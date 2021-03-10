@@ -67,7 +67,7 @@
 											<label>Address</label>
 											<?php 
 												if($row->CUST_ADDRESS !=null){
-													$ADDRESS = $row->CUST_ADDRESS.', ';
+													$ADDRESS = str_replace("<br>", "\r\n", $row->CUST_ADDRESS).', ';
 												} else {$ADDRESS ='';}
 												if($row->SUBD_ID !=0){
 													$SUBD = $row->SUBD_NAME.', ';
@@ -92,7 +92,7 @@
 										</div>
 										<div class="form-group">
 											<label>Note</label>
-											<textarea class="form-control" cols="100%" rows="5" name="ORDER_NOTES"><?php echo $row->ORDER_NOTES ?></textarea>
+											<textarea class="form-control" cols="100%" rows="5" name="ORDER_NOTES"><?php echo str_replace("<br>", "\r\n", $row->ORDER_NOTES) ?></textarea>
 										</div>
 									</div>
 									<div class="col-md-3">
@@ -133,10 +133,19 @@
 									<a href="<?php echo base_url('order/invoice/'.$row->ORDER_ID)?>" target="_blank" class="btn btn-sm btn-primary mb-1" id="INVOICE"><i class="fa fa-print"></i> INVOICE</a>
 									<a href="<?php echo base_url('order/receipt/'.$row->ORDER_ID)?>" target="_blank" class="btn btn-sm btn-primary mb-1" id="RECEIPT"><i class="fa fa-print"></i> RECEIPT</a>
 									<!-- <input type="hidden" name="ORDER_STATUS_ID" value="<?php echo $row->ORDER_STATUS ?>"> -->
+									<?php if(($this->access_m->isEdit('Order', 1)->row()) || ($this->session->GRP_SESSION ==3)) {
+										if($row->ORDER_STATUS >= 3) {
+											$cancel = 'class="btn btn-sm btn-secondary mb-1" disabled';
+										} else {
+											$cancel = 'class="btn btn-sm btn-warning mb-1"';
+										}
+									} else {
+										$cancel = 'class="btn btn-sm btn-secondary mb-1" disabled';
+									}?>
 									<input type="submit" name="CANCEL" <?php if((!$this->access_m->isEdit('Order', 1)->row()) && ($this->session->GRP_SESSION !=3)) {echo "class='btn btn-sm btn-secondary mb-1' disabled";} else {echo "class='btn btn-sm btn-warning mb-1'";} if($row->ORDER_STATUS >= 2) {echo "hidden";} ?> onclick="return confirm('Cancel order?')" value="CANCEL ORDER">
-									<a <?php if((!$this->access_m->isEdit('Order', 1)->row()) && ($this->session->GRP_SESSION !=3)) {echo "class='btn btn-sm btn-secondary mb-1' disabled";} else {echo "class='btn btn-sm btn-warning mb-1'";} if($row->ORDER_STATUS < 2) {echo "hidden";} ?> href="#" data-toggle="modal" data-target="#cancel-order" id="BTN_CANCEL"></i> CANCEL ORDER</a>
+									<a <?php if((!$this->access_m->isEdit('Order', 1)->row()) && ($this->session->GRP_SESSION !=3)) {echo "class='btn btn-sm btn-secondary mb-1' disabled";} else {echo "class='btn btn-sm btn-warning mb-1'";} if($row->ORDER_STATUS < 2 || $row->ORDER_STATUS > 2) {echo "hidden";} ?> href="#" data-toggle="modal" data-target="#cancel-order" id="BTN_CANCEL"></i> CANCEL ORDER</a>
 									<!-- The Modal Cancel Order -->
-									<div class="modal fade" id="cancel-order" <?php if($row->ORDER_STATUS < 2) {echo "hidden";} ?> >
+									<div class="modal fade" id="cancel-order" <?php if($row->ORDER_STATUS < 2 || $row->ORDER_STATUS > 2) {echo "hidden";} ?> >
 										<div class="modal-dialog">
 									    	<div class="modal-content">
 											    <!-- Modal Header -->
@@ -161,12 +170,13 @@
 											    </div>
 									      		<!-- Modal footer -->
 										      	<div class="modal-footer">
-										      		<input class="btn btn-primary" type="submit" name="CANCEL" value="Save">
-									                <button type="button" class="btn btn-danger cancel" data-dismiss="modal">Cancel</button>
+										      		<input class="btn btn-sm btn-primary" type="submit" name="CANCEL" value="Save">
+									                <button type="button" class="btn btn-sm btn-danger cancel" data-dismiss="modal">Cancel</button>
 										      	</div>
 									    	</div>
 									  	</div>
 									</div>
+									<button <?php if($row->ORDER_STATUS < 3) {echo "hidden";} ?> class="btn btn-sm btn-secondary mb-1" disabled="">CANCEL ORDER</button>
 									<br>
 									<hr>
 									<div class="table-responsive">
@@ -183,10 +193,18 @@
 							                  	</tr>
 							                </thead>
 							                <tbody style="font-size: 14px;">
-							                	<?php $no = 1; ?>
+							                	<?php
+							                		$no = 1;
+
+							                		if ($row->ORDER_STATUS >= 2 && $row->ORDER_STATUS <= 4) {
+							                			$del_style = 'style="opacity: 0.5; pointer-events: none; color: #6c757d;"';
+							                		} else {
+							                			$del_style = 'style="color: #dc3545;"';
+							                		}
+							                	?>
 							                	<?php foreach($detail as $value): ?>
 							                		<tr>
-							                			<td align="center" style="vertical-align: middle; width: 10px;"><a href="<?php echo site_url('order/delete_item/'.$value->ORDER_ID.'/'.$value->ORDD_ID.'/'.$value->VEND_ID) ?>" class="DELETE-ITEM" style="color: #dc3545;" onclick="return confirm('Delete Item?')"><i class="fa fa-trash"></i></a></td>
+							                			<td align="center" style="vertical-align: middle; width: 10px;"><a href="<?php echo site_url('order/delete_item/'.$value->ORDER_ID.'/'.$value->ORDD_ID.'/'.$value->VEND_ID) ?>" <?php echo $del_style ?> onclick="return confirm('Delete Item?')"><i class="fa fa-trash"></i></a></td>
 							                			<td align="center" style="vertical-align: middle; width: 10px;"><?php echo $no++ ?></td>
 							                			<td style="vertical-align: middle;"><?php echo $value->PRO_NAME ?></td>
 							                			<td style="vertical-align: middle;"><input style="font-size: 14px;" class="form-control" type="text" name="ORDD_OPTION[]" autocomplete="off" value="<?php echo $value->ORDD_OPTION ?>"></td>
@@ -337,6 +355,9 @@
 												<input type="hidden" id="CUST_ID<?php echo $data->VEND_ID ?>" name="CUST_ID" value="<?php echo $row->CUST_ID ?>">
 												<input type="hidden" id="VEND_ID<?php echo $data->VEND_ID ?>" name="VEND_ID" value="<?php echo $data->VEND_ID ?>">
 												<input type="hidden" name="PAYTOV_ID[]" value="<?php echo $data->PAYTOV_ID ?>">
+												<div class="form-group" align="right">
+													<a href="#" class="btn btn-info btn-sm" data-toggle="modal" data-target="#recent-<?php echo $data->VEND_ID ?>"><i class="fas fa-list-alt"></i> Recent Courier</a>
+												</div>
 												<div class="form-group">
 													<div class="input-group">
 														<input type="number" step="0.01" class="form-control" id="VENDOR_WEIGHT<?php echo $data->VEND_ID ?>" name="VENDOR_WEIGHT[]" value="<?php echo $data->ORDV_WEIGHT ?>" autocomplete="off">
@@ -393,9 +414,9 @@
 								</div>
 						        <div align="center">
 						        	<?php if((!$this->access_m->isEdit('Order', 1)->row()) && ($this->session->GRP_SESSION !=3)) : ?>
-						        		<a href="<?php echo site_url('order') ?>" class="btn btn-warning" name="batal"><i class="fa fa-arrow-left"></i> BACK</a>
+						        		<a href="<?php echo site_url('order') ?>" class="btn btn-sm btn-warning" name="batal"><i class="fa fa-arrow-left"></i> BACK</a>
 							        <?php else: ?>
-							        	<button type="submit" class="btn btn-primary" name="UPDATE_DATA" id="UPDATE_DATA"><i class="fa fa-save"></i> UPDATE</button>
+							        	<button type="submit" class="btn btn-sm btn-primary" name="UPDATE_DATA" id="UPDATE_DATA"><i class="fa fa-save"></i> UPDATE</button>
 							        <?php endif ?>
 						        </div>
 							</form>
@@ -406,6 +427,55 @@
 		</div>
   	</div>
 </div>
+<?php foreach($get_by_vendor as $key): ?>
+	<!-- The Modal Recent Courier -->
+	<div class="modal fade" id="recent-<?php echo $key->VEND_ID ?>">
+		<div class="modal-dialog modal-md">
+	    	<div class="modal-content">
+			    <!-- Modal Header -->
+			    <div class="modal-header">
+			        <h4 class="modal-title">Recent Courier</h4>
+			        <button type="button" class="close" data-dismiss="modal">&times;</button>
+			    </div>
+			    <!-- Modal body -->
+			    <div class="modal-body">
+			        <div class="row">
+						<div class="col-md-12">
+							<div class="table-responsive">
+				          		<table class="table table-bordered" width="100%" cellspacing="0">
+				            		<thead style="font-size: 14px;">
+					                	<tr>
+					                    	<th style="vertical-align: middle; text-align: center; width: 10px;">#</th>
+					                    	<th style="vertical-align: middle; text-align: center; width: 100px;">COURIER</th>
+					                  	</tr>
+					                </thead>
+					                <tbody style="font-size: 14px;">
+					                	<?php
+					                	$recents = $this->ordervendor_m->get_recent_courier($row->CUST_ID, $key->VEND_ID)->result();
+					                	$no = 1;
+					                	?>
+					                	<?php if($recents != null): ?>
+					                		<?php foreach($recents as $recent): ?>
+					                			<tr>
+					                				<td align="center"><?php echo $no++ ?></td>
+					                				<td><?php echo $recent->COURIER_NAME.' '.$recent->ORDV_SERVICE_TYPE ?></td>
+					                			</tr>
+					                		<?php endforeach ?>
+				                		<?php else: ?>
+				                			<tr>
+				                				<td colspan="2" align="center">No data available in table</td>
+				                			</tr>
+				                		<?php endif ?>
+					                </tbody>
+				          		</table>
+				        	</div>
+						</div>
+					</div>
+			    </div>
+	    	</div>
+	  	</div>
+	</div>
+<?php endforeach ?>
 <script src="<?php echo base_url()?>assets/vendor/jquery/jquery.min.js"></script>
 <script type="text/javascript">
 	$(document).ready(function(){
@@ -1462,7 +1532,6 @@
 		// untuk mengaktifkan print receipt
 		$(".VENDOR_SHIPCOST").ready(function(){
 			if($('#ORDER_STATUS').val() >= 2 && $('#ORDER_STATUS').val() <= 4) {
-				$(".DELETE-ITEM").css({'opacity' : '0.5', 'pointer-events': 'none', 'color' : '#6c757d'});
 				$("#UPDATE_PAYMENT").removeClass('btn-primary');
 				$("#UPDATE_PAYMENT").addClass('btn-secondary');
 				$("#UPDATE_PAYMENT").css({'opacity' : '0.5', 'pointer-events': 'none'});

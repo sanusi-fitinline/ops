@@ -148,7 +148,7 @@ class Venddeposit_m extends CI_Model {
         $params['VENDD_CLOSE_DATE']     = $DATE.' '.$TIME;
         $params['BANK_ID']              = $this->input->post('BANK_ID', TRUE);
         if(!empty($this->input->post('VENDD_NOTES', TRUE))) {
-            $params['VENDD_NOTES']          = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$this->input->post('VENDD_NOTES', TRUE));
+            $params['VENDD_NOTES']          = str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n"),"<br>",$this->input->post('VENDD_NOTES', TRUE));
         }
         $this->db->where('VENDD_ID', $VENDD_ID);
         $this->db->update('tb_vendor_deposit', $this->db->escape_str($params));

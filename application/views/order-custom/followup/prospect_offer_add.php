@@ -7,7 +7,7 @@
 	    	<a href="<?php echo site_url('dashboard') ?>">Dashboard</a>
 	  	</li>
 	  	<li class="breadcrumb-item">
-	    	<a href="<?php echo site_url('prospect_followup') ?>">Prospect Follow Up</a>
+	    	<a href="<?php echo site_url('prospect_followup') ?>">Follow Up (VR)</a>
 	  	</li>
 	  	<li class="breadcrumb-item">
 	    	<a href="<?php echo site_url('prospect_followup/detail/'.$detail->PRJ_ID.'/'.$detail->PRJD_ID) ?>">Detail</a>
@@ -125,8 +125,8 @@
 								<?php endforeach ?>
 							<?php endif ?>
 							<div class="col-md-12" align="center">
-								<button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;&nbsp;Save</button>
-	                    		<a href="<?php echo site_url('prospect_followup/detail/'.$detail->PRJ_ID.'/'.$detail->PRJD_ID) ?>" class="btn btn-danger"><i class="fa fa-times"></i>&nbsp;&nbsp;Cancel</a>
+								<button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-save"></i>&nbsp;&nbsp;Save</button>
+	                    		<a href="<?php echo site_url('prospect_followup/detail/'.$detail->PRJ_ID.'/'.$detail->PRJD_ID) ?>" class="btn btn-sm btn-danger"><i class="fa fa-times"></i>&nbsp;&nbsp;Cancel</a>
 							</div>
 						</div>
 					</form>

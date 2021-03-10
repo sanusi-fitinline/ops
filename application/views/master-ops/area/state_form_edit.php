@@ -43,10 +43,10 @@
 								<div align="center">
 									<?php $this->load->model('access_m');?>
 									<?php if((!$this->access_m->isEdit('Area', 1)->row()) && ($this->session->GRP_SESSION !=3)) : ?>
-										<a href="<?php echo site_url('master/state/') ?>" class="btn btn-warning" name="batal"><i class="fa fa-arrow-left"></i> Back</a>
+										<a href="<?php echo site_url('master/state/') ?>" class="btn btn-sm btn-warning" name="batal"><i class="fa fa-arrow-left"></i> Back</a>
 									<?php else: ?>
-										<button type="submit" class="btn btn-primary" name="simpan"><i class="fa fa-save"></i> Save</button>
-										<a href="<?php echo site_url('master/state/') ?>" class="btn btn-danger" name="batal"><i class="fa fa-times"></i> Cancel</a>
+										<button type="submit" class="btn btn-sm btn-primary" name="simpan"><i class="fa fa-save"></i> Save</button>
+										<a href="<?php echo site_url('master/state/') ?>" class="btn btn-sm btn-danger" name="batal"><i class="fa fa-times"></i> Cancel</a>
 									<?php endif ?>
 								</div>
 							</div>

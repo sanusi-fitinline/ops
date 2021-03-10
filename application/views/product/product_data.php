@@ -11,11 +11,11 @@
     <div class="card mb-3">
     	<div class="card-header">
         	<i class="fas fa-table"></i>
-        	Data Product <a href="#" data-toggle="modal" data-target="#print-price-list" class="btn btn-info btn-sm"><i class="fa fa-print"></i> Price List</a>
+        	Data Product <a href="#" data-toggle="modal" data-target="#print-price-list" class="btn btn-sm btn-info"><i class="fa fa-print"></i> Price List</a>
         </div>
       	<div class="card-body">
       		<div>
-				<a <?php if((!$this->access_m->isAdd('Product', 1)->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> href="<?php echo site_url('product/add') ?>" class="btn btn-success btn-sm">
+				<a <?php if((!$this->access_m->isAdd('Product', 1)->row()) && ($this->session->GRP_SESSION !=3)){echo "hidden";}?> href="<?php echo site_url('product/add') ?>" class="btn btn-sm btn-success">
 					<i class="fas fa-plus-circle"></i> Add</a>
 			</div><br>
         	<div class="table-responsive">
@@ -81,8 +81,8 @@
 			    </div>
 	      		<!-- Modal footer -->
 		      	<div class="modal-footer">
-		      		<button type="submit" class="btn btn-info"><i class="fa fa-print"></i>&nbsp;&nbsp;Print</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i>&nbsp;&nbsp;Cancel</button>
+		      		<button type="submit" class="btn btn-sm btn-info"><i class="fa fa-print"></i>&nbsp;&nbsp;Print</button>
+                    <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal"><i class="fa fa-times"></i>&nbsp;&nbsp;Cancel</button>
 		      	</div>
 			</form>
     	</div>

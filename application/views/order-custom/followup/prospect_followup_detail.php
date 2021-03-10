@@ -7,7 +7,7 @@
 	    	<a href="<?php echo site_url('dashboard') ?>">Dashboard</a>
 	  	</li>
 	  	<li class="breadcrumb-item">
-	    	<a href="<?php echo site_url('prospect_followup') ?>">Prospect Follow Up</a>
+	    	<a href="<?php echo site_url('prospect_followup') ?>">Follow Up (VR)</a>
 	  	</li>
 	  	<li class="breadcrumb-item active">Detail</li>
 	</ol>
@@ -16,7 +16,7 @@
 		    <div class="card mb-3">
 		    	<div class="card-header">
 		        	<i class="fas fa-table"></i>
-		        	Detail Prospect Follow Up
+		        	Detail Follow Up (VR)
 		        </div>
 		      	<div class="card-body">
 		      		<div class="row">
@@ -117,7 +117,11 @@
 						                		<td><?php echo $value->PRDPP_NAME ?></td>
 						                		<td align="center">
 						                			<?php if($value->PRJDM_IMG != null): ?>
-						                				<img style="height: 100px;" class="img-fluid" src="<?php echo base_url('assets/images/project/detail/model/'.$value->PRJDM_IMG) ?>">
+														<div class="img-group-zoom">
+															<a href="<?php echo base_url('assets/images/project/detail/model/'.$value->PRJDM_IMG) ?>">
+																<img style="height: 100px;" src="<?php echo base_url('assets/images/project/detail/model/'.$value->PRJDM_IMG) ?>">
+															</a>
+														</div>
 						                			<?php endif ?>
 						                		</td>
 						                		<td><?php echo $value->PRJDM_MATERIAL ?></td>
@@ -162,7 +166,7 @@
 				            <div>
 				            	<?php
 				            	// check add access
-				            	if( ($this->access_m->isAdd('Follow Up VR', 1)->row()) || ($this->session->GRP_SESSION == 3) ) {
+				            	if( ($this->access_m->isAdd('Follow Up (VR)', 1)->row()) || ($this->session->GRP_SESSION == 3) ) {
 					            	if($row->PRJ_STATUS >= 4) {
 				            			$add = 'class="btn btn-sm btn-secondary mb-1" style="opacity : 0.5; pointer-events: none; color : #ffffff;"';
 				            		} else {
@@ -172,7 +176,7 @@
 				            		$add = 'class="btn btn-sm btn-secondary mb-1" style="opacity : 0.5; pointer-events: none; color : #ffffff;"';
 				            	}
 				            	// check edit access
-				            	if( ($this->access_m->isEdit('Follow Up VR', 1)->row()) || ($this->session->GRP_SESSION == 3) ) {
+				            	if( ($this->access_m->isEdit('Follow Up (VR)', 1)->row()) || ($this->session->GRP_SESSION == 3) ) {
 					            	if($row->PRJ_STATUS >= 4) {
 				            			$edit = 'style="opacity : 0.5; pointer-events: none; color: #6c757d; float: right;"';
 				            		} else {
@@ -182,7 +186,7 @@
 				            		$edit = 'style="opacity : 0.5; pointer-events: none; color: #6c757d; float: right;"';
 				            	}
 				            	// check delete access
-				            	if( ($this->access_m->isDelete('Follow Up VR', 1)->row()) || ($this->session->GRP_SESSION == 3) ) {
+				            	if( ($this->access_m->isDelete('Follow Up (VR)', 1)->row()) || ($this->session->GRP_SESSION == 3) ) {
 					            	if($row->PRJ_STATUS >= 4) {
 				            			$delete = 'style="opacity : 0.5; pointer-events: none; color: #6c757d; float: left;"';
 				            		} else {
@@ -229,7 +233,11 @@
 						                			<td hidden rowspan="<?php echo $span?>"><?php echo $field->PRJPR_NOTES ?></td>
 						                			<td rowspan="<?php echo $span?>" align="center">
 							                			<?php if($field->PRJPR_IMG != null): ?>
-							                				<img style="height: 100px;" class="img-fluid" src="<?php echo base_url('assets/images/project/offer/'.$field->PRJPR_IMG) ?>">
+							                			<div class="img-group-zoom">
+															<a href="<?php echo base_url('assets/images/project/offer/'.$field->PRJPR_IMG) ?>">
+																<img style="height: 100px;" src="<?php echo base_url('assets/images/project/offer/'.$field->PRJPR_IMG) ?>">
+															</a>
+														</div>
 							                			<?php endif ?>
 							                		</td>
 						                			<td rowspan="<?php echo $span?>" align="center"><?php echo $field->PRJPR_DURATION ?> days</td>

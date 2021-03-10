@@ -77,7 +77,7 @@
 									<div class="col-md-3">
 										<div class="form-group">
 											<label>Notes</label>
-											<textarea class="form-control" rows="5" readonly><?php echo stripslashes($payment->PRJP2P_NOTES) ?></textarea>
+											<textarea class="form-control" rows="5" readonly><?php echo str_replace("<br>", "\r\n", stripslashes($payment->PRJP2P_NOTES)) ?></textarea>
 										</div>
 									</div>
 									<div class="col-md-3">

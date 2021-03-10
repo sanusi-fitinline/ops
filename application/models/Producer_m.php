@@ -86,7 +86,7 @@ class Producer_m extends CI_Model {
 		$dataInsert = array(
 			'PRDU_NAME'		=> $this->input->post('PRDU_NAME', TRUE),
 			'PRDU_CPERSON'	=> $this->input->post('PRDU_CPERSON', TRUE),
-			'PRDU_ADDRESS'	=> str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$this->input->post('PRDU_ADDRESS', TRUE)),
+			'PRDU_ADDRESS'	=> str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n"),"<br>",$this->input->post('PRDU_ADDRESS', TRUE)),
 			'CNTR_ID'		=> $this->input->post('CNTR_ID', TRUE),
 			'STATE_ID'		=> $this->input->post('STATE_ID', TRUE),
 			'CITY_ID'		=> $this->input->post('CITY_ID', TRUE),
@@ -104,7 +104,7 @@ class Producer_m extends CI_Model {
 		$dataUpdate = array(
 			'PRDU_NAME'		=> $this->input->post('PRDU_NAME', TRUE),
 			'PRDU_CPERSON'	=> $this->input->post('PRDU_CPERSON', TRUE),
-			'PRDU_ADDRESS'	=> str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n")," ",$this->input->post('PRDU_ADDRESS', TRUE)),
+			'PRDU_ADDRESS'	=> str_replace(array("\r\n","\r","\n","\\r","\\n","\\r\\n"),"<br>",$this->input->post('PRDU_ADDRESS', TRUE)),
 			'CNTR_ID'		=> $this->input->post('CNTR_ID', TRUE),
 			'STATE_ID'		=> $this->input->post('STATE_ID', TRUE),
 			'CITY_ID'		=> $this->input->post('CITY_ID', TRUE),
